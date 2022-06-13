@@ -1,0 +1,380 @@
+@extends('layouts.header')
+@section('content')
+<style type="text/css">
+  .form-control.form-control-2 input {
+    border: none;
+    box-sizing: border-box;
+    outline: 0;
+    padding: .75rem;
+    position: relative;
+    width: 100%;
+    display: block;
+}
+
+.form-control.form-control-2[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+    display: block;
+}
+</style>
+<div class="">
+<div class="content">
+     <div class="row">
+      	<div class="col-md-12">
+          <div class="side-h3">
+            <h3>Admin / Setup</h3>
+          </div>
+        </div>
+        @if(Session::has('success'))
+
+                    <div class="alert alert-success" id="selector">
+
+                        {{Session::get('success')}}
+
+                    </div>
+
+                @endif
+<form method="post" action="{{ route('company.updatesetting') }}" enctype="multipart/form-data">
+  @csrf
+<div class="col-lg-12 mb-4">
+<div class="card admin-setting">
+<div class="card-body">
+<h5 class="mb-4">Basic Info</h5>
+<div class="row">
+<div class="col-lg-9">
+
+<div class="row">
+<div class="col-lg-6 mb-3">
+<label class="form-label">First Name</label>
+  <input type="text" class="form-control form-control-2" placeholder="First Name" value="{{$userData->firstname}}" name="firstname" required="">
+</div>
+<div class="col-lg-6 mb-3">
+<label class="form-label">Last Name</label>
+  <input type="text" class="form-control form-control-2" placeholder="Last Name" value="{{$userData->lastname}}" name="lastname" required="">
+</div>
+
+<div class="col-lg-12 mb-3">
+<label class="form-label">Company Name</label>
+  <input type="text" class="form-control form-control-2" placeholder="Company Name" value="{{$userData->companyname}}" name="companyname" required="">
+</div>
+
+<div class="col-lg-6 mb-3">
+<label class="form-label">Phone Number</label>
+  <input type="text" class="form-control form-control-2" placeholder="Phone Number" value="{{$userData->phone}}" name="phone" required="" onkeypress="return checkPhone(event)" maxlength="12">
+</div>
+
+<div class="col-lg-6 mb-3">
+<label class="form-label">Email</label>
+  <input type="email" class="form-control form-control-2" placeholder="Email Id" value="{{$userData->email}}" name="email" readonly="">
+</div>
+<h5 class="my-4">Select Available Hours</h5>
+<div class="col-lg-6 mb-3">
+<label class="form-label">Opening Time</label>
+<select class="form-control" name="openingtime">
+    <option value="00" {{ ($userData->openingtime) == '00' ? 'selected' : '' }}>12.00 AM</option>
+    <option value="01" {{ ($userData->openingtime) == '01' ? 'selected' : '' }}>01.00 AM</option>
+    <option value="02" {{ ($userData->openingtime) == '02' ? 'selected' : '' }}>02.00 AM</option>
+    <option value="03" {{ ($userData->openingtime) == '03' ? 'selected' : '' }}>03.00 AM</option>
+    <option value="04" {{ ($userData->openingtime) == '04' ? 'selected' : '' }}>04.00 AM</option>
+    <option value="05" {{ ($userData->openingtime) == '05' ? 'selected' : '' }}>05.00 AM</option>
+    <option value="06" {{ ($userData->openingtime) == '06' ? 'selected' : '' }}>06.00 AM</option>
+    <option value="07" {{ ($userData->openingtime) == '07' ? 'selected' : '' }}>07.00 AM</option>
+    <option value="08" {{ ($userData->openingtime) == '08' ? 'selected' : '' }}>08.00 AM</option>
+    <option value="09" {{ ($userData->openingtime) == '09' ? 'selected' : '' }}>09.00 AM</option>
+    <option value="10" {{ ($userData->openingtime) == '10' ? 'selected' : '' }}>10.00 AM</option>
+    <option value="11" {{ ($userData->openingtime) == '11' ? 'selected' : '' }}>11.00 AM</option>
+    <option value="12" {{ ($userData->openingtime) == '12' ? 'selected' : '' }}>12.00 PM</option>
+    <option value="13" {{ ($userData->openingtime) == '13' ? 'selected' : '' }}>01.00 PM</option>
+    <option value="14" {{ ($userData->openingtime) == '14' ? 'selected' : '' }}>02.00 PM</option>
+    <option value="15" {{ ($userData->openingtime) == '15' ? 'selected' : '' }}>03.00 PM</option>
+    <option value="16" {{ ($userData->openingtime) == '16' ? 'selected' : '' }}>04.00 PM</option>
+    <option value="17" {{ ($userData->openingtime) == '17' ? 'selected' : '' }}>05.00 PM</option>
+    <option value="18" {{ ($userData->openingtime) == '18' ? 'selected' : '' }}>06.00 PM</option>
+    <option value="19" {{ ($userData->openingtime) == '19' ? 'selected' : '' }}>07.00 PM</option>
+    <option value="20" {{ ($userData->openingtime) == '20' ? 'selected' : '' }}>08.00 PM</option>
+    <option value="21" {{ ($userData->openingtime) == '21' ? 'selected' : '' }}>09.00 PM</option>
+    <option value="22" {{ ($userData->openingtime) == '22' ? 'selected' : '' }}>10.00 PM</option>
+    <option value="23" {{ ($userData->openingtime) == '23' ? 'selected' : '' }}>11.00 PM</option>
+ </select>
+  
+</div>
+<div class="col-lg-6 mb-3">
+<label class="form-label">Closing Time</label>
+  <select class="form-control" name="closingtime">
+    <option value="00" {{ ($userData->closingtime) == '00' ? 'selected' : '' }}>12.00 AM</option>
+    <option value="01" {{ ($userData->closingtime) == '01' ? 'selected' : '' }}>01.00 AM</option>
+    <option value="02" {{ ($userData->closingtime) == '02' ? 'selected' : '' }}>02.00 AM</option>
+    <option value="03" {{ ($userData->closingtime) == '03' ? 'selected' : '' }}>03.00 AM</option>
+    <option value="04" {{ ($userData->closingtime) == '04' ? 'selected' : '' }}>04.00 AM</option>
+    <option value="05" {{ ($userData->closingtime) == '05' ? 'selected' : '' }}>05.00 AM</option>
+    <option value="06" {{ ($userData->closingtime) == '06' ? 'selected' : '' }}>06.00 AM</option>
+    <option value="07" {{ ($userData->closingtime) == '07' ? 'selected' : '' }}>07.00 AM</option>
+    <option value="08" {{ ($userData->closingtime) == '08' ? 'selected' : '' }}>08.00 AM</option>
+    <option value="09" {{ ($userData->closingtime) == '09' ? 'selected' : '' }}>09.00 AM</option>
+    <option value="10" {{ ($userData->closingtime) == '10' ? 'selected' : '' }}>10.00 AM</option>
+    <option value="11" {{ ($userData->closingtime) == '11' ? 'selected' : '' }}>11.00 AM</option>
+    <option value="12" {{ ($userData->closingtime) == '12' ? 'selected' : '' }}>12.00 PM</option>
+    <option value="13" {{ ($userData->closingtime) == '13' ? 'selected' : '' }}>01.00 PM</option>
+    <option value="14" {{ ($userData->closingtime) == '14' ? 'selected' : '' }}>02.00 PM</option>
+    <option value="15" {{ ($userData->closingtime) == '15' ? 'selected' : '' }}>03.00 PM</option>
+    <option value="16" {{ ($userData->closingtime) == '16' ? 'selected' : '' }}>04.00 PM</option>
+    <option value="17" {{ ($userData->closingtime) == '17' ? 'selected' : '' }}>05.00 PM</option>
+    <option value="18" {{ ($userData->closingtime) == '18' ? 'selected' : '' }}>06.00 PM</option>
+    <option value="19" {{ ($userData->closingtime) == '19' ? 'selected' : '' }}>07.00 PM</option>
+    <option value="20" {{ ($userData->closingtime) == '20' ? 'selected' : '' }}>08.00 PM</option>
+    <option value="21" {{ ($userData->closingtime) == '21' ? 'selected' : '' }}>09.00 PM</option>
+    <option value="22" {{ ($userData->closingtime) == '22' ? 'selected' : '' }}>10.00 PM</option>
+    <option value="23" {{ ($userData->closingtime) == '23' ? 'selected' : '' }}>11.00 PM</option>
+ </select>
+</div>
+</div>
+
+
+</div>
+<div class="col-lg-3">
+<div class="avatar-upload">
+        <div class="avatar-edit">
+            <input type='file' id="imageUpload" name="imageUpload" accept=".png, .jpg, .jpeg">
+
+            <label for="imageUpload"></label>
+        </div>
+
+        <div class="avatar-preview">
+            @if($userData->image!=null)
+              <div id="imagePreview" style="background-image: url('{{url('userimage/')}}/{{$userData->image}}');">
+              </div>
+            @else
+              @php
+               $dimage = url('/').'/uploads/servicebolt-noimage.png';
+              @endphp
+              <div id="imagePreview" style="background-image: url('{{$dimage}}');">
+              </div>
+            @endif
+        </div>
+        <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;width: 100px;">Approximate Image Size : 122 * 122</div>
+
+    </div>
+</div>
+</div>
+<hr/>
+
+<h5 class="my-4">Billing Info</h5>
+<div class="row">
+<div class="col-md-8">
+<div class="row">
+<div class="col-lg-12 mb-3">
+  @php
+    $ccNum          = $userData->cardnumber;
+    $last4Digits    = preg_replace( "#(.*?)(\d{4})$#", "$2", $ccNum);
+    $firstDigits    = preg_replace( "#(.*?)(\d{4})$#", "$1", $ccNum);
+    $ccX            = preg_replace("#(\d)#", "*", $firstDigits);
+    $ccX           .= $last4Digits;
+  @endphp
+<label class="form-label">Credit Card Number</label>
+<input type="text" class="form-control form-control-2" placeholder="2598 xxxx xxxx 1073" value="{{$ccX}}" name="cardnumber" id="cardnumber" required="" onkeypress="return checkDigit(event)">
+
+
+</div>
+
+<div class="col-lg-6 mb-3">
+<label class="form-label">Expiration Date</label>
+<input type="date" class="form-control form-control-2 date1" placeholder="Exp. Date" value="{{$userData->date}}" name="date" id="date" required="" onkeydown="return false;" style="    position: relative;">
+</div>
+<div class="col-lg-6 mb-3">
+<label class="form-label">Security Code</label>
+<input type="text" class="form-control form-control-2" placeholder="xxx" value="{{$userData->securitycode}}" name="securitycode" required="" maxlength="3" onkeypress="return checkDigit1(event)">
+</div>
+
+</div>
+</div>
+
+<div class="col-lg-3 offset-lg-1">
+<img src="images/credit-card.jpg" alt=""/>
+</div>
+
+</div>
+
+<hr/>
+
+<h5 class="my-4">Payment Gateway</h5>
+
+<div class="row">
+<div class="col-lg-9 border-end pe-lg-4">
+<div class="row justify-content-around text-color">
+<label class="form-label col-md-12 mb-4">Choose one to set up</label>
+<div class="col-md-3 text-center">
+<div class="card-app mb-4">
+<input type="radio" id="control_01" name="select" value="1" checked>
+  <label for="control_01">
+    <img src="{{url('/')}}/images/icon-1.jpg" alt=""/>
+  </label>
+</div>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+</div>
+
+<div class="col-md-3 text-center">
+<div class="card-app mb-4">
+<input type="radio" id="control_02" name="select" value="2">
+  <label for="control_02">
+    <img src="{{url('/')}}/images/icon-2.jpg" alt=""/>
+  </label>
+</div>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+</div>
+
+<div class="col-md-3 text-center">
+<div class="card-app mb-4">
+<input type="radio" id="control_03" name="select" value="3">
+  <label for="control_03">
+    <img src="{{url('/')}}/images/icon-3.jpg" alt=""/>
+  </label>
+</div>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+</div>
+
+</div>
+</div>
+  @php
+    $paymenttype = array (
+      '1'=>"Cash",
+      '2'=>"Credit Card",
+      '3'=>"Check",
+      '4'=>"Invoice (Pay later)",
+    );
+    
+  @endphp
+<div class="col-lg-3 ps-lg-4">
+<label class="form-label mb-lg-5">Select payment types available</label>
+<div class="services-list">
+
+  @foreach($paymenttype as $key => $value)
+    @php
+      $ptypearray =  explode(',',$userData->paymenttype);
+      if(in_array($value, $ptypearray)) {
+        $checked = "checked";
+       } else {
+        $checked = "";
+      }
+    @endphp
+    <label class="container-checkbox mb-4">{{$value}}
+      <input type="checkbox" name="paymenttype[]" id="paymenttype" value="{{$value}}" {{$checked}}>
+      <span class="checkmark"></span>
+    </label>
+  @endforeach
+    </div>
+</div>
+<div class="col-lg-12 mt-4 text-center">
+<!-- <button class="btn btn-add w-25 w-none">Save Changes</button> -->
+<input class="btn btn-add w-25 w-none" type="submit" value="Save Changes">
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</form>
+</div>
+</div>
+</div>
+@endsection
+@section('script')
+<script type="text/javascript">
+  function cc_format(value) {
+  var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+  var matches = v.match(/\d{4,16}/g);
+  var match = matches && matches[0] || ''
+  var parts = []
+  for (i=0, len=match.length; i<len; i+=4) {
+    parts.push(match.substring(i, i+4))
+  }
+  if (parts.length) {
+    return parts.join(' ')
+  } else {
+    return value
+  }
+}
+
+onload = function() {
+  document.getElementById('cardnumber').oninput = function() {
+    this.value = cc_format(this.value)
+  }
+}
+function checkDigit(event) {
+    var code = (event.which) ? event.which : event.keyCode;
+
+    if ((code < 48 || code > 57) && (code > 31)) {
+        return false;
+    }
+
+    return true;
+}
+
+function checkDigit1(event) {
+    var code = (event.which) ? event.which : event.keyCode;
+
+    if ((code < 48 || code > 57) && (code > 31)) {
+        return false;
+    }
+
+    return true;
+}
+
+function checkPhone(event) {
+    var code = (event.which) ? event.which : event.keyCode;
+
+    if ((code < 48 || code > 57) && (code > 31)) {
+        return false;
+    }
+
+    return true;
+}
+ $('html').on('click','.date1',function() {
+  var dtToday = new Date();
+    
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if(month < 10)
+        month = '0' + month.toString();
+    if(day < 10)
+        day = '0' + day.toString();
+    
+    var maxDate = year + '-' + month + '-' + day;
+    $('#date').attr('min', maxDate);
+  
+ });
+$('#selector').delay(2000).fadeOut('slow');
+
+$(document).ready(function() {       
+  $('#imageUpload').bind('change', function() {
+      var a=(this.files[0].size);
+      if(a > 2000000) {
+           swal({
+            title: "Image Large?",
+            text: "Ïmage should not be larger than 2 mb!",
+            type: "warning",
+            showCancelButton: false,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ok",
+            closeOnConfirm: false,
+            closeOnCancel: false
+          },
+          function (isConfirm) {
+            if (isConfirm) {
+               location.reload();
+        }}
+      );
+         }
+    });
+});
+
+</script>
+@endsection

@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Http\Controllers\Company;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\User;
+use Auth;
+use Image;
+
+class SettingController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index(Request $request)
+    {
+        $auth_id = auth()->user()->id;
+        if(auth()->user()->role == 'company') {
+            $auth_id = auth()->user()->id;
+        } else {
+           return redirect()->back();
+        }
+        $userData = User::where('id',$auth_id)->first();
+        return view('setting.setting',compact('auth_id','userData'));
+    }
+
+    public function update(Request $request, $id = null) {
+        $user = User::find(Auth::user()->id);
+        $user->firstname = $request->firstname;
+        $user->lastname = $request->lastname;
+        $user->companyname = $request->companyname;
+        $user->phone = $request->phone;
+        $user->email = $request->email;
+        //$user->cardnumber = $request->cardnumber;
+        $user->date = $request->date;
+        $user->securitycode = $request->securitycode;
+
+        if(isset($request->paymenttype)) {
+          $user->paymenttype = implode(',', $request->paymenttype);
+        } else {
+           $user->paymenttype = null; 
+        }
+
+        $logofile = $request->file('imageUpload');
+        if (isset($logofile)) {
+            $datetime = date('YmdHis');
+            $image = $request->imageUpload->getClientOriginalName();
+            $image = str_replace(" ", "", $image);
+            $imageName = $datetime . '_' . $image;
+            $logofile->move(public_path('userimage/'), $imageName);
+
+            Image::make(public_path('userimage/').$imageName)->fit(300,300)->save(public_path('userimage/').$imageName);
+
+            $user->image = $imageName;
+        }
+
+        $user->openingtime = $request->openingtime;
+        $user->closingtime = $request->closingtime;
+
+        $user->save();
+        $request->session()->flash("success", "Settings Updated Successfully");
+
+        return redirect()->route('company.adminsetting');
+    }
+
+}
