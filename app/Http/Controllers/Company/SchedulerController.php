@@ -1084,8 +1084,9 @@ class SchedulerController extends Controller
       $worker = Personnel::where('userid', $auth_id)->offset(0)->limit(6)->get();
       $optiontitle1 = array();
       foreach($worker as $key => $value) {
+       $assav =  $value->personnelname.'#'.$value->image;
         $pid =  $value->id;
-        $name = $value->personnelname;
+        $name = $assav;
         $optiontitle2 = array (
             'id'=>$pid,
             'title'=>$name,

@@ -27,6 +27,7 @@ use DateTime;
 use App\Models\Workerhour;
 use App\Models\Workertimeoff;
 use App\Models\Workersethour;
+use App\Models\Balancesheet;
 
 class UserController extends Controller
 {
@@ -1161,6 +1162,15 @@ class UserController extends Controller
             }
             
         return response()->json(['message'=>'Success','data'=>$data],$this->successStatus);
+    }
+
+    public function getbalancesheet(Request $request) {
+      $auth_id = auth()->user()->id;
+      $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+      $balancesheet = Balancesheet::where('userid', $worker->userid)->where('workerid', $worker->workerid)->orderBy('id','DESC')->get();
+
+      return response()->json(['message'=>'Success','data'=>$balancesheet],$this->successStatus);  
     }
     
 }
