@@ -230,7 +230,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
  <div class="main-ticket showdata">
   <!-- Start right side -->
   <div class="rightsidebox">
-   <input type="hidden" id="suggest_trip_start" value="3">
+   <input type="hidden" id="suggest_trip_start" value="6">
    <div class="wt-150 border-end d-flex align-items-center justify-content-center">
     <i class="fa fa-angle-left fa-2x" aria-hidden="true" id="suggest_trip_prev" style="cursor: pointer;"></i><span style="margin-left:14px;">{{$wcount}}</span>
     <i class="fa fa-angle-right fa-2x ms-3" aria-hidden="true" id="suggest_trip_next" style="cursor: pointer;"></i>

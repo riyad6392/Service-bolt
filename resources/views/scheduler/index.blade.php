@@ -432,7 +432,9 @@ th.fc-resource-cell img {
                         <div class="row mb-0">
                             <div class="col-md-6">
                                 <div class="side-h3">
-                                    <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch <span class="counter">10</span></h3>
+                                    <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch 
+                                        <!-- <span class="counter">10</span> -->
+                                    </h3>
                                     <p style="margin: 0; font-weight: 500;color: #000;">Tickets to Assign</p>
                                 </div>
                             </div>
@@ -500,8 +502,9 @@ th.fc-resource-cell img {
             </div>
             <div>
                 <div id='calendar' style="position: relative;">
+                    <input type="hidden" id="suggest_trip_start" value="6">
                 <i class="fa fa-chevron-left" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 18px;left: 6px; z-index: 9;"></i>
-                <i class="fa fa-chevron-right" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 18px; left: 30px; z-index: 9;"></i>
+                <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 18px; left: 30px; z-index: 9;"></i>
                 </div>
             </div>
         </div>
@@ -641,15 +644,7 @@ th.fc-resource-cell img {
                 center: '', 
                 right: ''
             },
-
-            // events: '{{url("company/scheduler/geteventdata")}}',
-             // events: [
-             //    {
-             //      id: '20',
-             //      title: 'my event',
-             //      start: '2022-06-03',
-             //    }],
-           // defaultTimedEventDuration: '01:00:00',
+            // defaultTimedEventDuration: '01:00:00',
             minTime: "00:00:00",
             maxTime: "24:00:00",  
             allDaySlot: false,
@@ -673,41 +668,32 @@ th.fc-resource-cell img {
             events: '{{route("company.getschedulerdata")}}',
 
             eventRender: function(event, element, view) {
-                //console.log(event);
-                // alert(event.title);
-                // alert(event.resourceId);
-                //alert($( this ).attr('id'));
-                // var test = $(this).data('id');
-                // alert(test);
-                //alert(event.color);
                 if (view.name == 'listDay') {
                     element.find(".fc-list-item-time").append("<div class='text-end'><span class='closeon'><i class='fa fa-trash' > </i></span></div>");
                 } else {
                     element.find(".fc-content").prepend("<div class='text-end'><span class='closeon'><i class='fa fa-trash' > </i></span></div>");
                 } 
-
                 element.find(".closeon").on('click', function() {
-                      var id = event.id;
-                      $.ajax({
-                       url:"{{url('company/scheduler/deleteTicket')}}",
-                       type:"POST",
-                       data:{id:id},
-                       success:function()
-                       {
-                        $('#calendar').fullCalendar('removeEvents',event._id);
-                        swal({
-                           title: "Done!", 
-                           text: "Ticket Removed Successfully!", 
-                           type: "success"
-                        },
-                        function(){ 
-                               location.reload();
-                            }
-                        );
-                       }
-                      })
+                  var id = event.id;
+                  $.ajax({
+                   url:"{{url('company/scheduler/deleteTicket')}}",
+                   type:"POST",
+                   data:{id:id},
+                   success:function()
+                   {
+                    $('#calendar').fullCalendar('removeEvents',event._id);
+                    swal({
+                       title: "Done!", 
+                       text: "Ticket Removed Successfully!", 
+                       type: "success"
+                    },
+                    function(){ 
+                           location.reload();
+                        }
+                    );
+                   }
+                  })
                     //$('#calendar').fullCalendar('removeEvents',event._id);
-                    //console.log('delete');
                 });
                 
                 if (view.name == 'listDay') {
@@ -722,10 +708,17 @@ th.fc-resource-cell img {
                     console.log('edit');
                 });
             },
-         
             resourceRender: function (dataTds, eventTd) {
+                var datatitle = dataTds.title;
+                var title = datatitle.split("#");
+                
+                if(title[0]!=null) {
+                    var url = "{{url('uploads/personnel/')}}/"+title[1];
+                } else {
+                    var url = "{{url('uploads/servicebolt-noimage.png')}}";
+                }
                 var textElement = eventTd.empty();
-                textElement.append('<b><img src="https://i1.sndcdn.com/artworks-000056070659-e98l6i-t240x240.jpg" alt=""/>' + dataTds.title + '</b>');
+                textElement.append('<b><img src="'+ url +'" alt=""/>' + title[0] + '</b>');
             },
             unselectAuto: false,
             selectable: true,

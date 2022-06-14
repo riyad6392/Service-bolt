@@ -84,4 +84,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::post('/sethours', [App\Http\Controllers\Api\UserController::class, 'sethours'])->name('sethours');
 	Route::post('/timesheetview', [App\Http\Controllers\Api\UserController::class, 'timesheetview'])->name('timesheetview');
 	Route::post('/timesheetviewfilter', [App\Http\Controllers\Api\UserController::class, 'timesheetviewfilter'])->name('timesheetviewfilter');
+
+	Route::get('/getbalancesheet', [App\Http\Controllers\Api\UserController::class, 'getbalancesheet'])->name('getbalancesheet');
 });
