@@ -391,12 +391,40 @@ class UserController extends Controller
         $user = Auth::user();
         $auth_id = $user->id;
 
-        $customerData = Customer::where('id',$customerid)->get(); 
+        $customerData = Customer::where('id',$customerid)->get();
+        $mainarray = array();
+        if($customerData[0]->serviceid!="") {
+            $serviceids =explode(",",$customerData[0]->serviceid);
+            $servicearray = Service::select('id','servicename')->whereIn('id',$serviceids)->get();
+
+            foreach($servicearray as $key=> $servicedata) {
+                $mainarray[] = array(
+                    'id' => $servicedata->id,
+                    'servicename' => $servicedata->servicename,
+                );
+            }
+        }
+        $data1 = array();
+        
+        foreach($customerData as $key => $value) {
+            $data1['id']= $value->id;
+            $data1['userid']= $value->userid;   
+            $data1['workerid']= $value->workerid;   
+            $data1['customername']= $value->customername;   
+            $data1['phonenumber']= $value->phonenumber;   
+            $data1['email']= $value->email;   
+            $data1['companyname']= $value->companyname;   
+            $data1['servicearray']= $mainarray;   
+            $data1['image']= $value->image;
+            $data1['created_at']= $value->created_at; 
+            $data1['updated_at']= $value->updated_at;    
+        }
+
         $customerAddress = Address::where('customerid',$customerid)->get();
         $recentTicket = Quote::where('customerid',$customerid)->orderBy('id','DESC')->get();
 
         if ($customerData) {
-                return response()->json(['message'=>'success','customerData'=>$customerData,'connectedAddress'=>$customerAddress,'recentTickets'=>$recentTicket],$this->successStatus);
+                return response()->json(['message'=>'success','customerData'=>$data1,'connectedAddress'=>$customerAddress,'recentTickets'=>$recentTicket],$this->successStatus);
         } else {
             return response()->json(['message'=>'data not found'],$this->errorStatus);
         }
