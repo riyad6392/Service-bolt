@@ -53,6 +53,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::post('/serviceview', [App\Http\Controllers\Api\UserController::class, 'serviceview'])->name('serviceview');
 
 	Route::post('/sendinvoice', [App\Http\Controllers\Api\UserController::class, 'sendinvoice'])->name('sendinvoice');
+
+	Route::post('/customerupdate', [App\Http\Controllers\Api\UserController::class, 'customerupdate'])->name('customerupdate');
 	
 	Route::get('/allproducData', [App\Http\Controllers\Api\UserController::class, 'allproducData'])->name('allproducData');
 

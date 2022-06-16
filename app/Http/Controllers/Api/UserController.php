@@ -70,8 +70,20 @@ class UserController extends Controller
             //$user->createToken('MyApp')->accessToken; 
             //$details = DB::table('personnel')->where('id',$user->workerid)->first();
             $pdetails = User::select('users.id', 'psnl.id as pid', 'psnl.personnelname', 'psnl.phone', 'psnl.email', 'psnl.ticketid as permission', 'psnl.address','psnl.image')
-                ->join('personnel as psnl', 'psnl.id', '=', 'users.workerid')->where('psnl.id',$user->workerid)->first();
-            return response()->json(['message'=>__('You are successfully logged in.'),'token'=>$token,'data'=>$pdetails],$this->successStatus); 
+                ->join('personnel as psnl', 'psnl.id', '=', 'users.workerid')->where('psnl.id',$user->workerid)->get();
+                $data1 = array();
+                foreach($pdetails as $value) {
+                    $data1['id']= $value->id;
+                    $data1['pid']= $value->pid;
+                    $data1['personnelname']= $value->personnelname;
+                    $data1['phone']= $value->phone;
+                    $data1['email']= $value->email;
+                    $data1['permission']= explode(",",$value->permission);
+                    $data1['address']= $value->address;
+                    $data1['image']= $value->image;
+
+                }   
+            return response()->json(['message'=>__('You are successfully logged in.'),'token'=>$token,'data'=>$data1],$this->successStatus); 
         } 
         else{ 
             return response()->json(['message'=>__('You have entered an invalid username or password.')],$this->errorStatus); 
@@ -637,16 +649,22 @@ class UserController extends Controller
     }
 
     public function serviceview(Request $request) {
-        $ticketid = $request->id; 
-        $quote = Quote::select('product_id')->where('id', $ticketid)->get()->first();
-        $pidarray = explode(',', $quote->product_id);
-        $pdetails = Inventory::select('productname','id','category')->whereIn('id', $pidarray)->get();
-         
-        foreach ($pdetails as $key => $value) {
-          $pname[] = $value['productname'];
-          $category[] = $value['category'];
+        $serviceid = $request->id; 
+        $servicedata = Service::select('productid')->where('id', $serviceid)->get()->first();
+        if($servicedata->productid!="") {
+            $pidarray = explode(',', $servicedata->productid);
+            $pdetails = Inventory::select('productname','id','category')->whereIn('id', $pidarray)->get();
+             
+            foreach ($pdetails as $key => $value) {
+              $pname[] = $value['productname'];
+              $category[] = $value['category'];
+            }
+            $catname = implode(',', $category);
+        } else {
+            $pname = array();
+            $catname = "";
         }
-        $catname = implode(',', $category);
+        
         //$productname = implode(',', $pname);
         return response()->json(['message'=>'Success','product'=>$pname,'category'=>$catname],$this->successStatus); 
     }
@@ -1171,6 +1189,72 @@ class UserController extends Controller
       $balancesheet = Balancesheet::where('userid', $worker->userid)->where('workerid', $worker->workerid)->orderBy('id','DESC')->get();
 
       return response()->json(['message'=>'Success','data'=>$balancesheet],$this->successStatus);  
+    }
+
+    public function customerupdate(Request $request) {
+      $validator = Validator::make(request()->all(), [
+            'customername' => 'required',
+            'phonenumber' => 'required',
+            'companyname' => 'required',
+            'email' => 'required',
+        ]);
+
+        if ($validator->fails()) { 
+            $errors = $validator->errors()->toArray();
+            $msg_err = '';
+            if(isset($errors['customername'])){
+                foreach($errors['customername'] as $e){
+                    $msg_err .= $e;
+                }
+            }
+            if(isset($errors['phonenumber'])){
+                foreach($errors['phonenumber'] as $e){
+                    $msg_err .= $e;
+                }
+            }
+            if(isset($errors['companyname'])){
+                foreach($errors['companyname'] as $e){
+                    $msg_err .= $e;
+                }
+            }
+            if(isset($errors['email'])){
+                foreach($errors['email'] as $e){
+                    $msg_err .= $e;
+                }
+            }
+            return response()->json(['message'=>$msg_err],$this->errorStatus);
+        }
+
+      $customerid = $request->customerid;
+
+      $customer = Customer::where('id', $customerid)->get()->first();
+      
+      if($request->serviceid!="") {
+        $customer->serviceid = $request->serviceid;
+      }
+      $customer->customername = $request->customername;
+      $customer->phonenumber = $request->phonenumber;
+      $customer->companyname = $request->companyname;
+      $customer->email = $request->email;
+      
+      $img = $request->image;
+
+      if (!empty($img)) {    
+          $image_parts = explode(";base64,", $img);
+          $value = base64_decode($image_parts[1]);
+          $imageName = time()  . '.png';
+
+          $path = 'uploads/customer/'.$imageName;
+          $thumbPath = 'uploads/customer/thumbnail/'.$imageName;
+
+          file_put_contents($path, $value);
+          Image::make($path)->fit(300, 300)->save($thumbPath);
+
+          $customer->image = $imageName;
+      }
+      $customer->save();
+      
+      return response()->json(['message'=>'Customer has been updated successfully'],$this->successStatus); 
     }
     
 }
