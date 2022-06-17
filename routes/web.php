@@ -239,7 +239,7 @@ Route::group([
 
     Route::any('/scheduler/ticketadded', [SchedulerController::class, 'ticketadded'])->name('ticketadded');
 
-    Route::any('/scheduler/getschedulerdata', [SchedulerController::class, 'getschedulerdata'])->name('getschedulerdata');
+    Route::any('/scheduler/getschedulerdata/{date}', [SchedulerController::class, 'getschedulerdata'])->name('getschedulerdata');
 
     //Admin Setting
     Route::get('/adminsetting', [SettingController::class, 'index'])->name('adminsetting');

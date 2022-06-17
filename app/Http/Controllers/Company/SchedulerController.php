@@ -1102,13 +1102,16 @@ class SchedulerController extends Controller
       return json_encode(['resources' =>$optiontitle1]);
     }
 
-    public function getschedulerdata(Request $request)
+    public function getschedulerdata(Request $request,$date)
     {
         $auth_id = auth()->user()->id;
         $todaydate = date('l - F d, Y');
         $newdate = Carbon::createFromFormat('l - F d, Y', $todaydate)->format('Y-m-d');
+
+        $fulldate = Carbon::createFromFormat('Y-m-d', $date)->format('l - F d, Y');
+
         
-        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
         
         $data=[];
         foreach ($scheduleData as $key => $row) {

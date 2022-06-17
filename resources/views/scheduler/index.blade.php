@@ -433,17 +433,34 @@ th.fc-resource-cell img {
                             <div class="col-md-6">
                                 <div class="side-h3">
                                     <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch 
-                                        <!-- <span class="counter">10</span> -->
+                                        <!-- <span class="counter"></span> -->
                                     </h3>
                                     <p style="margin: 0; font-weight: 500;color: #000;">Tickets to Assign</p>
                                 </div>
                             </div>
+                           
+                            @if($userData->openingtime!="")
+                            <input type="hidden" name="openingtime" id="openingtime" value="{{$userData->openingtime}}:00">
+                            <input type="hidden" name="closingtime" id="closingtime" value="{{$userData->closingtime}}:00">
+                            @else
+                            <input type="hidden" name="openingtime" id="openingtime" value="00:00">
+                            <input type="hidden" name="closingtime" id="closingtime" value="24:00">
+                            @endif
                             <div class="col-md-6">
                                 <div class="datess">
-                                    <span></span>
-                                    <input type="text" placeholder="26/05/2022"
-                                            onfocus="(this.type='date')" class="form-control">
-                                           <!--  <input type="hidden" name="dateval" id="dateval" value="{{ date('l - F d, Y') }}">{{ date('l - F d, Y') }}</span> -->
+                                    @if(request()->date)
+                                      @php
+                                        $todaydate = request()->date;
+                                        $newdate = Carbon\Carbon::createFromFormat('Y-m-d', $todaydate)->format('m/d/Y');
+                                        $requestdate = request()->date;
+                                      @endphp
+                                        <input type="text" placeholder="{{ date('Y/m/d') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ request()->date }}">
+                                    @else
+                                    @php
+                                        $requestdate = date('Y-m-d');
+                                    @endphp
+                                        <input type="text" placeholder="{{ date('Y/m/d') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('Y/m/d') }}">
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-lg-4 mb-0" id="srcoll-here">
@@ -681,12 +698,13 @@ th.fc-resource-cell img {
      </div>
      
      <div class="col-lg-12">
-     <button class="btn btn-dark btn-block btn-lg p-2"><img src="images/share-2.png"  alt=""/> Share</button>
+     <button class="btn btn-dark btn-block btn-lg p-2"> Share</button>
      </div>
      </div>
     </form> 
   </div>
   </div>
+</div>
 </div>
 <!-- end ticket assign modal  -->
 @endsection
@@ -722,6 +740,11 @@ th.fc-resource-cell img {
         $(".side-h3").toggleClass("d-none");
         $(".use").toggleClass("new");
         $(".fc.fc-unthemed.fc-ltr").toggleClass("new");
+    });
+
+    $("#dateval").on("change",function() {
+        var selected = $(this).val();
+        window.location.href = "?date="+selected;
     });
 </script>
 
@@ -773,7 +796,6 @@ th.fc-resource-cell img {
         setTimeout(function() {
             $(".fc-scroller").addClass("heierts");
         },1000);
-        
     });
     
     $(document).on("click",'.fc-time-grid-event',function() {
@@ -801,7 +823,13 @@ th.fc-resource-cell img {
         var limit="6"; // no of records to fetch/ get .
         var newoffsetvalue = parseInt(offset)+6;
         $("#suggest_trip_start").val(newoffsetvalue); 
-        window.location.href = "{{url('company/scheduler/')}}?start="+start;
+        
+        @if(request()->date)
+           window.location.href = "?date={{request()->date}}&start="+start;     
+        @else
+            window.location.href = "?start="+start;
+        @endif
+        
     });
 
     @if(request()->prev)
@@ -820,7 +848,11 @@ th.fc-resource-cell img {
         var limit="6"; // no of records to fetch/ get .
         var newoffsetvalue = offset;
         $("#suggest_trip_start").val(newoffsetvalue);
-        window.location.href = "{{url('company/scheduler/')}}?prev="+start;
+        @if(request()->date)
+           window.location.href = "?date={{request()->date}}&prev="+start;     
+        @else
+            window.location.href = "?prev="+start;
+        @endif
     });
     
     $(function() {
@@ -848,8 +880,8 @@ th.fc-resource-cell img {
                 right: ''
             },
             // defaultTimedEventDuration: '01:00:00',
-            minTime: "00:00:00",
-            maxTime: "24:00:00",  
+            minTime: $("#openingtime").val(),
+            maxTime: $("#closingtime").val(),  
             allDaySlot: false,
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
             defaultView: 'agendaDay',
@@ -858,6 +890,7 @@ th.fc-resource-cell img {
             resources: function (callback) {
                 @if(request()->start)
                     var start ="{{request()->start}}";
+
                 @elseif(request()->prev)
                     var start ="{{request()->prev}}";
                 @else
@@ -876,7 +909,7 @@ th.fc-resource-cell img {
                 });
             },
 
-            events: '{{route("company.getschedulerdata")}}',
+            events: '{{route("company.getschedulerdata",["date"=>$requestdate])}}',
 
             eventRender: function(event, element, view) {
                 if (view.name == 'listDay') {
@@ -1064,34 +1097,6 @@ th.fc-resource-cell img {
             },
         });
 
-    function getworker() {
-        var res="";
-        $.ajax({
-            url:"{{url('company/scheduler/getworker')}}",
-            method: 'GET',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-              
-               res =data.resources;
-
-              //return res;
-              //$('#viewleftservicemodal').html(data.html);
-            }
-        });
-
-        console.log(res);
-
-        /*var res=[{id: '0', title: '123'},
-        {id: '1', title: 'Servic...'},
-        {id: '2', title: 'Servic...'},
-        {id: '3', title: 'Servic...'},
-        {id: '4', title: 'Servic...'},
-        {id: '5', title: 'Servic...'},
-        {id: '6', title: 'Servic...'}]*/
-        return res;
-    }
-
     $(document).on('click','#editsticket',function(e) {
          $('.selectpicker').selectpicker();
         var id = $(this).data('id');
@@ -1136,18 +1141,28 @@ th.fc-resource-cell img {
 </script>
 
 <script type="">
-    $(function() {
-        createSticky($("#header"));
-    });
+    // $(function() {
+    //     createSticky($("#header"));
+    // });
 
-    function createSticky(sticky) {
-        if (typeof sticky !== "undefined") {
-            var pos = sticky.offset().top + 20,
-            win = $(window);
-            win.on("scroll", function() {
-                win.scrollTop() >= pos ? sticky.addClass("fixed") : sticky.removeClass("fixed");
-            });     
-        }
-    }
+    // function createSticky(sticky) {
+    //     if (typeof sticky !== "undefined") {
+    //         var pos = sticky.offset().top + 20,
+    //         win = $(window);
+    //         win.on("scroll", function() {
+    //             win.scrollTop() >= pos ? sticky.addClass("fixed") : sticky.removeClass("fixed");
+    //         });     
+    //     }
+    // }
+
+// $("#dateval").datepicker({
+//     onSelect: function(dateText, inst) {
+//         var date = $(this).val();
+//         var time = $('#time').val();
+//         alert('on select triggered');
+//         $("#start").val(date + time.toString(' HH:mm').toString());
+//         console.log(date + time.toString(' HH:mm').toString());
+//     }
+// });
 </script>
 @endsection
