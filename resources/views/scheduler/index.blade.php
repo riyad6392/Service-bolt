@@ -453,7 +453,7 @@ th.fc-resource-cell img {
                                 </div>
                             </div>
                             <div class="col-lg-4 text-end mb-2 offset-lg-4">
-                                <a href="#" class="add-btn-yellow">New Ticket Assign + </a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#add-tickets" class="add-btn-yellow">New Ticket Assign + </a>
                             </div>
                         </div>
                         <div class="card-personal" id="external-events">
@@ -466,7 +466,7 @@ th.fc-resource-cell img {
                                             ->where('services.servicename',$value->servicename)->get()->first();
                                         @endphp
                                         <li class="inner red-slide">
-                                            <div class='fc-event' style="background-color: {{$servicecolor->color}};" data-color='{{$servicecolor->color}}' id='{{$value->id}}' data-bs-toggle='modal' data-bs-target='#exampleModal' > 
+                                            <div class='fc-event' style="background-color: {{$servicecolor->color}};" data-color='{{$servicecolor->color}}' data-id='{{$value->id}}' data-bs-toggle='modal' data-bs-target='#exampleModal' id="editsticket">
                                                 <div class="tickets_div">
                                                     <h6>#{{$value->id}}</h6>
                                                     <p> {{$value->customername}}</p>
@@ -503,7 +503,7 @@ th.fc-resource-cell img {
             <div>
                 <div id='calendar' style="position: relative;">
                     <input type="hidden" id="suggest_trip_start" value="6">
-                <i class="fa fa-chevron-left" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 18px;left: 6px; z-index: 9;"></i>
+                <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 18px;left: 6px; z-index: 9;"></i>
                 <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 18px; left: 30px; z-index: 9;"></i>
                 </div>
             </div>
@@ -523,6 +523,172 @@ th.fc-resource-cell img {
     </div>
   </div>
 </div>
+<!-- new ticket assign modal -->
+<div class="modal fade" id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+     
+      <div class="modal-body">
+       <div class="add-customer-modal">
+      <h5>Add A New Ticket</h5>
+     </div>
+      
+
+     @if(count($services)>0)
+      @else
+        @if(count($productData)==0)
+        <div style="color: red;">Step2: Please add a service in the services section.</div>
+        
+      @else
+        <div style="color: red;">Step1: Please add a service in the services section.</div>
+        
+      @endif
+     @endif
+
+    @if(count($customer)>0)
+      @else
+        @if(count($productData)==0 && count($services)==0)
+        <div style="color: red;">Step3: Please add a customer in the customer section.</div>
+        
+      @elseif(count($productData)>0 && count($services)>0)
+        <div style="color: red;">Step1: Please add a customer in the customer section.</div>
+      @elseif(count($productData)>0)
+        <div style="color: red;">Step2: Please add a customer in the customer section.</div>  
+        
+      @elseif(count($services)>0)
+        <div style="color: red;">Step1: Please add a customer in the customer section.</div>
+        <div style="color: red;">Step2: Then please create a new tickets/quote here.</div>
+        
+      @endif
+     @endif
+     
+     <form class="form-material m-t-40 row form-valide" method="post" action="{{route('company.directquotecreate')}}" enctype="multipart/form-data">
+        @csrf
+        @php
+        if(count($customer)>0) {
+          $custmername = "";
+        }
+        else {
+          $custmername = "active-focus";
+        }
+      @endphp
+     <div class="row customer-form">
+     <div class="col-md-12 mb-2">
+       <div class="input_fields_wrap">
+          <div class="mb-3">
+            <select class="form-select {{$custmername}}" name="customerid" id="customerid1" required>
+                <option selected="" value="">Select a customer </option>
+              @foreach($customer as $key => $value)
+                <option value="{{$value->id}}">{{$value->customername}}</option>
+              @endforeach
+            </select>
+          </div>
+      </div>
+    </div>
+
+    <div class="col-md-12 mb-2">
+       <div class="input_fields_wrap">
+          <div class="mb-3">
+            <select class="form-select" name="address" id="address_scheduler" required>
+              <option value="">Select Customer Address</option>
+              </select>
+          </div>
+      </div>
+    </div>
+
+    @php
+      if(count($services)>0) {
+        $cname = "";
+      }
+      else {
+        $cname = "active-focus";
+      }
+      if(count($worker)>0) {
+        $wname = "";
+      }
+      else {
+        $wname = "active-focus";
+      }
+    @endphp
+     <div class="col-md-12 mb-3">
+        <select class="selectpicker form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
+          @foreach($services as $key =>$value)
+          <option value="{{$value->id}}">{{$value->servicename}}</option>
+        @endforeach
+       </select>
+     </div>
+     
+     <div class="col-md-6 mb-3" style="display: none;">
+      <select class="form-select" name="personnelid" id="personnelid">
+      <option selected="" value="">Select a Personnel </option>
+      @foreach($worker as $key => $value)
+        <option value="{{$value->id}}">{{$value->personnelname}}</option>
+      @endforeach
+    </select>
+     </div>
+    
+    <div class="col-md-12 mb-3">
+       <div class="align-items-center justify-content-lg-between d-flex services-list">
+        <label class="container-checkbox">Per hour
+        <input type="radio" id="test1" name="radiogroup" value="perhour" checked>
+        <span class="checkmark"></span>
+      </label>
+      <label class="container-checkbox">Flate rate
+        <input type="radio" id="test2" name="radiogroup" value="flatrate">
+        <span class="checkmark"></span>
+      </label>
+      <label class="container-checkbox">Recurring
+        <input type="radio" id="test3" name="radiogroup" value="recurring">
+        <span class="checkmark"></span>
+      </label>
+      </div>
+      </div>
+     
+     <div class="col-md-6 mb-2">
+      <select class="form-select" name="frequency" id="frequency" required="">
+      <option selected="" value="">Service Frequency</option>
+        @foreach($tenture as $key=>$value)
+          <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
+        @endforeach
+    </select>
+     </div>
+     
+     <div class="col-md-6 mb-2">
+      <label>Default Time (hh:mm)</label><br>
+            <div class="timepicker timepicker1" style="display:inline-block;">
+            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+          </div>
+        </div>
+
+     <div class="col-md-12 mb-3 position-relative">
+      <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
+      <input type="text" class="form-control" placeholder="Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+     </div>
+     
+     <div class="col-md-12 mb-3">
+      <label style="position: relative;left: 12px;margin-bottom: 11px;">ETC</label>
+     <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;"  required>
+     </div>
+     <div class="col-md-12 mb-3">
+       <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required></textarea>
+     </div>
+     <div class="col-lg-6 mb-3">
+      <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+      <button type="submit" class="btn btn-add btn-block" type="submit">Add a Ticket</button>
+     </div>
+     
+     <div class="col-lg-12">
+     <button class="btn btn-dark btn-block btn-lg p-2"><img src="images/share-2.png"  alt=""/> Share</button>
+     </div>
+     </div>
+    </form> 
+  </div>
+  </div>
+</div>
+<!-- end ticket assign modal  -->
 @endsection
 
 @section('script')
@@ -622,6 +788,41 @@ th.fc-resource-cell img {
     });
 </script>
 <script type="">
+    @if(request()->start)
+        var start= $("#suggest_trip_start").val();
+        var offset = start;
+        var limit="6"; // no of records to fetch/ get .
+        var newoffsetvalue = parseInt(offset)+6;
+        $("#suggest_trip_start").val(newoffsetvalue); 
+    @endif
+    $(document).on("click","#suggest_trip_next",function() {
+        var start= $("#suggest_trip_start").val();
+        var offset = start;
+        var limit="6"; // no of records to fetch/ get .
+        var newoffsetvalue = parseInt(offset)+6;
+        $("#suggest_trip_start").val(newoffsetvalue); 
+        window.location.href = "{{url('company/scheduler/')}}?start="+start;
+    });
+
+    @if(request()->prev)
+        var start= $("#suggest_trip_start").val();
+        var offset = start;
+        var offset = parseInt(offset) - 6;
+        var limit="6"; // no of records to fetch/ get .
+        var newoffsetvalue = offset;
+        $("#suggest_trip_start").val(newoffsetvalue); 
+    @endif
+
+    $(document).on("click","#suggest_trip_prev",function() {
+        var start= $("#suggest_trip_start").val();
+        var offset = start;
+        var offset = parseInt(offset) - 6;
+        var limit="6"; // no of records to fetch/ get .
+        var newoffsetvalue = offset;
+        $("#suggest_trip_start").val(newoffsetvalue);
+        window.location.href = "{{url('company/scheduler/')}}?prev="+start;
+    });
+    
     $(function() {
         $('#external-events .fc-event').each(function() {
             // store data so the calendar knows to render an event upon drop
@@ -638,7 +839,9 @@ th.fc-resource-cell img {
             });
         });
         
-        $('#calendar').fullCalendar({
+        
+    });
+    $('#calendar').fullCalendar({
             header: {
                 left: '',
                 center: '', 
@@ -653,9 +856,17 @@ th.fc-resource-cell img {
             groupByResource: true,
             eventOverlap: true,
             resources: function (callback) {
+                @if(request()->start)
+                    var start ="{{request()->start}}";
+                @elseif(request()->prev)
+                    var start ="{{request()->prev}}";
+                @else
+                    var start =0;
+                @endif
                 $.ajax({
                 url:"{{url('company/scheduler/getworker')}}",
-                method: 'GET',
+                method:"POST",
+                data:{"start":start},
                 dataType: 'json',
                 refresh: true,
                     }).done(function(response) {
@@ -747,7 +958,7 @@ th.fc-resource-cell img {
                 hours = hours < 10 ? `0${hours}` : hours;
                 minutes = minutes < 10 ? `0${minutes}` : minutes;
 
-                var ticketid = $(this).attr('id');
+                var ticketid = $(this).data('id');
                 var workerid = resourceId;
                 var giventime = `${hours}:${minutes} ${ampm}`;
                 
@@ -852,7 +1063,6 @@ th.fc-resource-cell img {
                 });
             },
         });
-    });
 
     function getworker() {
         var res="";
@@ -901,6 +1111,28 @@ th.fc-resource-cell img {
             }
         })
     });
+
+    $(document).ready(function() {
+    $('#customerid1').on('change', function() {
+      var customerid = this.value;
+      $("#address_scheduler").html('');
+        $.ajax({
+          url:"{{url('company/quote/getaddressbyid')}}",
+          type: "POST",
+          data: {
+          customerid: customerid,
+          _token: '{{csrf_token()}}' 
+          },
+          dataType : 'json',
+          success: function(result) {
+          $('#address_scheduler').html('<option value="">Select Customer Address</option>'); 
+            $.each(result.address,function(key,value) {
+              $("#address_scheduler").append('<option value="'+value.address+'">'+value.address+'</option>');
+            });
+          }
+      });
+    });    
+  });
 </script>
 
 <script type="">

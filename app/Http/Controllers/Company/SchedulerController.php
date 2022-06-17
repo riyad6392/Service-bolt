@@ -1078,10 +1078,15 @@ class SchedulerController extends Controller
       return redirect()->route('company.scheduler');
     }
 
-    public function getworker()
+    public function getworker(Request $request)
     {
       $auth_id = auth()->user()->id;
-      $worker = Personnel::where('userid', $auth_id)->offset(0)->limit(6)->get();
+
+      $offset = $request->start; // start row index.
+      $limit="6"; // no of records to fetch/ get .
+      $newoffsetvalue = $offset+6;
+
+      $worker = Personnel::where('userid', $auth_id)->offset($offset)->limit($limit)->get();
       $optiontitle1 = array();
       foreach($worker as $key => $value) {
        $assav =  $value->personnelname.'#'.$value->image;

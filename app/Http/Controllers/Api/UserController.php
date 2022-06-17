@@ -98,9 +98,22 @@ class UserController extends Controller
         $user = Auth::user();
 
         $pdetails = User::select('users.id', 'psnl.id as pid', 'psnl.personnelname', 'psnl.phone', 'psnl.email', 'psnl.ticketid as permission', 'psnl.address','psnl.image')
-                ->join('personnel as psnl', 'psnl.id', '=', 'users.workerid')->where('psnl.id',$user->workerid)->first();
+                ->join('personnel as psnl', 'psnl.id', '=', 'users.workerid')->where('psnl.id',$user->workerid)->get();
+        $data1 = array();
+                foreach($pdetails as $value) {
+                    $data1['id']= $value->id;
+                    $data1['pid']= $value->pid;
+                    $data1['personnelname']= $value->personnelname;
+                    $data1['phone']= $value->phone;
+                    $data1['email']= $value->email;
+                    $data1['permission']= explode(",",$value->permission);
+                    $data1['address']= $value->address;
+                    $data1['image']= $value->image;
+
+                }
+
         if ($pdetails) {
-                return response()->json(['message'=>'success','data'=>$pdetails],$this->successStatus);
+                return response()->json(['message'=>'success','data'=>$data1],$this->successStatus);
         } else {
             return response()->json(['message'=>'id not found'],$this->errorStatus);
         }
