@@ -220,6 +220,7 @@ Route::group([
     Route::get('/scheduler', [SchedulerController::class, 'index'])->name('scheduler');
     Route::get('/schedulernew', [SchedulerController::class, 'indexnew'])->name('schedulernew');
     Route::any('/scheduler/sortdata', [SchedulerController::class, 'sortdata'])->name('sortdata');
+    Route::any('/scheduler/updatesortdata', [SchedulerController::class, 'updatesortdata'])->name('updatesortdata');
 
     Route::any('/scheduler/leftbarschedulerdata', [SchedulerController::class, 'leftbarschedulerdata'])->name('leftbarschedulerdata');
     Route::any('/scheduler/leftbarschedulerdataprev', [SchedulerController::class, 'leftbarschedulerdataprev'])->name('leftbarschedulerdataprev');

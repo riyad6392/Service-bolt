@@ -15,6 +15,7 @@ use Mail;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Tenture;
+use DateTime;
 
 class SchedulerController extends Controller
 {
@@ -44,7 +45,13 @@ class SchedulerController extends Controller
         //$ticketData = Quote::where('userid',$auth_id)->where('ticket_status',"1")->orderBy('id','ASC')->get();
 
         $ticketData = DB::table('quote')->select('quote.*', 'customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"1")->orderBy('quote.id','ASC')->get();
-        $todaydate = date('l - F d, Y');
+
+        if(isset($_REQUEST['date'])) {
+            $todaydate = Carbon::createFromFormat('Y-m-d', $_REQUEST['date'])->format('l - F d, Y');
+        } else {
+            $todaydate = date('l - F d, Y');
+        }
+        
         $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
 
         $customer = Customer::where('userid',$auth_id)->orderBy('id','DESC')->get();
@@ -1116,17 +1123,43 @@ class SchedulerController extends Controller
         $data=[];
         foreach ($scheduleData as $key => $row) {
             $newTime = date('h:i', strtotime($row->giventime));
-            $datetime = $newdate.' '.$newTime;
+            $startdatetime = $newdate.' '.$newTime;
+            if($row->givenendtime!=null) {  
+                $newTime = date('h:i', strtotime($row->givenendtime));
+                $enddatetime = $newdate.' '.$newTime;
+            } else {
+                $enddatetime = "";
+            }
 
             $data[] = array (
                 'id'=>$row->id,
                 'title'   =>'#'.$row->id."\n".$row->customername."\n".$row->servicename,
-                'start'   => $datetime,
+                'start'   => $startdatetime,
+                'end' => $enddatetime,
                 'resourceId'=>$row->personnelid,
                 'backgroundColor'   => $row->color,
             );
         }
       echo json_encode($data);
+    }
+
+    public function updatesortdata(Request $request)
+    {
+        $auth_id = auth()->user()->id;
+        $quoteid = $request->quoteid;
+        $time = $request->time;
+        $endtime = $request->endtime;
+
+        $datetime1 = new DateTime($time);
+        $datetime2 = new DateTime($endtime);
+        $interval = $datetime1->diff($datetime2);
+        $hours = $interval->format('%h Hours');
+        $minutes = $interval->format('%i Minutes');
+
+        DB::table('quote')->where('id','=',$quoteid)
+          ->update([ 
+              "giventime"=>"$time","givenendtime"=>"$request->endtime","time"=>"$hours","minute"=>"$minutes"
+          ]);
     }
 
 }

@@ -135,11 +135,23 @@ Map / Directions</a>
 
   <div class="row" style="background: #eff3f5;padding: 10px;border-radius: 6px;">
     <div class="col-md-6">
-  <div>
-<p>Time: {{$quoteData->giventime}}</p></div></div>
-<div class="col-md-6">
-  <div>
-<p>Price: ${{$totalprice}}</p></div></div>
+      <div>
+        <p>Start Time: {{$quoteData->giventime}}</p>
+      </div>
+    </div>
+    @if($quoteData->givenendtime!="")
+    <div class="col-md-6">
+      <div>
+        <p>End Time: {{$quoteData->givenendtime}}</p>
+      </div>
+    </div>
+    @endif
+    <div class="col-md-6">
+      <div>
+        <p>Price: ${{$totalprice}}</p>
+      </div>
+    </div>
+    
     <div class="col-md-6">
       <div>
 <p>{{$servicename}}</p></div></div>

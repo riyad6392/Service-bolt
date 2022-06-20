@@ -433,7 +433,7 @@ th.fc-resource-cell img {
                             <div class="col-md-6">
                                 <div class="side-h3">
                                     <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch 
-                                        <!-- <span class="counter"></span> -->
+                                        <span class="counter">{{count($scheduleData)}}</span>
                                     </h3>
                                     <p style="margin: 0; font-weight: 500;color: #000;">Tickets to Assign</p>
                                 </div>
@@ -520,8 +520,13 @@ th.fc-resource-cell img {
             <div>
                 <div id='calendar' style="position: relative;">
                     <input type="hidden" id="suggest_trip_start" value="6">
-                <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 18px;left: 6px; z-index: 9;"></i>
-                <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 18px; left: 30px; z-index: 9;"></i>
+                    <input type="hidden" name="wcount" id="wcount" value="{{$wcount}}">
+                    @if(request()->start)
+                        <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 18px;left: 6px; z-index: 9;"></i>
+                    @else
+                    
+                    @endif
+                    <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 18px; left: 30px; z-index: 9;"></i>
                 </div>
             </div>
         </div>
@@ -628,7 +633,7 @@ th.fc-resource-cell img {
       }
     @endphp
      <div class="col-md-12 mb-3">
-        <select class="selectpicker form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
+        <select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
           @foreach($services as $key =>$value)
           <option value="{{$value->id}}">{{$value->servicename}}</option>
         @endforeach
@@ -789,6 +794,7 @@ th.fc-resource-cell img {
 
 <script type="">
     $(document).ready(function () {
+        $('.selectpicker1').selectpicker();
         $('html, body').animate({
             scrollTop: $('#srcoll-here').offset().top
         }, 'slow');
@@ -810,20 +816,30 @@ th.fc-resource-cell img {
     });
 </script>
 <script type="">
+
     @if(request()->start)
-        var start= $("#suggest_trip_start").val();
+        //var start= $("#suggest_trip_start").val();
+        var start = {{request()->start}};
         var offset = start;
         var limit="6"; // no of records to fetch/ get .
         var newoffsetvalue = parseInt(offset)+6;
         $("#suggest_trip_start").val(newoffsetvalue); 
     @endif
+
     $(document).on("click","#suggest_trip_next",function() {
         var start= $("#suggest_trip_start").val();
         var offset = start;
         var limit="6"; // no of records to fetch/ get .
-        var newoffsetvalue = parseInt(offset)+6;
+        //var newoffsetvalue = parseInt(offset)+6;
+        var newoffsetvalue = parseInt({{request()->start}})+6;
+        //alert(newoffsetvalue);
         $("#suggest_trip_start").val(newoffsetvalue); 
         
+        var wcount = {{$wcount}};
+        
+        if(parseInt(start) >= parseInt(wcount)) {
+            start = start -6;
+        } 
         @if(request()->date)
            window.location.href = "?date={{request()->date}}&start="+start;     
         @else
@@ -848,6 +864,7 @@ th.fc-resource-cell img {
         var limit="6"; // no of records to fetch/ get .
         var newoffsetvalue = offset;
         $("#suggest_trip_start").val(newoffsetvalue);
+        var start = 0;
         @if(request()->date)
            window.location.href = "?date={{request()->date}}&prev="+start;     
         @else
@@ -879,7 +896,9 @@ th.fc-resource-cell img {
                 center: '', 
                 right: ''
             },
-            // defaultTimedEventDuration: '01:00:00',
+            //defaultTimedEventDuration: '01:00:00',
+            //slotDuration: '00:30:00',
+            snapDuration: '00:05:00',
             minTime: $("#openingtime").val(),
             maxTime: $("#closingtime").val(),  
             allDaySlot: false,
@@ -887,6 +906,9 @@ th.fc-resource-cell img {
             defaultView: 'agendaDay',
             groupByResource: true,
             eventOverlap: true,
+           // defaultEventMinutes: 30, 
+            //defaultTimedEventDuration: '01:00',
+            //forceEventDuration: true,
             resources: function (callback) {
                 @if(request()->start)
                     var start ="{{request()->start}}";
@@ -903,8 +925,6 @@ th.fc-resource-cell img {
                 dataType: 'json',
                 refresh: true,
                     }).done(function(response) {
-                    //console.log(response.resources);
-        
                   callback(response.resources); //return resource data to the calendar via the provided callback function
                 });
             },
@@ -977,9 +997,59 @@ th.fc-resource-cell img {
             },
 
             eventClick: function (info) {
-                console.log(info);
+                //console.log(info);
             },
-            // drop: function (date, allDay, jsEvent, ui) {
+
+            eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) { 
+                var hours = event.start._i[3];
+                var minutes = event.start._i[4];
+                const ampm = hours >= 12 ? 'pm' : 'am';
+
+                hours %= 12;
+                hours = hours || 12;    
+                hours = hours < 10 ? `0${hours}` : hours;
+                minutes = minutes < 10 ? `0${minutes}` : minutes;
+                var giventime = `${hours}:${minutes} ${ampm}`;
+
+                var hours1 = event.end._i[3];
+                var minutes1 = event.end._i[4];
+                const ampm1 = hours1 >= 12 ? 'pm' : 'am';
+
+                hours1 %= 12;
+                hours1 = hours1 || 12;    
+                hours1 = hours1 < 10 ? `0${hours1}` : hours1;
+                minutes1 = minutes1 < 10 ? `0${minutes1}` : minutes1;
+                var givenendtime = `${hours1}:${minutes1} ${ampm1}`;
+
+                var ticketid = event.id;
+                var workerid = event.resourceId;
+
+                form_data = new FormData();
+                form_data.append('quoteid',ticketid);
+                form_data.append('time',giventime);
+                form_data.append('endtime',givenendtime);
+                $.ajax({
+                    url:"{{url('company/scheduler/updatesortdata')}}",
+                    method:"POST",
+                    data:form_data,
+                    cache:false,
+                    contentType:false,
+                    processData:false,
+                    success:function() {
+                        swal({
+                           title: "Done!", 
+                           text: "Ticket Updated Successfully!", 
+                           type: "success"
+                        },
+                        function(){ 
+                               location.reload();
+                            }
+                        );
+                    }
+                });
+                
+            },
+
             drop: function (date, jsEvent, ui, resourceId) {
 
                 var hours = date._i[3];
