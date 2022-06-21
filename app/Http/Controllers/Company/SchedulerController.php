@@ -576,12 +576,15 @@ class SchedulerController extends Controller
 
     public function sortdata(Request $request)
     {
-      //dd($request->all());
         //DB::table('sethours')->where('workerid',$request->workerid)
         $auth_id = auth()->user()->id;
         $quoteid = $request->quoteid;
         $time = $request->time;
-        $date = $request->date;
+
+        $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
+
+
+        //$date = $request->date;
         $workerid = $request->workerid;
         $tstatus = 2;
         $created_at = Carbon::now();

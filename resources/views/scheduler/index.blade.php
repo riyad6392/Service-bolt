@@ -283,6 +283,10 @@ div#bs-select-1 {
     border-radius: 30px;
     position: relative;
     bottom: 3px;
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    line-height: 15px;
 }
 .side-h3 {
     padding: 0px 24px 8px!important;
@@ -446,7 +450,7 @@ th.fc-resource-cell img {
                             <input type="hidden" name="openingtime" id="openingtime" value="00:00">
                             <input type="hidden" name="closingtime" id="closingtime" value="24:00">
                             @endif
-                            <div class="col-md-6">
+                            <div class="col-md-3 ms-auto">
                                 <div class="datess">
                                     @if(request()->date)
                                       @php
@@ -896,8 +900,6 @@ th.fc-resource-cell img {
                 center: '', 
                 right: ''
             },
-            //defaultTimedEventDuration: '01:00:00',
-            //slotDuration: '00:30:00',
             snapDuration: '00:05:00',
             minTime: $("#openingtime").val(),
             maxTime: $("#closingtime").val(),  
@@ -939,24 +941,35 @@ th.fc-resource-cell img {
                 } 
                 element.find(".closeon").on('click', function() {
                   var id = event.id;
-                  $.ajax({
-                   url:"{{url('company/scheduler/deleteTicket')}}",
-                   type:"POST",
-                   data:{id:id},
-                   success:function()
-                   {
-                    $('#calendar').fullCalendar('removeEvents',event._id);
-                    swal({
-                       title: "Done!", 
-                       text: "Ticket Removed Successfully!", 
-                       type: "success"
+                   swal({
+                        title: "Are you sure!",
+                        text: "Are you sure? you want to delete it!",
+                        type: "error",
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Yes!",
+                        showCancelButton: true,
                     },
-                    function(){ 
-                           location.reload();
-                        }
-                    );
-                   }
-                  })
+                function() {
+                    $.ajax({
+                           url:"{{url('company/scheduler/deleteTicket')}}",
+                           type:"POST",
+                           data:{id:id},
+                           success:function()
+                           {
+                            $('#calendar').fullCalendar('removeEvents',event._id);
+                            swal({
+                               title: "Done!", 
+                               text: "Ticket Removed Successfully!", 
+                               type: "success"
+                            },
+                            function(){ 
+                                $('#calendar').fullCalendar('refetchEvents');
+                                  // location.reload();
+                                }
+                            );
+                           }
+                          })
+            });
                     //$('#calendar').fullCalendar('removeEvents',event._id);
                 });
                 
@@ -1041,8 +1054,9 @@ th.fc-resource-cell img {
                            text: "Ticket Updated Successfully!", 
                            type: "success"
                         },
-                        function(){ 
-                               location.reload();
+                        function(){
+                                $('#calendar').fullCalendar('refetchEvents'); 
+                               //location.reload();
                             }
                         );
                     }
@@ -1051,7 +1065,7 @@ th.fc-resource-cell img {
             },
 
             drop: function (date, jsEvent, ui, resourceId) {
-
+                
                 var hours = date._i[3];
                 var minutes = date._i[4];
                 const ampm = hours >= 12 ? 'pm' : 'am';
@@ -1067,7 +1081,10 @@ th.fc-resource-cell img {
                 
                 var dd = date._d;
                 var date = moment(new Date(dd.toString().substr(0, 16)));
-                var fulldate = date.format("dddd - MMMM DD, YYYY");
+                //var fulldate = date.format("dddd - MMMM DD, YYYY");
+                
+                var fulldate = "{{$requestdate}}";
+
 
                 form_data = new FormData();
                 form_data.append('quoteid',ticketid);
@@ -1087,13 +1104,13 @@ th.fc-resource-cell img {
                            text: "Ticket Assigned Successfully!", 
                            type: "success"
                         },
-                        function(){ 
-                               location.reload();
-                            }
+                        function() { 
+                            location.reload();
+                        }
                         );
                     }
                 });
-            },
+            },  
             eventDrop: function(event,delta, revertFunc, jsEvent, ui, view ) {
                 //console.log(event.start._d);
                 var ticketid = event.id;
@@ -1118,9 +1135,7 @@ th.fc-resource-cell img {
                     var workerid = resourceId;
                     var giventime = `${hours}:${minutes} ${ampm}`
 
-                    var dd = event.start._d;
-                    var date = moment(new Date(dd.toString().substr(0, 16)));
-                    var fulldate = date.format("dddd - MMMM DD, YYYY");
+                    var fulldate = "{{$requestdate}}";
                 } else {
                     var hours = event.start._i[3];
                     var minutes = event.start._i[4];
@@ -1135,9 +1150,7 @@ th.fc-resource-cell img {
                     var workerid = resourceId;
                     var giventime = `${hours}:${minutes} ${ampm}`;
 
-                    var dd = event.start._d;
-                    var date = moment(new Date(dd.toString().substr(0, 16)));
-                    var fulldate = date.format("dddd - MMMM DD, YYYY");
+                    var fulldate = "{{$requestdate}}";
                 }
 
                 form_data = new FormData();
@@ -1159,7 +1172,8 @@ th.fc-resource-cell img {
                            type: "success"
                         },
                         function(){ 
-                               location.reload();
+                            $('#calendar').fullCalendar('refetchEvents');
+                               //location.reload();
                             }
                         );
                     }

@@ -63,7 +63,8 @@
               <tr>
                 <td style="display: none;">{{$value->id}}</td>
                 <td>{{$value->date}}</td>
-                <td>{{$value->notes}}</td>
+
+                <td style="white-space:break-spaces;">{{$value->notes}}</td>
                 <td>
                   @if($value->status==null)
                   Pending

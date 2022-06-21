@@ -204,7 +204,7 @@
             <h5>{{$value->customername}}</h5>
             <p>{{$value->servicename}}</p>
             <div class="grinding" style="display: block;">
-              {{$value->time}} 
+              {{$value->time}} {{$value->minute}}   
               @php
                 $date=date_create($value->etc);
                 $dateetc = date_format($date,"F d, Y");
