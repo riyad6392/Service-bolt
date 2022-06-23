@@ -136,7 +136,7 @@
               <td style="display: none;">{{$value->id}}</td>
               <td>{{$value->personnelname}}</td>
               <td>{{$value->date1}}</td>
-              <td>{{$value->notes}}</td>
+              <td style="white-space:break-spaces">{{$value->notes}}</td>
               <td>
                 @if($value->status!=null)
                   <a class="btn btn-edit p-3 w-auto" id="accept" data-id="'.$value->id.'" style="pointer-events:none;">{{$value->status}}</a>

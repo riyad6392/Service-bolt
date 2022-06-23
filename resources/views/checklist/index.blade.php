@@ -218,6 +218,8 @@
   </div>
 </div>
 </div>
+
+
 @endsection
 @section('script')
 <script type="text/javascript">
@@ -316,7 +318,7 @@
 
   	$('html').on('click','#updatednew',function() {
   		var sid = $(this).data('sid');
-        var sname = $(this).data('sname');
+  		  var sname = $(this).data('sname');
          $("#serviceidnew").empty();
          $("#servicetitle").empty();
         $("#new-listupdate").modal('show');

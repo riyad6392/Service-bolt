@@ -119,7 +119,7 @@ class ChecklistController extends Controller
          $html = "";
          $html .='<div class="product-card">
                   <img src="'.$imagepath.'" alt="" style="object-fit: cover;width:auto!important;">
-                  <a class="" id="updatednew" data-sid="'.$checklistdata[0]->serviceid.'" data-sname="'.$checklistdata[0]->servicename.'" style="color:#000;"></a>
+                  <a href="javascript:void(0);" class="" id="updatednew" data-sid="'.$checklistdata[0]->serviceid.'" data-sname="'.$checklistdata[0]->servicename.'" style="color:#000;"></a>
                   <h2>'.$checklistdata[0]->servicename.'</h2>';
 
         $html .='<div class="product-info-list time-sheet">

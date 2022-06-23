@@ -499,7 +499,7 @@ th.fc-resource-cell img {
                                 </ul>
                                 @else
                                     <div style="text-align: center;">
-                                        Not found any schedule ticket
+                                        No Tickets To Schedule
                                     </div>
                                 @endif
                             </div>
