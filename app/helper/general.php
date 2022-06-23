@@ -87,13 +87,13 @@
             $destinationPath = public_path($path);
             $new_file->move($destinationPath, $input['imagename']);
 
-            // $imageToResize = Image::make($destinationPath . '/' . $input['imagename']);
-            // $mainImgWidth = "300";
-            // $mainImgHeight = "200";
-            // $imageToResize->resize($mainImgWidth,$mainImgHeight, function ($constraint) {
-            // $constraint->aspectRatio();
-            // $constraint->upsize();
-            // })->save($destinationPath . '/' . $input['imagename']);
+            $imageToResize = Image::make($destinationPath . '/' . $input['imagename']);
+            $mainImgWidth = "300";
+            $mainImgHeight = "200";
+            $imageToResize->resize($mainImgWidth,$mainImgHeight, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+            })->save($destinationPath . '/' . $input['imagename']);
 
             return $input['imagename'];
         }
