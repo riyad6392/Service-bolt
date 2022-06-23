@@ -142,14 +142,14 @@
      <div class="row">
       <div class="col-md-12">
         <div class="side-h3">
-       <h3>Lorem Ipsum</h3>
-       <p style="color: #B0B7C3;">Lorem ipsum dolor sit amet</p>
+       <h3>Payment Settings</h3>
+       <!-- <p style="color: #B0B7C3;">Lorem ipsum dolor sit amet</p> -->
      </div>
      </div>
 
      <div class="personal-setting">
       <div class="settings-payement">
-        <h3>Personnal Payment Settings</h3>
+        <h3>Personnel Payment Settings</h3>
       </div>
       <div class="labesls">
         
@@ -159,7 +159,7 @@
 </label>
 <div class="amounts">
   <div class="d-block">
-  <h5>Amont</h5>
+  <h5>Amount</h5>
   <input type="" name="" class="form-control" placeholder="$12">
 </div>
 </div>
@@ -216,7 +216,7 @@
     <h6>All</h6>
   <div class="amounts">
   <div class="d-block">
-  <h5>Amont</h5>
+  <h5>Amount</h5>
   <input type="" name="" class="form-control" placeholder="$12">
 </div>
 </div>
@@ -232,7 +232,7 @@
     <h6>Service or Prdouct name</h6>
   <div class="amounts">
   <div class="d-block">
-  <h5>Amont</h5>
+  <h5>Amount</h5>
   <input type="" name="" class="form-control" placeholder="$12">
 </div>
 </div>
@@ -248,7 +248,7 @@
     <h6>Service Name</h6>
   <div class="amounts">
   <div class="d-block">
-  <h5>Amont</h5>
+  <h5>Amount</h5>
   <input type="" name="" class="form-control" placeholder="$12">
 </div>
 </div>

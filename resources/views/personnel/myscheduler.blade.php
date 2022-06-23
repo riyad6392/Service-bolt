@@ -292,7 +292,14 @@
               $f= $i+1;
               $m =   ":00";
               $settimes = date("h:i a", strtotime($times));
-              if($value->giventime == $settimes) {
+
+              $settimes1 = explode(":", $settimes);
+              $start = $settimes[0];
+              $endtime = explode(":",$value->giventime);
+              $endtime = $endtime[1];
+              $settimefinal =$settimes1[0].":".$endtime;
+
+              if($value->giventime == $settimefinal) {
                 @endphp
                 <li class="inner yellow-slide" id="drop_{{$value->id}}">
         <div class="card">
@@ -305,6 +312,7 @@
             <span>#{{$value->id}}</span>
             <h5>{{$value->customername}}</h5>
             <p>{{$value->servicename}}</p>
+            <p>Time : {{$value->giventime}} @if($value->givenendtime!="") to {{$value->givenendtime}}@endif</p>
             <div class="grinding" style="display: block;">
               <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="5" cy="5" r="5" fill="currentColor" style="display: none;">

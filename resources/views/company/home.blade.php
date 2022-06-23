@@ -305,7 +305,7 @@
               <td class="text-truncate">{{$value->servicename}}</td>
               <td>{{$value->etc}}</td>
               <td>${{$value->price}}</td>
-              <td>{{$value->time}}</td>
+              <td>{{$value->time}} {{$value->minute}}</td>
               @if($value->ticket_status == "3")
                 <td><a href="#" class="btn-pending btn-block">Completed</a></td>
               @elseif($value->ticket_status == "4")

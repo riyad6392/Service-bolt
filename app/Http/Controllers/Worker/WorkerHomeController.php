@@ -125,7 +125,18 @@ class WorkerHomeController extends Controller
               $f= $i+1;
               $m =   ":00";
               $settimes = date("h:i a", strtotime($times));
-              if($value->giventime == $settimes) {
+
+              $settimes1 = explode(":", $settimes);
+              $start = $settimes[0];
+              $endtime = explode(":",$value->giventime);
+              $endtime = $endtime[1];
+              $settimefinal =$settimes1[0].":".$endtime;
+              if($value->givenendtime!="") { 
+                $givntime = 'to '.$value->givenendtime;
+                } else {
+                $givntime = "";
+              }
+              if($value->giventime == $settimefinal) {
                 $imagepath = url('/').'/uploads/customer/'.$value->image;
               $html .='<li class="inner yellow-slide" id="drop_'.$value->id.'">
                         <div class="card">
@@ -137,11 +148,12 @@ class WorkerHomeController extends Controller
                             <input type="hidden" name="quoteid" id="quoteid_'.$value->id.'" value="'.$value->id.'"><span>#'.$value->id.'</span>
                             <h5>'.$value->customername.'</h5><a href="javascript:void(0);" class="info_link1" dataval="'.$value->id.'"></a>
                             <p>'.$value->servicename.'</p>
-                            <p>Personnel Name - '.$value->personnelname.'</p>
-                            <div class="grinding" style="display:block;">'.$value->time.'</a>'; 
+                            <p>Time : '.$value->giventime.' '.$givntime.'</p>
+                            <div class="grinding" style="display:block;"></a>';
+
                                 $date=date_create($value->etc);
                                 $dateetc = date_format($date,"F d, Y");
-                            $html .=' ETC : '.$dateetc.'
+                            $html .=' '.$value->time.' '.$value->minute.' ETC : '.$dateetc.'
                             </div>
                           </div>
                         </div>
