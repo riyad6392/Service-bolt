@@ -638,7 +638,7 @@ class TicketController extends Controller
         </div>
           <div class="col-md-12 mb-2">
             <label>Select a Service</label>
-            <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" style="height:auto;">';
+            <select class="form-control selectpicker2" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" style="height:auto;">';
               foreach($allservices as $key => $value) {
                 $serviceids =explode(",", $quotedetails[0]->serviceid);
                  if(in_array($value->id, $serviceids)){
@@ -647,7 +647,7 @@ class TicketController extends Controller
                   $selectedp = "";
                  }
 
-                $html .='<option value="'.$value->id.'" '.@$selectedp.'>'.$value->servicename.'</option>';
+                $html .='<option value="'.$value->id.'" '.@$selectedp.' data-hour="'.$value->time.'" data-min="'.$value->minute.'">'.$value->servicename.'</option>';
               }
         $html .='</select>
           </div>
@@ -701,9 +701,9 @@ class TicketController extends Controller
           </div>
           <div class="col-md-6 mb-2">
             <label>Default Time (hh:mm)</label><br>
-            <div class="timepicker timepicker1" style="display:inline-block;">
-           <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" value="'.$time[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" value="'.$minute[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
+           <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" value="'.$time[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" value="'.$minute[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
             </div></div>
           <div class="col-md-12 mb-3 position-relative">
             <label>Price</label>

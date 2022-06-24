@@ -451,7 +451,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         })
 
   });
-$(document).on('click','#edit-services',function(e) {
+$(document).on('click','#editService',function(e) {
   $('.selectpicker').selectpicker();
    var id = $(this).data('id');
    var dataString =  'id='+ id;

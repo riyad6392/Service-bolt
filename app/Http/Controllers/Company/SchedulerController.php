@@ -947,7 +947,7 @@ class SchedulerController extends Controller
         </div>
           <div class="col-md-12 mb-2">
             <label>Select a Service</label>
-            <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" style="height:auto;">';
+            <select class="form-control selectpicker1" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" style="height:auto;">';
 
               foreach($allservices as $key => $value) {
                   $serviceids =explode(",", $quotedetails[0]->serviceid);
@@ -957,7 +957,7 @@ class SchedulerController extends Controller
                   $selectedp = "";
                  }
 
-                $html .='<option value="'.$value->id.'" '.@$selectedp.'>'.$value->servicename.'</option>';
+                $html .='<option value="'.$value->id.'" '.@$selectedp.' data-hour="'.$value->time.'" data-min="'.$value->minute.'">'.$value->servicename.'</option>';
               }
             $html .='</select>
           </div>
@@ -983,8 +983,8 @@ class SchedulerController extends Controller
             <label>Service Frequency</label>
             <select class="form-select" name="frequency" id="frequency" required="">
               <option value="">Service Frequency</option>';
-              foreach ($tenture as $key => $value) {
-            if(in_array($value->tenturename, $quotedetailsnew[0])) {
+            foreach ($tenture as $key => $value) {
+                if(in_array($value->tenturename, $quotedetailsnew[0])) {
                   $selectedsf = "selected";
                 } else {
                   $selectedsf = "";
@@ -995,9 +995,9 @@ class SchedulerController extends Controller
           </div>
           <div class="col-md-6 mb-2">
             <label>Default Time (hh:mm)</label><br>
-            <div class="timepicker timepicker1" style="display:inline-block;">
-           <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" value="'.$time[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" value="'.$minute[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
+            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" value="'.$time[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" value="'.$minute[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
             </div></div>
           <div class="col-md-12 mb-3 position-relative">
             <label>Price</label>

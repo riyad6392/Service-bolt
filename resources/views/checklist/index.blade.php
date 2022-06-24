@@ -219,6 +219,53 @@
 </div>
 </div>
 
+<div class="modal fade" id="new-listupdate" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+ <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+  <div class="modal-content customer-modal-box">
+  <div class="modal-body">
+   <div class="add-customer-modal">
+	  <h5 id="servicetitle"></h5>
+	  <!-- <p class="lead">Lorem ipsum dolar si amen</p> -->
+	  </div>
+	 
+
+  @if(count($serviceData)>0)
+   @else
+   	   		<div style="color: red;">Step1: Please add a service in the services section.</div>
+  		<div style="color: red;">Step2: Then add checklist for services here.</div>
+
+  		
+  	@endif
+	 <form class="form-material m-t-40 form-valide" method="post" action="{{route('company.updateallchecklist')}}" enctype="multipart/form-data">
+    @csrf
+    <div class="row customer-form" id="product-box-tabs">
+			<div class="col-md-12">
+  	 	<div class="row" style="align-items: center;">
+
+	  		<div id="allchecklist"></div>
+
+	  <div class="col-md-12 text-end mb-2 append-buttons" style="margin-top: 5px">
+		  <div class="clearfix">
+		   <button type="button" id="add-button1" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="fa fa-plus fa-fw"></i>
+		   </button>
+		   <button type="button" id="remove-button1" class="btn btn-secondary float-left text-uppercase ml-1" disabled="disabled"><i class="fa fa-minus fa-fw"></i>
+		   </button>
+		  </div>
+		 </div>
+		</div>
+	</div>
+	<div class="col-lg-6 mb-3">
+	  	<button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
+	</div>
+	<div class="col-lg-6 mb-3">
+	  	<button type="submit" class="btn btn-add btn-block">Submit</button>
+	</div>
+</div>
+	</form>
+ </div>
+ </div>
+</div>
+</div>
 
 @endsection
 @section('script')
@@ -321,11 +368,29 @@
   		  var sname = $(this).data('sname');
          $("#serviceidnew").empty();
          $("#servicetitle").empty();
-        $("#new-listupdate").modal('show');
+        //$("#new-listupdate").modal('show');
         
-        $("#servicetitle").append(sname);
-        $("#serviceidnew").append("<option value="+sid+">"+sname+"</option>");
-	});
+        //$("#servicetitle").append(sname);
+        //$("#serviceidnew").append("<option value="+sid+">"+sname+"</option>");
+
+        
+        $.ajax({
+            url:'{{route('company.vieweditallchecklistmodal')}}',
+            data: {
+              'sid':sid,
+              'sname':sname,
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              //console.log(data.html);
+              $('#allchecklist').html(data.html);
+              $("#new-listupdate").modal('show')
+            }
+        })
+    });
+
 
     $('html').on('click','#editchecklist',function() {
       var cid = $(this).data('id');
@@ -340,7 +405,7 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.html);
+              console.log(data.html);
               $('#vieweditaddressmodaldata').html(data.html);
             }
         })

@@ -255,6 +255,10 @@ Route::group([
     Route::any('/checklist/vieweditchecklistmodal', [ChecklistController::class, 'vieweditchecklistmodal'])->name('vieweditchecklistmodal');
     Route::any('/checklist/updatechecklist', [ChecklistController::class, 'updatechecklist'])->name('updatechecklist');
 
+    Route::any('/checklist/updateallchecklist', [ChecklistController::class, 'updateallchecklist'])->name('updateallchecklist');
+
+    Route::any('/checklist/vieweditallchecklistmodal', [ChecklistController::class, 'vieweditallchecklistmodal'])->name('vieweditallchecklistmodal');
+
     Route::any('/scheduler/deleteTicket', [SchedulerController::class, 'deleteTicket'])->name('deleteTicket');
 
     Route::any('/scheduler/getworker', [SchedulerController::class, 'getworker'])->name('getworker');

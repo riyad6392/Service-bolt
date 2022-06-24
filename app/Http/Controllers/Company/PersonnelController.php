@@ -199,7 +199,7 @@ class PersonnelController extends Controller
                 </div>
               <button class="btn mb-3 btn-block btn-schedule" data-bs-toggle="modal" data-bs-target="#see-timesheet" id="seetimesheet" data-id="'.$PersonnelData[$datacount]->id.'" style="pointer-events:block;margin-top:14px;">See Time Sheet</button>
               <button class="btn mb-3 btn-block btn-schedule" data-bs-toggle="modal" data-bs-target="#see-timeoff" id="seetimeoff" data-id="'.$PersonnelData[$datacount]->id.'" style="pointer-events:block;margin-top:14px;">PTO</button>
-              <a class="btn btn-edit w-100 p-3" data-bs-toggle="modal" data-bs-target="#edit-personnel" id="editPersonnel" data-id="'.$PersonnelData[$datacount]->id.'">Edit</a>
+              <a class="btn mb-3 btn-block btn-schedule" data-bs-toggle="modal" data-bs-target="#edit-personnel" id="editPersonnel" data-id="'.$PersonnelData[$datacount]->id.'">Edit</a>
               <a href="'.$paymentsettingurl.'" class="add-btn-yellow w-100" style="text-align:center;">Payment Setting</a>
             </div>
               
@@ -248,7 +248,7 @@ class PersonnelController extends Controller
                 </div>
               <button class="btn mb-3 btn-block btn-schedule" data-bs-toggle="modal" data-bs-target="#see-timesheet" id="seetimesheet" data-id="'.$PersonnelData[0]->id.'" style="pointer-events:block;margin-top:14px;">See Time Sheet</button>
               <button class="btn mb-3 btn-block btn-schedule" data-bs-toggle="modal" data-bs-target="#see-timeoff" id="seetimeoff" data-id="'.$PersonnelData[0]->id.'" style="pointer-events:block;margin-top:14px;">PTO</button>
-              <a class="btn btn-edit w-100 p-3" data-bs-toggle="modal" data-bs-target="#edit-personnel" id="editPersonnel" data-id="'.$PersonnelData[0]->id.'">Edit</a>
+              <a class="btn mb-3 btn-block btn-schedule" data-bs-toggle="modal" data-bs-target="#edit-personnel" id="editPersonnel" data-id="'.$PersonnelData[0]->id.'">Edit</a>
               <a href="'.$paymentsettingurl1.'" class="add-btn-yellow w-100" style="text-align:center;">Payment Setting</a>
             </div>
               

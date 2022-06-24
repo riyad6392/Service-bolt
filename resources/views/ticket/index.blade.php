@@ -627,8 +627,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	   </div>
 	   
 	    <div class="col-md-6 mb-2">
-	  	 <label>Default Time (hh:mm)</label><br>
-            <div class="timepicker timepicker1" style="display:inline-block;">
+            <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
             <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
             <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div>
@@ -749,9 +748,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	 		}
 	 	@endphp
 		<div class="col-md-12 mb-3">
-	  	<select class="selectpicker form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
+	  	<select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
 	  		@foreach($services as $key =>$value)
-				<option value="{{$value->id}}">{{$value->servicename}}</option>
+				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}">{{$value->servicename}}</option>
 			@endforeach
 		</select>
 	   </div>
@@ -792,10 +791,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	   </div>
 	   
 	   <div class="col-md-6 mb-2">
-	  	<label>Default Time (hh:mm)</label><br>
-            <div class="timepicker timepicker1" style="display:inline-block;">
-            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
+            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div>
         </div>
 
@@ -1068,25 +1066,68 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     $('#etc').attr('min', maxDate);
   
  });
-
-  	$(document).ready(function() {
-	    function gethours() {
-				var h=0;
+  function gethoursajax() {
+  			var h=0;
 				var m=0;
-				$('select.selectpicker').find('option:selected').each(function(){
+				$('select.selectpicker2').find('option:selected').each(function() {
 			   	h += parseInt($(this).data('hour'));
 				  m += parseInt($(this).data('min'));
 				  
 				});
-				console.log(h);
-				console.log(m);
+				var realmin = m % 60;
+    		var hours = Math.floor(m / 60);
+    		h = h+hours;
+				
 		    $("#time").val(h);
-				$("#minute").val(m);
+				$("#minute").val(realmin);
+	    }
+		
+		$(document).on('change', 'select.selectpicker2',function() {
+			gethoursajax();
+		});
+
+		 
+  	$(document).ready(function() {
+	   function gethours() {
+				var h=0;
+				var m=0;
+				$('select.selectpicker').find('option:selected').each(function() {
+			   	h += parseInt($(this).data('hour'));
+				  m += parseInt($(this).data('min'));
+				  
+				});
+				var realmin = m % 60;
+    		var hours = Math.floor(m / 60);
+    		h = h+hours;
+				
+		    $("#time").val(h);
+				$("#minute").val(realmin);
 	    }
 		
 		$('select.selectpicker').on('change', function() {
 			gethours();
 		});
+		$('.selectpicker1').selectpicker();
+		function gethours1() {
+				var h=0;
+				var m=0;
+				$('select.selectpicker1').find('option:selected').each(function() {
+			   	h += parseInt($(this).data('hour'));
+				  m += parseInt($(this).data('min'));
+				  
+				});
+				var realmin = m % 60;
+    		var hours = Math.floor(m / 60);
+    		h = h+hours;
+				
+		    $("#time1").val(h);
+				$("#minute1").val(realmin);
+	    }
+		
+		$('select.selectpicker1').on('change', function() {
+			gethours1();
+		});
+
 		$('#customerid').on('change', function() {
 			var customerid = this.value;
 			$("#address1").html('');
@@ -1148,8 +1189,28 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 			});
 	}); 
 
+ $('.selectpicker2').selectpicker();
+		function gethours2() {
+				var h=0;
+				var m=0;
+				$('select.selectpicker2').find('option:selected').each(function() {
+			   	h += parseInt($(this).data('hour'));
+				  m += parseInt($(this).data('min'));
+				  
+				});
+				var realmin = m % 60;
+    		var hours = Math.floor(m / 60);
+    		h = h+hours;
+				console.log(h);
+		    $("#time").val(h);
+				$("#minute").val(realmin);
+	    }
+		
+		$('select.selectpicker2').on('change', function() {
+			gethours2();
+		});
  $(document).on('click','#editTickets',function(e) {
-   $('.selectpicker').selectpicker();
+   $('.selectpicker2').selectpicker();
    var id = $(this).data('id');
    var dataString =  'id='+ id;
    $.ajax({
@@ -1161,7 +1222,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             success:function(data) {
               console.log(data.html);
               $('#viewmodaldata1').html(data.html);
-              $('.selectpicker').selectpicker({
+              $('.selectpicker2').selectpicker({
                 size: 3
               });
             }

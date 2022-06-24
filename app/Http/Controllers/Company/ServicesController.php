@@ -108,7 +108,6 @@ class ServicesController extends Controller
        $productData = Inventory::where('user_id',$auth_id)->orderBy('id','ASC')->get();
        $services = Service::where('id', $request->id)->get()->toArray();
        $inventory = Inventory::where('user_id', $auth_id)->get();
-
        $checklistData = DB::table('checklist')->select('*')->where('serviceid',$request->id)->get();
        $tenture = Tenture::where('status','Active')->get();
        if($services[0]['image'] != null) {

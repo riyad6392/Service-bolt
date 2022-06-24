@@ -590,6 +590,74 @@ $(document).ready(function() {
     enableButtonAdd();
   });
 });
+
+
+var buttonAdd1 = $("#add-button1");
+  var buttonRemove1 = $("#remove-button1");
+  
+  var className1 = ".dynamic-fieldnew";
+  var count = 0;
+  var field = "";
+  var maxFields =50;
+
+  function totalFields1() {
+    return $(className1).length;
+  }
+
+  function addNewField1() {
+    count = totalFields1() + 1;
+    field = $("#dynamic-fieldnew-1").clone();
+    field.attr("id", "dynamic-fieldnew-" + count);
+    field.children("label").text("Field " + count);
+    field.find("input").val("");
+    $(className1 + ":last").after($(field));
+  }
+
+  function removeLastField1() {
+    if (totalFields1() > 1) {
+      $(className1 + ":last").remove();
+    }
+  }
+
+  function enableButtonRemove1() {
+    if (totalFields1() === 2 || totalFields1() >= 2) {
+      buttonRemove1.removeAttr("disabled");
+      buttonRemove1.addClass("shadow-sm");
+    }
+  }
+
+  function disableButtonRemove1() {
+    if (totalFields1() === 1) {
+      buttonRemove1.attr("disabled", "disabled");
+      buttonRemove1.removeClass("shadow-sm");
+    }
+  }
+
+  function disableButtonAdd1() {
+    if (totalFields1() === maxFields) {
+      buttonAdd1.attr("disabled", "disabled");
+      buttonAdd1.removeClass("shadow-sm");
+    }
+  }
+
+  function enableButtonAdd1() {
+    if (totalFields1() === (maxFields - 1)) {
+      buttonAdd1.removeAttr("disabled");
+      buttonAdd1.addClass("shadow-sm");
+    }
+  }
+
+  buttonAdd1.click(function() {
+    addNewField1();
+    enableButtonRemove1();
+    disableButtonAdd1();
+  });
+
+  buttonRemove1.click(function() {
+    removeLastField1();
+    disableButtonRemove1();
+    enableButtonAdd1();
+  });
    
 </script>
 

@@ -50,6 +50,16 @@
     padding: 8px 34px;
     box-shadow: 0px 0px 10px #ccc;
 }
+.accept-btn {
+    background-color: limegreen;
+    color: #fff;
+    padding: 5px 8px!important;
+}
+.reject-btn {
+    background-color: red;
+    color: #fff;
+    padding: 5px 8px!important;
+}
 </style>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
@@ -58,15 +68,7 @@
       <div class="col-md-12">
         <div class="side-h3 d-flex justify-content-between">
        <h3>PTO</h3>
-      <a href="#" data-bs-toggle="modal" data-bs-target="#request-modal" style="background: #FEE200;color: #000;
-    margin: 0;
-    padding: 10px 20px;
-    border-radius: 13px;
-    text-decoration: none;
-    position: relative;
-    right: 49px;">
-        Add PTO
-      </a>
+     
         @if(Session::has('success'))
 
               <div class="alert alert-success" id="selector">
@@ -84,7 +86,18 @@
       <div class="card">
      <div class="card-body">
      <div class="row">
-      <form method="post" action="{{route('company.searchtimeoff') }}" class="row">
+      <div class="col-md-12 text-end mb-4">
+           <a href="#" data-bs-toggle="modal" data-bs-target="#request-modal" style="background: #FEE200;color: #000;
+    margin: 0;
+    padding: 10px 20px;
+    border-radius: 13px;
+    text-decoration: none;
+    position: relative;
+    ">
+        Add PTO +
+      </a>
+      </div>
+      <form method="post" action="{{route('company.searchtimeoff') }}" class="row pe-0">
       @csrf
       <input type="hidden" name="phiddenid" id="phiddenid" value="">
       <div class="col-lg-3 mb-3">
@@ -110,7 +123,7 @@
           <input type="date" id="until" value="{{$currentdate}}" name="until" class="form-control">
         </div>
       @endif
-      <div class="col-lg-3 mb-3">
+      <div class="col-lg-3 mb-3 pe-0" >
        <button class="btn btn-block button" type="submit" id="search1">Search</button>
       </div>
 
@@ -125,7 +138,7 @@
               <th style="display: none;">Id</th>
               <th>NAME</th>
               <th>DATE</th>
-              <th>Notes</th>
+              <th style="width:300px!important">Notes</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -136,13 +149,13 @@
               <td style="display: none;">{{$value->id}}</td>
               <td>{{$value->personnelname}}</td>
               <td>{{$value->date1}}</td>
-              <td style="white-space:break-spaces">{{$value->notes}}</td>
+              <td style="white-space:break-spaces;width:300px!important">{{$value->notes}}</td>
               <td>
                 @if($value->status!=null)
-                  <a class="btn btn-edit p-3 w-auto" id="accept" data-id="'.$value->id.'" style="pointer-events:none;">{{$value->status}}</a>
+                  <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="'.$value->id.'" style="pointer-events:none;">{{$value->status}}</a>
                 @else
-                  <a class="btn btn-edit p-3 w-auto" id="accept" data-id="{{$value->id}}">Accept</a>
-                  <a class="btn btn-edit p-3 w-auto" id="reject" data-id="{{$value->id}}">Reject</a>
+                  <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="{{$value->id}}">Accept</a>
+                  <a class="btn btn-edit reject-btn p-3 w-auto" id="reject" data-id="{{$value->id}}">Reject</a>
                 @endif
               </td>
               

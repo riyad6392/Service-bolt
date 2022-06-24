@@ -442,7 +442,7 @@ th.fc-resource-cell img {
                                     <p style="margin: 0; font-weight: 500;color: #000;">Tickets to Assign</p>
                                 </div>
                             </div>
-                           
+                            
                             @if($userData->openingtime!="")
                             <input type="hidden" name="openingtime" id="openingtime" value="{{$userData->openingtime}}:00">
                             <input type="hidden" name="closingtime" id="closingtime" value="{{$userData->closingtime}}:00">
@@ -639,7 +639,7 @@ th.fc-resource-cell img {
      <div class="col-md-12 mb-3">
         <select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
           @foreach($services as $key =>$value)
-          <option value="{{$value->id}}">{{$value->servicename}}</option>
+          <option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}">{{$value->servicename}}</option>
         @endforeach
        </select>
      </div>
@@ -680,10 +680,9 @@ th.fc-resource-cell img {
      </div>
      
      <div class="col-md-6 mb-2">
-      <label>Default Time (hh:mm)</label><br>
-            <div class="timepicker timepicker1" style="display:inline-block;">
-            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
+            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div>
         </div>
 
@@ -799,6 +798,25 @@ th.fc-resource-cell img {
 <script type="">
     $(document).ready(function () {
         $('.selectpicker1').selectpicker();
+        function gethours1() {
+                var h=0;
+                var m=0;
+                $('select.selectpicker1').find('option:selected').each(function() {
+                h += parseInt($(this).data('hour'));
+                  m += parseInt($(this).data('min'));
+                  
+                });
+                var realmin = m % 60;
+            var hours = Math.floor(m / 60);
+            h = h+hours;
+                
+            $("#time").val(h);
+                $("#minute").val(realmin);
+        }
+        
+        $(document).on('change', 'select.selectpicker1',function() {
+            gethours1();
+        });
         $('html, body').animate({
             scrollTop: $('#srcoll-here').offset().top
         }, 'slow');
@@ -1182,7 +1200,7 @@ th.fc-resource-cell img {
         });
 
     $(document).on('click','#editsticket',function(e) {
-         $('.selectpicker').selectpicker();
+         $('.selectpicker1').selectpicker();
         var id = $(this).data('id');
         var dataString =  'id='+ id;
         $.ajax({
@@ -1194,7 +1212,7 @@ th.fc-resource-cell img {
             success:function(data) {
               console.log(data.html);
               $('#sviewmodaldata').html(data.html);
-              $('.selectpicker').selectpicker({
+              $('.selectpicker1').selectpicker({
                 size: 5
               });
             }
