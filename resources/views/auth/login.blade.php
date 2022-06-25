@@ -59,6 +59,11 @@
         </span>
     @enderror
   </div>
+   <div class="mb-4">
+        <div class="">
+          <label for="css"><a href="{{ route('login.forget.get') }}" style="color: #FAED61;">Forgot Password ?</a>
+        </div>
+    </div>
    <div class="form-group row" style="display: none;">
     <div class="col-md-6 offset-md-4">
         <div class="form-check">

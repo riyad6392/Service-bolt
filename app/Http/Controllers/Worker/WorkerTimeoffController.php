@@ -66,6 +66,7 @@ class WorkerTimeoffController extends Controller
           $data['date'] = $fulldate;
           $data['date1'] = $value;
           $data['notes'] = $notes;
+          $data['submitted_by'] = "Personnel";
           //dd($data);
           Workertimeoff::create($data);
         }

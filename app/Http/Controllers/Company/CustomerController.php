@@ -154,6 +154,21 @@ class CustomerController extends Controller
         return view('customer.view',compact('customerData','customerAddress','recentTicket'));
     }
 
+    public function viewall(Request $request ,$id,$address) {
+       $auth_id = auth()->user()->id;
+        if(auth()->user()->role == 'company') {
+            $auth_id = auth()->user()->id;
+        } else {
+           return redirect()->back();
+        }
+        $customerData = Customer::where('id',$id)->get(); 
+        $customerAddress = Address::where('customerid',$id)->get();
+        $recentTicket = Quote::where('customerid',$id)->where('address',$address)->orderBy('id','DESC')->get();
+        $customeridv = $id;
+        return view('customer.viewall',compact('customerData','customerAddress','recentTicket','customeridv','address'));
+    }
+
+
     public function viewcustomerquotemodal(Request $request)
     {
        $json = array();

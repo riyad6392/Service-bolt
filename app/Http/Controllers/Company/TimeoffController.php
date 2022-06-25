@@ -144,6 +144,7 @@ use Image;
           $data['date'] = $fulldate;
           $data['date1'] = $value;
           $data['notes'] = $notes;
+          $data['submitted_by'] = "Self";
           Workertimeoff::create($data);
         }
       }

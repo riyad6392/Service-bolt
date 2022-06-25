@@ -869,4 +869,11 @@ class PersonnelController extends Controller
       $timeoff->save();
       echo "1";
     }
+
+    public function deleterequest(Request $request) 
+    {
+      $id = $request->id;
+      Workertimeoff::where('id', $id)->delete();
+      echo "1";
+    }
 }

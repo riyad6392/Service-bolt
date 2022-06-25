@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Workertimeoff extends Model
 {
     protected $table = 'timeoff';
-    protected $fillable = ['workerid','userid','date','date1','notes','status'];
+    protected $fillable = ['workerid','userid','date','date1','notes','submitted_by','status'];
 }

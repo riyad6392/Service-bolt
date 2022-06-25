@@ -6,7 +6,7 @@
       <div class="col-md-12">
         <div class="side-h3">
        <h3>PTO</h3>
-<a href="#" data-bs-toggle="modal" data-bs-target="#request-modal" style="background: #FEE200;color: #000;margin: 0;padding: 10px 20px;border-radius: 13px;text-decoration: none;position: relative;left: 922px;bottom: 25px;">Add PTO</a>
+  <a href="#" data-bs-toggle="modal" data-bs-target="#request-modal" style="background: #FEE200;color: #000;margin: 0;padding: 10px 20px;border-radius: 13px;text-decoration: none;position: relative;left: 922px;bottom: 25px;">Add PTO</a>
         @if(Session::has('success'))
 
               <div class="alert alert-success" id="selector">

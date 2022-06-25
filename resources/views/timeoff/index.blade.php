@@ -139,23 +139,34 @@
               <th>NAME</th>
               <th>DATE</th>
               <th style="width:300px!important">Notes</th>
+              <th style="">Submitted By</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             @if(isset($stimesheetData))
             @foreach($stimesheetData as $key => $value)
+            @php
+            if($value->submitted_by!="") {
+               $submittedby = $value->submitted_by; 
+            } else {
+              $submittedby = "-";
+            }
+
+            @endphp
             <tr>
               <td style="display: none;">{{$value->id}}</td>
               <td>{{$value->personnelname}}</td>
               <td>{{$value->date1}}</td>
               <td style="white-space:break-spaces;width:300px!important">{{$value->notes}}</td>
+              <td>{{$submittedby}}</td>
               <td>
                 @if($value->status!=null)
                   <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="'.$value->id.'" style="pointer-events:none;">{{$value->status}}</a>
                 @else
                   <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="{{$value->id}}">Accept</a>
                   <a class="btn btn-edit reject-btn p-3 w-auto" id="reject" data-id="{{$value->id}}">Reject</a>
+                  <a class="btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->id}}">Delete</a>
                 @endif
               </td>
               
@@ -268,6 +279,7 @@ $('#selector').delay(2000).fadeOut('slow');
             refresh: true,
             success:function(data) {
                swal("Done!","It was succesfully Accepted!","success");
+               location.reload();
             }
         })
   });
@@ -284,8 +296,43 @@ $('html').on('click','#reject',function() {
             refresh: true,
             success:function(data) {
                swal("Done!","It was succesfully Rejected!","success");
+               location.reload();
             }
         })
+  });
+
+$('html').on('click','#delete',function() {
+   var id = $(this).data('id');
+   var dataString =  'id='+ id;
+  swal({
+    title: "Are you sure!",
+    text: "Are you sure? you want to delete it!",
+    type: "error",
+    confirmButtonClass: "btn-danger",
+    confirmButtonText: "Yes!",
+    showCancelButton: true,
+},
+function() {
+$.ajax({
+        url:'{{route('company.deleterequest')}}',
+        data: dataString,
+        method: 'post',
+        dataType: 'json',
+        refresh: true,
+       success:function()
+       {
+        swal({
+           title: "Done!", 
+           text: "Deleted Successfully!", 
+           type: "success"
+        },
+        function() { 
+               location.reload();
+            }
+        );
+       }
+      })
+});
   });
 
 $('.puser').on('change', function() {

@@ -90,6 +90,14 @@ Route::post('signupcomplete1', [App\Http\Controllers\Auth\AuthController::class,
 
 Route::get('/login', [App\Http\Controllers\Auth\AuthController::class, 'login'])->name('login');
 
+//company forget password start
+    Route::get('/login/forget', [App\Http\Controllers\Auth\ForgotController::class, 'showCompanyForgetPasswordForm'])->name('login.forget.get');
+Route::post('/login/forget', [App\Http\Controllers\Auth\ForgotController::class, 'submitCompanyForgetPasswordForm'])->name('login.forget.post');
+
+Route::get('companyreset-password/{token}', [App\Http\Controllers\Auth\ForgotController::class, 'showCompanyResetPasswordForm'])->name('login.reset.get');
+Route::post('companyreset-password', [App\Http\Controllers\Auth\ForgotController::class, 'submitCompanyResetPasswordForm'])->name('login.reset.post');
+//end here
+
 // worker login start
 Route::get('/personnel/login', [App\Http\Controllers\Auth\AuthController::class, 'workerlogin'])->name('personnel/login');
 Route::post('/personnel/login', [App\Http\Controllers\Auth\LoginController::class, 'customLogin1'])->name('personnel/login');
@@ -132,6 +140,9 @@ Route::group([
     Route::any('/customer/viewservicepopup', [CustomerController::class, 'viewservicepopup'])->name('viewservicepopup');
     Route::any('/customer/view/{id}', [CustomerController::class, 'view'])->name('customerview');
     Route::any('/customer/address', [CustomerController::class, 'address'])->name('customeraddresscreate');
+
+    Route::any('/customer/ticketviewall/{id}/{address}', [CustomerController::class, 'viewall'])->name('ticketviewall');
+
     Route::any('/customer/viewcustomerquotemodal', [CustomerController::class, 'viewcustomerquotemodal'])->name('viewcustomerquotemodal');
     Route::any('/customer/customercreatequote', [CustomerController::class, 'customercreatequote'])->name('customercreatequote');
 
@@ -175,6 +186,8 @@ Route::group([
     Route::any('/personnel/accepttime', [PersonnelController::class, 'accepttime'])->name('accepttime');
     Route::any('/personnel/rejecttime', [PersonnelController::class, 'rejecttime'])->name('rejecttime');
      Route::any('/personnel/paymentsetting/{id}', [PersonnelController::class, 'paymentsetting'])->name('paymentsetting');
+
+    Route::any('/personnel/deleterequest', [PersonnelController::class, 'deleterequest'])->name('deleterequest');
 
     //Inventory Create
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory');
