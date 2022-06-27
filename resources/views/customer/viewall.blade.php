@@ -137,10 +137,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
      </div>
    </div>
+</div>
 
-
-
-          </div>
+<div class="modal fade" id="service-list-dot" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div id="viewservicelistdata"></div>
+    </div>
+  </div>
+</div>
      
 @endsection
 <div class="modal fade" id="view-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">

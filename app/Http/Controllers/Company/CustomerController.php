@@ -387,21 +387,55 @@ class CustomerController extends Controller
         $imagepath = url('/').'/uploads/servicebolt-noimage.png';
       }
 
+      $serviceid = explode(',', $quoteData[$datacount]->serviceid);
+
+       $servicedetails = Service::select('servicename')->whereIn('id', $serviceid)->get();
+
+      foreach ($servicedetails as $key => $value) {
+        $sname[] = $value['servicename'];
+      } 
+      $servicename = implode(',', $sname);
+
       $html ='<div class="row"><h5 class="mb-4">Ticket Info</h5><div class="col-md-7">
          <div class="padding-tree">
-           <h5>#'.$quoteData[$datacount]->id.' <span style="color: #B0B7C3;">'.$quoteData[$datacount]->servicename.'</span></h5>
+           <h5>#'.$quoteData[$datacount]->id.'</h5>
+         </div>
+         <div class="col-md-12 mb-2">
+            <label>Customer Name: &nbsp;</label>'.$quoteData[$datacount]->customername.'</div>
+          <div class="col-md-12 mb-2">
+           <div class="input_fields_wrap">
+              <div class="mb-3">
+              <label>Customer Address:&nbsp;</label>
+                '.$quoteData[$datacount]->address.'
+              </div>
+          </div>
+        </div>
+        </div>
+         <div>
+           <p class="">Service Name: </p>
+           <h6 class="">'.$servicename.'</h6>
+         </div>
+         <div class="col-md-12 mb-2">
+            <label>Frequency:&nbsp;</label>'.$quoteData[$datacount]->frequency.'
+          </div>
+          <div class="col-md-12 mb-2">
+            <label>Default Time: &nbsp;</label>'.$quoteData[$datacount]->time.' '.$quoteData[$datacount]->minute.'
+            
+          </div>
+          <div class="col-md-12 mb-3">
+            <label>Price:&nbsp;</label>'.$quoteData[$datacount]->price.'
+          </div>
+         <div>
+           <p class="">Personnel Name: </p>
+           <h6 class="">'.$quoteData[$datacount]->personnelname.'</h6>
          </div>
          <div>
-           <p class="cstmr">Personnel Name</p>
-           <h6 class="billy">'.$quoteData[$datacount]->personnelname.'</h6>
+           <p class="">Personnel Phone: </p>
+           <h6 class="">'.$quoteData[$datacount]->phone.'</h6>
          </div>
          <div>
-           <p class="cstmr">Personnel Phone</p>
-           <h6 class="billy">'.$quoteData[$datacount]->phone.'</h6>
-         </div>
-         <div>
-           <p class="cstmr">Date</p>
-           <h6  class="billy">'.$quoteData[$datacount]->etc.'</h6>
+           <p class="">Date: </p>
+           <h6  class="">'.$quoteData[$datacount]->etc.'</h6>
          </div>
          </div>
          <div class="col-md-5">
@@ -417,7 +451,16 @@ class CustomerController extends Controller
         } else {
           $imagepath = url('/').'/uploads/servicebolt-noimage.png';
         }
-      }
+      } 
+
+      $serviceid = explode(',', $quoteData->serviceid);
+
+       $servicedetails = Service::select('servicename')->whereIn('id', $serviceid)->get();
+
+      foreach ($servicedetails as $key => $value) {
+        $sname[] = $value['servicename'];
+      } 
+      $servicename = implode(',', $sname);
         
       $html =
 
@@ -425,19 +468,44 @@ class CustomerController extends Controller
       <h5 class="mb-4">Ticket Info</h5>
       <div class="col-md-7">
          <div class="padding-tree">
-           <h5>#'.$quoteData->id.' <span style="color: #B0B7C3;">'.$quoteData->servicename.'</span></h5>
+           <h5>#'.$quoteData->id.'</h5>
+         </div>
+         <div class="col-md-12 mb-2">
+            <label>Customer Name: &nbsp;</label>'.$quoteData->customername.'</div>
+          <div class="col-md-12 mb-2">
+           <div class="input_fields_wrap">
+              <div class="mb-3">
+              <label>Customer Address:&nbsp;</label>
+                '.$quoteData->address.'
+              </div>
+          </div>
+        </div>
+        </div>
+         <div>
+           <p class="">Service Name: </p>
+           <h6 class="">'.$servicename.'</h6>
+         </div>
+         <div class="col-md-12 mb-2">
+            <label>Frequency:&nbsp;</label>'.$quoteData->frequency.'
+          </div>
+          <div class="col-md-12 mb-2">
+            <label>Default Time: &nbsp;</label>'.$quoteData->time.' '.$quoteData->minute.'
+            
+          </div>
+          <div class="col-md-12 mb-3">
+            <label>Price:&nbsp;</label>'.$quoteData->price.'
+          </div>
+         <div>
+           <p class="">Personnel Name: </p>
+           <h6 class="">'.$quoteData->personnelname.'</h6>
          </div>
          <div>
-           <p class="cstmr">Personnel Name</p>
-           <h6 class="billy">'.$quoteData->personnelname.'</h6>
+           <p class="">Personnel Phone: </p>
+           <h6 class="">'.$quoteData->phone.'</h6>
          </div>
          <div>
-           <p class="cstmr">Personnel Phone</p>
-           <h6 class="billy">'.$quoteData->phone.'</h6>
-         </div>
-         <div>
-           <p class="cstmr">Date</p>
-           <h6  class="billy">'.$quoteData->etc.'</h6>
+           <p class="">Date: </p>
+           <h6  class="">'.$quoteData->etc.'</h6>
          </div>
          </div>
          <div class="col-md-5">

@@ -16,10 +16,12 @@
     border-radius: 14px;
 }
 .container-checkbox .checkmark:after {
-    left: 13px;
-    top: 9px;
-    width: 5px;
-    height: 10px;
+    left: 7px!important;
+    top: 4px!important;
+    width: 5px!important;
+    height: 10px!important;
+    border-radius: initial!important;
+    background-color: transparent!important;
     border: solid white;
     border-width: 0 3px 3px 0;
     -webkit-transform: rotate(45deg);
@@ -136,9 +138,13 @@
     font-weight: 500;
     width: 35%;
 }
-
+.selection-div li .container-checkbox{
+   font-size: 18px!important;
+    font-weight: 500;
+    width: 57%;
+}
 .payment-page input[type='text'] {
-  width: 150px;
+  width: 100px;
 }
  .radio-div{
     display: block;
@@ -214,6 +220,9 @@
 .third-section ul {
     padding: 0;
 }
+.payment-page .input-group{
+  width: auto;
+}
         </style>
 <div class="">
   <div class="content payment-page">
@@ -228,6 +237,7 @@
         <div class="settings-payement">
           <h3>Personnel Payment Settings</h3>
         </div>
+        <hr>
         <div class="first-section">
           <label class="radio-div active">Hourly Payment <input type="radio" checked="checked" name="method" class="custom-radio">
             <span class="checkmark"></span>
@@ -237,7 +247,10 @@
               <label class="radio-div me-2">Amount Per Hour : <input type="radio" checked="checked" name="hourly-payment" class="custom-radio">
                 <span class="checkmark"></span>
               </label>
-              <input type="text" name="" class="form-control" placeholder="$12">
+               <div class="input-group mb-3">
+  <span class="input-group-text">$</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+</div>
             </li>
           </ul>
         </div>
@@ -251,25 +264,37 @@
               <label class="radio-div me-2">Monthly Salary Amount : <input type="radio" checked="checked" name="fixed-salary" class="custom-radio">
                 <span class="checkmark"></span>
               </label>
-              <input type="text" name="" class="form-control" placeholder="$12">
+             <div class="input-group mb-3">
+  <span class="input-group-text">$</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+</div>
             </li>
             <li class="d-flex">
               <label class="radio-div me-2">Bi Monthly Salary Amount : <input type="radio" checked="checked" name="fixed-salary" class="custom-radio">
                 <span class="checkmark"></span>
               </label>
-              <input type="text" name="" class="form-control" placeholder="$12">
+                 <div class="input-group mb-3">
+  <span class="input-group-text">$</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+</div>
             </li>
             <li class="d-flex">
               <label class="radio-div me-2">Weekly Salary Amount : <input type="radio" checked="checked" name="fixed-salary" class="custom-radio">
                 <span class="checkmark"></span>
               </label>
-              <input type="text" name="" class="form-control" placeholder="$12">
+                <div class="input-group mb-3">
+  <span class="input-group-text">$</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+</div>
             </li>
             <li class="d-flex">
               <label class="radio-div me-2">Bi Weekly Salary Amount : <input type="radio" checked="checked" name="fixed-salary" class="custom-radio">
                 <span class="checkmark"></span>
               </label>
-              <input type="text" name="" class="form-control" placeholder="$12">
+               <div class="input-group mb-3">
+  <span class="input-group-text">$</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+</div>
             </li>
           </ul>
         </div>
@@ -288,22 +313,31 @@
                 
                   <ul class="selection-div">
                     <li class="d-flex">
-             <label class="container-checkbox active me-5">All Services  :<input type="checkbox" checked="checked" name="amount-wise">
+             <label class="container-checkbox active me-4">All Services/Products  <input type="checkbox" checked="checked" name="amount-wise">
             <span class="checkmark"></span>
-          </label>
+          </label>   <div class="input-group mb-3">
+  <span class="input-group-text">$</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+</div>
                
             </li>
              <li class="d-flex">
-             <label class="container-checkbox me-5">Service 1 :<input type="checkbox" name="amount-wise">
+             <label class="container-checkbox me-4">Service 1 :<input type="checkbox" name="amount-wise">
             <span class="checkmark"></span>
           </label>
-              <input type="text" name="" class="form-control" placeholder="$12">
+                <div class="input-group mb-3">
+  <span class="input-group-text">$</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+</div>
             </li>
              <li class="d-flex">
-             <label class="container-checkbox me-5">Service 2 :<input type="checkbox" name="amount-wise">
+             <label class="container-checkbox me-4">Products 1 :<input type="checkbox" name="amount-wise">
             <span class="checkmark"></span>
           </label>
-              <input type="text" name="" class="form-control" placeholder="$12">
+               <div class="input-group mb-3">
+  <span class="input-group-text">$</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+</div>
             </li>
                   </ul>
                 
@@ -316,24 +350,31 @@
               </label>
                 <ul class="selection-div">
                     <li class="d-flex">
-          <label class="container-checkbox me-5">All Services <input type="checkbox" name="percent-wise">
+          <label class="container-checkbox me-4">All Services/Products <input type="checkbox" name="percent-wise">
             <span class="checkmark"></span>
           </label>
-               
+                  <div class="input-group mb-3">
+
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"><span class="input-group-text">%</span>
+</div>
             </li>
              <li class="d-flex">
-             <label class="container-checkbox me-5">Service 1 : <input type="checkbox" name="percent-wise">
+             <label class="container-checkbox me-4">Service 1 : <input type="checkbox" name="percent-wise">
             <span class="checkmark"></span>
           </label>
-              <input type="text" name="" class="form-control" placeholder="$12">
+               <div class="input-group mb-3">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"><span class="input-group-text">%</span>
+</div>
             </li>
              <li class="d-flex">
               
 
-              <label class="container-checkbox me-5">Service 2 :<input type="checkbox" name="percent-wise">
+              <label class="container-checkbox me-4">Product 1 :<input type="checkbox" name="percent-wise">
             <span class="checkmark"></span>
           </label>
-              <input type="text" name="" class="form-control" placeholder="$12">
+                <div class="input-group mb-3">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"><span class="input-group-text">%</span>
+</div>
             </li>
                   </ul>
           </div>

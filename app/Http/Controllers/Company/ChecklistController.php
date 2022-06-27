@@ -69,35 +69,28 @@ class ChecklistController extends Controller
         $imagefiles = $request->file('checklistimage');
         if($imagefiles!=null) {
           if(isset($imagefiles[$key])) {
-           //$postImage = date('YmdHis') . "." . $imagefiles[$key]->getClientOriginalExtension();
-
-          $path = 'uploads/checklist/thumbnail/';
-          $postImage = custom_fileupload($imagefiles[$key],$path);
-
-           //$imagefiles[$key]->move(public_path('uploads/checklist/thumbnail/'), $postImage);
+           
+           $path = 'uploads/checklist/thumbnail/';
+           $postImage = custom_fileupload($imagefiles[$key],$path);
          } else {
            $postImage = null;
          }
        } else {
           $postImage = null;
        }
-          
-          $data['checklistimage'] = $postImage;
-        //image logic end
+        $data['checklistimage'] = $postImage;
         Checklist::create($data);
       }
       if($request->adminck) {
-      foreach($request->adminck as $key => $value) {
-        $admind = DB::table('adminchecklist')->where('id',$value)->first();
-        $data['userid'] = $auth_id;
-        $data['serviceid'] = $request->serviceid;
-        $data['checklist'] = $admind->checklist;
-        $data['checklistimage'] = $admind->image;
-
-        //image logic end
-        Checklist::create($data);
+        foreach($request->adminck as $key => $value) {
+          $admind = DB::table('adminchecklist')->where('id',$value)->first();
+          $data['userid'] = $auth_id;
+          $data['serviceid'] = $request->serviceid;
+          $data['checklist'] = $admind->checklist;
+          $data['checklistimage'] = $admind->image;
+          Checklist::create($data);
+        }
       }
-    }
       
       $request->session()->flash('success', 'Checklist point added successfully');
             
@@ -269,9 +262,10 @@ class ChecklistController extends Controller
                 <div class="staresd">
                  <div class="imgup d-flex w-100 justify-content-between align-items-start">
                  <div>
-                  <input type="text" class="form-control" placeholder="checklistname" name="point[]" id="point" value="'.$value->checklist.'" required="">
+                  <input type="text" class="form-control" placeholder="checklistname" name="pointed[]" id="point" value="'.$value->checklist.'" required="">
+                  <input type="hidden" name="pointids[]" id="pointids" value="'.$value->id.'">
 
-                  <input type="file" class="form-control" style="margin-bottom: 5px;margin-top: 10px;" name="checklistimage[]" accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg"></div>
+                  <input type="file" class="form-control" style="margin-bottom: 5px;margin-top: 10px;" name="checklistimageed[]" accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg"></div>
 
                   <img src="'.$userimage.'" class="defaultimage" style="width:30px;height:30px;border-radius:100%">
 
@@ -291,54 +285,28 @@ class ChecklistController extends Controller
     public function updateallchecklist(Request $request)
     {
       $auth_id = auth()->user()->id;
-      if($request->serviceid) {
-         $totlchelist =  DB::table('checklist')->where('serviceid',$request->serviceid)->get();
-      }
-      if(count($totlchelist)>0) {
-        Checklist::where('serviceid', $request->serviceid)->delete();
-      }
-
-      foreach($request->point as $key => $value) {
-        $data['userid'] = $auth_id;
-        $data['serviceid'] = $request->serviceid;
-        $data['checklist'] = $value;
-
-        //image logic start
-        $imagefiles = $request->file('checklistimage');
-        if($imagefiles!=null) {
-          if(isset($imagefiles[$key])) {
-           //$postImage = date('YmdHis') . "." . $imagefiles[$key]->getClientOriginalExtension();
-
-          $path = 'uploads/checklist/thumbnail/';
-          $postImage = custom_fileupload($imagefiles[$key],$path);
-
-           //$imagefiles[$key]->move(public_path('uploads/checklist/thumbnail/'), $postImage);
-         } else {
-           $postImage = null;
-         }
-       } else {
-          $postImage = null;
-       }
+    
+      foreach($request->pointids as $idkey => $idvalue) {
+        $pointids = isset($request->pointids[$idkey]);
+        $checklist=Checklist::find($idvalue);
+        if(empty($checklist)) {
           
-          $data['checklistimage'] = $postImage;
-        //image logic end
-        Checklist::create($data);
-      }
-      if($request->adminck) {
-      foreach($request->adminck as $key => $value) {
-        $admind = DB::table('adminchecklist')->where('id',$value)->first();
-        $data['userid'] = $auth_id;
-        $data['serviceid'] = $request->serviceid;
-        $data['checklist'] = $admind->checklist;
-        $data['checklistimage'] = $admind->image;
+          $checklist= new Checklist;
+          $checklist->userid = $auth_id;
+          $checklist->serviceid = $request->serviceid;
 
-        //image logic end
-        Checklist::create($data);
-      }
-    }
-      
+        }
+        $imagefiles = $request->file('checklistimageed');
+        if($imagefiles!=null) {
+            if(isset($imagefiles[$idkey])) {
+              $path = 'uploads/checklist/thumbnail/';
+              $checklist->checklistimage = custom_fileupload($imagefiles[$idkey],$path);
+           }
+        }
+        $checklist->checklist=$request->pointed[$idkey];
+        $checklist->save();  
+      } 
       $request->session()->flash('success', 'Checklist point updated successfully');
-            
       return redirect()->route('company.checklist');
     }
 }
