@@ -199,7 +199,7 @@
         @endforeach
       </select>
     </div>
-      <p>Choose dates needed off</p>
+      <p>Choose multiple dates needed off</p>
     </div>
     <div class="col-md-12">
     <input type="text" id="datepicker2" name="datepicker2" placeholder="Choose Date" style="cursor: pointer;" class="mb-3 form-control"></div>

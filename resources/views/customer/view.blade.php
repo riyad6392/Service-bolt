@@ -306,6 +306,26 @@ $(document).ready(function() {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
+
+   function gethours() {
+        var h=0;
+        var m=0;
+        $('select.selectpicker').find('option:selected').each(function() {
+          h += parseInt($(this).data('hour'));
+          m += parseInt($(this).data('min'));
+          
+        });
+        var realmin = m % 60;
+        var hours = Math.floor(m / 60);
+        h = h+hours;
+        $("#time").val(h);
+        $("#minute").val(realmin);
+      }
+    
+    $(document).on('change', 'select.selectpicker',function() {
+      gethours();
+    });
+
 $(document).on('click','#service_list_dot',function(e) {
    var id = $(this).data('id');
    var name = $(this).data('name');

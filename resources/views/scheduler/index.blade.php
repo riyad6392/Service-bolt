@@ -923,7 +923,7 @@ th.fc-resource-cell img {
             maxTime: $("#closingtime").val(),  
             allDaySlot: false,
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-            defaultView: 'agendaDay',
+            defaultView: 'agendaWeek',
             groupByResource: true,
             eventOverlap: true,
            // defaultEventMinutes: 30, 

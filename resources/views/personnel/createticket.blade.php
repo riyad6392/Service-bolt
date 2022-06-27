@@ -118,10 +118,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		</select>
 	   </div>
 	   <div class="col-md-6 mb-2">
-	   	<label>Default Time (hh:mm)</label><br>
-            <div class="timepicker timepicker1" style="display:inline-block;width: 145px;">
-            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+	   	    <div class="timepicker timepicker1" style="display:inline-block;width: 145px;">
+            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div>
 	  	<!-- <select class="form-select" name="time" required="">
 	        <option selected="" value="">Default Time</option>
@@ -288,7 +287,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
-
+   
+   function gethours() {
+        var h=0;
+        var m=0;
+        $('select.selectpicker').find('option:selected').each(function() {
+          h += parseInt($(this).data('hour'));
+          m += parseInt($(this).data('min'));
+        });
+        var realmin = m % 60;
+        var hours = Math.floor(m / 60);
+        h = h+hours;
+        $("#time").val(h);
+        $("#minute").val(realmin);
+      }
+    
+    $(document).on('change', 'select.selectpicker',function() {
+      gethours();
+    });
    $('#customerid1').on('change', function() {
 		var customerid = this.value;
 		$("#address2").html('');
@@ -314,7 +330,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 					$("#servicename").empty();
 
 					$.each(result.serviceData,function(key,value) {
-						$("#servicename").append('<option value="'+value.id+'">'+value.servicename+'</option>');
+						$("#servicename").append('<option value="'+value.id+'" data-hour="'+value.time+'" data-min="'+value.minute+'">'+value.servicename+'</option>');
 					});
 					
 					$('.selectpicker').selectpicker('refresh');

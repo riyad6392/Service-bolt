@@ -592,7 +592,7 @@ class WorkerTicketController extends Controller
 
       $sid = explode(',',$customer[0]->serviceid);
 
-       $data['serviceData'] = Service::whereIn('id',$sid)->get(["servicename","id"]);
+       $data['serviceData'] = Service::whereIn('id',$sid)->get(["servicename","id","time","minute"]);
        
         $data['address'] = Address::where("customerid",$request->customerid)
                     ->get(["address","id"]);
