@@ -239,12 +239,14 @@
         </div>
         <hr>
         <div class="first-section">
-          <label class="radio-div active">Hourly Payment <input type="radio" checked="checked" name="method" class="custom-radio">
+          <label class="radio-div active">Hourly Payment 
+            <input type="radio" checked="checked" name="method" class="custom-radio">
             <span class="checkmark"></span>
           </label>
           <ul class="selection-div">
             <li class="d-flex">
-              <label class="radio-div me-2">Amount Per Hour : <input type="radio" checked="checked" name="hourly-payment" class="custom-radio">
+              <label class="radio-div me-2">Amount Per Hour : 
+                <input type="radio" checked="checked" name="hourly-payment" class="custom-radio">
                 <span class="checkmark"></span>
               </label>
                <div class="input-group mb-3">
@@ -499,7 +501,9 @@
     padding-bottom: 12px;">1. Hire Date:</p>
           <input type="date" name="" class="form-control dates_picker">
         </div>
+         <div class="col-md-3" style="margin-left: 750px;margin-top: -45px;"><button type="submit" class="btn btn-add btn-block">Save</button></div>
       </div>
+
     </div>
   </div>
   <!-- Modal -->

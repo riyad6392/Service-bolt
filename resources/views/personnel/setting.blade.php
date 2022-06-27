@@ -65,6 +65,27 @@
     <label class="form-label">Email</label>
     <input type="email" class="form-control form-control-2" placeholder="Email Id" value="{{$workerData->email}}" name="email" readonly="">
   </div>
+  <div class="col-lg-6 mb-3">
+    <label class="form-label">Hired Date</label>
+    <input type="date" class="form-control form-control-2" placeholder="Hired Date" value="" name="hiredate" readonly="">
+  </div>
+ 
+  <label class="form-label">Total Earning</label>
+  <div class="col-lg-6 mb-3">
+    <select name="earning" id="earning" name="earning" class="form-control">
+      <option value="">Select Duration</option>
+      <option value="1week" selected>One Week</option>
+      <option value="1month">One Month</option>
+      <option value="6month">Six Month</option>
+      <option value="1year">One Year</option>
+    </select>
+  </div>
+  
+  <div class="col-lg-6 mb-3">
+    <!-- <label class="form-label">Amount</label> -->
+    <input type="text" class="form-control form-control-2" placeholder="Amount" value="$1000" name="amount" readonly="">
+  </div>
+
 </div>
 
 
