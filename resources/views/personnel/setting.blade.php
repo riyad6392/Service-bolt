@@ -1,184 +1,298 @@
-@extends('layouts.workerheader')
-@section('content')
+@extends('layouts.workerheader') @section('content')
 <style type="text/css">
-  .form-control.form-control-2 input {
-    border: none;
-    box-sizing: border-box;
-    outline: 0;
-    padding: .75rem;
-    position: relative;
-    width: 100%;
-    display: block;
+.form-control.form-control-2 input {
+  border: none;
+  box-sizing: border-box;
+  outline: 0;
+  padding: .75rem;
+  position: relative;
+  width: 100%;
+  display: block;
 }
 
 .form-control.form-control-2[type="date"]::-webkit-calendar-picker-indicator {
-    background: transparent;
-    bottom: 0;
-    color: transparent;
-    cursor: pointer;
-    height: auto;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: auto;
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
+  display: block;
+}
+.third-section ul {
+    padding: 0;
+}
+.payment-page .input-group{
+  width: auto;
+}
+.selection-div li{
+    padding: 10px 0;
+}.payment-page input[type='text'] {
+  width: 100px;
+}
+.selection-div li .radio-div {
+    font-size: 18px!important;
+    font-weight: 500;
+    width: 35%;
+}
+.selection-div li .container-checkbox{
+   font-size: 18px!important;
+    font-weight: 500;
+    width: 57%;
+    color: #232322;
+}
+.radio-div {
     display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 600;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #232322!important;
+}
+.icon-show {
+    background-color: #f5e87c;
+    border-radius: 100%;
+    padding: 2px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>
 <div class="">
-<div class="content">
-     <div class="row">
-      	<div class="col-md-12">
-          <div class="side-h3">
-            <h3>Settings</h3>
+  <div class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="side-h3">
+          <h3>Settings</h3> </div>
+      </div> @if(Session::has('success'))
+      <div class="alert alert-success" id="selector"> {{Session::get('success')}} </div> @endif
+      <form method="post" action="{{ route('worker.updatesetting') }}" enctype="multipart/form-data"> @csrf
+        <div class="col-lg-12 mb-4">
+          <div class="card admin-setting">
+            <div class="card-body">
+              <h5 class="mb-4">Basic Info</h5>
+              <div class="row">
+                <div class="col-lg-9">
+                  <div class="row">
+                    <div class="col-lg-6 mb-3">
+                      <label class="form-label">Name</label>
+                      <input type="text" class="form-control form-control-2" placeholder="Name" value="{{$workerData->personnelname}}" name="personnelname" required=""> </div>
+                    <div class="col-lg-6 mb-3">
+                      <label class="form-label">Address</label>
+                      <input type="text" class="form-control form-control-2" placeholder="Address" value="{{$workerData->address}}" name="address" required=""> </div>
+                    <div class="col-lg-12 mb-3">
+                      <label class="form-label">Phone</label>
+                      <input type="text" class="form-control form-control-2" placeholder="Phone" value="{{$workerData->phone}}" name="phone" required="" onkeypress="return checkPhone(event)" maxlength="12"> </div>
+                    <div class="col-lg-6 mb-3">
+                      <label class="form-label">Email</label>
+                      <input type="email" class="form-control form-control-2" placeholder="Email Id" value="{{$workerData->email}}" name="email" readonly=""> </div>
+                    <div class="col-lg-6 mb-3">
+                      <label class="form-label">Hired Date</label>
+                     <p class="mt-3">06/28/2022</p></div>
+                    
+
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="avatar-upload">
+                    <div class="avatar-edit">
+                      <input type='file' id="imageUpload" name="imageUpload" accept=".png, .jpg, .jpeg">
+                      <label for="imageUpload"></label>
+                    </div>
+                    <div class="avatar-preview"> @if($workerData->image!=null)
+                      <div id="imagePreview" style="background-image: url('{{url('uploads/personnel/thumbnail/')}}/{{$workerData->image}}');"> </div> @else @php $dimage = url('/').'/uploads/servicebolt-noimage.png'; @endphp
+                      <div id="imagePreview" style="background-image: url('{{$dimage}}');"> </div> @endif </div>
+                    <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;width: 100px;">Approximate Image Size : 122 * 122</div>
+                  </div>
+                </div>
+              </div>
+              <hr/>
+              <div class="row">
+                <div class="col-lg-12 mt-4 text-center">
+                  <input class="btn btn-add w-25 w-none" type="submit" value="Save Changes"> </div>
+              </div>
+              <!-- -==-=--=-=-=-start new form-=-=-=-=- -->
+              <div class="row content payment-page">
+
+               
+                <div class="col-md-12 mt-3">
+                  <div class="">
+                     <h5 class="mb-4">Payment Info</h5>
+                    <!-- <p style="color: #B0B7C3;">Lorem ipsum dolor sit amet</p> -->
+                  </div></div><hr>
+                  <div class="col-md-6 mt-3">
+                   <div class="settings-payement">
+                    <h5 class="mb-4 ">My Payment Settings</h5> </div>
+                </div>
+                <div class="col-lg-6 mt-3">
+                  <div class="card p-3">
+                    <div class="d-flex align-items-center justify-content-between"><div class="icon-show"><i class="fa fa-money fa-2x"></i></div><select name="earning" id="earning" name="earning" style="    border: 1px solid #F3F3F3;">
+                        <option value="" selected>Select Duration</option>
+                        <option value="1week" >1 Week</option>
+                        <option value="1month">1 Month</option>
+                        <option value="6month">6 Month</option>
+                        <option value="1year">1 Year</option>
+                      </select> </div>
+                      <div class="earning-content"><h5 class="mt-4">Total Earning</h5>
+                        <h3><b>$200</b></h3></div>
+                  </div>
+                </div>
+                <div class="personal-setting">
+                 
+                  <hr>
+                  <div class="first-section">
+                    <label class="radio-div active">Hourly Payment
+                      </label>
+                    <ul class="selection-div">
+                      <li class="d-flex">
+                        <label class="radio-div me-2">Amount Per Hour :
+                         </label>
+                        <p>$80</p>
+                      </li>
+                    </ul>
+                  </div>
+                  <hr>
+                  <div class="second-section">
+                    <label class="radio-div">Fixed Salary
+                      </label>
+                    <ul class="selection-div">
+                      <li class="d-flex">
+                        <label class="radio-div me-2">Monthly Salary Amount :
+                         </span> </label>
+                        <p>$100</p>
+                      </li>
+                      <li class="d-flex">
+                        <label class="radio-div me-2">Bi Monthly Salary Amount :
+                          </label>
+                       <p>$120</p>
+                      </li>
+                      <li class="d-flex">
+                        <label class="radio-div me-2">Weekly Salary Amount :
+                          </label>
+                        <p>$230</p>
+                      </li>
+                      <li class="d-flex">
+                        <label class="radio-div me-2">Bi Weekly Salary Amount :
+                          </label>
+                        <p>$440</p>
+                      </li>
+                    </ul>
+                  </div>
+                  <hr>
+                  <div class="third-section">
+                    <label class="radio-div">Commission Basis
+                     </label>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div style="padding-left:35px">
+                          <label class="radio-div ">Amount Wise
+                            </label>
+                          <ul class="selection-div">
+                            <li class="d-flex">
+                              <label class="container-checkbox active me-4">All Services/Products
+                               </label>
+                              <p>$30</p>
+                            </li>
+                            <li class="d-flex">
+                              <label class="container-checkbox me-4">Service 1 :
+                               </label>
+                              <p>$770</p>
+                            </li>
+                            <li class="d-flex">
+                              <label class="container-checkbox me-4">Products 1 :
+                              </label>
+                              <p>$40</p>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="radio-div">Percent Wise
+                          </label>
+                        <ul class="selection-div">
+                          <li class="d-flex">
+                            <label class="container-checkbox me-4">All Services/Products
+                             </label>
+                             <p>20%</p>
+                          </li>
+                          <li class="d-flex">
+                            <label class="container-checkbox me-4">Service 1 :
+                               </label>
+                             <p>40%</p>
+                          </li>
+                          <li class="d-flex">
+                            <label class="container-checkbox me-4">Product 1 :
+                              </label>
+                            <p>20%</p>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- -=-=-=-=-=end new form-=-=-=-=-= -->
+            </div>
           </div>
         </div>
-        @if(Session::has('success'))
-          <div class="alert alert-success" id="selector">
-            {{Session::get('success')}}
-          </div>
-        @endif
-<form method="post" action="{{ route('worker.updatesetting') }}" enctype="multipart/form-data">
-  @csrf
-<div class="col-lg-12 mb-4">
-<div class="card admin-setting">
-<div class="card-body">
-<h5 class="mb-4">Basic Info</h5>
-<div class="row">
-<div class="col-lg-9">
-
-<div class="row">
-  <div class="col-lg-6 mb-3">
-    <label class="form-label">Name</label>
-    <input type="text" class="form-control form-control-2" placeholder="Name" value="{{$workerData->personnelname}}" name="personnelname" required="">
-  </div>
-  <div class="col-lg-6 mb-3">
-    <label class="form-label">Address</label>
-    <input type="text" class="form-control form-control-2" placeholder="Address" value="{{$workerData->address}}" name="address" required="">
-  </div>
-
-  <div class="col-lg-12 mb-3">
-    <label class="form-label">Phone</label>
-    <input type="text" class="form-control form-control-2" placeholder="Phone" value="{{$workerData->phone}}" name="phone" required="" onkeypress="return checkPhone(event)" maxlength="12">
-  </div>
-  <div class="col-lg-6 mb-3">
-    <label class="form-label">Email</label>
-    <input type="email" class="form-control form-control-2" placeholder="Email Id" value="{{$workerData->email}}" name="email" readonly="">
-  </div>
-  <div class="col-lg-6 mb-3">
-    <label class="form-label">Hired Date</label>
-    <input type="date" class="form-control form-control-2" placeholder="Hired Date" value="" name="hiredate" readonly="">
-  </div>
- 
-  <label class="form-label">Total Earning</label>
-  <div class="col-lg-6 mb-3">
-    <select name="earning" id="earning" name="earning" class="form-control">
-      <option value="">Select Duration</option>
-      <option value="1week" selected>One Week</option>
-      <option value="1month">One Month</option>
-      <option value="6month">Six Month</option>
-      <option value="1year">One Year</option>
-    </select>
-  </div>
-  
-  <div class="col-lg-6 mb-3">
-    <!-- <label class="form-label">Amount</label> -->
-    <input type="text" class="form-control form-control-2" placeholder="Amount" value="$1000" name="amount" readonly="">
-  </div>
-
-</div>
-
-
-</div>
-<div class="col-lg-3">
-<div class="avatar-upload">
-        <div class="avatar-edit">
-            <input type='file' id="imageUpload" name="imageUpload" accept=".png, .jpg, .jpeg">
-
-            <label for="imageUpload"></label>
-        </div>
-
-        <div class="avatar-preview">
-            @if($workerData->image!=null)
-              <div id="imagePreview" style="background-image: url('{{url('uploads/personnel/thumbnail/')}}/{{$workerData->image}}');">
-              </div>
-            @else
-              @php
-               $dimage = url('/').'/uploads/servicebolt-noimage.png';
-              @endphp
-              <div id="imagePreview" style="background-image: url('{{$dimage}}');">
-              </div>
-            @endif
-        </div>
-        <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;width: 100px;">Approximate Image Size : 122 * 122</div>
-
+      </form>
     </div>
-</div>
-</div>
-<hr/>
-<div class="row">
-  <div class="col-lg-12 mt-4 text-center">
-    <input class="btn btn-add w-25 w-none" type="submit" value="Save Changes">
   </div>
-</div>
-
-</div>
-</div>
-</div>
-</form>
-</div>
-</div>
-</div>
-@endsection
-@section('script')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places"
-      async
-    ></script>
+</div> @endsection @section('script')
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places" async></script>
 <script>
-  function initAutocomplete() {
-    var input = document.getElementById('address');
-    var autocomplete = new google.maps.places.Autocomplete(input);
-    autocomplete.addListener('place_changed', function() {
-         var place = autocomplete.getPlace();
-          autocomplete.setComponentRestrictions(
-      {'country': ['us']});
+function initAutocomplete() {
+  var input = document.getElementById('address');
+  var autocomplete = new google.maps.places.Autocomplete(input);
+  autocomplete.addListener('place_changed', function() {
+    var place = autocomplete.getPlace();
+    autocomplete.setComponentRestrictions({
+      'country': ['us']
     });
-  }
+  });
+}
 </script>
 <script type="text/javascript">
-  function checkPhone(event) {
-    var code = (event.which) ? event.which : event.keyCode;
-
-    if ((code < 48 || code > 57) && (code > 31)) {
-        return false;
-    }
-
-    return true;
+function checkPhone(event) {
+  var code = (event.which) ? event.which : event.keyCode;
+  if((code < 48 || code > 57) && (code > 31)) {
+    return false;
   }
-  $('#selector').delay(2000).fadeOut('slow');
-
-  $(document).ready(function() {       
-    $('#imageUpload').bind('change', function() {
-        var a=(this.files[0].size);
-        //alert(a);
-        if(a > 2000000) {
-           swal({
-            title: "Image Large?",
-            text: "Ïmage should not be larger than 2 mb!",
-            type: "warning",
-            showCancelButton: false,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Ok",
-            closeOnConfirm: false,
-            closeOnCancel: false
-          },
-          function (isConfirm) {
-            if (isConfirm) {
-               location.reload();
-        }}
-      );
-         }
+  return true;
+}
+$('#selector').delay(2000).fadeOut('slow');
+$(document).ready(function() {
+  $('#imageUpload').bind('change', function() {
+    var a = (this.files[0].size);
+    //alert(a);
+    if(a > 2000000) {
+      swal({
+        title: "Image Large?",
+        text: "Ïmage should not be larger than 2 mb!",
+        type: "warning",
+        showCancelButton: false,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ok",
+        closeOnConfirm: false,
+        closeOnCancel: false
+      }, function(isConfirm) {
+        if(isConfirm) {
+          location.reload();
+        }
+      });
+    }
+  });
 });
-    });
-</script>
-@endsection
+</script> @endsection

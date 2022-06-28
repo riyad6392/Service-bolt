@@ -501,7 +501,7 @@
     padding-bottom: 12px;">1. Hire Date:</p>
           <input type="date" name="" class="form-control dates_picker">
         </div>
-         <div class="col-md-3" style="margin-left: 750px;margin-top: -45px;"><button type="submit" class="btn btn-add btn-block">Save</button></div>
+         <div class="col-md-12 text-center" ><button type="submit" class="btn btn-add px-5 text-center">Save</button></div>
       </div>
 
     </div>

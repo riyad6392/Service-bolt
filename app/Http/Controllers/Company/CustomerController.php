@@ -396,7 +396,7 @@ class CustomerController extends Controller
       } 
       $servicename = implode(',', $sname);
 
-      $html ='<div class="row"><h5 class="mb-4">Ticket Info</h5><div class="col-md-7">
+      $html ='<div class="row"><h5 class="mb-4">Ticket Info</h5><div class="col-md-12">
          <div class="padding-tree">
            <h5>#'.$quoteData[$datacount]->id.'</h5>
          </div>
@@ -411,8 +411,8 @@ class CustomerController extends Controller
           </div>
         </div>
         </div>
-         <div>
-           <p class="">Service Name: </p>
+         <div class="col-md-12 mb-3">
+           <div class="">Service Name: </div>
            <h6 class="">'.$servicename.'</h6>
          </div>
          <div class="col-md-12 mb-2">
@@ -425,21 +425,21 @@ class CustomerController extends Controller
           <div class="col-md-12 mb-3">
             <label>Price:&nbsp;</label>'.$quoteData[$datacount]->price.'
           </div>
-         <div>
-           <p class="">Personnel Name: </p>
+         <div class="col-md-12 mb-3">
+           <div class="">Personnel Name: </div>
            <h6 class="">'.$quoteData[$datacount]->personnelname.'</h6>
          </div>
-         <div>
-           <p class="">Personnel Phone: </p>
+         <div class="col-md-12 mb-3">
+           <div class="">Personnel Phone: </div>
            <h6 class="">'.$quoteData[$datacount]->phone.'</h6>
          </div>
-         <div>
-           <p class="">Date: </p>
+         <div class="col-md-12 mb-3">
+           <div class="">Date: </div>
            <h6  class="">'.$quoteData[$datacount]->etc.'</h6>
          </div>
          </div>
          <div class="col-md-5">
-        <div>
+        <div class="col-md-12 mb-3">
           <img src="'.$imagepath.'" class="ticket-img">
        </div>
        </div></div>';
@@ -466,7 +466,7 @@ class CustomerController extends Controller
 
       '<div class="row">
       <h5 class="mb-4">Ticket Info</h5>
-      <div class="col-md-7">
+      <div class="col-md-12">
          <div class="padding-tree">
            <h5>#'.$quoteData->id.'</h5>
          </div>
@@ -481,8 +481,8 @@ class CustomerController extends Controller
           </div>
         </div>
         </div>
-         <div>
-           <p class="">Service Name: </p>
+         <div class="col-md-12 mb-3">
+           <div class="">Service Name: </div>
            <h6 class="">'.$servicename.'</h6>
          </div>
          <div class="col-md-12 mb-2">
@@ -495,21 +495,21 @@ class CustomerController extends Controller
           <div class="col-md-12 mb-3">
             <label>Price:&nbsp;</label>'.$quoteData->price.'
           </div>
-         <div>
-           <p class="">Personnel Name: </p>
+         <div class="col-md-12 mb-3">
+           <div class="">Personnel Name: </div>
            <h6 class="">'.$quoteData->personnelname.'</h6>
          </div>
-         <div>
-           <p class="">Personnel Phone: </p>
+         <div class="col-md-12 mb-3">
+           <div class="">Personnel Phone: </div>
            <h6 class="">'.$quoteData->phone.'</h6>
          </div>
-         <div>
-           <p class="">Date: </p>
+         <div class="col-md-12 mb-3">
+           <div class="">Date: </div>
            <h6  class="">'.$quoteData->etc.'</h6>
          </div>
          </div>
          <div class="col-md-5">
-        <div>
+        <div class="col-md-12 mb-3">
          <img src="'.$imagepath.'" class="ticket-img">
        </div>
        </div></div>';
