@@ -233,6 +233,8 @@ Route::group([
     Route::get('/scheduler', [SchedulerController::class, 'index'])->name('scheduler');
     Route::get('/schedulernew', [SchedulerController::class, 'indexnew'])->name('schedulernew');
     Route::any('/scheduler/sortdata', [SchedulerController::class, 'sortdata'])->name('sortdata');
+    Route::any('/scheduler/sortdataweekview', [SchedulerController::class, 'sortdataweekview'])->name('sortdataweekview');
+    
     Route::any('/scheduler/updatesortdata', [SchedulerController::class, 'updatesortdata'])->name('updatesortdata');
 
     Route::any('/scheduler/leftbarschedulerdata', [SchedulerController::class, 'leftbarschedulerdata'])->name('leftbarschedulerdata');
@@ -247,6 +249,8 @@ Route::group([
     Route::any('/quote/directquotecreate', [SchedulerController::class, 'directquotecreate'])->name('directquotecreate');
 
     Route::any('/scheduler/detail/{id}', [SchedulerController::class, 'view'])->name('schedulerview');
+    Route::any('/scheduler/detailweekview/{id}', [SchedulerController::class, 'weekview'])->name('schedulerweekview');
+
     Route::any('/scheduler/personnelschedulerdata', [SchedulerController::class, 'personnelschedulerdata'])->name('personnelschedulerdata');
 
     Route::any('/scheduler/viewaddedticketmodal', [SchedulerController::class, 'viewaddedticketmodal'])->name('viewaddedticketmodal');
@@ -254,7 +258,7 @@ Route::group([
     Route::any('/scheduler/ticketadded', [SchedulerController::class, 'ticketadded'])->name('ticketadded');
 
     Route::any('/scheduler/getschedulerdata/{date}', [SchedulerController::class, 'getschedulerdata'])->name('getschedulerdata');
-
+    Route::any('/scheduler/getschedulerdataweekview', [SchedulerController::class, 'getschedulerdataweekview'])->name('getschedulerdataweekview');
     //Admin Setting
     Route::get('/adminsetting', [SettingController::class, 'index'])->name('adminsetting');
     Route::any('/updatesetting', [SettingController::class, 'update'])->name('updatesetting');
@@ -275,6 +279,8 @@ Route::group([
     Route::any('/scheduler/deleteTicket', [SchedulerController::class, 'deleteTicket'])->name('deleteTicket');
 
     Route::any('/scheduler/getworker', [SchedulerController::class, 'getworker'])->name('getworker');
+    Route::any('/scheduler/getworkerweekview', [SchedulerController::class, 'getworkerweekview'])->name('getworkerweekview');
+    
     Route::any('/scheduler/geteventdata', [SchedulerController::class, 'geteventdata'])->name('geteventdata');
 
     Route::get('/report', [ReportController::class, 'index'])->name('report');

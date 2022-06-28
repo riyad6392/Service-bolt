@@ -426,6 +426,12 @@ th.fc-resource-cell img {
 .fc-unthemed td.fc-today {
     background: #f7f9fa;
 }
+
+.fc-button-group {
+  position :absolute!important;
+  margin-top: -206px!important;
+  margin-left: 995px!important;
+}
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -437,12 +443,14 @@ th.fc-resource-cell img {
                             <div class="col-md-6">
                                 <div class="side-h3">
                                     <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch 
-                                        <span class="counter">{{count($scheduleData)}}</span>
                                     </h3>
+                                    <a href="javascript:history.back()" class="back-btn">
+                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
+                                       Back</a><br>
                                     <p style="margin: 0; font-weight: 500;color: #000;">Tickets to Assign</p>
                                 </div>
                             </div>
-                            
+                            <input type="hidden" name="workerid" id="workerid" value="{{$id}}">
                             @if($userData->openingtime!="")
                             <input type="hidden" name="openingtime" id="openingtime" value="{{$userData->openingtime}}:00">
                             <input type="hidden" name="closingtime" id="closingtime" value="{{$userData->closingtime}}:00">
@@ -458,12 +466,12 @@ th.fc-resource-cell img {
                                         $newdate = Carbon\Carbon::createFromFormat('Y-m-d', $todaydate)->format('m/d/Y');
                                         $requestdate = request()->date;
                                       @endphp
-                                        <input type="text" placeholder="{{ date('Y/m/d') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ request()->date }}">
+                                       
                                     @else
                                     @php
                                         $requestdate = date('Y-m-d');
                                     @endphp
-                                        <input type="text" placeholder="{{ date('Y/m/d') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('Y/m/d') }}">
+                                        
                                     @endif
                                 </div>
                             </div>
@@ -522,16 +530,9 @@ th.fc-resource-cell img {
                 </div>
             </div>
             <div>
-                <div id='calendar' style="position: relative;">
-                    <input type="hidden" id="suggest_trip_start" value="6">
-                    <input type="hidden" name="wcount" id="wcount" value="{{$wcount}}">
-                    @if(request()->start)
-                        <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 18px;left: 6px; z-index: 9;"></i>
-                    @else
-                    
-                    @endif
-                    <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 18px; left: 30px; z-index: 9;"></i>
-                </div>
+            <div id='calendar' style="position: relative;">
+                  
+              </div>
             </div>
         </div>
     </div>
@@ -914,18 +915,19 @@ th.fc-resource-cell img {
     });
     $('#calendar').fullCalendar({
             header: {
-                left: '',
-                center: '', 
-                right: ''
+              left: '',
+              center: '',
+               right:  'prev,next'
             },
             snapDuration: '00:05:00',
             minTime: $("#openingtime").val(),
             maxTime: $("#closingtime").val(),  
             allDaySlot: false,
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-            defaultView: 'agendaDay',
+            defaultView: 'agendaWeek',
             groupByResource: true,
             eventOverlap: true,
+            firstDay:1,
            // defaultEventMinutes: 30, 
             //defaultTimedEventDuration: '01:00',
             //forceEventDuration: true,
@@ -938,10 +940,11 @@ th.fc-resource-cell img {
                 @else
                     var start =0;
                 @endif
+                var workerid = $("#workerid").val();
                 $.ajax({
-                url:"{{url('company/scheduler/getworker')}}",
+                url:"{{url('company/scheduler/getworkerweekview')}}",
                 method:"POST",
-                data:{"start":start},
+                data:{"workerid":workerid},
                 dataType: 'json',
                 refresh: true,
                     }).done(function(response) {
@@ -949,7 +952,7 @@ th.fc-resource-cell img {
                 });
             },
 
-            events: '{{route("company.getschedulerdata",["date"=>$requestdate])}}',
+            events: '{{route("company.getschedulerdataweekview")}}',
 
             eventRender: function(event, element, view) {
                 if (view.name == 'listDay') {
@@ -1012,9 +1015,8 @@ th.fc-resource-cell img {
                 } else {
                     var url = "{{url('uploads/servicebolt-noimage.png')}}";
                 }
-                var linkurl= "{{url('company/scheduler/detailweekview/')}}/"+dataTds.id;
                 var textElement = eventTd.empty();
-                textElement.append('<b><a href="'+ linkurl +'"><img src="'+ url +'" alt=""/>' + title[0] + '</a></b>');
+                textElement.append('<b><img src="'+ url +'" alt=""/>' + title[0] + '</b>');
             },
             unselectAuto: false,
             selectable: true,
@@ -1032,7 +1034,7 @@ th.fc-resource-cell img {
                 //console.log(info);
             },
 
-            eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) { 
+            eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) {
                 var hours = event.start._i[3];
                 var minutes = event.start._i[4];
                 const ampm = hours >= 12 ? 'pm' : 'am';
@@ -1100,9 +1102,8 @@ th.fc-resource-cell img {
                 
                 var dd = date._d;
                 var date = moment(new Date(dd.toString().substr(0, 16)));
-                //var fulldate = date.format("dddd - MMMM DD, YYYY");
-                
-                var fulldate = "{{$requestdate}}";
+                var fulldate = date.format("dddd - MMMM DD, YYYY");
+                //var fulldate = "{{$requestdate}}";
 
 
                 form_data = new FormData();
@@ -1111,7 +1112,7 @@ th.fc-resource-cell img {
                 form_data.append('date',fulldate);
                 form_data.append('workerid',workerid);
                 $.ajax({
-                    url:"{{url('company/scheduler/sortdata')}}",
+                    url:"{{url('company/scheduler/sortdataweekview')}}",
                     method:"POST",
                     data:form_data,
                     cache:false,
@@ -1131,7 +1132,7 @@ th.fc-resource-cell img {
                 });
             },  
             eventDrop: function(event,delta, revertFunc, jsEvent, ui, view ) {
-                //console.log(event.start._d);
+               
                 var ticketid = event.id;
                 var resourceId = event.resourceId;
                 
@@ -1153,8 +1154,9 @@ th.fc-resource-cell img {
                     var ticketid = ticketid;
                     var workerid = resourceId;
                     var giventime = `${hours}:${minutes} ${ampm}`
-
-                    var fulldate = "{{$requestdate}}";
+                    var date = moment(new Date(event.start.format().toString().substr(0, 16)));
+                    var fulldate = date.format("dddd - MMMM DD, YYYY");
+                    //var fulldate = "{{$requestdate}}";
                 } else {
                     var hours = event.start._i[3];
                     var minutes = event.start._i[4];
@@ -1169,7 +1171,8 @@ th.fc-resource-cell img {
                     var workerid = resourceId;
                     var giventime = `${hours}:${minutes} ${ampm}`;
 
-                    var fulldate = "{{$requestdate}}";
+                    var date = moment(new Date(event.start.format().toString().substr(0, 16)));
+                    var fulldate = date.format("dddd - MMMM DD, YYYY");
                 }
 
                 form_data = new FormData();
@@ -1178,7 +1181,7 @@ th.fc-resource-cell img {
                 form_data.append('date',fulldate);
                 form_data.append('workerid',workerid);
                 $.ajax({
-                    url:"{{url('company/scheduler/sortdata')}}",
+                    url:"{{url('company/scheduler/sortdataweekview')}}",
                     method:"POST",
                     data:form_data,
                     cache:false,

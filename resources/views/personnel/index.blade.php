@@ -500,7 +500,7 @@ function viewmodalpopup(id) {
 
 function viewmodaldata() {
   var aa = "53";
-  alert(aa);
+  
   var dataString =  'id='+ aa;
    $.ajax({
             url:'{{route('company.viewpersonnelmodal')}}',

@@ -594,6 +594,27 @@ class SchedulerController extends Controller
           ]);
     }
 
+    public function sortdataweekview(Request $request)
+    {
+        //DB::table('sethours')->where('workerid',$request->workerid)
+        $auth_id = auth()->user()->id;
+        $quoteid = $request->quoteid;
+        $time = $request->time;
+        
+        //$date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
+
+
+        //$date = $request->date;
+        $workerid = $request->workerid;
+        $tstatus = 2;
+        $created_at = Carbon::now();
+        DB::table('quote')->where('id','=',$quoteid)
+          ->update([ 
+              "ticket_status"=>"$tstatus","giventime"=>"$time","givendate"=>"$request->date","personnelid"=>"$workerid","created_at"=>"$created_at"
+          ]);
+    }
+
+
     public function mapdata(Request $request)
     {
       $fulldate =  $request->fulldate;
@@ -725,6 +746,37 @@ class SchedulerController extends Controller
 
     $userData = User::select('openingtime','closingtime')->where('id',$auth_id)->first();
     return view('scheduler.view',compact('scheduleData','pname','userData','sethour','setminute','setprice'));
+  }
+
+  public function weekview(Request $request ,$id) 
+  {
+    $auth_id = auth()->user()->id;
+    if(auth()->user()->role == 'company') {
+        $auth_id = auth()->user()->id;
+    } else {
+       return redirect()->back();
+    }
+    //$ticketData = Quote::where('userid',$auth_id)->where('ticket_status',"1")->orderBy('id','ASC')->get();
+
+    $ticketData = DB::table('quote')->select('quote.*', 'customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"1")->orderBy('quote.id','ASC')->get();
+
+    if(isset($_REQUEST['date'])) {
+        $todaydate = Carbon::createFromFormat('Y-m-d', $_REQUEST['date'])->format('l - F d, Y');
+    } else {
+        $todaydate = date('l - F d, Y');
+    }
+    
+    $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
+
+    $customer = Customer::where('userid',$auth_id)->orderBy('id','DESC')->get();
+    $services = Service::where('userid', $auth_id)->get();
+    $worker = Personnel::where('userid', $auth_id)->offset(0)->limit(6)->get();
+    $workercount = Personnel::where('userid', $auth_id)->get();
+    $wcount = count($workercount);
+    $productData = Inventory::where('user_id',$auth_id)->orderBy('id','ASC')->get();
+    $userData = User::select('openingtime','closingtime')->where('id',$auth_id)->first();
+    $tenture = Tenture::where('status','Active')->get();
+    return view('scheduler.weekview',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id'));
   }
 
   public function personnelschedulerdata(Request $request)
@@ -1085,7 +1137,7 @@ class SchedulerController extends Controller
 
       $quote->save();
       $request->session()->flash('success', 'Updated successfully');
-      return redirect()->route('company.scheduler');
+      return redirect()->back();
     }
 
     public function getworker(Request $request)
@@ -1097,6 +1149,30 @@ class SchedulerController extends Controller
       $newoffsetvalue = $offset+6;
 
       $worker = Personnel::where('userid', $auth_id)->offset($offset)->limit($limit)->get();
+      $optiontitle1 = array();
+      foreach($worker as $key => $value) {
+       $assav =  $value->personnelname.'#'.$value->image;
+        $pid =  $value->id;
+        $name = $assav;
+        $optiontitle2 = array (
+            'id'=>$pid,
+            'title'=>$name,
+        );
+        array_push($optiontitle1,$optiontitle2);
+      }
+
+      return json_encode(['resources' =>$optiontitle1]);
+    }
+
+    public function getworkerweekview(Request $request)
+    {
+      $auth_id = auth()->user()->id;
+
+      $offset = $request->start; // start row index.
+      $limit="6"; // no of records to fetch/ get .
+      $newoffsetvalue = $offset+6;
+
+      $worker = Personnel::where('userid', $auth_id)->where('id',$request->workerid)->get();
       $optiontitle1 = array();
       foreach($worker as $key => $value) {
        $assav =  $value->personnelname.'#'.$value->image;
@@ -1125,6 +1201,37 @@ class SchedulerController extends Controller
         
         $data=[];
         foreach ($scheduleData as $key => $row) {
+            $newTime = date('h:i', strtotime($row->giventime));
+            $startdatetime = $newdate.' '.$newTime;
+            if($row->givenendtime!=null) {  
+                $newTime = date('h:i', strtotime($row->givenendtime));
+                $enddatetime = $newdate.' '.$newTime;
+            } else {
+                $enddatetime = "";
+            }
+
+            $data[] = array (
+                'id'=>$row->id,
+                'title'   =>'#'.$row->id."\n".$row->customername."\n".$row->servicename,
+                'start'   => $startdatetime,
+                'end' => $enddatetime,
+                'resourceId'=>$row->personnelid,
+                'backgroundColor'   => $row->color,
+            );
+        }
+      echo json_encode($data);
+    }
+
+    public function getschedulerdataweekview(Request $request)
+    {
+        $auth_id = auth()->user()->id;
+        
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('personnel.id','15')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->orderBy('quote.id','ASC')->get();
+        
+        $data=[];
+        foreach ($scheduleData as $key => $row) {
+            
+            $newdate = Carbon::createFromFormat('l - F d, Y', $row->givendate)->format('Y-m-d');
             $newTime = date('h:i', strtotime($row->giventime));
             $startdatetime = $newdate.' '.$newTime;
             if($row->givenendtime!=null) {  

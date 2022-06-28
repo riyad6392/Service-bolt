@@ -396,53 +396,43 @@ class CustomerController extends Controller
       } 
       $servicename = implode(',', $sname);
 
-      $html ='<div class="row"><h5 class="mb-4">Ticket Info</h5><div class="col-md-12">
-         <div class="padding-tree">
-           <h5>#'.$quoteData[$datacount]->id.'</h5>
-         </div>
-         <div class="col-md-12 mb-2">
-            <label>Customer Name: &nbsp;</label>'.$quoteData[$datacount]->customername.'</div>
+      $html ='<div class="row"><h5 class="mb-4">Ticket Info #'.$quoteData[$datacount]->id.'</h5>
+      <div class="col-md-12">
+         
           <div class="col-md-12 mb-2">
            <div class="input_fields_wrap">
               <div class="mb-3">
-              <label>Customer Address:&nbsp;</label>
+              <label><strong>Customer Address</strong>:&nbsp;</label>
                 '.$quoteData[$datacount]->address.'
               </div>
           </div>
         </div>
         </div>
+        <div class="col-md-12 mb-3">
+        <div><strong>Personnel Info:</strong></div>
+           <div class="">Name: '.$quoteData[$datacount]->personnelname.'</div>
+           <div class="">Phone: '.$quoteData[$datacount]->phone.'</div>
+         </div>
+         
          <div class="col-md-12 mb-3">
-           <div class="">Service Name: </div>
-           <h6 class="">'.$servicename.'</h6>
+           <div class=""><strong>Service Name:</strong> '.$servicename.'</div>
+           
          </div>
          <div class="col-md-12 mb-2">
-            <label>Frequency:&nbsp;</label>'.$quoteData[$datacount]->frequency.'
+            <strong><label>Frequency:&nbsp;</label></strong>'.$quoteData[$datacount]->frequency.'
           </div>
           <div class="col-md-12 mb-2">
-            <label>Default Time: &nbsp;</label>'.$quoteData[$datacount]->time.' '.$quoteData[$datacount]->minute.'
+            <strong><label>Default Time: &nbsp;</label></strong>'.$quoteData[$datacount]->time.' '.$quoteData[$datacount]->minute.'
             
           </div>
           <div class="col-md-12 mb-3">
-            <label>Price:&nbsp;</label>'.$quoteData[$datacount]->price.'
+            <strong><label>Price:&nbsp;</label></strong>'.$quoteData[$datacount]->price.'
           </div>
+         
          <div class="col-md-12 mb-3">
-           <div class="">Personnel Name: </div>
-           <h6 class="">'.$quoteData[$datacount]->personnelname.'</h6>
+           <div class=""><strong>Date:</strong> '.$quoteData[$datacount]->etc.'</div>
          </div>
-         <div class="col-md-12 mb-3">
-           <div class="">Personnel Phone: </div>
-           <h6 class="">'.$quoteData[$datacount]->phone.'</h6>
-         </div>
-         <div class="col-md-12 mb-3">
-           <div class="">Date: </div>
-           <h6  class="">'.$quoteData[$datacount]->etc.'</h6>
-         </div>
-         </div>
-         <div class="col-md-5">
-        <div class="col-md-12 mb-3">
-          <img src="'.$imagepath.'" class="ticket-img">
-       </div>
-       </div></div>';
+         </div></div>';
       } else {
         $quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber','personnel.phone','personnel.personnelname','services.image as serviceimage')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.id',$request->ticketid)->first();
       if($quoteData!=null) {
@@ -464,55 +454,43 @@ class CustomerController extends Controller
         
       $html =
 
-      '<div class="row">
-      <h5 class="mb-4">Ticket Info</h5>
+      '<div class="row"><h5 class="mb-4">Ticket Info #'.$quoteData->id.'</h5>
       <div class="col-md-12">
-         <div class="padding-tree">
-           <h5>#'.$quoteData->id.'</h5>
-         </div>
-         <div class="col-md-12 mb-2">
-            <label>Customer Name: &nbsp;</label>'.$quoteData->customername.'</div>
+         
           <div class="col-md-12 mb-2">
            <div class="input_fields_wrap">
               <div class="mb-3">
-              <label>Customer Address:&nbsp;</label>
+              <label><strong>Customer Address</strong>:&nbsp;</label>
                 '.$quoteData->address.'
               </div>
           </div>
         </div>
         </div>
+        <div class="col-md-12 mb-3">
+        <div><strong>Personnel Info:</strong></div>
+           <div class="">Name: '.$quoteData->personnelname.'</div>
+           <div class="">Phone: '.$quoteData->phone.'</div>
+         </div>
+         
          <div class="col-md-12 mb-3">
-           <div class="">Service Name: </div>
-           <h6 class="">'.$servicename.'</h6>
+           <div class=""><strong>Service Name:</strong> '.$servicename.'</div>
+           
          </div>
          <div class="col-md-12 mb-2">
-            <label>Frequency:&nbsp;</label>'.$quoteData->frequency.'
+            <strong><label>Frequency:&nbsp;</label></strong>'.$quoteData->frequency.'
           </div>
           <div class="col-md-12 mb-2">
-            <label>Default Time: &nbsp;</label>'.$quoteData->time.' '.$quoteData->minute.'
+            <strong><label>Default Time: &nbsp;</label></strong>'.$quoteData->time.' '.$quoteData->minute.'
             
           </div>
           <div class="col-md-12 mb-3">
-            <label>Price:&nbsp;</label>'.$quoteData->price.'
+            <strong><label>Price:&nbsp;</label></strong>'.$quoteData->price.'
           </div>
+         
          <div class="col-md-12 mb-3">
-           <div class="">Personnel Name: </div>
-           <h6 class="">'.$quoteData->personnelname.'</h6>
+           <div class=""><strong>Date:</strong> '.$quoteData->etc.'</div>
          </div>
-         <div class="col-md-12 mb-3">
-           <div class="">Personnel Phone: </div>
-           <h6 class="">'.$quoteData->phone.'</h6>
-         </div>
-         <div class="col-md-12 mb-3">
-           <div class="">Date: </div>
-           <h6  class="">'.$quoteData->etc.'</h6>
-         </div>
-         </div>
-         <div class="col-md-5">
-        <div class="col-md-12 mb-3">
-         <img src="'.$imagepath.'" class="ticket-img">
-       </div>
-       </div></div>';
+         </div></div>';
       }
       
         return json_encode(['html' =>$html]);
