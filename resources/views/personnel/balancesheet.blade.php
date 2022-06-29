@@ -57,7 +57,7 @@
               <th>TicketId</th>
               <th>Date</th>
               <th>Amount</th>
-              <th>Paymenth Method </th>
+              <th>Payment Method </th>
               <th>Customer</th>
             </tr>
           </thead>

@@ -93,7 +93,7 @@
                 <div class="user-descption align-items-center d-flex">
                  <div class="user-img me-3">
                   @if($customer->image!=null)
-                  <img src="{{url('uploads/customer')}}/{{$customer->image}}" alt="">
+                  <img src="{{url('uploads/customer/thumbnail')}}/{{$customer->image}}" alt="">
                   @else
                   <img src="{{url('uploads/servicebolt-noimage.png')}}" alt="">
                   @endif

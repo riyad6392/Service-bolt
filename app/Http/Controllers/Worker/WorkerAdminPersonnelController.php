@@ -80,8 +80,8 @@ class WorkerAdminPersonnelController extends Controller
       if (isset($logofile)) {
         $new_file = $logofile;
         $path = 'uploads/personnel/';
-
-        $imageName = custom_fileupload($new_file,$path);
+        $thumbnailpath = 'uploads/personnel/thumbnail/';
+        $imageName = custom_fileupload1($new_file,$path,$thumbnailpath);
 
         $data['image'] = $imageName;
       }
@@ -431,8 +431,9 @@ class WorkerAdminPersonnelController extends Controller
       if (isset($logofile)) {
           $new_file = $logofile;
            $path = 'uploads/personnel/';
+           $thumbnailpath = 'uploads/personnel/thumbnail/';
            $old_file_name = $personnel->image;
-           $imageName = custom_fileupload($new_file,$path,$old_file_name);
+           $imageName = custom_fileupload1($new_file,$path,$thumbnailpath,$old_file_name);
 
           $personnel->image = $imageName;
       }
@@ -677,8 +678,9 @@ class WorkerAdminPersonnelController extends Controller
       if (isset($logofile)) {
           $new_file = $logofile;
            $path = 'uploads/personnel/';
+           $thumbnailpath = 'uploads/personnel/thumbnail/';
            $old_file_name = $personnel->image;
-           $imageName = custom_fileupload($new_file,$path,$old_file_name);
+           $imageName = custom_fileupload1($new_file,$path,$thumbnailpath,$old_file_name);
 
           $personnel->image = $imageName;
       }

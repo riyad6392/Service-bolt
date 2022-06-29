@@ -232,7 +232,8 @@ class WorkerCustomerController extends Controller
       if (isset($logofile)) {
         $new_file = $logofile;
         $path = 'uploads/customer/';
-        $imageName = custom_fileupload($new_file,$path);
+        $thumbnailpath = 'uploads/customer/thumbnail/';
+        $imageName = custom_fileupload1($new_file,$path,$thumbnailpath);
 
         $data['image'] = $imageName; 
       }
@@ -259,7 +260,8 @@ class WorkerCustomerController extends Controller
       if (isset($logofile)) {
         $new_file = $logofile;
          $path = 'uploads/customer/';
-         $imageName = custom_fileupload($new_file,$path);
+         $thumbnailpath = 'uploads/customer/thumbnail/';
+         $imageName = custom_fileupload1($new_file,$path,$thumbnailpath);
 
          $data['image'] = $imageName; 
       }
@@ -374,7 +376,8 @@ class WorkerCustomerController extends Controller
         $new_file = $logofile;
            $path = 'uploads/customer/';
            $old_file_name = $customer->image;
-           $imageName = custom_fileupload($new_file,$path,$old_file_name);
+           $thumbnailpath = 'uploads/customer/thumbnail/';
+           $imageName = custom_fileupload1($new_file,$path,$thumbnailpath,$old_file_name);
            $customer->image = $imageName;
       }
       $customer->save();

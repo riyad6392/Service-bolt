@@ -1010,8 +1010,8 @@ th.fc-resource-cell img {
                 var datatitle = dataTds.title;
                 var title = datatitle.split("#");
                 
-                if(title[0]!=null) {
-                    var url = "{{url('uploads/personnel/')}}/"+title[1];
+                if(title[1]!="") {
+                    var url = "{{url('uploads/personnel/thumbnail/')}}/"+title[1];
                 } else {
                     var url = "{{url('uploads/servicebolt-noimage.png')}}";
                 }

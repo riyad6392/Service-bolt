@@ -10,6 +10,9 @@
     padding: 1px 0 26px;
     border-bottom: 1px solid #B0B7C3;
 }
+.pointerevent{
+  pointer-events: none;
+}
 .dates_picker {
     padding: 16px;
     width: 320px;
@@ -133,7 +136,7 @@
     padding-top: 9px;
 }
 
-.selection-div li .radio-div {
+.selection-div li .radio-div,.selection-div li .radio-div1,.selection-div li .radio-div2,.selection-div li .radio-div3,.selection-div li .radio-div4 {
     font-size: 18px!important;
     font-weight: 500;
     width: 35%;
@@ -143,10 +146,44 @@
     font-weight: 500;
     width: 57%;
 }
+
+.selection-div1 li .radio-div,.selection-div1 li .radio-div1,.selection-div1 li .radio-div2,.selection-div1 li .radio-div3,.selection-div1 li .radio-div4 {
+    font-size: 18px!important;
+    font-weight: 500;
+    width: 35%;
+}
+.selection-div1 li .container-checkbox{
+   font-size: 18px!important;
+    font-weight: 500;
+    width: 57%;
+}
+
+.selection-div3 li .radio-div,.selection-div3 li .radio-div1,.selection-div3 li .radio-div2,.selection-div3 li .radio-div3,.selection-div3 li .radio-div4 {
+    font-size: 18px!important;
+    font-weight: 500;
+    width: 35%;
+}
+.selection-div3 li .container-checkbox{
+   font-size: 18px!important;
+    font-weight: 500;
+    width: 57%;
+}
+
+.selection-div4 li .radio-div,.selection-div4 li .radio-div1,.selection-div4 li .radio-div2,.selection-div4 li .radio-div3,.selection-div4 li .radio-div4 {
+    font-size: 18px!important;
+    font-weight: 500;
+    width: 35%;
+}
+.selection-div4 li .container-checkbox{
+   font-size: 18px!important;
+    font-weight: 500;
+    width: 57%;
+}
+
 .payment-page input[type='text'] {
   width: 100px;
 }
- .radio-div{
+ .radio-div,.radio-div1,.radio-div2,.radio-div3,.radio-div4{
     display: block;
     position: relative;
     padding-left: 35px;
@@ -211,7 +248,17 @@
 .selection-div li{
     padding: 10px 0;
 }
-.radio-div.active{
+
+.selection-div1 li{
+    padding: 10px 0;
+}
+.selection-div3 li{
+    padding: 10px 0;
+}
+.selection-div4 li{
+    padding: 10px 0;
+}
+.radio-div.active,.radio-div1.active,.radio-div2.active,.radio-div3.active,.radio-div4.active{
     color: #232322;
 }
 .container-checkbox.active{
@@ -240,142 +287,142 @@
         <hr>
         <div class="first-section">
           <label class="radio-div active">Hourly Payment 
-            <input type="radio" checked="checked" name="method" class="custom-radio">
+            <input type="radio" checked="checked" name="method" class="custom-radio firstradio">
             <span class="checkmark"></span>
           </label>
           <ul class="selection-div">
             <li class="d-flex">
               <label class="radio-div me-2">Amount Per Hour : 
-                <input type="radio" checked="checked" name="hourly-payment" class="custom-radio">
+                <input type="radio" checked="checked" name="hourly-payment" class="custom-radio firstradio">
                 <span class="checkmark"></span>
               </label>
                <div class="input-group mb-3">
   <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
 </div>
             </li>
           </ul>
         </div>
         <hr>
         <div class="second-section">
-          <label class="radio-div">Fixed Salary <input type="radio" name="method" class="custom-radio">
+          <label class="radio-div1">Fixed Salary <input type="radio" name="method" class="custom-radio">
             <span class="checkmark"></span>
           </label>
-          <ul class="selection-div">
+          <ul class="selection-div1">
             <li class="d-flex">
-              <label class="radio-div me-2">Monthly Salary Amount : <input type="radio" checked="checked" name="fixed-salary" class="custom-radio">
+              <label class="radio-div2 me-2">Monthly Salary Amount : <input type="radio" checked="checked" name="fixed-salary" class="custom-radio secondradio">
                 <span class="checkmark"></span>
               </label>
              <div class="input-group mb-3">
   <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
 </div>
             </li>
             <li class="d-flex">
-              <label class="radio-div me-2">Bi Monthly Salary Amount : <input type="radio" checked="checked" name="fixed-salary" class="custom-radio">
+              <label class="radio-div2 me-2">Bi Monthly Salary Amount : <input type="radio" name="fixed-salary" class="custom-radio secondradio">
                 <span class="checkmark"></span>
               </label>
                  <div class="input-group mb-3">
   <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
 </div>
             </li>
             <li class="d-flex">
-              <label class="radio-div me-2">Weekly Salary Amount : <input type="radio" checked="checked" name="fixed-salary" class="custom-radio">
+              <label class="radio-div2 me-2">Weekly Salary Amount : <input type="radio" name="fixed-salary" class="custom-radio secondradio">
                 <span class="checkmark"></span>
               </label>
                 <div class="input-group mb-3">
   <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
 </div>
             </li>
             <li class="d-flex">
-              <label class="radio-div me-2">Bi Weekly Salary Amount : <input type="radio" checked="checked" name="fixed-salary" class="custom-radio">
+              <label class="radio-div2 me-2">Bi Weekly Salary Amount : <input type="radio" name="fixed-salary" class="custom-radio secondradio">
                 <span class="checkmark"></span>
               </label>
                <div class="input-group mb-3">
   <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
 </div>
             </li>
           </ul>
         </div>
         <hr>
         <div class="third-section">
-         <label class="radio-div">Commission Basis <input type="radio"  name="method" class="custom-radio">
+         <label class="radio-div3">Commission Basis <input type="radio" checked="checked" name="method" class="custom-radio">
             <span class="checkmark"></span>
           </label>
           <div class="row">
             <div class="col-md-6">
                  <div style="padding-left:35px">
-              <label class="radio-div ">Amount Wise <input type="radio" checked="checked" name="commission" class="custom-radio">
+              <label class="radio-div3 ">Amount Wise <input type="radio" checked="checked" name="commission" class="custom-radio">
                 <span class="checkmark"></span>
               </label>
             
                 
-                  <ul class="selection-div">
+                  <ul class="selection-div3">
                     <li class="d-flex">
-             <label class="container-checkbox active me-4">All Services/Products  <input type="checkbox" checked="checked" name="amount-wise">
-            <span class="checkmark"></span>
-          </label>   <div class="input-group mb-3">
-  <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-</div>
-               
-            </li>
-             <li class="d-flex">
-             <label class="container-checkbox me-4">Service 1 :<input type="checkbox" name="amount-wise">
-            <span class="checkmark"></span>
-          </label>
-                <div class="input-group mb-3">
-  <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-</div>
-            </li>
-             <li class="d-flex">
-             <label class="container-checkbox me-4">Products 1 :<input type="checkbox" name="amount-wise">
-            <span class="checkmark"></span>
-          </label>
-               <div class="input-group mb-3">
-  <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-</div>
-            </li>
+                        <label class="container-checkbox active me-4">All Services/Products  <input type="checkbox" name="amount-wise" class="amount-wise">
+                          <span class="checkmark"></span>
+                        </label>   
+                        <div class="input-group mb-3">
+                          <span class="input-group-text">$</span>
+                          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+                        </div>
+                    </li>
+                     <li class="d-flex">
+                     <label class="container-checkbox me-4">Service 1 :<input type="checkbox" name="amount-wise" class="amountall">
+                    <span class="checkmark"></span>
+                  </label>
+                        <div class="input-group mb-3">
+          <span class="input-group-text">$</span>
+          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+        </div>
+                    </li>
+                     <li class="d-flex">
+                     <label class="container-checkbox me-4">Products 1 :<input type="checkbox" name="amount-wise" class="amountall">
+                    <span class="checkmark"></span>
+                  </label>
+                       <div class="input-group mb-3">
+          <span class="input-group-text">$</span>
+          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+        </div>
+                    </li>
                   </ul>
                 
             </div>
         </div>
             <div class="col-md-6">
                
-              <label class="radio-div">Percent Wise <input type="radio" checked="checked" name="commission" class="custom-radio">
+              <label class="radio-div4">Percent Wise <input type="radio" name="commission" class="custom-radio">
                 <span class="checkmark"></span>
               </label>
-                <ul class="selection-div">
+                <ul class="selection-div4">
                     <li class="d-flex">
-          <label class="container-checkbox me-4">All Services/Products <input type="checkbox" name="percent-wise">
+          <label class="container-checkbox me-4">All Services/Products <input type="checkbox" name="percent-wise" class="percent-wise">
             <span class="checkmark"></span>
           </label>
                   <div class="input-group mb-3">
 
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"><span class="input-group-text">%</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false"><span class="input-group-text">%</span>
 </div>
             </li>
              <li class="d-flex">
-             <label class="container-checkbox me-4">Service 1 : <input type="checkbox" name="percent-wise">
+             <label class="container-checkbox me-4">Service 1 : <input type="checkbox" name="percent-wise" class="allpercent">
             <span class="checkmark"></span>
           </label>
                <div class="input-group mb-3">
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"><span class="input-group-text">%</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false"><span class="input-group-text">%</span>
 </div>
             </li>
              <li class="d-flex">
               
 
-              <label class="container-checkbox me-4">Product 1 :<input type="checkbox" name="percent-wise">
+              <label class="container-checkbox me-4">Product 1 :<input type="checkbox" name="percent-wise" class="allpercent">
             <span class="checkmark"></span>
           </label>
                 <div class="input-group mb-3">
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"><span class="input-group-text">%</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false"><span class="input-group-text">%</span>
 </div>
             </li>
                   </ul>
@@ -592,4 +639,64 @@
       </div>
     </div> 
     @endsection @section('script')
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('.selection-div1').addClass('pointerevent');
+         $('.selection-div4').addClass('pointerevent');
+      });
+
+      $('.first-section').on('click', function() {
+
+        $(".secondradio").removeAttr("checked");
+
+        $('.selection-div').removeClass('pointerevent');
+        
+        $('.selection-div1').addClass('pointerevent');
+
+        $('.radio-div1').removeClass('active');
+        $('.radio-div').addClass('active');
+
+
+      });
+
+      $('.radio-div1').on('click', function() {
+         $(".firstradio").removeAttr("checked");
+          $('.selection-div1').removeClass('pointerevent');
+          $('.selection-div').addClass('pointerevent');
+          $('.radio-div1').addClass('active');
+          $('.radio-div').removeClass('active');
+      });
+
+      $('.amount-wise').on('click', function() {
+        if ($(this).is(':checked')) {
+          $(".amountall").attr('checked', 'checked');
+        } else {
+         $(".amountall").removeAttr("checked");
+        }
+      });
+
+      $('.percent-wise').on('click', function() {
+        if ($(this).is(':checked')) {
+          $(".allpercent").attr('checked', 'checked');
+        } else {
+         $(".allpercent").removeAttr("checked");
+        }
+      });
+
+      $('.radio-div4').on('click', function() {
+        $(".amountall").removeAttr("checked");
+        $('.selection-div4').removeClass('pointerevent');
+        $('.selection-div3').addClass('pointerevent');
+
+      });
+
+      $('.radio-div3').on('click', function() {
+        $(".allpercent").removeAttr("checked");
+        $('.selection-div3').removeClass('pointerevent');
+         $('.selection-div4').addClass('pointerevent');
+
+      });
+
+
+    </script>
      @endsection

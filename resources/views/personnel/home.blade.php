@@ -116,7 +116,7 @@
            <div class="user-descption d-flex">
       <div class="user-img me-2">
         @if($value->image!=null)
-          <img src="{{url('uploads/customer')}}/{{$value->image}}" alt="">
+          <img src="{{url('uploads/customer/thumbnail')}}/{{$value->image}}" alt="">
         @else
           <img src="{{url('uploads/servicebolt-noimage.png')}}" alt="">
         @endif

@@ -98,4 +98,42 @@
             return $input['imagename'];
         }
     }
+
+    if (!function_exists('custom_fileupload1')) 
+    {
+        function custom_fileupload1($new_file, $path, $thumbnailpath, $old_file_name = null) 
+        {
+            if (!file_exists(public_path($path))) {
+                    mkdir(public_path($path), 0777, true);
+            }
+            if (isset($old_file_name) && $old_file_name != "" && file_exists(public_path() . '/' . $path . '/'. $old_file_name)) {
+                unlink(public_path() . '/' . $path . '/' . $old_file_name);
+            }
+
+            if (!file_exists(public_path($thumbnailpath))) {
+                    mkdir(public_path($thumbnailpath), 0777, true);
+            }
+            if (isset($old_file_name) && $old_file_name != "" && file_exists(public_path() . '/' . $thumbnailpath . '/'. $old_file_name)) {
+                unlink(public_path() . '/' . $thumbnailpath . '/' . $old_file_name);
+            }
+
+            $input['imagename'] = uniqid() . time() . '.' . $new_file->getClientOriginalExtension();
+            $destinationPath = public_path($path);
+            $destinationPath1 = public_path($thumbnailpath);
+            $new_file->move($destinationPath, $input['imagename']);
+
+            $imageToResize = Image::make($destinationPath . '/' . $input['imagename']);
+            $mainImgWidth = "300";
+            $mainImgHeight = "200";
+            $imageToResize->resize($mainImgWidth,$mainImgHeight, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+            })->save($destinationPath . '/' . $input['imagename'])->resize('52','52', function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+            })->save($destinationPath1 . '/' . $input['imagename']);
+
+            return $input['imagename'];
+        }
+    }
 ?>
