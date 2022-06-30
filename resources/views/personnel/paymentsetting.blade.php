@@ -136,10 +136,10 @@
     padding-top: 9px;
 }
 
-.selection-div li .radio-div,.selection-div li .radio-div1,.selection-div li .radio-div2,.selection-div li .radio-div3,.selection-div li .radio-div4 {
+.selection-div li .radio-div,.selection-div li .radio-div1,.selection-div li .radio-div2,.selection-div li .radio-div3,.selection-div li .radio-div4,.selection-div li .radio-div11 {
     font-size: 18px!important;
     font-weight: 500;
-    width: 35%;
+    width: 29%;
 }
 .selection-div li .container-checkbox{
    font-size: 18px!important;
@@ -147,10 +147,10 @@
     width: 57%;
 }
 
-.selection-div1 li .radio-div,.selection-div1 li .radio-div1,.selection-div1 li .radio-div2,.selection-div1 li .radio-div3,.selection-div1 li .radio-div4 {
+.selection-div1 li .radio-div,.selection-div1 li .radio-div1,.selection-div1 li .radio-div2,.selection-div1 li .radio-div3,.selection-div1 li .radio-div4,.selection-div1 li .radio-div11 {
     font-size: 18px!important;
     font-weight: 500;
-    width: 35%;
+   width: 29%;
 }
 .selection-div1 li .container-checkbox{
    font-size: 18px!important;
@@ -158,7 +158,7 @@
     width: 57%;
 }
 
-.selection-div3 li .radio-div,.selection-div3 li .radio-div1,.selection-div3 li .radio-div2,.selection-div3 li .radio-div3,.selection-div3 li .radio-div4 {
+.selection-div3 li .radio-div,.selection-div3 li .radio-div1,.selection-div3 li .radio-div2,.selection-div3 li .radio-div3,.selection-div3 li .radio-div4,.selection-div3 li .radio-div11 {
     font-size: 18px!important;
     font-weight: 500;
     width: 35%;
@@ -169,7 +169,7 @@
     width: 57%;
 }
 
-.selection-div4 li .radio-div,.selection-div4 li .radio-div1,.selection-div4 li .radio-div2,.selection-div4 li .radio-div3,.selection-div4 li .radio-div4 {
+.selection-div4 li .radio-div,.selection-div4 li .radio-div1,.selection-div4 li .radio-div2,.selection-div4 li .radio-div3,.selection-div4 li .radio-div4,.selection-div4 li .radio-div11 {
     font-size: 18px!important;
     font-weight: 500;
     width: 35%;
@@ -183,7 +183,7 @@
 .payment-page input[type='text'] {
   width: 100px;
 }
- .radio-div,.radio-div1,.radio-div2,.radio-div3,.radio-div4{
+ .radio-div,.radio-div1,.radio-div2,.radio-div3,.radio-div4,.radio-div11{
     display: block;
     position: relative;
     padding-left: 35px;
@@ -258,7 +258,7 @@
 .selection-div4 li{
     padding: 10px 0;
 }
-.radio-div.active,.radio-div1.active,.radio-div2.active,.radio-div3.active,.radio-div4.active{
+.radio-div.active,.radio-div1.active,.radio-div2.active,.radio-div3.active,.radio-div4.active,.radio-div11.active{
     color: #232322;
 }
 .container-checkbox.active{
@@ -286,7 +286,7 @@
         </div>
         <hr>
         <div class="first-section">
-          <label class="radio-div active">Hourly Payment 
+          <label class="radio-div11 active">Hourly Payments 
             <input type="radio" checked="checked" name="method" class="custom-radio firstradio">
             <span class="checkmark"></span>
           </label>
@@ -349,20 +349,20 @@
         </div>
         <hr>
         <div class="third-section">
-         <label class="radio-div3">Commission Basis <input type="radio" checked="checked" name="method" class="custom-radio">
+         <label class="radio-div3">Commission Basis <input type="radio" name="method" class="custom-radio commisionchekbox">
             <span class="checkmark"></span>
           </label>
           <div class="row">
             <div class="col-md-6">
                  <div style="padding-left:35px">
-              <label class="radio-div3 ">Amount Wise <input type="radio" checked="checked" name="commission" class="custom-radio">
+              <label class="radio-div3 ">Amount Wise <input type="radio" name="commission" class="custom-radio amountradio">
                 <span class="checkmark"></span>
               </label>
             
                 
                   <ul class="selection-div3">
                     <li class="d-flex">
-                        <label class="container-checkbox active me-4">All Services/Products  <input type="checkbox" name="amount-wise" class="amount-wise">
+                        <label class="container-checkbox me-4">All Services/Products  <input type="checkbox" name="amount-wise" class="amount-wise">
                           <span class="checkmark"></span>
                         </label>   
                         <div class="input-group mb-3">
@@ -541,8 +541,7 @@
       <div class="personal-setting">
         <div class="settings-payement">
           <h3>Other Employment Information</h3>
-          <p style="    color: #B0B7C3;
-    font-size: 18px;
+          <p style="font-size: 18px;
     width: 100%;margin: 0;
     padding-top: 10px;
     padding-bottom: 12px;">1. Hire Date:</p>
@@ -643,9 +642,10 @@
       $(document).ready(function() {
         $('.selection-div1').addClass('pointerevent');
          $('.selection-div4').addClass('pointerevent');
+         $('.selection-div3').addClass('pointerevent');
       });
 
-      $('.first-section').on('click', function() {
+      $('.radio-div11').on('click', function() {
 
         $(".secondradio").removeAttr("checked");
 
@@ -654,7 +654,11 @@
         $('.selection-div1').addClass('pointerevent');
 
         $('.radio-div1').removeClass('active');
-        $('.radio-div').addClass('active');
+        $('.radio-div11').addClass('active');
+         $(".firstradio").attr('checked', 'checked');
+
+         $(".amountradio").removeAttr("checked");
+         
 
 
       });
@@ -664,7 +668,9 @@
           $('.selection-div1').removeClass('pointerevent');
           $('.selection-div').addClass('pointerevent');
           $('.radio-div1').addClass('active');
-          $('.radio-div').removeClass('active');
+          $('.radio-div11').removeClass('active');
+
+          $(".amountradio").removeAttr("checked");
       });
 
       $('.amount-wise').on('click', function() {
@@ -685,18 +691,38 @@
 
       $('.radio-div4').on('click', function() {
         $(".amountall").removeAttr("checked");
+        $(".amount-wise").removeAttr("checked");
         $('.selection-div4').removeClass('pointerevent');
         $('.selection-div3').addClass('pointerevent');
+
+        $('.selection-div').addClass('pointerevent');
+         $('.selection-div1').addClass('pointerevent');
+
+         $(".commisionchekbox").attr('checked', 'checked');
+
+         $(".firstradio").removeAttr("checked");
+
+        $('.radio-div11').removeClass('active');
 
       });
 
       $('.radio-div3').on('click', function() {
         $(".allpercent").removeAttr("checked");
+        $(".percent-wise").removeAttr("checked");
+        
         $('.selection-div3').removeClass('pointerevent');
          $('.selection-div4').addClass('pointerevent');
 
+         $('.selection-div').addClass('pointerevent');
+         $('.selection-div1').addClass('pointerevent');
+         $(".commisionchekbox").attr('checked', 'checked');
+
+         $(".firstradio").removeAttr("checked");
+
+          $('.radio-div11').removeClass('active');
       });
 
+       
 
     </script>
      @endsection
