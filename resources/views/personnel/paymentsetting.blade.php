@@ -651,6 +651,12 @@
         $(".amountradio").prop("checked",false);
         $(".percentradio").prop("checked",false);
 
+        $("#ckbCheckAll").prop("checked",false);
+        $(".amountall").prop("checked",false);
+
+        $("#ckbCheckAllpercent").prop("checked",false);
+        $(".allpercent").prop("checked",false);
+
         $('.selection-div3').addClass('pointerevent');
 
         $(".secondradio").removeAttr("checked");
@@ -672,6 +678,12 @@
       $('.radio-div1').on('click', function() {
         $(".amountradio").prop("checked",false);
         $(".percentradio").prop("checked",false);
+
+        $("#ckbCheckAll").prop("checked",false);
+        $(".amountall").prop("checked",false);
+
+        $("#ckbCheckAllpercent").prop("checked",false);
+        $(".allpercent").prop("checked",false);
 
          $(".firstradio").removeAttr("checked");
           $('.selection-div1').removeClass('pointerevent');
@@ -700,6 +712,7 @@
       });
 
       $('.radio-div4').on('click', function() {
+        $('.radio-div1').prop("checked",false);
         $('.radio-div1').removeClass('active');
         $("#ckbCheckAll").prop("checked",false);
         $(".amountall").prop("checked",false);
@@ -724,6 +737,7 @@
       });
 
       $('.radio-div3').on('click', function() {
+        $('.radio-div1').prop("checked",false);
         $('.radio-div1').removeClass('active');
         $(".secondradio").prop("checked",false);
         $("#ckbCheckAllpercent").prop("checked",false);
@@ -747,6 +761,7 @@
 
        $('.third-section').on('click', function() {
           $('.radio-div11').removeClass('active');
+           $('.radio-div1').prop("checked",false);
        });
 
       

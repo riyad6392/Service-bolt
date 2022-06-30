@@ -170,11 +170,12 @@ if(strpos(Request::url(), 'paymentsetting') !== false) {
     $classpsetting = "";
 }
 
-if(strpos(Request::url(), 'detail') !== false){
+if(strpos(Request::url(), 'detail') !== false || strpos(Request::url(), 'detailweek') !== false){
 	$classcheduler = "active";
 } else {
 	$classcheduler = "";
 }
+
 
 if(strpos(Request::url(), 'searchtimeoff') !== false) {
 	$classtimeoff = "active";

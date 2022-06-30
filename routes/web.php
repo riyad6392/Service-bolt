@@ -249,7 +249,7 @@ Route::group([
     Route::any('/quote/directquotecreate', [SchedulerController::class, 'directquotecreate'])->name('directquotecreate');
 
     Route::any('/scheduler/detail/{id}', [SchedulerController::class, 'view'])->name('schedulerview');
-    Route::any('/scheduler/detailweekview/{id}', [SchedulerController::class, 'weekview'])->name('schedulerweekview');
+    Route::any('/scheduler/detailweek/{id}', [SchedulerController::class, 'weekview'])->name('schedulerweekview');
 
     Route::any('/scheduler/personnelschedulerdata', [SchedulerController::class, 'personnelschedulerdata'])->name('personnelschedulerdata');
 

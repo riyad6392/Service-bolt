@@ -478,30 +478,7 @@ $('#selector').delay(2000).fadeOut('slow');
 
 
 function viewmodalpopup(id) {
-  alert('aaa');
    var dataString =  'id='+ id;
-   $.ajax({
-            url:'{{route('company.viewpersonnelmodal')}}',
-            data: dataString,
-            method: 'post',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-
-              console.log(data.html);
-              $('#viewmodaldata').html(data.html);
-              $('.dropify').dropify();
-              $('.selectpicker').selectpicker({
-                size: 5
-              });
-            }
-        })
-}
-
-function viewmodaldata() {
-  var aa = "53";
-  
-  var dataString =  'id='+ aa;
    $.ajax({
             url:'{{route('company.viewpersonnelmodal')}}',
             data: dataString,

@@ -15,7 +15,7 @@
 
 <div>
     <div class="row g-0">
-        <div class="col-md-5 none-sign">
+        <div class="col-md-5 none-sign" style="height: 100vh">
             <div class="bg-sign"></div>
         </div>
         <div class="col-md-7">

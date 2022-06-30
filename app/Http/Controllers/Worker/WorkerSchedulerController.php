@@ -97,18 +97,17 @@ if(count($serviceids)>0) {
               // echo $f.$m .' '.$ampm;
               $settimes = date("h:i a", strtotime($times));
 
-              $settimes1 = explode(":", $settimes);
-              $start = $settimes[0];
-              $endtime = explode(":",$value->giventime);
-              $endtime = $endtime[1];
-              $settimefinal =$settimes1[0].":".$endtime;
+              $gtime = explode(":",$value->giventime);
+              $gtimeampm = explode(" ",$gtime[1]);
+
+              $giventime = $gtime[0].':00'.' '.$gtimeampm[1];
 
               if($value->givenendtime!="") { 
                 $givntime = 'to '.$value->givenendtime;
               } else {
                 $givntime = "";
               }
-              if($value->giventime == $settimefinal) {
+              if($giventime == $settimes) {
                 $imagepath = url('/').'/uploads/customer/'.$value->image;
               $html .='<li class="inner yellow-slide" id="drop_'.$value->id.'">
                         <div class="card">

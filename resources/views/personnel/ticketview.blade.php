@@ -259,7 +259,7 @@ Save
     <tr>
     <td><a href="{{url('personnel/myticket/view/')}}/{{$ticket->id}}">#{{$ticket->id}}</a></td>
     <td>{{$ticket->frequency}}</td>
-    <td>{{$ticket->price}}</td>
+    <td>${{$ticket->price}}</td>
     <td>{{$ticket->servicename}}</td>
     </tr>
       @php

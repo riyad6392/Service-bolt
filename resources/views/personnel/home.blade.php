@@ -190,12 +190,13 @@
               $f= $i+1;
               $m =   ":00";
               $settimes = date("h:i a", strtotime($times));
-              $settimes1 = explode(":", $settimes);
-              $start = $settimes[0];
-              $endtime = explode(":",$value->giventime);
-              $endtime = $endtime[1];
-              $settimefinal =$settimes1[0].":".$endtime;
-              if($value->giventime == $settimefinal) {
+
+              $gtime = explode(":",$value->giventime);
+              $gtimeampm = explode(" ",$gtime[1]);
+
+              $giventime = $gtime[0].':00'.' '.$gtimeampm[1];
+            
+              if($giventime == $settimes) {
                 @endphp
                 <li class="inner yellow-slide" id="drop_{{$value->id}}">
         <div class="card">

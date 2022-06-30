@@ -1201,10 +1201,10 @@ class SchedulerController extends Controller
         
         $data=[];
         foreach ($scheduleData as $key => $row) {
-            $newTime = date('h:i', strtotime($row->giventime));
+            $newTime = date('H:i', strtotime($row->giventime));
             $startdatetime = $newdate.' '.$newTime;
             if($row->givenendtime!=null) {  
-                $newTime = date('h:i', strtotime($row->givenendtime));
+                $newTime = date('H:i', strtotime($row->givenendtime));
                 $enddatetime = $newdate.' '.$newTime;
             } else {
                 $enddatetime = "";
@@ -1232,10 +1232,10 @@ class SchedulerController extends Controller
         foreach ($scheduleData as $key => $row) {
             
             $newdate = Carbon::createFromFormat('l - F d, Y', $row->givendate)->format('Y-m-d');
-            $newTime = date('h:i', strtotime($row->giventime));
+            $newTime = date('H:i', strtotime($row->giventime));
             $startdatetime = $newdate.' '.$newTime;
             if($row->givenendtime!=null) {  
-                $newTime = date('h:i', strtotime($row->givenendtime));
+                $newTime = date('H:i', strtotime($row->givenendtime));
                 $enddatetime = $newdate.' '.$newTime;
             } else {
                 $enddatetime = "";

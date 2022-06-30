@@ -1011,7 +1011,7 @@ th.fc-resource-cell img {
                 } else {
                     var url = "{{url('uploads/servicebolt-noimage.png')}}";
                 }
-                var linkurl= "{{url('company/scheduler/detailweekview/')}}/"+dataTds.id;
+                var linkurl= "{{url('company/scheduler/detailweek/')}}/"+dataTds.id;
                 var textElement = eventTd.empty();
                 textElement.append('<b><a href="'+ linkurl +'" style="color:inherit;text-decoration:none;"><img src="'+ url +'" alt=""/>' + title[0] + '</a></b>');
             },
