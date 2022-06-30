@@ -362,7 +362,7 @@
                 
                   <ul class="selection-div3">
                     <li class="d-flex">
-                        <label class="container-checkbox me-4">All Services/Products  <input type="checkbox" name="amount-wise" class="amount-wise">
+                        <label class="container-checkbox me-4">All Services/Products  <input type="checkbox" name="amount-wise1" class="amount-wise1" id="ckbCheckAll">
                           <span class="checkmark"></span>
                         </label>   
                         <div class="input-group mb-3">
@@ -394,12 +394,12 @@
         </div>
             <div class="col-md-6">
                
-              <label class="radio-div4">Percent Wise <input type="radio" name="commission" class="custom-radio">
+              <label class="radio-div4">Percent Wise <input type="radio" name="commission" class="custom-radio percentradio">
                 <span class="checkmark"></span>
               </label>
                 <ul class="selection-div4">
                     <li class="d-flex">
-          <label class="container-checkbox me-4">All Services/Products <input type="checkbox" name="percent-wise" class="percent-wise">
+          <label class="container-checkbox me-4">All Services/Products <input type="checkbox" name="percent-wise1" class="percent-wise1" id="ckbCheckAllpercent">
             <span class="checkmark"></span>
           </label>
                   <div class="input-group mb-3">
@@ -643,9 +643,15 @@
         $('.selection-div1').addClass('pointerevent');
          $('.selection-div4').addClass('pointerevent');
          $('.selection-div3').addClass('pointerevent');
+         $(".secondradio").prop("checked",false);
       });
 
       $('.radio-div11').on('click', function() {
+        $(".secondradio").prop("checked",false);
+        $(".amountradio").prop("checked",false);
+        $(".percentradio").prop("checked",false);
+
+        $('.selection-div3').addClass('pointerevent');
 
         $(".secondradio").removeAttr("checked");
 
@@ -664,6 +670,9 @@
       });
 
       $('.radio-div1').on('click', function() {
+        $(".amountradio").prop("checked",false);
+        $(".percentradio").prop("checked",false);
+
          $(".firstradio").removeAttr("checked");
           $('.selection-div1').removeClass('pointerevent');
           $('.selection-div').addClass('pointerevent');
@@ -682,6 +691,7 @@
       });
 
       $('.percent-wise').on('click', function() {
+        alert('aaa');
         if ($(this).is(':checked')) {
           $(".allpercent").attr('checked', 'checked');
         } else {
@@ -690,6 +700,13 @@
       });
 
       $('.radio-div4').on('click', function() {
+        $('.radio-div1').removeClass('active');
+        $("#ckbCheckAll").prop("checked",false);
+        $(".amountall").prop("checked",false);
+        $(".firstradio").prop("checked",false);
+         $(".secondradio").prop("checked",false);
+
+
         $(".amountall").removeAttr("checked");
         $(".amount-wise").removeAttr("checked");
         $('.selection-div4').removeClass('pointerevent');
@@ -707,6 +724,12 @@
       });
 
       $('.radio-div3').on('click', function() {
+        $('.radio-div1').removeClass('active');
+        $(".secondradio").prop("checked",false);
+        $("#ckbCheckAllpercent").prop("checked",false);
+        $(".allpercent").prop("checked",false);
+        $(".firstradio").prop("checked",false);
+
         $(".allpercent").removeAttr("checked");
         $(".percent-wise").removeAttr("checked");
         
@@ -722,7 +745,34 @@
           $('.radio-div11').removeClass('active');
       });
 
-       
+       $('.third-section').on('click', function() {
+          $('.radio-div11').removeClass('active');
+       });
+
+      
+      $(document).ready(function () {
+        $("#ckbCheckAll").click(function () {
+            $(".amountall").prop('checked', $(this).prop('checked'));
+        });
+        
+        $(".amountall").change(function(){
+            if (!$(this).prop("checked")){
+                $("#ckbCheckAll").prop("checked",false);
+            }
+        });
+
+        $("#ckbCheckAllpercent").click(function () {
+            $(".allpercent").prop('checked', $(this).prop('checked'));
+        });
+        
+        $(".allpercent").change(function(){
+            if (!$(this).prop("checked")){
+                $("#ckbCheckAllpercent").prop("checked",false);
+            }
+        });
+
+        
+    });
 
     </script>
      @endsection
