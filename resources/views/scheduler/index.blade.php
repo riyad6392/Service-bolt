@@ -1013,7 +1013,7 @@ th.fc-resource-cell img {
                 }
                 var linkurl= "{{url('company/scheduler/detailweekview/')}}/"+dataTds.id;
                 var textElement = eventTd.empty();
-                textElement.append('<b><a href="'+ linkurl +'"><img src="'+ url +'" alt=""/>' + title[0] + '</a></b>');
+                textElement.append('<b><a href="'+ linkurl +'" style="color:inherit;text-decoration:none;"><img src="'+ url +'" alt=""/>' + title[0] + '</a></b>');
             },
             unselectAuto: false,
             selectable: true,
