@@ -428,9 +428,13 @@ th.fc-resource-cell img {
 }
 
 .fc-button-group {
-  position :absolute!important;
-  margin-top: -206px!important;
-  margin-left: 995px!important;
+    position :absolute!important;
+    top: 15px;
+    right: 28px;
+    z-index: 99;
+}
+.fc-state-hover{
+background: transparent!important;
 }
 </style>
 <div class="row">

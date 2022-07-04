@@ -17,6 +17,8 @@ use App\Http\Controllers\Company\ReportController;
 use App\Http\Controllers\Company\BillingController;
 use App\Http\Controllers\Company\CategoriesController;
 use App\Http\Controllers\Company\TimeoffController;
+use App\Http\Controllers\Company\PaymentsettingController;
+use App\Http\Controllers\Company\CommissionController;
 
 use App\Http\Controllers\Worker\WorkerHomeController;
 use App\Http\Controllers\Worker\WorkerTicketController;
@@ -172,6 +174,11 @@ Route::group([
 
     //personnel Create
     Route::get('/personnel', [PersonnelController::class, 'index'])->name('personnel');
+
+    Route::any('/personnel/paymentsetting/{id}', [PersonnelController::class, 'paymentsetting'])->name('paymentsetting');
+
+    Route::any('/personnel/paymentsettingcreate', [PersonnelController::class, 'paymentsettingcreate'])->name('paymentsettingcreate');
+
     Route::any('/personnel/create', [PersonnelController::class, 'create'])->name('personnelcreate');
     Route::any('/personnel/leftbarservicedata', [PersonnelController::class, 'leftbarservicedata'])->name('leftbarservicedata');
     Route::any('/personnel/viewpersonnelmodal', [PersonnelController::class, 'viewpersonnelmodal'])->name('viewpersonnelmodal');
@@ -185,7 +192,6 @@ Route::group([
 
     Route::any('/personnel/accepttime', [PersonnelController::class, 'accepttime'])->name('accepttime');
     Route::any('/personnel/rejecttime', [PersonnelController::class, 'rejecttime'])->name('rejecttime');
-     Route::any('/personnel/paymentsetting/{id}', [PersonnelController::class, 'paymentsetting'])->name('paymentsetting');
 
     Route::any('/personnel/deleterequest', [PersonnelController::class, 'deleterequest'])->name('deleterequest');
 
@@ -227,7 +233,6 @@ Route::group([
 
      Route::any('/quote/leftbarinvoice', [TicketController::class, 'leftbarinvoice'])->name('leftbarinvoice');
      Route::any('/quote/sharequote', [TicketController::class, 'sharequote'])->name('sharequote');
-     
 
     //Scheduler Listing
     Route::get('/scheduler', [SchedulerController::class, 'index'])->name('scheduler');
@@ -284,6 +289,8 @@ Route::group([
     Route::any('/scheduler/geteventdata', [SchedulerController::class, 'geteventdata'])->name('geteventdata');
 
     Route::get('/report', [ReportController::class, 'index'])->name('report');
+    Route::get('/managecommission', [CommissionController::class, 'index'])->name('managecommission');
+
     Route::get('/billing', [BillingController::class, 'index'])->name('billing');
     Route::any('/billing/billingview/{date}', [BillingController::class, 'billingview'])->name('billingview');
     Route::any('/billing/leftbarbillingdata', [BillingController::class, 'leftbarbillingdata'])->name('leftbarbillingdata');

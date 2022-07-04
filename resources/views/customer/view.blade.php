@@ -27,6 +27,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     /*background: #FDFBEC;*/
     background: #FAED61 !important;
   }
+  .card-body.customer-scroll-div {
+    height: 450px;
+    overflow-y: auto;
+}
 </style>
 <div class="">
 <div class="content">
@@ -168,10 +172,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
      <div class="col-md-8 mb-4">
              <div class="card">
-       <div class="card-body">
+       <div class="card-body customer-scroll-div">
 	    <h5 class="mb-4">Recent Tickets</h5>
 		
-		<div class="table-responsive">
+		<div class="">
     <table id="example" class="table no-wrap table-new table-list align-items-center">
     <thead>
     <tr>

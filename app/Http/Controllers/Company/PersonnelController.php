@@ -18,6 +18,9 @@ use App\Models\Workerhour;
 use App\Models\Workertimeoff;
 use Illuminate\Validation\Rule;
 use Redirect;
+use App\Models\PaymentSetting;
+use App\Models\Service;
+use App\Models\Inventory;
 
 class PersonnelController extends Controller
 {
@@ -259,11 +262,6 @@ class PersonnelController extends Controller
         return json_encode(['html' =>$html]);
         die;
        
-    }
-
-    public function paymentsetting($id) {
-
-      return view('personnel.paymentsetting');
     }
 
     public function viewpersonnelmodal(Request $request)
@@ -878,5 +876,89 @@ class PersonnelController extends Controller
       $id = $request->id;
       Workertimeoff::where('id', $id)->delete();
       echo "1";
+    }
+
+    public function paymentsetting(Request $request, $id)
+    {
+     $auth_id = auth()->user()->id;
+      if(auth()->user()->role == 'company') {
+          $auth_id = auth()->user()->id;
+      } else {
+         return redirect()->back();
+      }
+      $services = Service::select('id','servicename')->where('userid',$auth_id)->get();
+      $products = Inventory::select('id','productname')->where('user_id',$auth_id)->get();
+      return view('personnel.paymentsetting',compact('services','products'));
+    }
+
+    public function paymentsettingcreate(Request $request) {
+      
+      
+      // $amountarray = $request->amountwise;
+      // $amountvaluearray = array_filter($request->amountvalue);
+      //  print_r($amountarray);
+      //  echo "<br>";
+      //  print_r($amountvaluearray);
+      //  die;
+
+      // foreach($amountarray as $key=> $value) {
+        
+      // }
+      // dd($jsondata);
+
+      $auth_id = auth()->user()->id;
+      if(auth()->user()->role == 'company') {
+          $auth_id = auth()->user()->id;
+      } else {
+         return redirect()->back();
+      }
+      $data['uid'] = $auth_id;
+      $data['pid'] = $request->pid;
+      $data['hiredate'] = $request->hiredate;
+      if($request->hourly=="on") {
+        if($request->hourlypaymentamount!="") {
+          $data['hourly'] = $request->hourly;
+          $data['hourlypayment'] = $request->hourlypaymentamount;
+        }
+      }
+
+      if($request->fixedsalary == "on") {
+        $data['fixedsalary'] = $request->fixedsalary;
+        $requestsalary = $request->salary;
+        if($requestsalary == "monthlysalaryamount") {
+          $data['monthlysalary'] = $request->monthlysalaryamount;
+        }
+        if($requestsalary == "bimonthlysalaryamount") {
+          $data['bimonthlysalary'] = $request->bimonthlysalaryamount;
+        }
+
+        if($requestsalary == "weeklysalaryamount") {
+          $data['weeklysalary'] = $request->weeklysalaryamount;
+        }
+
+        if($requestsalary == "biweeklysalaryamount") {
+          $data['biweeklysalary'] = $request->biweeklysalaryamount;
+        }
+      }
+
+      if(isset($request->commission)) {
+        if($request->commission == "amount") {
+          $data['amountwise'] = "on";
+          
+          if($request->amountall =="on") {
+            $data['amountall'] = $request->amountallamount;
+          }
+        }
+
+        if($request->commission == "percent") {
+          $data['percentwise'] = "on";
+          
+          if($request->percentall =="on") {
+            $data['percentall'] = $request->percentallamount;
+          }
+        }
+      }
+      PaymentSetting::create($data);
+      return redirect()->back();
     }
 }

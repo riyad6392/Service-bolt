@@ -271,13 +271,20 @@
   width: auto;
 }
         </style>
+        @php
+            $uri_path = $_SERVER['REQUEST_URI']; 
+            $uri_parts = explode('/', $uri_path);
+            $request_url = end($uri_parts);
+        @endphp
 <div class="">
+ <form method="post" action="{{route('company.paymentsettingcreate')}}">
+    @csrf
+    <input type="hidden" name="pid" value="{{$request_url}}">
   <div class="content payment-page">
     <div class="row">
       <div class="col-md-12">
         <div class="side-h3">
           <h3>Payment Settings</h3>
-          <!-- <p style="color: #B0B7C3;">Lorem ipsum dolor sit amet</p> -->
         </div>
       </div>
       <div class="personal-setting">
@@ -287,62 +294,67 @@
         <hr>
         <div class="first-section">
           <label class="radio-div11 active">Hourly Payments 
-            <input type="radio" checked="checked" name="method" class="custom-radio firstradio">
+            <input type="radio" checked="checked" name="hourly" class="custom-radio firstradio">
             <span class="checkmark"></span>
           </label>
           <ul class="selection-div">
             <li class="d-flex">
               <label class="radio-div me-2">Amount Per Hour : 
-                <input type="radio" checked="checked" name="hourly-payment" class="custom-radio firstradio">
+                <input type="radio" checked="checked" name="hourlypayment" class="custom-radio firstradio">
                 <span class="checkmark"></span>
               </label>
                <div class="input-group mb-3">
   <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="hourlypaymentamount">
 </div>
             </li>
           </ul>
         </div>
         <hr>
         <div class="second-section">
-          <label class="radio-div1">Fixed Salary <input type="radio" name="method" class="custom-radio">
+          <label class="radio-div1">Fixed Salary 
+            <input type="radio" name="fixedsalary" class="custom-radio secondradio">
             <span class="checkmark"></span>
           </label>
           <ul class="selection-div1">
             <li class="d-flex">
-              <label class="radio-div2 me-2">Monthly Salary Amount : <input type="radio" checked="checked" name="fixed-salary" class="custom-radio secondradio">
+              <label class="radio-div2 me-2">Monthly Salary Amount : 
+                <input type="radio" checked="checked" name="salary" class="custom-radio secondradio" value="monthlysalaryamount">
                 <span class="checkmark"></span>
               </label>
-             <div class="input-group mb-3">
-  <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
-</div>
+              <div class="input-group mb-3">
+                  <span class="input-group-text">$</span>
+                  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="monthlysalaryamount">
+              </div>
             </li>
             <li class="d-flex">
-              <label class="radio-div2 me-2">Bi Monthly Salary Amount : <input type="radio" name="fixed-salary" class="custom-radio secondradio">
+              <label class="radio-div2 me-2">Bi Monthly Salary Amount : 
+                <input type="radio" name="salary" class="custom-radio secondradio" value="bimonthlysalaryamount">
                 <span class="checkmark"></span>
               </label>
                  <div class="input-group mb-3">
   <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="bimonthlysalaryamount">
 </div>
             </li>
             <li class="d-flex">
-              <label class="radio-div2 me-2">Weekly Salary Amount : <input type="radio" name="fixed-salary" class="custom-radio secondradio">
+              <label class="radio-div2 me-2">Weekly Salary Amount : 
+                <input type="radio" name="salary" class="custom-radio secondradio" value="weeklysalaryamount">
                 <span class="checkmark"></span>
               </label>
                 <div class="input-group mb-3">
   <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="weeklysalaryamount">
 </div>
             </li>
             <li class="d-flex">
-              <label class="radio-div2 me-2">Bi Weekly Salary Amount : <input type="radio" name="fixed-salary" class="custom-radio secondradio">
+              <label class="radio-div2 me-2">Bi Weekly Salary Amount : 
+                <input type="radio" name="salary" class="custom-radio secondradio" value="biweeklysalaryamount">
                 <span class="checkmark"></span>
               </label>
                <div class="input-group mb-3">
   <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="biweeklysalaryamount">
 </div>
             </li>
           </ul>
@@ -355,77 +367,92 @@
           <div class="row">
             <div class="col-md-6">
                  <div style="padding-left:35px">
-              <label class="radio-div3 ">Amount Wise <input type="radio" name="commission" class="custom-radio amountradio">
+              <label class="radio-div3 ">Amount Wise 
+                <input type="radio" name="commission" class="custom-radio amountradio" value="amount">
                 <span class="checkmark"></span>
               </label>
             
                 
                   <ul class="selection-div3">
                     <li class="d-flex">
-                        <label class="container-checkbox me-4">All Services/Products  <input type="checkbox" name="amount-wise1" class="amount-wise1" id="ckbCheckAll">
+                        <label class="container-checkbox me-4">All Services/Products  
+                            <input type="checkbox" name="amountall" class="amount-wise1" id="ckbCheckAll">
                           <span class="checkmark"></span>
                         </label>   
                         <div class="input-group mb-3">
                           <span class="input-group-text">$</span>
-                          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+                          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountallamount">
                         </div>
                     </li>
+                    @foreach($services as $key => $value)
                      <li class="d-flex">
-                     <label class="container-checkbox me-4">Service 1 :<input type="checkbox" name="amount-wise" class="amountall">
-                    <span class="checkmark"></span>
-                  </label>
+                        <label class="container-checkbox me-4">{{$value->servicename}} :
+                            <input type="checkbox" name="amountwise[]" class="amountall" value="{{$value->servicename}}">
+                            <span class="checkmark"></span>
+                        </label>
                         <div class="input-group mb-3">
-          <span class="input-group-text">$</span>
-          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
-        </div>
+                            <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]">
+                        </div>
                     </li>
+                    @endforeach
+                    @foreach($products as $key1 => $product)
                      <li class="d-flex">
-                     <label class="container-checkbox me-4">Products 1 :<input type="checkbox" name="amount-wise" class="amountall">
+                     <label class="container-checkbox me-4">{{$product->productname}} :
+                        <input type="checkbox" name="amountwise[]" class="amountall" name="{{$product->productname}}" value="{{$product->productname}}">
                     <span class="checkmark"></span>
                   </label>
                        <div class="input-group mb-3">
           <span class="input-group-text">$</span>
-          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]">
         </div>
                     </li>
+                    @endforeach
                   </ul>
                 
             </div>
         </div>
             <div class="col-md-6">
                
-              <label class="radio-div4">Percent Wise <input type="radio" name="commission" class="custom-radio percentradio">
+              <label class="radio-div4">Percent Wise 
+                <input type="radio" name="commission" class="custom-radio percentradio" value="percent">
                 <span class="checkmark"></span>
               </label>
                 <ul class="selection-div4">
                     <li class="d-flex">
-          <label class="container-checkbox me-4">All Services/Products <input type="checkbox" name="percent-wise1" class="percent-wise1" id="ckbCheckAllpercent">
+          <label class="container-checkbox me-4">All Services/Products 
+            <input type="checkbox" name="percentall" class="percent-wise1" id="ckbCheckAllpercent">
             <span class="checkmark"></span>
           </label>
                   <div class="input-group mb-3">
 
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false"><span class="input-group-text">%</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="percentallamount"><span class="input-group-text">%</span>
 </div>
             </li>
-             <li class="d-flex">
-             <label class="container-checkbox me-4">Service 1 : <input type="checkbox" name="percent-wise" class="allpercent">
-            <span class="checkmark"></span>
-          </label>
-               <div class="input-group mb-3">
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false"><span class="input-group-text">%</span>
-</div>
-            </li>
-             <li class="d-flex">
-              
 
-              <label class="container-checkbox me-4">Product 1 :<input type="checkbox" name="percent-wise" class="allpercent">
-            <span class="checkmark"></span>
-          </label>
-                <div class="input-group mb-3">
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false"><span class="input-group-text">%</span>
-</div>
+            @foreach($services as $key => $value)
+             <li class="d-flex">
+                <label class="container-checkbox me-4">{{$value->servicename}} : 
+                    <input type="checkbox" name="percent-wise" class="allpercent" value="{{$value->servicename}}">
+                    <span class="checkmark"></span>
+                </label>
+               <div class="input-group mb-3">
+                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false"><span class="input-group-text">%</span>
+                </div>
             </li>
-                  </ul>
+            @endforeach
+             @foreach($products as $key1 => $product)
+             <li class="d-flex">
+              <label class="container-checkbox me-4">{{$product->productname}} :
+                <input type="checkbox" name="percent-wise" class="allpercent" value="{{$product->productname}}">
+                <span class="checkmark"></span>
+             </label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false"><span class="input-group-text">%</span>
+                </div>
+            </li>
+            @endforeach
+        </ul>
           </div>
             
             
@@ -438,106 +465,7 @@
         
          
         </div>
-
-
-
-
-
-
-
-<!--         <div class="labesls">
-          <label class="container-checkbox me-5">Hourly <input type="checkbox">
-            <span class="checkmark"></span>
-          </label>
-          <div class="amounts">
-            <div class="d-block">
-              <h5>Amount</h5>
-              <input type="" name="" class="form-control" placeholder="$12">
-            </div>
-          </div>
-        </div>
-        <div class="second-labels">
-          <label class="container-checkbox me-5">Salary <input type="checkbox">
-            <span class="checkmark"></span>
-          </label>
-          <label class="container-checkbox me-5">Monthly <input type="checkbox">
-            <span class="checkmark"></span>
-          </label>
-          <label class="container-checkbox me-5">Weekly <input type="checkbox">
-            <span class="checkmark"></span>
-          </label>
-          <label class="container-checkbox me-5">Bi Monthly <input type="checkbox">
-            <span class="checkmark"></span>
-          </label>
-          <label class="container-checkbox me-5">Bi Weekly <input type="checkbox">
-            <span class="checkmark"></span>
-          </label>
-          <div class="amounts">
-            <div class="d-block">
-              <h5>Amount</h5>
-              <input type="" name="" class="form-control" placeholder="$12">
-            </div>
-          </div>
-        </div>
-        <div class="third_labels">
-          <label class="container-checkbox me-5">Commission <input type="checkbox">
-            <span class="checkmark"></span>
-          </label>
-          <label class="container-checkbox me-5">Flat Rate Per Service/Product <input type="checkbox">
-            <span class="checkmark"></span>
-          </label>
-          <label class="container-checkbox me-5">Percentage <input type="checkbox">
-            <span class="checkmark"></span>
-          </label>
-        </div>
-        <div class="forth_labels">
-          <div class="side-section">
-            <h6>All</h6>
-            <div class="amounts">
-              <div class="d-block">
-                <h5>Amount</h5>
-                <input type="" name="" class="form-control" placeholder="$12">
-              </div>
-            </div>
-            <div class="amounts">
-              <div class="d-block">
-                <h5>Percentage</h5>
-                <input type="" name="" class="form-control" placeholder="20%">
-              </div>
-            </div>
-          </div>
-          <div class="side-section_1">
-            <h6>Service or Prdouct name</h6>
-            <div class="amounts">
-              <div class="d-block">
-                <h5>Amount</h5>
-                <input type="" name="" class="form-control" placeholder="$12">
-              </div>
-            </div>
-            <div class="amounts">
-              <div class="d-block">
-                <h5>Percentage</h5>
-                <input type="" name="" class="form-control" placeholder="20%">
-              </div>
-            </div>
-          </div>
-          <div class="side-section_2">
-            <h6>Service Name</h6>
-            <div class="amounts">
-              <div class="d-block">
-                <h5>Amount</h5>
-                <input type="" name="" class="form-control" placeholder="$12">
-              </div>
-            </div>
-            <div class="amounts">
-              <div class="d-block">
-                <h5>Percentage</h5>
-                <input type="" name="" class="form-control" placeholder="20%">
-              </div>
-            </div>
-          </div>
-        </div> -->
-      </div>
+    </div>
       <div class="personal-setting">
         <div class="settings-payement">
           <h3>Other Employment Information</h3>
@@ -545,98 +473,15 @@
     width: 100%;margin: 0;
     padding-top: 10px;
     padding-bottom: 12px;">1. Hire Date:</p>
-          <input type="date" name="" class="form-control dates_picker">
+          <input type="date" name="hiredate" class="form-control dates_picker">
         </div>
-         <div class="col-md-12 text-center" ><button type="submit" class="btn btn-add px-5 text-center">Save</button></div>
+         <div class="col-md-12 text-center" >
+            <button type="submit" class="btn btn-add px-5 text-center" style="pointer-events: none;">Save</button></div>
       </div>
 
     </div>
   </div>
-  <!-- Modal -->
-  <div class="modal fade" id="add-services" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content customer-modal-box">
-        <div class="modal-body">
-          <div class="add-customer-modal">
-            <h5>Lorem Ipsum</h5>
-            <p class="lead">Lorem ipsum dolar si amen</p>
-          </div>
-          <div class="row customer-form" id="product-box-tabs">
-            <div class="col-md-12 mb-2">
-              <input type="text" class="form-control" placeholder="Service Name" />
-            </div>
-            <div class="col-md-12 mb-2">
-              <input type="text" class="form-control" placeholder="Service Default Price" />
-            </div>
-            <div class="col-md-12 mb-2">
-              <select class="form-select">
-                <option selected="">Default Product</option>
-                <option>Default Product 1</option>
-                <option>Default Product 2</option>
-              </select>
-            </div>
-            <div class="col-md-12 mb-2">
-              <div class="align-items-center justify-content-lg-between d-flex services-list">
-                <label class="container-checkbox">Per hour <input type="checkbox" checked="checked">
-                  <span class="checkmark"></span>
-                </label>
-                <label class="container-checkbox">Flate rate <input type="checkbox">
-                  <span class="checkmark"></span>
-                </label>
-                <label class="container-checkbox">Reoccuring <input type="checkbox">
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-            </div>
-            <div class="col-md-6 mb-2">
-              <select class="form-select">
-                <option selected="">Service Frequency</option>
-                <option>Service 1</option>
-                <option>Service 2</option>
-              </select>
-            </div>
-            <div class="col-md-6 mb-2">
-              <select class="form-select">
-                <option selected="">Default Time</option>
-                <option>Default Time</option>
-                <option>Default Time</option>
-              </select>
-            </div>
-            <div class="col-lg-12 mb-2">
-              <div class="drop-zone h-160">
-                <span class="drop-zone__prompt text-center">
-                  <small>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="17 8 12 3 7 8"></polyline>
-                      <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                  </small> Drop file here or click to upload </span>
-                <input type="file" name="myFile" class="drop-zone__input">
-              </div>
-            </div>
-            <div class="col-md-12 mb-2">
-              <p class="create-gray mb-2">Create default checklist </p>
-              <div class="align-items-center  d-flex services-list">
-                <label class="container-checkbox me-3">Point 1 <input type="checkbox" checked="checked">
-                  <span class="checkmark"></span>
-                </label>
-                <label class="container-checkbox me-3">Point 1 <input type="checkbox">
-                  <span class="checkmark"></span>
-                </label>
-                <span>+</span>
-              </div>
-            </div>
-            <div class="col-lg-6 mb-2">
-              <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
-            </div>
-            <div class="col-lg-6">
-              <button class="btn btn-add btn-block">Add a Service</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> 
+ </form>   
     @endsection @section('script')
     <script type="text/javascript">
       $(document).ready(function() {
@@ -647,6 +492,7 @@
       });
 
       $('.radio-div11').on('click', function() {
+        $(".commisionchekbox").prop("checked",false);
         $(".secondradio").prop("checked",false);
         $(".amountradio").prop("checked",false);
         $(".percentradio").prop("checked",false);
@@ -676,6 +522,8 @@
       });
 
       $('.radio-div1').on('click', function() {
+        $(".commisionchekbox").prop("checked",false);
+        $(".firstradio").prop("checked",false);
         $(".amountradio").prop("checked",false);
         $(".percentradio").prop("checked",false);
 
@@ -694,7 +542,7 @@
           $(".amountradio").removeAttr("checked");
       });
 
-      $('.amount-wise').on('click', function() {
+      $('.amountwise').on('click', function() {
         if ($(this).is(':checked')) {
           $(".amountall").attr('checked', 'checked');
         } else {
@@ -721,7 +569,7 @@
 
 
         $(".amountall").removeAttr("checked");
-        $(".amount-wise").removeAttr("checked");
+        $(".amountwise").removeAttr("checked");
         $('.selection-div4').removeClass('pointerevent');
         $('.selection-div3').addClass('pointerevent');
 
@@ -765,7 +613,7 @@
        });
 
       
-      $(document).ready(function () {
+    $(document).ready(function () {
         $("#ckbCheckAll").click(function () {
             $(".amountall").prop('checked', $(this).prop('checked'));
         });
@@ -780,13 +628,11 @@
             $(".allpercent").prop('checked', $(this).prop('checked'));
         });
         
-        $(".allpercent").change(function(){
+        $(".allpercent").change(function() {
             if (!$(this).prop("checked")){
                 $("#ckbCheckAllpercent").prop("checked",false);
             }
         });
-
-        
     });
 
     </script>
