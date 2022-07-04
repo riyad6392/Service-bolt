@@ -893,28 +893,24 @@ class PersonnelController extends Controller
 
     public function paymentsettingcreate(Request $request) {
       
-      
-      // $amountarray = $request->amountwise;
-      // $amountvaluearray = array_filter($request->amountvalue);
-      //  print_r($amountarray);
-      //  echo "<br>";
-      //  print_r($amountvaluearray);
-      //  die;
-
-      // foreach($amountarray as $key=> $value) {
-        
-      // }
-      // dd($jsondata);
-
       $auth_id = auth()->user()->id;
+      
       if(auth()->user()->role == 'company') {
           $auth_id = auth()->user()->id;
       } else {
          return redirect()->back();
       }
-      $data['uid'] = $auth_id;
-      $data['pid'] = $request->pid;
-      $data['hiredate'] = $request->hiredate;
+
+      $datajson = array();
+
+      $paymentSetting = new PaymentSetting;
+      $paymentSetting->uid = $auth_id;
+      $paymentSetting->pid = $request->pid;
+      $paymentSetting->hiredate = $request->hiredate;
+
+      // $data['uid'] = $auth_id;
+      // $data['pid'] = $request->pid;
+      // $data['hiredate'] = $request->hiredate;
       if($request->hourly=="on") {
         if($request->hourlypaymentamount!="") {
           $data['hourly'] = $request->hourly;
@@ -923,9 +919,11 @@ class PersonnelController extends Controller
       }
 
       if($request->fixedsalary == "on") {
-        $data['fixedsalary'] = $request->fixedsalary;
+        $payment['fixedsalary'] = $request->fixedsalary;
         $requestsalary = $request->salary;
         if($requestsalary == "monthlysalaryamount") {
+          // array_push($datajson,$requestsalary=>$monthlysalaryamount);
+          // $paymentSetting->hourlypayment=json_encode($datajson);
           $data['monthlysalary'] = $request->monthlysalaryamount;
         }
         if($requestsalary == "bimonthlysalaryamount") {
@@ -940,25 +938,51 @@ class PersonnelController extends Controller
           $data['biweeklysalary'] = $request->biweeklysalaryamount;
         }
       }
+      
 
       if(isset($request->commission)) {
-        if($request->commission == "amount") {
-          $data['amountwise'] = "on";
-          
-          if($request->amountall =="on") {
-            $data['amountall'] = $request->amountallamount;
-          }
+        $amountarray = $request->amountwise;
+        $amountvaluearray = array_filter($request->amountvalue);
+        foreach($amountarray as $key=> $value) {
+          $servicename = $value;
+          $servicevalue = $amountvaluearray[$key];
+          array_push($datajson,[$servicename=>$servicevalue]);
         }
+       
+       $paymentSetting->hourly = "commission";
+       if($request->commission == "amount"){
+         $typevalue = $request->commission;
+       }
 
-        if($request->commission == "percent") {
-          $data['percentwise'] = "on";
-          
-          if($request->percentall =="on") {
-            $data['percentall'] = $request->percentallamount;
-          }
-        }
+       if($request->commission == "percent") {
+          $typevalue = $request->commission;
+       }
+        $datajson=array (
+          $typevalue=>$datajson
+        );
+         $paymentSetting->hourlypayment=json_encode($datajson);
       }
-      PaymentSetting::create($data);
+        
+      $paymentSetting->save();
+
+      // if(isset($request->commission)) {
+      //   if($request->commission == "amount") {
+      //     $data['amountwise'] = "on";
+          
+      //     if($request->amountall =="on") {
+      //       $data['amountall'] = $request->amountallamount;
+      //     }
+      //   }
+
+      //   if($request->commission == "percent") {
+      //     $data['percentwise'] = "on";
+          
+      //     if($request->percentall =="on") {
+      //       $data['percentall'] = $request->percentallamount;
+      //     }
+      //   }
+      // }
+      // PaymentSetting::create($data);
       return redirect()->back();
     }
 }

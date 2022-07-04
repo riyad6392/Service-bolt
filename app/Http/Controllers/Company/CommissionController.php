@@ -8,6 +8,8 @@ use Carbon\Carbon;
 
 use DB;
 use Image;
+use App\Models\Service;
+use App\Models\Inventory;
 
 class CommissionController extends Controller
 {
@@ -34,6 +36,9 @@ class CommissionController extends Controller
         } else {
            return redirect()->back();
         }
-        return view('commission.index',compact('auth_id'));
+
+        $services = Service::select('id','servicename')->where('userid',$auth_id)->get();
+        $products = Inventory::select('id','productname')->where('user_id',$auth_id)->get();
+        return view('commission.index',compact('services','products'));
     }
 }
