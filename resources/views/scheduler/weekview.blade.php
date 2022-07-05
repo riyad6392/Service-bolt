@@ -436,6 +436,15 @@ th.fc-resource-cell img {
 .fc-state-hover{
 background: transparent!important;
 }
+
+.text-start.assigndiv {
+    right: 5px;
+    color: green;
+    background-color: #fff;
+    border-radius: 100%;
+    padding: 2px 3px;
+    font-size: 12px;
+}
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -554,6 +563,20 @@ background: transparent!important;
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="edit-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body" style="height: 500px;">
+      <form method="post" action="{{ route('company.ticketadded') }}" enctype="multipart/form-data">
+        @csrf
+        <div id="viewmodaldata1"></div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- new ticket assign modal -->
 <div class="modal fade" id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -988,8 +1011,8 @@ background: transparent!important;
                                type: "success"
                             },
                             function(){ 
-                                $('#calendar').fullCalendar('refetchEvents');
-                                  // location.reload();
+                                //$('#calendar').fullCalendar('refetchEvents');
+                                location.reload();
                                 }
                             );
                            }
@@ -1002,6 +1025,8 @@ background: transparent!important;
                     element.find(".fc-list-item-time").append("<div class='text-start'><span class='fa fa-edit' data-bs-toggle='modal' data-bs-target='#exampleModal'></span></div>");
                 } else {
                     element.find(".fc-content").prepend("<div class='text-start'><span class='fa fa-edit' data-bs-toggle='modal' data-bs-target='#exampleModal' id='editsticket' data-id='"+event.id+"'></span></div>");
+
+                    element.find(".fc-content").prepend("<div class='text-start assigndiv'><span class='fa fa-user-plus' data-bs-toggle='modal' data-bs-target='#edit-tickets' id='editTickets' data-id='"+event.id+"'></span></div>");
                 } 
 
                 element.find(".fa-edit").on('click', function() {
@@ -1251,28 +1276,23 @@ background: transparent!important;
 </script>
 
 <script type="">
-    // $(function() {
-    //     createSticky($("#header"));
-    // });
-
-    // function createSticky(sticky) {
-    //     if (typeof sticky !== "undefined") {
-    //         var pos = sticky.offset().top + 20,
-    //         win = $(window);
-    //         win.on("scroll", function() {
-    //             win.scrollTop() >= pos ? sticky.addClass("fixed") : sticky.removeClass("fixed");
-    //         });     
-    //     }
-    // }
-
-// $("#dateval").datepicker({
-//     onSelect: function(dateText, inst) {
-//         var date = $(this).val();
-//         var time = $('#time').val();
-//         alert('on select triggered');
-//         $("#start").val(date + time.toString(' HH:mm').toString());
-//         console.log(date + time.toString(' HH:mm').toString());
-//     }
-// });
+    $(document).on('click','#editTickets',function(e) {
+       var id = $(this).data('id');
+       var dataString =  'id='+ id;
+       $.ajax({
+            url:'{{route('company.viewaddedticketmodal')}}',
+            data: dataString,
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              console.log(data.html);
+              $('#viewmodaldata1').html(data.html);
+              $('.selectpicker').selectpicker({
+                size: 5
+              });
+            }
+        })
+   });
 </script>
 @endsection

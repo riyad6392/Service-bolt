@@ -10,6 +10,7 @@ use DB;
 use Image;
 use App\Models\Service;
 use App\Models\Inventory;
+use App\Models\PaymentSetting;
 
 class CommissionController extends Controller
 {
@@ -40,5 +41,49 @@ class CommissionController extends Controller
         $services = Service::select('id','servicename')->where('userid',$auth_id)->get();
         $products = Inventory::select('id','productname')->where('user_id',$auth_id)->get();
         return view('commission.index',compact('services','products'));
+    }
+
+    public function commissioncreate(Request $request) {
+       $auth_id = auth()->user()->id;
+      
+      if(auth()->user()->role == 'company') {
+          $auth_id = auth()->user()->id;
+      } else {
+         return redirect()->back();
+      }
+
+      $datajson = array();
+
+      $paymentSetting = new PaymentSetting;
+      $paymentSetting->uid = $auth_id;
+
+        $amountarray = $request->amountwise;
+        $amountvaluearray = array_filter($request->amountvalue);
+        foreach($amountarray as $key=> $value) {
+          $servicename = $value;
+          $servicevalue = $amountvaluearray[$key];
+          array_push($datajson,[$servicename=>$servicevalue]);
+        }
+       
+       $paymentSetting->paymentbase = "commission";
+       if($request->commission == "amount") {
+         $typevalue = $request->commission;
+       }
+
+       if($request->commission == "percent") {
+          $typevalue = $request->commission;
+       }
+        
+        $datajson=array (
+          $typevalue=>$datajson
+        );
+
+        $paymentSetting->content=json_encode($datajson);
+      
+        
+        $paymentSetting->save();
+
+      
+      return redirect()->back(); 
     }
 }

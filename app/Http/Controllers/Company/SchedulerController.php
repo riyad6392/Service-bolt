@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Tenture;
 use DateTime;
+use App\Models\Address;
 
 class SchedulerController extends Controller
 {
@@ -916,10 +917,12 @@ class SchedulerController extends Controller
         $data['radiogroup'] = $quote->radiogroup;
         $data['frequency'] = $quote->frequency;
         $data['time'] = $quote->time;
+        $data['minute'] = $quote->minute;
         $data['price'] = $quote->price;
         $data['etc'] = $quote->etc;
         $data['description'] = $quote->description;
         $data['giventime'] = $quote->giventime;
+        $data['givenendtime'] = $quote->givenendtime;
         $data['givendate'] = $quote->givendate;
         $data['ticket_status'] = 2;
         Quote::create($data);
@@ -978,8 +981,12 @@ class SchedulerController extends Controller
         if($quotedetails[0]->time =='1 Hours') {
             $selectedt4 = "selected";
         }
+
         $time =  explode(" ", $quotedetails[0]->time);
-       $minute =  explode(" ", $quotedetails[0]->minute);
+        $minute =  explode(" ", $quotedetails[0]->minute);
+
+        $address = Address::select('id','address')->where("customerid",$quotedetails[0]->customerid)->get();
+
        $html ='<div class="add-customer-modal">
                   <h5>Edit</h5>
                 </div>';
@@ -993,7 +1000,16 @@ class SchedulerController extends Controller
            <div class="input_fields_wrap">
               <div class="mb-3">
               <label>Customer Address</label>
-                <input type="text" class="form-control" placeholder="Address" name="address" id="address" value="'.$quotedetails[0]->address.'" readonly>
+                <select class="form-select" name="address" id="address" required>';
+                foreach($address as $key => $value) {
+                  if($value->address == $quotedetails[0]->address) {
+                    $selectecpa = "selected";
+                  } else {
+                    $selectecpa = "";
+                }
+                 $html .='<option value="'.$value->address.'" '.@$selectecpa.'>'.$value->address.'</option>';
+              }
+        $html .='</select>
               </div>
           </div>
         </div>
@@ -1009,7 +1025,7 @@ class SchedulerController extends Controller
                   $selectedp = "";
                  }
 
-                $html .='<option value="'.$value->id.'" '.@$selectedp.' data-hour="'.$value->time.'" data-min="'.$value->minute.'">'.$value->servicename.'</option>';
+                $html .='<option value="'.$value->id.'" '.@$selectedp.' data-hour="'.$value->time.'" data-min="'.$value->minute.'" data-price="'.$value->price.'">'.$value->servicename.'</option>';
               }
             $html .='</select>
           </div>
@@ -1119,6 +1135,7 @@ class SchedulerController extends Controller
       } else {
         $quote->minute = null;
       }
+      $quote->address = $request->address;
       $quote->price = $request->price;
       $quote->etc = $request->etc;
       $quote->description = $request->description;
@@ -1225,8 +1242,8 @@ class SchedulerController extends Controller
     public function getschedulerdataweekview(Request $request)
     {
         $auth_id = auth()->user()->id;
-        
-        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('personnel.id','15')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->orderBy('quote.id','ASC')->get();
+        //->where('personnel.id','15')
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->orderBy('quote.id','ASC')->get();
         
         $data=[];
         foreach ($scheduleData as $key => $row) {

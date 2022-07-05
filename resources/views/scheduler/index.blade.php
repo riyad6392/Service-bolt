@@ -426,6 +426,16 @@ th.fc-resource-cell img {
 .fc-unthemed td.fc-today {
     background: #f7f9fa;
 }
+
+.text-start.assigndiv {
+    right: 5px;
+    color: green;
+    background-color: #fff;
+    border-radius: 100%;
+    padding: 2px 3px;
+    font-size: 12px;
+}
+
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -549,6 +559,20 @@ th.fc-resource-cell img {
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="edit-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body" style="height: 500px;">
+      <form method="post" action="{{ route('company.ticketadded') }}" enctype="multipart/form-data">
+        @csrf
+        <div id="viewmodaldata1"></div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- new ticket assign modal -->
 <div class="modal fade" id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -639,7 +663,7 @@ th.fc-resource-cell img {
      <div class="col-md-12 mb-3">
         <select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
           @foreach($services as $key =>$value)
-          <option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}">{{$value->servicename}}</option>
+          <option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}">{{$value->servicename}}</option>
         @endforeach
        </select>
      </div>
@@ -813,9 +837,19 @@ th.fc-resource-cell img {
             $("#time").val(h);
                 $("#minute").val(realmin);
         }
+
+        function getprice1() {
+            var price=0;
+            $('select.selectpicker1').find('option:selected').each(function() {
+                price += parseInt($(this).data('price'));
+            });
+                
+            $("#price").val(price);
+        }
         
         $(document).on('change', 'select.selectpicker1',function() {
             gethours1();
+            getprice1();
         });
         $('html, body').animate({
             scrollTop: $('#srcoll-here').offset().top
@@ -981,8 +1015,8 @@ th.fc-resource-cell img {
                                type: "success"
                             },
                             function(){ 
-                                $('#calendar').fullCalendar('refetchEvents');
-                                  // location.reload();
+                                //$('#calendar').fullCalendar('refetchEvents');
+                                   location.reload();
                                 }
                             );
                            }
@@ -992,10 +1026,12 @@ th.fc-resource-cell img {
                 });
                 
                 if (view.name == 'listDay') {
-                    element.find(".fc-list-item-time").append("<div class='text-start'><span class='fa fa-edit' data-bs-toggle='modal' data-bs-target='#exampleModal'></span></div>");
+                    element.find(".fc-list-item-time").append("<div class='text-start'><span class='fa fa-edit123' data-bs-toggle='modal' data-bs-target='#exampleModal'></span></div>");
                 } else {
                     element.find(".fc-content").prepend("<div class='text-start'><span class='fa fa-edit' data-bs-toggle='modal' data-bs-target='#exampleModal' id='editsticket' data-id='"+event.id+"'></span></div>");
-                } 
+
+                    element.find(".fc-content").prepend("<div class='text-start assigndiv'><span class='fa fa-user-plus' data-bs-toggle='modal' data-bs-target='#edit-tickets' id='editTickets' data-id='"+event.id+"'></span></div>");
+               } 
 
                 element.find(".fa-edit").on('click', function() {
                     //console.log(event.id);
@@ -1243,28 +1279,23 @@ th.fc-resource-cell img {
 </script>
 
 <script type="">
-    // $(function() {
-    //     createSticky($("#header"));
-    // });
-
-    // function createSticky(sticky) {
-    //     if (typeof sticky !== "undefined") {
-    //         var pos = sticky.offset().top + 20,
-    //         win = $(window);
-    //         win.on("scroll", function() {
-    //             win.scrollTop() >= pos ? sticky.addClass("fixed") : sticky.removeClass("fixed");
-    //         });     
-    //     }
-    // }
-
-// $("#dateval").datepicker({
-//     onSelect: function(dateText, inst) {
-//         var date = $(this).val();
-//         var time = $('#time').val();
-//         alert('on select triggered');
-//         $("#start").val(date + time.toString(' HH:mm').toString());
-//         console.log(date + time.toString(' HH:mm').toString());
-//     }
-// });
-</script>
+ $(document).on('click','#editTickets',function(e) {
+   var id = $(this).data('id');
+   var dataString =  'id='+ id;
+   $.ajax({
+            url:'{{route('company.viewaddedticketmodal')}}',
+            data: dataString,
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              console.log(data.html);
+              $('#viewmodaldata1').html(data.html);
+              $('.selectpicker').selectpicker({
+                size: 5
+              });
+            }
+        })
+  });
+ </script>
 @endsection

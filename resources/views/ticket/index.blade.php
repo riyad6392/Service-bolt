@@ -583,7 +583,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	  <div class="col-md-12 mb-3">
 	  	<select class="selectpicker form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
 	  		@foreach($services as $key =>$value)
-				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}">{{$value->servicename}}</option>
+				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}">{{$value->servicename}}</option>
 			@endforeach
 		</select>
 	   </div>
@@ -750,7 +750,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		<div class="col-md-12 mb-3">
 	  	<select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
 	  		@foreach($services as $key =>$value)
-				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}">{{$value->servicename}}</option>
+				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price1="{{$value->price}}">{{$value->servicename}}</option>
 			@endforeach
 		</select>
 	   </div>
@@ -800,7 +800,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	   <div class="col-md-12 mb-3 position-relative">
 	   	<i class="fa fa-dollar" style="position: absolute;
     margin: 18px;"></i>
-	   	<input type="text" class="form-control" placeholder="Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+	   	<input type="text" class="form-control" placeholder="Price" name="price" id="price1" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
 	   </div>
 	   
 	   <div class="col-md-12 mb-3">
@@ -1081,9 +1081,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		    $("#time").val(h);
 				$("#minute").val(realmin);
 	    }
+
+	    function getpriceajax() {
+  			var price=0;
+				$('select.selectpicker2').find('option:selected').each(function() {
+			   	price += parseInt($(this).data('price'));
+				});
+				
+				$("#price").val(price);
+	    }
 		
 		$(document).on('change', 'select.selectpicker2',function() {
 			gethoursajax();
+			getpriceajax();
 		});
 
 		 
@@ -1103,9 +1113,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		    $("#time").val(h);
 				$("#minute").val(realmin);
 	    }
+
+	  function getprice() {
+	  	var price = 0;
+	  	$('select.selectpicker').find('option:selected').each(function() {
+			   	price += parseInt($(this).data('price'));
+			});
+			
+			$("#price").val(price);	
+	  }
 		
 		$('select.selectpicker').on('change', function() {
 			gethours();
+			getprice();
 		});
 		$('.selectpicker1').selectpicker();
 		function gethours1() {
@@ -1123,10 +1143,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		    $("#time1").val(h);
 				$("#minute1").val(realmin);
 	    }
+
+	    function getprice1() {
+				var price = 0;
+	  		$('select.selectpicker1').find('option:selected').each(function() {
+			   	price += parseInt($(this).data('price1'));
+				});
+			
+				$("#price1").val(price);	
+	    }
 		
-		$('select.selectpicker1').on('change', function() {
-			gethours1();
-		});
+			$('select.selectpicker1').on('change', function() {
+				gethours1();
+				getprice1();
+			});
 
 		$('#customerid').on('change', function() {
 			var customerid = this.value;

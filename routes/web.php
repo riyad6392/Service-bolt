@@ -290,6 +290,7 @@ Route::group([
 
     Route::get('/report', [ReportController::class, 'index'])->name('report');
     Route::get('/managecommission', [CommissionController::class, 'index'])->name('managecommission');
+    Route::any('/personnel/managecommissioncreate', [CommissionController::class, 'commissioncreate'])->name('commissioncreate');
 
     Route::get('/billing', [BillingController::class, 'index'])->name('billing');
     Route::any('/billing/billingview/{date}', [BillingController::class, 'billingview'])->name('billingview');

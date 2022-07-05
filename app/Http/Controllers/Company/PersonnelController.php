@@ -886,9 +886,17 @@ class PersonnelController extends Controller
       } else {
          return redirect()->back();
       }
+
       $services = Service::select('id','servicename')->where('userid',$auth_id)->get();
       $products = Inventory::select('id','productname')->where('user_id',$auth_id)->get();
-      return view('personnel.paymentsetting',compact('services','products'));
+
+      $paymentdata = PaymentSetting::where('pid',$id)->first()->count();
+      if($paymentdata == 1) {
+        $paymentdata = "1";
+      } else {
+        $paymentdata = "0";
+      }
+      return view('personnel.paymentsetting',compact('services','products','paymentdata'));
     }
 
     public function paymentsettingcreate(Request $request) {
@@ -913,29 +921,37 @@ class PersonnelController extends Controller
       // $data['hiredate'] = $request->hiredate;
       if($request->hourly=="on") {
         if($request->hourlypaymentamount!="") {
-          $data['hourly'] = $request->hourly;
-          $data['hourlypayment'] = $request->hourlypaymentamount;
+          $paymentSetting->paymentbase = "hourly";
+
+          array_push($datajson,['hourly'=>$request->hourlypaymentamount]);
+          $paymentSetting->content=json_encode($datajson);
         }
       }
 
       if($request->fixedsalary == "on") {
-        $payment['fixedsalary'] = $request->fixedsalary;
+        
+        $paymentSetting->paymentbase = "fixedsalary";
+
         $requestsalary = $request->salary;
+        
         if($requestsalary == "monthlysalaryamount") {
-          // array_push($datajson,$requestsalary=>$monthlysalaryamount);
-          // $paymentSetting->hourlypayment=json_encode($datajson);
-          $data['monthlysalary'] = $request->monthlysalaryamount;
+          array_push($datajson,['monthlysalary'=>$request->monthlysalaryamount]);
+          $paymentSetting->content=json_encode($datajson);
         }
+
         if($requestsalary == "bimonthlysalaryamount") {
-          $data['bimonthlysalary'] = $request->bimonthlysalaryamount;
+          array_push($datajson,['bimonthlysalary'=>$request->bimonthlysalaryamount]);
+          $paymentSetting->content=json_encode($datajson);
         }
 
         if($requestsalary == "weeklysalaryamount") {
-          $data['weeklysalary'] = $request->weeklysalaryamount;
+          array_push($datajson,['weeklysalary'=>$request->weeklysalaryamount]);
+          $paymentSetting->content=json_encode($datajson);
         }
 
         if($requestsalary == "biweeklysalaryamount") {
-          $data['biweeklysalary'] = $request->biweeklysalaryamount;
+          array_push($datajson,['biweeklysalary'=>$request->biweeklysalaryamount]);
+          $paymentSetting->content=json_encode($datajson);
         }
       }
       
@@ -949,8 +965,8 @@ class PersonnelController extends Controller
           array_push($datajson,[$servicename=>$servicevalue]);
         }
        
-       $paymentSetting->hourly = "commission";
-       if($request->commission == "amount"){
+       $paymentSetting->paymentbase = "commission";
+       if($request->commission == "amount") {
          $typevalue = $request->commission;
        }
 
@@ -960,7 +976,7 @@ class PersonnelController extends Controller
         $datajson=array (
           $typevalue=>$datajson
         );
-         $paymentSetting->hourlypayment=json_encode($datajson);
+         $paymentSetting->content=json_encode($datajson);
       }
         
       $paymentSetting->save();

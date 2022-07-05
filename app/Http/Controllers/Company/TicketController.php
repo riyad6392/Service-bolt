@@ -605,6 +605,8 @@ class TicketController extends Controller
 
       $time =  explode(" ", $quotedetails[0]->time);
       $minute =  explode(" ", $quotedetails[0]->minute);
+
+      $address = Address::select('id','address')->where("customerid",$quotedetails[0]->customerid)->get(); 
        
        $html ='<div class="add-customer-modal">
                   <h5>Edit</h5>
@@ -630,9 +632,16 @@ class TicketController extends Controller
            <div class="input_fields_wrap">
               <div class="mb-3">
               <label>Select Customer Address</label>
-                <select class="form-select" name="address" id="address3" required>
-                  <option value="'.$quotedetails[0]->address.'">'.$quotedetails[0]->address.'</option>
-                  </select>
+                <select class="form-select" name="address" id="address3" required>';
+                foreach($address as $key => $value) {
+                  if($value->address == $quotedetails[0]->address) {
+                    $selectecpa = "selected";
+                  } else {
+                    $selectecpa = "";
+                }
+                 $html .='<option value="'.$value->address.'" '.@$selectecpa.'>'.$value->address.'</option>';
+              }
+        $html .='</select>
               </div>
           </div>
         </div>
@@ -647,7 +656,7 @@ class TicketController extends Controller
                   $selectedp = "";
                  }
 
-                $html .='<option value="'.$value->id.'" '.@$selectedp.' data-hour="'.$value->time.'" data-min="'.$value->minute.'">'.$value->servicename.'</option>';
+                $html .='<option value="'.$value->id.'" '.@$selectedp.' data-hour="'.$value->time.'" data-min="'.$value->minute.'" data-price="'.$value->price.'">'.$value->servicename.'</option>';
               }
         $html .='</select>
           </div>

@@ -282,7 +282,8 @@
 
 <div class="col-lg-12">
 <div class="card mb-3 h-auto">
-  <form>
+  <form method="post" action="{{route('company.commissioncreate')}}">
+    @csrf
 <div class="card-body payment-page">
 	   
         <div class="third-section">
@@ -391,7 +392,7 @@
          
         </div>
 </div>
-<div class="text-center "><button class="btn btn-add px-5 text-center mb-3">Save</button></div>
+<div class="text-center "><button class="btn btn-add px-5 text-center mb-3" style="pointer-events: none;">Save</button></div>
 </form>
 </div>
 </div>
