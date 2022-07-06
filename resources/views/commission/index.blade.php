@@ -294,14 +294,7 @@
             <div class="col-md-6">
                  <div style="padding-left:35px">
               <label class="radio-div3 ">Amount Wise 
-                @if($iscomisiondata!="")
-                    @if($iscomisiondata->type =="amount")
-                        <input type="radio" name="commission" class="custom-radio amountradio" value="amount" checked>
-                    @endif
-                @else
-                    <input type="radio" name="commission" class="custom-radio amountradio" value="amount" cheked>
-                @endif
-
+                        <input type="radio" name="commission" class="custom-radio amountradio" value="amount" {{ @$iscomisiondata[0]->type == 'amount' ? 'checked' : '' }}>
                 <span class="checkmark"></span>
               </label>
             
@@ -317,27 +310,42 @@
                           <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountallamount">
                         </div>
                     </li>
+                    @php
+                        $totlcount = count($services);
+
+                    @endphp
+
                     @foreach($services as $key => $value)
+                       
                      <li class="d-flex">
                         <label class="container-checkbox me-4">{{$value->servicename}} :
-                            <input type="checkbox" name="amountwise[]" class="amountall" value="{{$value->servicename}}">
+                            @if(@$commissiondata == "")
+                                <input type="checkbox" name="amountwise[]" class="amountall" value="{{$value->servicename}}" id="inputs_{{$key}}">
+                            @else
+                                <input type="checkbox" name="amountwise[]" class="amountall" value="{{$value->servicename}}" id="inputs_{{$key}}" {{ array_column(@$commissiondata,$value->servicename) ? 'checked' : '' }} >
+                            @endif
                             <span class="checkmark"></span>
                         </label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]">
+                            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]" value="{{@$commissiondata[$key][$value->servicename]}}" disabled>
                         </div>
                     </li>
                     @endforeach
                     @foreach($products as $key1 => $product)
                      <li class="d-flex">
                      <label class="container-checkbox me-4">{{$product->productname}} :
-                        <input type="checkbox" name="amountwise[]" class="amountall" name="{{$product->productname}}" value="{{$product->productname}}">
+                        @if(@$commissiondata == "")
+                         <input type="checkbox" name="amountwise[]" class="amountall" name="{{$product->productname}}" value="{{$product->productname}}" id="inputp_{{$key1}}">
+                        @else
+                         <input type="checkbox" name="amountwise[]" class="amountall" name="{{$product->productname}}" value="{{$product->productname}}" id="inputp_{{$key1}}" {{ array_column($commissiondata,$product->productname) ? 'checked' : '' }}>
+                        @endif
+                        
                     <span class="checkmark"></span>
                   </label>
                        <div class="input-group mb-3">
           <span class="input-group-text">$</span>
-          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]">
+          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]" value="{{@$commissiondata[$key1+$totlcount][$product->productname]}}" id="chkbp_{{$key}}" disabled>
         </div>
                     </li>
                     @endforeach
@@ -348,14 +356,7 @@
             <div class="col-md-6">
                
               <label class="radio-div4">Percent Wise 
-                @if($iscomisiondata!="")
-                    @if($iscomisiondata->type =="percent")
-                        <input type="radio" name="commission" class="custom-radio percentradio" value="percent" checked>
-                    @endif
-                @else
-                    <input type="radio" name="commission" class="custom-radio percentradio" value="percent">
-                @endif
-                
+                        <input type="radio" name="commission" class="custom-radio percentradio" value="percent" {{ @$iscomisiondata[0]->type == 'percent' ? 'checked' : '' }}>
                 <span class="checkmark"></span>
               </label>
                 <ul class="selection-div4">
@@ -372,23 +373,33 @@
 
             @foreach($services as $key => $value)
              <li class="d-flex">
-                <label class="container-checkbox me-4">{{$value->servicename}} : 
-                    <input type="checkbox" name="percent-wise" class="allpercent" value="{{$value->servicename}}">
+                <label class="container-checkbox me-4">{{$value->servicename}} :
+                @if(@$commissionpdata == "")
+                    <input type="checkbox" name="percentwise[]" class="allpercent" value="{{$value->servicename}}">
+                @else
+                    <input type="checkbox" name="percentwise[]" class="allpercent" value="{{$value->servicename}}" {{ array_column(@$commissionpdata,$value->servicename) ? 'checked' : '' }} >
+                @endif
+
+                    
                     <span class="checkmark"></span>
                 </label>
                <div class="input-group mb-3">
-                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false"><span class="input-group-text">%</span>
+                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="percentvalue[]" value="{{@$commissionpdata[$key][$value->servicename]}}"><span class="input-group-text">%</span>
                 </div>
             </li>
             @endforeach
              @foreach($products as $key1 => $product)
              <li class="d-flex">
               <label class="container-checkbox me-4">{{$product->productname}} :
-                <input type="checkbox" name="percent-wise" class="allpercent" value="{{$product->productname}}">
+                @if(@$commissionpdata == "")
+                    <input type="checkbox" name="percentwise[]" class="allpercent" value="{{$value->servicename}}">
+                @else
+                    <input type="checkbox" name="percentwise[]" class="allpercent" value="{{$value->servicename}}" {{ array_column(@$commissionpdata,$value->servicename) ? 'checked' : '' }} >
+                @endif
                 <span class="checkmark"></span>
              </label>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false"><span class="input-group-text">%</span>
+                    <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="percentvalue[]" value="{{@$commissionpdata[$key1+$totlcount][$product->productname]}}"> <span class="input-group-text">%</span>
                 </div>
             </li>
             @endforeach
@@ -406,7 +417,7 @@
          
         </div>
 </div>
-<div class="text-center "><button class="btn btn-add px-5 text-center mb-3" style="pointer-events: none;">Save</button></div>
+<div class="text-center "><button class="btn btn-add px-5 text-center mb-3" style="pointer-events:none;">Save</button></div>
 </form>
 </div>
 </div>
@@ -421,12 +432,28 @@
     $('#example').DataTable();
     
 
+    //percentradio
+
   });
+  if($('.amountradio').is(':checked') == false || $('.percentradio').is(':checked')== false) {
+        $('.savebutton').addClass('pointerevent');
+    }
    $.ajaxSetup({
       headers: {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
+
+
+   $('.amountradio').on('click', function() {
+        $('.savebutton').removeClass('pointerevent');
+   });
+
+   $('.percentradio').on('click', function() {
+        $('.savebutton').removeClass('pointerevent');
+   });
+
+    
 
    $('.radio-div4').on('click', function() {
         $('.radio-div1').prop("checked",false);
@@ -481,6 +508,8 @@
         $(".commisionchekbox").attr('checked', 'checked');
         $("#ckbCheckAll").click(function () {
             $(".amountall").prop('checked', $(this).prop('checked'));
+             $(".amountall").closest('li').find('input[type=text]').prop('disabled', !$(this).prop('checked'));
+           
         });
         
         $(".amountall").change(function(){
@@ -498,6 +527,14 @@
                 $("#ckbCheckAllpercent").prop("checked",false);
             }
         });
+
+        $(document).on('change','.amountall',function(){
+
+            $(this).closest('li').find('input[type=text]').prop('disabled', !$(this).is(':checked'));
+        });
+
+         
+        
     });
 
 </script>

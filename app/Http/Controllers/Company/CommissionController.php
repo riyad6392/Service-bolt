@@ -40,15 +40,25 @@ class CommissionController extends Controller
 
         $services = Service::select('id','servicename')->where('userid',$auth_id)->get();
         $products = Inventory::select('id','productname')->where('user_id',$auth_id)->get();
-        $iscomisiondata = PaymentSetting::where('uid',$auth_id)->whereNull('pid')->first();
-        
-        if($iscomisiondata == null) { 
-           $commissiondata = ""; 
+        $iscomisiondata = PaymentSetting::where('uid',$auth_id)->whereNull('pid')->get();
+        //dd($iscomisiondata);
+        if(count($iscomisiondata) == 0) { 
+           @$commissiondata = ""; 
            $iscomisiondata = "";
+           $commissionpdata = "";
         } else {
-            $commissiondata = json_decode($iscomisiondata->content);
+            if($iscomisiondata[0]->type=="amount") {
+                @$commissiondata = json_decode(@$iscomisiondata[0]->content,true);
+                $commissionpdata = "";
+            }
+            if($iscomisiondata[0]->type=="percent") {
+                $commissionpdata = json_decode(@$iscomisiondata[0]->content,true);
+                @$commissiondata = "";
+            }
+            
         }
-        return view('commission.index',compact('services','products','commissiondata','iscomisiondata'));
+       
+        return view('commission.index',compact('services','products','commissiondata','iscomisiondata','commissionpdata'));
     }
 
     public function commissioncreate(Request $request) {
@@ -61,12 +71,21 @@ class CommissionController extends Controller
       }
 
       $datajson = array();
+      $iscomisiondata = PaymentSetting::where('uid',$auth_id)->whereNull('pid')->get();
+       if(count($iscomisiondata) >= 1) {
+        PaymentSetting::where('uid',$auth_id)->whereNull('pid')->delete();
+       }
 
       $paymentSetting = new PaymentSetting;
       $paymentSetting->uid = $auth_id;
+        if($request->commission == "amount") {
+            $amountarray = array_filter($request->amountwise);
+            $amountvaluearray = array_filter($request->amountvalue);
+        }  else {
+            $amountarray = array_filter($request->percentwise);
+            $amountvaluearray = array_filter($request->percentvalue);
+        }
 
-        $amountarray = $request->amountwise;
-        $amountvaluearray = array_filter($request->amountvalue);
         foreach($amountarray as $key=> $value) {
           $servicename = $value;
           $servicevalue = $amountvaluearray[$key];
