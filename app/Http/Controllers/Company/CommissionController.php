@@ -40,7 +40,15 @@ class CommissionController extends Controller
 
         $services = Service::select('id','servicename')->where('userid',$auth_id)->get();
         $products = Inventory::select('id','productname')->where('user_id',$auth_id)->get();
-        return view('commission.index',compact('services','products'));
+        $iscomisiondata = PaymentSetting::where('uid',$auth_id)->whereNull('pid')->first();
+        
+        if($iscomisiondata == null) { 
+           $commissiondata = ""; 
+           $iscomisiondata = "";
+        } else {
+            $commissiondata = json_decode($iscomisiondata->content);
+        }
+        return view('commission.index',compact('services','products','commissiondata','iscomisiondata'));
     }
 
     public function commissioncreate(Request $request) {
@@ -74,11 +82,12 @@ class CommissionController extends Controller
           $typevalue = $request->commission;
        }
         
-        $datajson=array (
-          $typevalue=>$datajson
-        );
+        // $datajson=array (
+        //   $typevalue=>$datajson
+        // );
 
         $paymentSetting->content=json_encode($datajson);
+        $paymentSetting->type=$typevalue;
       
         
         $paymentSetting->save();

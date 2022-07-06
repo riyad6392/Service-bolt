@@ -294,7 +294,14 @@
             <div class="col-md-6">
                  <div style="padding-left:35px">
               <label class="radio-div3 ">Amount Wise 
-                <input type="radio" name="commission" class="custom-radio amountradio" value="amount">
+                @if($iscomisiondata!="")
+                    @if($iscomisiondata->type =="amount")
+                        <input type="radio" name="commission" class="custom-radio amountradio" value="amount" checked>
+                    @endif
+                @else
+                    <input type="radio" name="commission" class="custom-radio amountradio" value="amount" cheked>
+                @endif
+
                 <span class="checkmark"></span>
               </label>
             
@@ -341,7 +348,14 @@
             <div class="col-md-6">
                
               <label class="radio-div4">Percent Wise 
-                <input type="radio" name="commission" class="custom-radio percentradio" value="percent">
+                @if($iscomisiondata!="")
+                    @if($iscomisiondata->type =="percent")
+                        <input type="radio" name="commission" class="custom-radio percentradio" value="percent" checked>
+                    @endif
+                @else
+                    <input type="radio" name="commission" class="custom-radio percentradio" value="percent">
+                @endif
+                
                 <span class="checkmark"></span>
               </label>
                 <ul class="selection-div4">

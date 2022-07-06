@@ -890,8 +890,9 @@ class PersonnelController extends Controller
       $services = Service::select('id','servicename')->where('userid',$auth_id)->get();
       $products = Inventory::select('id','productname')->where('user_id',$auth_id)->get();
 
-      $paymentdata = PaymentSetting::where('pid',$id)->first()->count();
-      if($paymentdata == 1) {
+      $paymentdata = PaymentSetting::where('pid',$id)->first();
+      
+      if($paymentdata == null) {
         $paymentdata = "1";
       } else {
         $paymentdata = "0";
