@@ -583,10 +583,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	  <div class="col-md-12 mb-3">
 	  	<select class="selectpicker form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
 	  		@foreach($services as $key =>$value)
-				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}">{{$value->servicename}}</option>
+				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
 			@endforeach
-		</select>
-	   </div>
+			</select>
+	  </div>
 	   
 	   <div class="col-md-6 mb-3" style="display: none;">
 	  	<select class="form-select {{$wname}}" name="personnelid" id="personnelid">
@@ -750,7 +750,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		<div class="col-md-12 mb-3">
 	  	<select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
 	  		@foreach($services as $key =>$value)
-				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price1="{{$value->price}}">{{$value->servicename}}</option>
+				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price1="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
 			@endforeach
 		</select>
 	   </div>
@@ -1122,10 +1122,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 			
 			$("#price").val(price);	
 	  }
+
+	  function getfrequency() {
+	  	var frequency = "";
+	  	$("#frequency option").removeAttr('selected');
+	  	$('select.selectpicker').find('option:selected').each(function() {
+			   	frequency = $(this).data('frequency');
+			});
+			$("#frequency option[value='"+frequency+"']").attr('selected', 'selected');
+			
+	  }
 		
 		$('select.selectpicker').on('change', function() {
 			gethours();
 			getprice();
+			getfrequency();
 		});
 		$('.selectpicker1').selectpicker();
 		function gethours1() {
@@ -1152,10 +1163,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 			
 				$("#price1").val(price);	
 	    }
+
+	    function getfrequency1() {
+		  	var frequency = "";
+		  	$("#frequency option").removeAttr('selected');
+		  	$('select.selectpicker1').find('option:selected').each(function() {
+				   	frequency = $(this).data('frequency');
+				});
+				$("#frequency option[value='"+frequency+"']").attr('selected', 'selected').change();
+			}
 		
 			$('select.selectpicker1').on('change', function() {
 				gethours1();
 				getprice1();
+				getfrequency1();
 			});
 
 		$('#customerid').on('change', function() {

@@ -445,24 +445,32 @@ background: transparent!important;
     padding: 2px 3px;
     font-size: 12px;
 }
+.dropdownvisible {
+    position: relative;z-index: 999;
+}
+.bootstrap-select{
+        border: 1px solid #c1c1c1!important;
+}
+
 </style>
 <div class="row">
     <div class="col-md-12">
         <div class="col-lg-12 mb-4">
-            <div class="col-md-12">
+            <div class="col-md-12 dropdownvisible">
                 <div class="card position-sticky">
                     <div class="card-body">
                         <div class="row mb-0">
                             <div class="col-md-6">
                                 <div class="side-h3">
-                                    <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch 
+                                    <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch (Week View)
                                     </h3>
-                                    <a href="javascript:history.back()" class="back-btn">
+                                    <a href="{{url('company/scheduler')}}" class="back-btn">
                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
                                        Back</a><br>
                                     <p style="margin: 0; font-weight: 500;color: #000;">Tickets to Assign</p>
                                 </div>
                             </div>
+                           
                             <input type="hidden" name="workerid" id="workerid" value="{{$id}}">
                             @if($userData->openingtime!="")
                             <input type="hidden" name="openingtime" id="openingtime" value="{{$userData->openingtime}}:00">
@@ -525,6 +533,21 @@ background: transparent!important;
                                 @endif
                             </div>
                         </div>
+                         <div class="col-md-4  offset-md-8 mb-2 d-flex align-items-center">
+                               <label style="white-space:nowrap;"> Select Team member - </label> <select class="selectpicker3 form-control" data-live-search="true" name="personnelid" id="personnelid">';
+
+                                  @foreach($allworker as $key => $value)
+                                  @php
+                                    if(in_array($value->id, array($id))) {
+                                      $selectedp = "selected";
+                                     } else {
+                                      $selectedp = "";
+                                     }
+                                     @endphp
+                                    <option value="{{$value->id}}" data-id="{{$value->id}}" {{$selectedp}}>{{$value->personnelname}}</option>
+                                  @endforeach
+                                </select>
+                            </div>
                     </div>
                     @if(count($ticketData)>0)
                         <div class="use">
@@ -541,8 +564,10 @@ background: transparent!important;
                         </div>
                     @endif
                 </div>
+                
             </div>
             <div>
+
             <div id='calendar' style="position: relative;">
                   
               </div>
@@ -825,6 +850,7 @@ background: transparent!important;
 
 <script type="">
     $(document).ready(function () {
+        $('.selectpicker3').selectpicker();
         $('.selectpicker1').selectpicker();
         function gethours1() {
                 var h=0;
@@ -844,6 +870,11 @@ background: transparent!important;
         
         $(document).on('change', 'select.selectpicker1',function() {
             gethours1();
+        });
+
+        $(document).on('change', 'select.selectpicker3',function() {
+            var id=$(this).find('option:selected').data('id');
+            window.location.href = "{{url('company/scheduler/detailweek/')}}/"+id;
         });
         $('html, body').animate({
             scrollTop: $('#srcoll-here').offset().top

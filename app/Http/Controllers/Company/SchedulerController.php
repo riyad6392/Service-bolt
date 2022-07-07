@@ -777,7 +777,10 @@ class SchedulerController extends Controller
     $productData = Inventory::where('user_id',$auth_id)->orderBy('id','ASC')->get();
     $userData = User::select('openingtime','closingtime')->where('id',$auth_id)->first();
     $tenture = Tenture::where('status','Active')->get();
-    return view('scheduler.weekview',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id'));
+    
+    $allworker = Personnel::where('userid', $auth_id)->get();
+
+    return view('scheduler.weekview',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker'));
   }
 
   public function personnelschedulerdata(Request $request)

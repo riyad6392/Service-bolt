@@ -117,7 +117,7 @@ class WorkerTicketController extends Controller
 
           foreach($pidarray as $key => $pid) {
             $productd = Inventory::where('id', $pid)->first();
-            $productd->quantity = $productd->quantity - 1;
+            $productd->quantity = @$productd->quantity - 1;
             $productd->save();
           }
           
@@ -133,6 +133,8 @@ class WorkerTicketController extends Controller
           $data['date1'] = $date1;
 
           Schedulerhours::create($data);
+
+          
 
           $request->session()->flash('success', 'Ticket Pickup successfully');
           return redirect()->route('worker.myticket');
