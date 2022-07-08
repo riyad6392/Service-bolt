@@ -81,8 +81,9 @@ class AuthController extends Controller
                 'required',
                 'email',
                 Rule::unique('users')->ignore('email')->where(function ($query) {
-                    return $query->where('role', '!=', 'worker');
+                    return $query;
                 })],
+                //->where('role', '!=', 'worker')
             //'email' => 'required|string|email|max:255|unique:users,"worker",role',
             'password' => 'min:6|required_with:confirmpassword|same:confirmpassword',
             'confirmpassword' => 'min:6',

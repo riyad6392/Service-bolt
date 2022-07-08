@@ -134,7 +134,19 @@ class WorkerTicketController extends Controller
 
           Schedulerhours::create($data);
 
+          $app_name = 'ServiceBolt';
+          $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
           
+          $user_exist = DB::table('users')->select('email','firstname')->where('id',$ticket->userid)->first();
+          $ticketid ='#'.$request->ticketid;
+          $ticketsub = "Ticket($ticketid) has been picked";
+          $ticketheading = "The ticket below has been picked successfully.";
+
+          Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {
+            $message->to($user_exist->email)
+            ->subject($ticketsub);
+            $message->from($app_email,$app_name);
+          });
 
           $request->session()->flash('success', 'Ticket Pickup successfully');
           return redirect()->route('worker.myticket');
@@ -162,6 +174,21 @@ class WorkerTicketController extends Controller
               $sdata->date1 = $date1;
               $sdata->save();
             }
+
+            $app_name = 'ServiceBolt';
+            $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
+            
+            $user_exist = DB::table('users')->select('email','firstname')->where('id',$ticket->userid)->first();
+            $ticketid ='#'.$request->ticketid;
+            $ticketsub = "Ticket($ticketid) has been completed";
+            $ticketheading = "The ticket below has been completed successfully.";
+            
+            Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {
+              $message->to($user_exist->email)
+              ->subject($ticketsub);
+              $message->from($app_email,$app_name);
+            });
+
             $request->session()->flash('success', 'Ticket completed successfully');
             return redirect()->route('worker.myticket');
         }
@@ -211,6 +238,20 @@ class WorkerTicketController extends Controller
 
           Schedulerhours::create($data);
 
+          $app_name = 'ServiceBolt';
+          $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
+
+          $user_exist = DB::table('users')->select('email','firstname')->where('id',$ticket->userid)->first();
+          $ticketid ='#'.$request->ticketid;
+          $ticketsub = "Ticket($ticketid) has been picked";
+          $ticketheading = "The ticket below has been picked successfully.";
+
+          Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {
+            $message->to($user_exist->email)
+            ->subject($ticketsub);
+            $message->from($app_email,$app_name);
+          });
+
           $request->session()->flash('success', 'Ticket Pickup successfully');
           return redirect()->back();
         }
@@ -245,6 +286,21 @@ class WorkerTicketController extends Controller
               $sdata->date1 = $date1;
               $sdata->save();
             }
+
+            $app_name = 'ServiceBolt';
+            $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
+
+            $user_exist = DB::table('users')->select('email','firstname')->where('id',$ticket->userid)->first();
+            $ticketid ='#'.$request->ticketid;
+            $ticketsub = "Ticket($ticketid) has been completed";
+            $ticketheading = "The ticket below has been completed successfully.";
+
+            Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {
+              $message->to($user_exist->email)
+              ->subject($ticketsub);
+              $message->from($app_email,$app_name);
+            });
+
             $request->session()->flash('success', 'Ticket completed successfully');
             return redirect()->back();
         }

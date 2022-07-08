@@ -1,5 +1,6 @@
 <div>
-    <p>The ticket below has been picked successfully.</p>
+    <p>Hello {{ $name }},</p>
+    <p>{{$heading}}</p>
     <p>Ticket Details:- </p>
     TicketId: #{{ $ticketId }}
     <br>
