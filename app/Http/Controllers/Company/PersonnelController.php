@@ -68,10 +68,10 @@ class PersonnelController extends Controller
                 'required',
                 'email',
                 Rule::unique('users')->ignore('email')->where(function ($query) {
-                    return $query->where('role', '!=', 'company');
+                    return $query;
                 })],
             ]);
-
+            //->where('role', '!=', 'company')
             if ($validate->fails()) {
 
               return Redirect::back()->withErrors($validate)->withInput($request->all());
@@ -110,6 +110,10 @@ class PersonnelController extends Controller
             $output = json_decode($geocodeFromAddr);
             //Get latitude and longitute from json data
             //print_r($output->results[0]->geometry->location->lat); die;
+            if(empty($output->results)) {
+              $request->session()->flash('error', 'This address not found.');
+              return redirect()->back();
+            }
             $latitude  = $output->results[0]->geometry->location->lat; 
             $longitude = $output->results[0]->geometry->location->lng;
 
@@ -301,7 +305,7 @@ class PersonnelController extends Controller
           <label>Phone</label>
              <div class="input_fields_wrap">
                 <div class="mb-3">
-                  <input type="text" class="form-control" placeholder="Phone Number" name="phone" id="phone" value="'.$personnel[0]->phone.'" required="">
+                  <input type="text" class="form-control" placeholder="Phone Number" name="phone" id="phone" value="'.$personnel[0]->phone.'" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
                 </div>
             </div>
           </div>
@@ -384,9 +388,10 @@ class PersonnelController extends Controller
             'required',
             'email',
             Rule::unique('users')->ignore('email')->where(function ($query) {
-                return $query->where('role', '!=', 'company');
+                return $query;
         })],
       ]);
+      // ->where('role', '!=', 'company')
       if ($validate->fails()) {
         $request->session()->flash('error', 'The email has already been taken.');
         $request->session()->flash('editid', $request->personnelid);
@@ -431,6 +436,10 @@ class PersonnelController extends Controller
       $output = json_decode($geocodeFromAddr);
       //Get latitude and longitute from json data
       //print_r($output->results[0]->geometry->location->lat); die;
+      if(empty($output->results)) {
+        $request->session()->flash('error', 'This address not found.');
+        return redirect()->back();
+      }
       $latitude  = $output->results[0]->geometry->location->lat; 
       $longitude = $output->results[0]->geometry->location->lng;
 
