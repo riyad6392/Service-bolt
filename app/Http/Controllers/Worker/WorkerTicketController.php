@@ -17,6 +17,8 @@ use App\Models\Schedulerhours;
 use DateTime;
 use Mail;
 use App\Models\Tenture;
+use App\Models\Notification;
+use App\Events\MyEvent;
 
 class WorkerTicketController extends Controller
 {
@@ -37,7 +39,6 @@ class WorkerTicketController extends Controller
      */
     public function index(Request $request)
     {
-
         $auth_id = auth()->user()->id;
        
         if(auth()->user()->role == 'worker') {
@@ -106,7 +107,7 @@ class WorkerTicketController extends Controller
     public function update(Request $request)
     {
         $auth_id = auth()->user()->id;
-        $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
+        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
         $currentDate = date('l - F d, Y');
         if($request->Pickup == "Pickup") {
           $ticket = Quote::where('id', $request->ticketid)->get()->first();
@@ -148,6 +149,13 @@ class WorkerTicketController extends Controller
             $message->from($app_email,$app_name);
           });
 
+          $data1['uid'] = $worker->userid;
+          $data1['pid'] = $worker->workerid;
+          $data1['ticketid'] = $request->ticketid;
+          $data1['message'] = $ticketsub;
+
+          Notification::create($data1);
+          event(new MyEvent($ticketsub));
           $request->session()->flash('success', 'Ticket Pickup successfully');
           return redirect()->route('worker.myticket');
         }
@@ -189,6 +197,13 @@ class WorkerTicketController extends Controller
               $message->from($app_email,$app_name);
             });
 
+            $data1['uid'] = $worker->userid;
+            $data1['pid'] = $worker->workerid;
+            $data1['ticketid'] = $request->ticketid;
+            $data1['message'] = $ticketsub;
+
+            Notification::create($data1);
+            event(new MyEvent($ticketsub));
             $request->session()->flash('success', 'Ticket completed successfully');
             return redirect()->route('worker.myticket');
         }
@@ -209,7 +224,7 @@ class WorkerTicketController extends Controller
     {
       //dd($request->all());
         $auth_id = auth()->user()->id;
-        $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
+        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
         $currentDate = date('l - F d, Y');
         if($request->Pickup == "Pickup") {
           $ticket = Quote::where('id', $request->ticketid)->get()->first();
@@ -252,6 +267,13 @@ class WorkerTicketController extends Controller
             $message->from($app_email,$app_name);
           });
 
+          $data1['uid'] = $worker->userid;
+          $data1['pid'] = $worker->workerid;
+          $data1['ticketid'] = $request->ticketid;
+          $data1['message'] = $ticketsub;
+
+          Notification::create($data1);
+          event(new MyEvent($ticketsub));
           $request->session()->flash('success', 'Ticket Pickup successfully');
           return redirect()->back();
         }
@@ -301,8 +323,16 @@ class WorkerTicketController extends Controller
               $message->from($app_email,$app_name);
             });
 
-            $request->session()->flash('success', 'Ticket completed successfully');
-            return redirect()->back();
+          $data1['uid'] = $worker->userid;
+          $data1['pid'] = $worker->workerid;
+          $data1['ticketid'] = $request->ticketid;
+          $data1['message'] = $ticketsub;
+
+          Notification::create($data1);
+          event(new MyEvent($ticketsub));
+
+          $request->session()->flash('success', 'Ticket completed successfully');
+          return redirect()->back();
         }
 
         if($request->unclose == "unclose") {

@@ -143,6 +143,73 @@ i.fa.fa-angle-down {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+.position-absolute.not-bell {
+    width: 10px;
+    height: 10px;
+    background-color: green;
+    border-radius: 100%;
+    top: -5px;
+     animation: 1s blink ease infinite;
+  
+}
+.blinking {
+  -webkit-animation: 1s blink ease infinite;
+  -moz-animation: 1s blink ease infinite;
+  -ms-animation: 1s blink ease infinite;
+  -o-animation: 1s blink ease infinite;
+  animation: 1s blink ease infinite;
+  
+}
+
+@keyframes "blink" {
+  from, to {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes blink {
+  from, to {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes "blink" {
+  from, to {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes "blink" {
+  from, to {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes "blink" {
+  from, to {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.notification-icon .dropdown-menu{
+    top: 23px!important;
+}
 </style>
   <title>
   Services Bolt
@@ -189,8 +256,7 @@ if(strpos(Request::url(), 'categories') !== false || strpos(Request::url(), 'inv
   $classpc = "";
 }
 
-
-
+$notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest()->offset(0)->limit(5)->get();
 
 @endphp
 <div class="sidebar pt-2">
@@ -403,6 +469,21 @@ if(strpos(Request::url(), 'categories') !== false || strpos(Request::url(), 'inv
 	   </div>
        <div class="flex-new">
          <span class="ned-hlp">Need Help?</span>
+<div class="dropdown position-relative notification-icon">
+    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color: #81878F;">
+    <img src="{{url('')}}/images/notificationgray.png" style="width: 30px;  position: relative;right: 20px;height: 30px;object-fit: cover;border-radius: 100px;">
+    </a>
+    <div class="position-absolute not-bell" id="blink">
+   <span class="blinking"></span>
+</div>
+@if(count($notifications)>0)
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" id="notification">
+        @foreach($notifications as $notification)
+            <li><a class="dropdown-item">{{$notification->message}}</a></li>
+        @endforeach
+    </ul>   
+     @endif 
+</div>
 
 <div class="dropdown">
 	@if(Auth::user()->image!="")
@@ -410,7 +491,7 @@ if(strpos(Request::url(), 'categories') !== false || strpos(Request::url(), 'inv
 	@else
   	<img src="{{ url('')}}/uploads/servicebolt-noimage.png" style="width: 30px;  position: relative;right: 20px;height: 30px;object-fit: cover;border-radius: 100px;">
   @endif
-  <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color: #81878F;">
+  <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink1" data-bs-toggle="dropdown" aria-expanded="false" style="color: #81878F;">
     {{Auth::user()->firstname}}
   </a>
 
@@ -470,6 +551,7 @@ if(strpos(Request::url(), 'categories') !== false || strpos(Request::url(), 'inv
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css'>
 <script src="{{ asset('js/jquery-ui.js')}}"></script>
    <script src="{{ asset('js/add-field.js')}}"></script>
+   <script src="https://js.pusher.com/7.1/pusher.min.js"></script>
 
    
 @yield('script')
@@ -526,8 +608,8 @@ $(document).ready(function () {
    $("body").toggleClass('leftside-none');
    
   });
-      
-    });
+    $("#blink").removeClass("not-bell");  
+});
 
 $(document).ready(function() {
   var buttonAdd = $("#add-button");
@@ -803,6 +885,25 @@ function initMap() {
       },1000);
    } 
 });
+    </script>
+
+    <script type="text/javascript">
+        // Enable pusher logging - don't include this in production
+        //Pusher.logToConsole = true;
+
+        var pusher = new Pusher('21ccb81c25e86ff20bc3', {
+          cluster: 'ap2'
+        });
+
+        var channel = pusher.subscribe('my-channel');
+        
+        channel.bind('my-event', function(data) {
+        
+        var newNotificationHtml = `<li><a class="dropdown-item" href="">${data.message}</a></li>`;
+        $("#notification").append(newNotificationHtml);
+        $("#blink").addClass("not-bell"); 
+
+        });
     </script>
 
 
