@@ -293,8 +293,8 @@
           <div class="row">
             <div class="col-md-6">
                 <div style="padding-left:35px">
-                <label class="radio-div3 ">Flat Amount 
-                    <input type="radio" name="commission" class="custom-radio amountradio" value="amount" {{ @$iscomisiondata[0]->type == 'amount' ? 'checked' : '' }}>
+                <label class="radio-div3 container-checkbox me-4">Flat Amount 
+                    <input type="checkbox" name="commission" class="custom-radio amountradio" value="amount" {{ @$type == 'amount' ? 'checked' : '' }}>
                    <span class="checkmark"></span>
                 </label>
             
@@ -328,7 +328,7 @@
                     </label>
                     <div class="input-group mb-3">
                         <span class="input-group-text">$</span>
-                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]" value="{{@$commissiondata[$key][$value->servicename]}}" disabled>
+                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]" value="{{@$commissiondata[$key][$value->servicename]}}">
                     </div>
                 </li>
                 @endforeach
@@ -344,7 +344,7 @@
                 </label>
                 <div class="input-group mb-3">
                   <span class="input-group-text">$</span>
-                  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]" value="{{@$commissiondata[$key1+$totlcount][$product->productname]}}" id="chkbp_{{$key}}" disabled>
+                  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]" value="{{@$commissiondata[$key1+$totlcount][$product->productname]}}" id="chkbp_{{$key}}" >
                 </div>
                 </li>
                 @endforeach
@@ -353,8 +353,8 @@
         </div>
             <div class="col-md-6">
                
-              <label class="radio-div4">Percent Base
-                        <input type="radio" name="commission" class="custom-radio percentradio" value="percent" {{ @$iscomisiondata[0]->type == 'percent' ? 'checked' : '' }}>
+              <label class="radio-div4 container-checkbox me-4">Percent Base
+                        <input type="checkbox" name="commission1" class="custom-radio percentradio" value="percent" {{ @$type1 == 'percent' ? 'checked' : '' }}>
                 <span class="checkmark"></span>
               </label>
                 <ul class="selection-div4">
@@ -390,9 +390,9 @@
              <li class="d-flex">
               <label class="container-checkbox me-4">{{$product->productname}} :
                 @if(@$commissionpdata == "")
-                    <input type="checkbox" name="percentwise[]" class="allpercent" value="{{$value->servicename}}">
+                    <input type="checkbox" name="percentwise[]" class="allpercent" value="{{$product->productname}}">
                 @else
-                    <input type="checkbox" name="percentwise[]" class="allpercent" value="{{$value->servicename}}" {{ array_column(@$commissionpdata,$value->servicename) ? 'checked' : '' }} >
+                    <input type="checkbox" name="percentwise[]" class="allpercent" value="{{$product->productname}}" {{ array_column(@$commissionpdata,$product->productname) ? 'checked' : '' }} >
                 @endif
                 <span class="checkmark"></span>
              </label>
@@ -415,7 +415,7 @@
          
         </div>
 </div>
-<div class="text-center "><button class="btn btn-add px-5 text-center mb-3" style="pointer-events:none;">Save</button></div>
+<div class="text-center "><button class="btn btn-add px-5 text-center mb-3" style="pointer-events:block;">Save</button></div>
 </form>
 </div>
 </div>
@@ -426,87 +426,19 @@
 
 @section('script')
 <script type="text/javascript">
-  $(document).ready(function() {
-    $('#example').DataTable();
-    
-
-    //percentradio
-
-  });
-  if($('.amountradio').is(':checked') == false || $('.percentradio').is(':checked')== false) {
-        $('.savebutton').addClass('pointerevent');
-    }
-   $.ajaxSetup({
-      headers: {
-         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-   });
-
-
-   $('.amountradio').on('click', function() {
-        $('.savebutton').removeClass('pointerevent');
-   });
-
-   $('.percentradio').on('click', function() {
-        $('.savebutton').removeClass('pointerevent');
-   });
-
-    
-
-   $('.radio-div4').on('click', function() {
-        $('.radio-div1').prop("checked",false);
-        $('.radio-div1').removeClass('active');
-        $("#ckbCheckAll").prop("checked",false);
-        $(".amountall").prop("checked",false);
-        $(".firstradio").prop("checked",false);
-         $(".secondradio").prop("checked",false);
-
-
-        $(".amountall").removeAttr("checked");
-        $(".amountwise").removeAttr("checked");
-        $('.selection-div4').removeClass('pointerevent');
-        $('.selection-div3').addClass('pointerevent');
-
-        $('.selection-div').addClass('pointerevent');
-         $('.selection-div1').addClass('pointerevent');
-
-         $(".commisionchekbox").attr('checked', 'checked');
-
-         $(".firstradio").removeAttr("checked");
-
-        $('.radio-div11').removeClass('active');
-
-      });
-
-      $('.radio-div3').on('click', function() {
-        $('.radio-div1').prop("checked",false);
-        $('.radio-div1').removeClass('active');
-        $(".secondradio").prop("checked",false);
-        $("#ckbCheckAllpercent").prop("checked",false);
-        $(".allpercent").prop("checked",false);
-        $(".firstradio").prop("checked",false);
-
-        $(".allpercent").removeAttr("checked");
-        $(".percent-wise").removeAttr("checked");
-        
+    $('.radio-div3').on('click', function() {
         $('.selection-div3').removeClass('pointerevent');
-         $('.selection-div4').addClass('pointerevent');
+    });
 
-         $('.selection-div').addClass('pointerevent');
-         $('.selection-div1').addClass('pointerevent');
-         $(".commisionchekbox").attr('checked', 'checked');
+    $('.radio-div4').on('click', function() {
+        $('.selection-div4').removeClass('pointerevent');
+    });
 
-         $(".firstradio").removeAttr("checked");
-
-          $('.radio-div11').removeClass('active');
-      });
-
-   $(document).ready(function () {
-
+     $(document).ready(function () {
         $(".commisionchekbox").attr('checked', 'checked');
         $("#ckbCheckAll").click(function () {
             $(".amountall").prop('checked', $(this).prop('checked'));
-             $(".amountall").closest('li').find('input[type=text]').prop('disabled', !$(this).prop('checked'));
+             //$(".amountall").closest('li').find('input[type=text]').prop('disabled', !$(this).prop('checked'));
            
         });
         
@@ -518,6 +450,7 @@
 
         $("#ckbCheckAllpercent").click(function () {
             $(".allpercent").prop('checked', $(this).prop('checked'));
+            //$(".allpercent").closest('li').find('input[type=text]').prop('disabled', !$(this).prop('checked'));
         });
         
         $(".allpercent").change(function() {
@@ -528,12 +461,8 @@
 
         $(document).on('change','.amountall',function(){
 
-            $(this).closest('li').find('input[type=text]').prop('disabled', !$(this).is(':checked'));
+            //$(this).closest('li').find('input[type=text]').prop('disabled', !$(this).is(':checked'));
         });
-
-         
-        
     });
-
 </script>
 @endsection

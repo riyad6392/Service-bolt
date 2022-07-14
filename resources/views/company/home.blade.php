@@ -1,5 +1,11 @@
 @extends('layouts.header')
 @section('content')
+<style type="text/css">
+  img[src$="#custom_marker"]{
+    /*border: 2px solid #000 !important;*/
+    border-radius:50%;
+}
+</style>
 <div class="content">
      <div class="row">
       <div class="col-md-12">
@@ -440,7 +446,7 @@
                               position: new google.maps.LatLng(data.html[i][1], data.html[i][2]),
                               map: map,
                               icon: {
-                                 url: APP_URL+'/uploads/personnel/'+data.html[i][4],
+                                 url: APP_URL+'/uploads/personnel/thumbnail/'+data.html[i][4]+ '#custom_marker',
                                  size: new google.maps.Size(36, 36),
                                  scaledSize: new google.maps.Size(36, 36),
                                  anchor: new google.maps.Point(0, 50),
@@ -451,7 +457,7 @@
                             google.maps.event.addListener(marker, 'click', (function(marker, i) {
                               return function() {
                                  if(data.html[i][4]!=null){
-                                  var imgeurl = APP_URL+'/uploads/personnel/'+data.html[i][4];
+                                  var imgeurl = APP_URL+'/uploads/personnel/thumbnail/'+data.html[i][4];
                                 } else {
                                   var imgeurl = APP_URL+'/uploads/servicebolt-noimage.png';
                                 }
@@ -459,8 +465,8 @@
                               '<div class="user-box">' +
                               '<div>' +
                               '<img class="mb-2" src="'+imgeurl+'" alt="" style="width:60px;height:60px;border-radius:100%">' +
-                              '<span>'+data.html[i][0]+'</span>' +
-                              '<p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket #'+data.html[i][5]+'<span style="font-size:12px;color:black;"> '+data.html[i][6]+' </span></p>' +
+                              '<span style="font-weight:bold"> '+data.html[i][0]+'</span>' +
+                              '<p style="margin:0px;font-size:12px;color:#;font-weight:bold;">Ticket #'+data.html[i][5]+'<span style="font-size:12px;color:black;"> '+data.html[i][6]+' </span></p>' +
                               "</div>" +
                               "</div>";
                                 infowindow.setContent(contentString);

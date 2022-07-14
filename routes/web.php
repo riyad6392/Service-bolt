@@ -19,6 +19,7 @@ use App\Http\Controllers\Company\CategoriesController;
 use App\Http\Controllers\Company\TimeoffController;
 use App\Http\Controllers\Company\PaymentsettingController;
 use App\Http\Controllers\Company\CommissionController;
+use App\Http\Controllers\Company\NotificationController;
 
 use App\Http\Controllers\Worker\WorkerHomeController;
 use App\Http\Controllers\Worker\WorkerTicketController;
@@ -135,6 +136,8 @@ Route::group([
 
      Route::any('/timeoffpto', [TimeoffController::class, 'timeoffpto'])->name('timeoffpto');
     
+     Route::get('/notification', [NotificationController::class, 'index'])->name('notification');
+     Route::any('/notification/deletenotification', [NotificationController::class, 'deletenotification'])->name('deletenotification');
 
     //customer create
     Route::get('/customer', [CustomerController::class, 'index'])->name('customer');

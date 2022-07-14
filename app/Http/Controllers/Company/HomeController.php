@@ -121,7 +121,8 @@ class HomeController extends Controller
     {
       $fulldate =  $request->fulldate;
       $auth_id = auth()->user()->id;
-      $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->orderBy('quote.id','ASC')->get();
+      $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->orderBy('quote.id','ASC')->get();
+      //->where('quote.ticket_status',"2")
       $json = array();
       $data = [];
           foreach($scheduleData as $key => $value) {
