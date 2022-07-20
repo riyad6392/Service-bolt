@@ -251,13 +251,13 @@
           $color = "5555FF";
         }
         if($i==2) {
-          $color = "FF55B8";
+          $color = "FFC0CB";
         }
         if($i==3) {
           $color = "888888";
         }
         if($i==4) {
-          $color = "5555FF";
+          $color = "28B463";
         }
     @endphp
     <div class="col-lg-6 mb-3">
@@ -502,7 +502,7 @@ for(var i=1; i<=colorcount; i++) {
 
   if (i == "2") {
     var gradientRed = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
-    gradientRed.addColorStop(0, '#FF55B8');
+    gradientRed.addColorStop(0, '#FFC0CB');
   }
 
   if (i == "3") {
@@ -518,7 +518,7 @@ for(var i=1; i<=colorcount; i++) {
 
 
 window.arcSpacing = 0.15;
-window.segmentHovered = false;
+window.segmentHovered = true;
 
 function textInCenter(value, label) {
   var ctx = tooltipCanvas.getContext('2d');
@@ -571,10 +571,10 @@ Chart.elements.Arc.prototype.draw = function() {
 var config = {
     type: 'doughnut',
     data: {
-        labels: ['Pink', 'Grey', 'Blue' , 'green'],
+        labels: ['Blue','Pink','Grey','green'],
         datasets: [
           {
-              data: [400, 540, 290, 200],
+              data: [{{$serviceinfo[0]->total}}, {{$serviceinfo[1]->total}}, {{$serviceinfo[2]->total}}, {{$serviceinfo[3]->total}}],
               backgroundColor: [
                gradientBlue,
                gradientRed,
@@ -607,18 +607,39 @@ var config = {
           },
         },
         tooltips: {
-         enabled: false,
-         custom: function(tooltip) {
-            if (tooltip.body) {
-              var line = tooltip.body[0].lines[0],
-               parts = line.split(': ');
-              textInCenter(parts[1], parts[0].split('').join(' ').toUpperCase());
-              window.segmentHovered = true;
-            } else {
-               window.segmentHovered = false;
+          callbacks: {
+            title: function(tooltipItem, data) {
+              return data['labels'][tooltipItem[0]['index']];
+            },
+            label: function(tooltipItem, data) {
+              return data['datasets'][0]['data'][tooltipItem['index']];
+            },
+            afterLabel: function(tooltipItem, data) {
+              var dataset = data['datasets'][0];
+              var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+              return '(' + percent + '%)';
             }
           },
+          backgroundColor: '#FFF',
+          titleFontSize: 16,
+          titleFontColor: '#0066ff',
+          bodyFontColor: '#000',
+          bodyFontSize: 14,
+          displayColors: false
         },
+        // tooltips: {
+        //  enabled: true,
+        //  custom: function(tooltip) {
+        //     if (tooltip.body) {
+        //       var line = tooltip.body[0].lines[0],
+        //        parts = line.split(': ');
+        //       textInCenter(parts[1], parts[0].split('').join(' ').toUpperCase());
+        //       window.segmentHovered = true;
+        //     } else {
+        //        window.segmentHovered = false;
+        //     }
+        //   },
+        // },
     },
 };
 
