@@ -1184,16 +1184,15 @@ class SchedulerController extends Controller
       $quote->save();
 
       $auth_id = auth()->user()->id;
-
-      if($quote->workerid!="") {
+      if($quote->personnelid!="") {
         $notification = new AppNotification;
         $notification->uid = $auth_id;
-        $notification->pid = $quote->workerid;
+        $notification->pid = $quote->personnelid;
         $notification->ticketid = $quote->id;
         $notification->message =  "Ticket #" .$quote->id. " details has been changed";
         $notification->save();
 
-        $puser = Personnel::select('device_token')->where("id", $quote->workerid)->first();
+        $puser = Personnel::select('device_token')->where("id", $quote->personnelid)->first();
 
         $msgarray = array (
             'title' => 'Ticket Detail changed',

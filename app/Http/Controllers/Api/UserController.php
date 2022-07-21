@@ -1331,7 +1331,7 @@ class UserController extends Controller
 
             return response()->json(['message'=>"We will send 4 digit code to your email for verification.","code"=>$code],$this->successStatus);
         } else {
-            return response()->json(['message'=>"This Email Address does not exists!"],$this->errorStatus);
+            return response()->json(['message'=>"This Email Address does not exists!"],$this->successStatus);
         }
     }
 
@@ -1363,15 +1363,15 @@ class UserController extends Controller
                 } else {
 
                     $response = array('message' => "OTP Code not validate");
-                    return response()->json($response,$this->errorStatus);
+                    return response()->json($response,$this->successStatus);
                 }
             } else {
                 $response = array('message' => "Email Not Found");
-                return response()->json($response,$this->errorStatus);
+                return response()->json($response,$this->successStatus);
             }
         } else {
             $response = array('message' => "This Email does not exists");
-            return response()->json($response,$this->errorStatus);
+            return response()->json($response,$this->successStatus);
         }
     }
 
@@ -1384,7 +1384,7 @@ class UserController extends Controller
         ]);
         if ($validator->fails()) {
             $response = array('message' => $validator->errors()->toArray());
-            return response()->json($response,$this->errorStatus);
+            return response()->json($response,$this->successStatus);
         }
         $user = User::where("email", "=", $request->email)->where('role', 'worker')->first();
         if (!empty($user)) {
@@ -1399,7 +1399,7 @@ class UserController extends Controller
             }
         } else {
             $response = array('message' => "Email Not Found");
-            return response()->json($response,$this->errorStatus);
+            return response()->json($response,$this->successStatus);
         }
     }
     
