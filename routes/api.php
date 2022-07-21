@@ -22,6 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [App\Http\Controllers\Api\UserController::class, 'login'])->name('login');
 Route::get('/loginerror', [App\Http\Controllers\Api\UserController::class, 'loginerror'])->name('loginerror');
 
+Route::post('/forgot_password', [App\Http\Controllers\Api\UserController::class, 'forgot_password'])->name('forgot_password');
+
+Route::post('/verification_code', [App\Http\Controllers\Api\UserController::class, 'verification_code'])->name('verification_code');
+
+Route::post('/reset_password', [App\Http\Controllers\Api\UserController::class, 'reset_password'])->name('reset_password');
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::get('/profileDetails', [App\Http\Controllers\Api\UserController::class, 'getprofile']);
 	Route::post('/updateprofile', [App\Http\Controllers\Api\UserController::class, 'updateprofile']);

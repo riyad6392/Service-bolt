@@ -28,6 +28,7 @@ use App\Models\Workerhour;
 use App\Models\Workertimeoff;
 use App\Models\Workersethour;
 use App\Models\Balancesheet;
+use App\Models\PasswordReset;
 
 class UserController extends Controller
 {
@@ -1296,6 +1297,110 @@ class UserController extends Controller
       $customer->save();
       
       return response()->json(['message'=>'Customer has been updated successfully'],$this->successStatus); 
+    }
+
+    public function forgot_password(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users',
+        ]);
+        
+        $user = User::where("email", "=", $request->email)->where('role', 'worker')->first();
+        if (!empty($user)) {
+            $email = $request->email;
+            $code = mt_rand(1000,9999);
+            $token = Hash::make($code);
+            $passwordreset = PasswordReset::where('email', '=', $email)->first();
+            if (empty($passwordreset)) {
+                $passwordreset = new PasswordReset;
+                $passwordreset->email = $email;
+            }
+            $passwordreset->token = $token;
+            $passwordreset->created_at = Carbon::now();
+            $passwordreset->save();
+
+              $app_name = 'ServiceBolt';
+              $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
+              $email = $request->email;
+                
+              Mail::send('mail_templates.appforgotpaasword', ['otpcode'=>$code], function($message) use ($app_name,$app_email,$email) {
+                  $message->to($email)
+                  ->subject('Forgot password OTP Code');
+                  $message->from($app_email,$app_name);
+                }); 
+
+            return response()->json(['message'=>"We will send 4 digit code to your email for verification.","code"=>$code],$this->successStatus);
+        } else {
+            return response()->json(['message'=>"This Email Address does not exists!"],$this->errorStatus);
+        }
+    }
+
+    public function verification_code(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users',
+            'code' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            $response = array('message' => $validator->errors()->toArray());
+            return response()->json($response,$this->errorStatus);
+        }
+        $user = User::where("email", "=", $request->email)->where('role', 'worker')->first();
+        if (!empty($user)) {
+            
+            $email = $request->email;
+            $usercode = $request->code;
+            $passwordreset = PasswordReset::where('email', '=', $email)->first();
+            $email = $request->email;
+
+
+            $user = PasswordReset::where('email', '=', $email)->first();
+            if (!empty($user)) {
+                $hashedPassword = $user->token;
+                if (Hash::check($usercode, $hashedPassword)) {
+                    $response = array('message' => "Success");
+                    return response()->json($response,$this->successStatus);
+                } else {
+
+                    $response = array('message' => "OTP Code not validate");
+                    return response()->json($response,$this->errorStatus);
+                }
+            } else {
+                $response = array('message' => "Email Not Found");
+                return response()->json($response,$this->errorStatus);
+            }
+        } else {
+            $response = array('message' => "This Email does not exists");
+            return response()->json($response,$this->errorStatus);
+        }
+    }
+
+    public function reset_password(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users',
+            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:6'
+        ]);
+        if ($validator->fails()) {
+            $response = array('message' => $validator->errors()->toArray());
+            return response()->json($response,$this->errorStatus);
+        }
+        $user = User::where("email", "=", $request->email)->where('role', 'worker')->first();
+        if (!empty($user)) {
+            $user->password = Hash::make($request->password);
+            if ($user->save()) {
+                DB::table('password_resets')->where(['email'=> $request->email])->delete();
+                $response = array('message' => "Your password has been changed!");
+                return response()->json($response,$this->successStatus);       
+            } else {
+                $response = array('message' =>"Something went wrong!");
+                return response()->json($response,$this->errorStatus);       
+            }
+        } else {
+            $response = array('message' => "Email Not Found");
+            return response()->json($response,$this->errorStatus);
+        }
     }
     
 }
