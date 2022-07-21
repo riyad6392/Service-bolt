@@ -574,7 +574,7 @@ var config = {
         labels: ['Blue','Pink','Grey','green'],
         datasets: [
           {
-              data: [{{$serviceinfo[0]->total}}, {{$serviceinfo[1]->total}}, {{$serviceinfo[2]->total}}, {{$serviceinfo[3]->total}}],
+              data: [{{@$serviceinfo[0]->total}}, {{@$serviceinfo[1]->total}}, {{@$serviceinfo[2]->total}}, {{@$serviceinfo[3]->total}}],
               backgroundColor: [
                gradientBlue,
                gradientRed,

@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Models\Tenture;
 use DateTime;
 use App\Models\Address;
+use App\Models\AppNotification;
 
 class SchedulerController extends Controller
 {
@@ -593,6 +594,29 @@ class SchedulerController extends Controller
           ->update([ 
               "ticket_status"=>"$tstatus","giventime"=>"$time","givendate"=>"$date","personnelid"=>"$workerid","created_at"=>"$created_at"
           ]);
+
+        $notification = new AppNotification;
+        $notification->uid = $auth_id;
+        $notification->pid = $workerid;
+        $notification->ticketid = $quoteid;
+        $notification->message =  "A new ticket #" .$quoteid. " has been assigned";
+        $notification->save();
+
+        $puser = Personnel::select('device_token')->where("id", $workerid)->first();
+
+        $msgarray = array (
+            'title' => 'Ticket Assign',
+            'msg' => "A new ticket #" .$quoteid. " has been assigned",
+            'type' => 'ticketassign',
+        );
+
+        $fcmData = array(
+            'message' => $msgarray['msg'],
+            'body' => $msgarray['title'],
+        );
+
+        $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+
     }
 
     public function sortdataweekview(Request $request)
@@ -1118,6 +1142,8 @@ class SchedulerController extends Controller
       $quote = Quote::where('id', $request->quoteid)->get()->first();
       //$quote->customerid =  $request->customerid;
 
+
+
       if(isset($request->serviceid)) {
         $quote->serviceid = implode(',', $request->serviceid);
       } else {
@@ -1156,6 +1182,33 @@ class SchedulerController extends Controller
       $quote->longitude = $longitude;
 
       $quote->save();
+
+      $auth_id = auth()->user()->id;
+
+      if($quote->workerid!="") {
+        $notification = new AppNotification;
+        $notification->uid = $auth_id;
+        $notification->pid = $quote->workerid;
+        $notification->ticketid = $quote->id;
+        $notification->message =  "Ticket #" .$quote->id. " details has been changed";
+        $notification->save();
+
+        $puser = Personnel::select('device_token')->where("id", $quote->workerid)->first();
+
+        $msgarray = array (
+            'title' => 'Ticket Detail changed',
+            'msg' => "Ticket #" .$quote->id. " details has been changed",
+            'type' => 'ticketdetailchanges',
+        );
+
+        $fcmData = array(
+            'message' => $msgarray['msg'],
+            'body' => $msgarray['title'],
+        );
+
+        $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+      }
+
       $request->session()->flash('success', 'Updated successfully');
       return redirect()->back();
     }
@@ -1290,6 +1343,49 @@ class SchedulerController extends Controller
           ->update([ 
               "giventime"=>"$time","givenendtime"=>"$request->endtime","time"=>"$hours","minute"=>"$minutes"
           ]);
+    }
+
+    public function sendFirebaseNotification($puser, $msgarray, $fcmData) 
+    {
+        $url = 'https://fcm.googleapis.com/fcm/send';
+
+        $fcmApiKey = "AAAARQKM8JU:APA91bGX3j2-L9qPoU7PhhTrxIZzjUDDUa8XFkyMsyYHUVr8uqC5yHofDtQR73vlmUarnbQDAexn2TQVRGlWhf99gVkD8UcCvSIX_1DcqX5ZdLy8xu3JOfAMgJmN3Zl6NZ-H3WBKXJDl";
+
+        $fcmMsg = array(
+            'title' => $msgarray['title'],
+            'text' => $msgarray['msg'],
+            'type' => $msgarray['type'],
+            'vibrate' => 1,
+            "date_time" => date("Y-m-d H:i:s"),
+            'message' => $msgarray['msg'],
+        );
+
+        $fcmFields = array(
+            'to' => $puser->device_token,
+            'priority' => 'high',
+            'notification' => $fcmMsg,
+            'data' => $fcmMsg,
+        );
+
+        $headers = array(
+        'Authorization: key=' . $fcmApiKey,
+        'Content-Type: application/json',
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmFields));
+        $result = curl_exec($ch);
+
+        if ($result === false) {
+
+        }
+        curl_close($ch);
+        return $result;
     }
 
 }

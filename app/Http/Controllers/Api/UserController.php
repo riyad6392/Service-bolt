@@ -62,7 +62,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['message'=>$msg_err],$this->successStatus);
         }
 
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 

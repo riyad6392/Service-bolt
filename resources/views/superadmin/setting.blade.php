@@ -57,7 +57,12 @@
     <div class="manage-home">
       <h3>Other Settings</h3>
     </div>
-
+    <div class="col-md-6">
+     <div class="mb-3">
+      <label class="form-label"> Firebase Key </label>
+        <input type="text" name="firebase" id="firebase" class="form-control" placeholder="Firebase Key" value="{{$userData->firebase}}">
+      </div>
+    </div>
     <div class="col-md-6">
      <div class="mb-3">
       <label class="form-label"> Currency </label>

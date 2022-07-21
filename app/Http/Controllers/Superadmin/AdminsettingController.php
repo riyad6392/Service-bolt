@@ -51,6 +51,7 @@ class AdminsettingController extends Controller
       $setting->currency = $request->currency;
       $setting->timezone = $request->timezone;
       $setting->featureprice = $request->featureprice;
+      $setting->firebase = $request->firebase;
       $setting->save();
 
       // $name = "MAIL_HOST";
