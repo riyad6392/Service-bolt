@@ -595,27 +595,31 @@ class SchedulerController extends Controller
               "ticket_status"=>"$tstatus","giventime"=>"$time","givendate"=>"$date","personnelid"=>"$workerid","created_at"=>"$created_at"
           ]);
 
-        $notification = new AppNotification;
-        $notification->uid = $auth_id;
-        $notification->pid = $workerid;
-        $notification->ticketid = $quoteid;
-        $notification->message =  "A new ticket #" .$quoteid. " has been assigned";
-        $notification->save();
+        $appnotifiction = AppNotification::where('pid',$workerid)->where('ticketid',$quoteid)->get(); 
+        if(count($appnotifiction)==0) {
 
-        $puser = Personnel::select('device_token')->where("id", $workerid)->first();
+            $notification = new AppNotification;
+            $notification->uid = $auth_id;
+            $notification->pid = $workerid;
+            $notification->ticketid = $quoteid;
+            $notification->message =  "A new ticket #" .$quoteid. " has been assigned";
+            $notification->save();
 
-        $msgarray = array (
-            'title' => 'Ticket Assign',
-            'msg' => "A new ticket #" .$quoteid. " has been assigned",
-            'type' => 'ticketassign',
-        );
+            $puser = Personnel::select('device_token')->where("id", $workerid)->first();
 
-        $fcmData = array(
-            'message' => $msgarray['msg'],
-            'body' => $msgarray['title'],
-        );
+            $msgarray = array (
+                'title' => 'Ticket Assign',
+                'msg' => "A new ticket #" .$quoteid. " has been assigned",
+                'type' => 'ticketassign',
+            );
 
-        $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+            $fcmData = array(
+                'message' => $msgarray['msg'],
+                'body' => $msgarray['title'],
+            );
+
+            $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+        }
 
     }
 
@@ -637,6 +641,32 @@ class SchedulerController extends Controller
           ->update([ 
               "ticket_status"=>"$tstatus","giventime"=>"$time","givendate"=>"$request->date","personnelid"=>"$workerid","created_at"=>"$created_at"
           ]);
+
+        $appnotifiction = AppNotification::where('pid',$workerid)->where('ticketid',$quoteid)->get(); 
+        if(count($appnotifiction)==0) {
+
+            $notification = new AppNotification;
+            $notification->uid = $auth_id;
+            $notification->pid = $workerid;
+            $notification->ticketid = $quoteid;
+            $notification->message =  "A new ticket #" .$quoteid. " has been assigned";
+            $notification->save();
+
+            $puser = Personnel::select('device_token')->where("id", $workerid)->first();
+
+            $msgarray = array (
+                'title' => 'Ticket Assign',
+                'msg' => "A new ticket #" .$quoteid. " has been assigned",
+                'type' => 'ticketassign',
+            );
+
+            $fcmData = array(
+                'message' => $msgarray['msg'],
+                'body' => $msgarray['title'],
+            );
+
+            $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+       }
     }
 
 

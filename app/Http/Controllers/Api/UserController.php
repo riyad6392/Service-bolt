@@ -70,7 +70,7 @@ class UserController extends Controller
             $token =  auth()->user()->createToken('API Token')->plainTextToken;
             //$user->createToken('MyApp')->accessToken; 
             //$details = DB::table('personnel')->where('id',$user->workerid)->first();
-            $pdetails = User::select('users.id', 'psnl.id as pid', 'psnl.personnelname', 'psnl.phone', 'psnl.email', 'psnl.ticketid as permission', 'psnl.address','psnl.image')
+            $pdetails = User::select('users.id', 'psnl.id as pid', 'psnl.personnelname', 'psnl.phone', 'psnl.email', 'psnl.ticketid as permission', 'psnl.address','psnl.image','psnl.vibration','psnl.notification')
                 ->join('personnel as psnl', 'psnl.id', '=', 'users.workerid')->where('psnl.id',$user->workerid)->get();
                 $data1 = array();
                 foreach($pdetails as $value) {
@@ -82,7 +82,8 @@ class UserController extends Controller
                     $data1['permission']= explode(",",$value->permission);
                     $data1['address']= $value->address;
                     $data1['image']= $value->image;
-
+                    $data1['vibration']= $value->vibration;
+                    $data1['notification']= $value->notification;
                 }
 
                 $device_token = request('device_token');
@@ -203,7 +204,10 @@ class UserController extends Controller
             Image::make($path)->fit(300, 300)->save($thumbPath);
 
             $personnel->image = $imageName;
-        }    
+        }
+
+        $personnel->vibration = $request->vibration;
+        $personnel->notification = $request->notification;    
         $personnel->save();
         return response()->json(['message'=>'Updated successfully'],$this->successStatus);
     }
@@ -1421,5 +1425,5 @@ class UserController extends Controller
 
       return response()->json(['message'=>'Success','data'=>$notification],$this->successStatus);  
     }
-    
+
 }
