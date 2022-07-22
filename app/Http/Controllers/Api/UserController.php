@@ -97,7 +97,7 @@ class UserController extends Controller
             return response()->json(['message'=>__('You are successfully logged in.'),'token'=>$token,'data'=>$data1],$this->successStatus); 
         } 
         else{ 
-            return response()->json(['message'=>__('You have entered an invalid username or password.')],$this->errorStatus); 
+            return response()->json(['message'=>__('You have entered an invalid username or password.')],$this->successStatus); 
         }
     }
 
@@ -108,7 +108,7 @@ class UserController extends Controller
     public function getprofile(Request $request) {
         $user = Auth::user();
 
-        $pdetails = User::select('users.id', 'psnl.id as pid', 'psnl.personnelname', 'psnl.phone', 'psnl.email', 'psnl.ticketid as permission', 'psnl.address','psnl.image')
+        $pdetails = User::select('users.id', 'psnl.id as pid', 'psnl.personnelname', 'psnl.phone', 'psnl.email', 'psnl.ticketid as permission', 'psnl.address','psnl.image','psnl.vibration','psnl.notification')
                 ->join('personnel as psnl', 'psnl.id', '=', 'users.workerid')->where('psnl.id',$user->workerid)->get();
         $data1 = array();
                 foreach($pdetails as $value) {
@@ -120,7 +120,8 @@ class UserController extends Controller
                     $data1['permission']= explode(",",$value->permission);
                     $data1['address']= $value->address;
                     $data1['image']= $value->image;
-
+                    $data1['vibration']= $value->vibration;
+                    $data1['notification']= $value->notification;
                 }
 
         if ($pdetails) {
@@ -155,7 +156,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['message'=>$msg_err],$this->successStatus);
         }
 
         $user = Auth::user();
@@ -170,10 +171,10 @@ class UserController extends Controller
                     $user->wpassword = $request->newpassword;
                     $user->save();
                 } else {
-                    return response()->json(['message'=>'Confirm Password did not match'],$this->errorStatus);
+                    return response()->json(['message'=>'Confirm Password did not match'],$this->successStatus);
                 }
             } else {
-                return response()->json(['message'=>'Current Password did not match'],$this->errorStatus);
+                return response()->json(['message'=>'Current Password did not match'],$this->successStatus);
             }
         }
         $personnel = Personnel::find($user->workerid);
