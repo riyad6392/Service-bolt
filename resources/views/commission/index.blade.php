@@ -415,7 +415,11 @@
          
         </div>
 </div>
-<div class="text-center "><button class="btn btn-add px-5 text-center mb-3" style="pointer-events:block;">Save</button></div>
+@if(count($services)==0 && count($products)==0)
+    <div class="text-center "><button class="btn btn-add px-5 text-center mb-3" style="pointer-events:none;">Save</button></div>
+@else
+    <div class="text-center "><button class="btn btn-add px-5 text-center mb-3" style="pointer-events:block;">Save</button></div>
+@endif
 </form>
 </div>
 </div>

@@ -83,6 +83,15 @@ class UserController extends Controller
                     $data1['address']= $value->address;
                     $data1['image']= $value->image;
 
+                }
+
+                $device_token = request('device_token');
+                
+                if($device_token!=null) {
+                    DB::table('personnel')->where('id','=',$user->workerid)
+                      ->update([ 
+                          "device_token"=>"$device_token"
+                    ]);
                 }   
             return response()->json(['message'=>__('You are successfully logged in.'),'token'=>$token,'data'=>$data1],$this->successStatus); 
         } 
@@ -1401,6 +1410,16 @@ class UserController extends Controller
             $response = array('message' => "Email Not Found");
             return response()->json($response,$this->successStatus);
         }
+    }
+
+    public function getnotification(Request $request) {
+
+      $auth_id = auth()->user()->id;
+      $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+      $notification = DB::table('appnotification')->where('pid', $worker->workerid)->orderBy('id','DESC')->get();
+
+      return response()->json(['message'=>'Success','data'=>$notification],$this->successStatus);  
     }
     
 }

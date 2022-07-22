@@ -94,4 +94,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::post('/timesheetviewfilter', [App\Http\Controllers\Api\UserController::class, 'timesheetviewfilter'])->name('timesheetviewfilter');
 
 	Route::get('/getbalancesheet', [App\Http\Controllers\Api\UserController::class, 'getbalancesheet'])->name('getbalancesheet');
+
+	Route::get('/getnotification', [App\Http\Controllers\Api\UserController::class, 'getnotification'])->name('getnotification');
 });
