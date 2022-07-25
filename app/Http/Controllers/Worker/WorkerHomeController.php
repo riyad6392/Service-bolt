@@ -10,6 +10,7 @@ use App\Models\Workerhour;
 use DateTime;
 use App\Models\User;
 use App\Models\AppNotification;
+use App\Models\Personnel;
 
 class WorkerHomeController extends Controller
 {
@@ -41,11 +42,11 @@ class WorkerHomeController extends Controller
         $cdate = Carbon::now();
 
         $ctime =  date_format($cdate, 'g:i a');
-
-         $times = strtotime($ctime);
-         //echo $times; die;
-
+        
+        $times = strtotime($ctime);
+        
         $middle = strtotime($cdate);
+        
         $new_date = date('l - F d, Y', $middle); 
         
 
@@ -54,42 +55,44 @@ class WorkerHomeController extends Controller
         $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
         $workername = DB::table('personnel')->select('personnelname','ticketid')->where('id',$worker->workerid)->first();
 
-        $todayservicecall = DB::table('quote')->where('personnelid',$worker->workerid)->where('ticket_status','2')->whereDate('created_at', Carbon::today())->limit('2')->orderBy('id','DESC')->get();
+        $todayservicecall = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',[2,4])->where('givendate', $new_date)->limit('2')->orderBy('id','DESC')->get();
 
-        // if(count($todayservicecall)>0) {
-        //   foreach($todayservicecall as $key => $value) {
+        if(count($todayservicecall)>0) {
+          foreach($todayservicecall as $key => $value) {
 
-        //     $tickettime= strtotime($value->giventime);
+            $tickettime= strtotime($value->giventime);
+            //DB::enableQuerylog();
+             $tickettimeg= DB::table('quote')->where('personnelid',$worker->workerid)->where('ticket_status','2')->where('givendate', $new_date)->whereRaw("time_to_sec('giventime')<={$times}")->where('ticket_status','2')->get();
+             //dd(DB::getQuerylog()); die;
+             //dd($tickettimeg[0]);
+            if(count($tickettimeg)>0) {
 
-        //     $tickettimeg= DB::table('quote')->where('personnelid',$worker->workerid)->where('ticket_status','2')->where('givendate', $new_date)->whereRaw('TIME_TO_SEC($cdate") AS time','>=', $tickettime)->get();
-        //     if(count($tickettimeg)>0) {
+              $notification = new AppNotification;
+              $notification->uid = $auth_id;
+              $notification->pid = $worker->workerid;
+              $notification->ticketid = $tickettimeg[0]->id;
+              $notification->message =  "Your ticket #" .$tickettimeg[0]->id. " have not picked it up yet";
+              $notification->save();
 
-        //       $notification = new AppNotification;
-        //       $notification->uid = $auth_id;
-        //       $notification->pid = $worker->workerid;
-        //       $notification->ticketid = $tickettimeg->id;
-        //       $notification->message =  "Your ticket #" .$tickettimeg->id. " have not picked it up yet";
-        //       $notification->save();
+              $puser = Personnel::select('device_token')->where("id", $worker->workerid)->first();
 
-        //       $puser = Personnel::select('device_token')->where("id", $worker->workerid)->first();
+              $msgarray = array (
+                  'title' => 'Ticket have not picked it up yet',
+                  'msg' => "Your ticket #" .$tickettimeg[0]->id. " have not picked it up yet",
+                  'type' => 'ticketnotpickedyet',
+              );
 
-        //       $msgarray = array (
-        //           'title' => 'Ticket have not picked it up yet',
-        //           'msg' => "Your ticket #" .$tickettimeg->id. " have not picked it up yet",
-        //           'type' => 'ticketnotpickedyet',
-        //       );
+              $fcmData = array(
+                  'message' => $msgarray['msg'],
+                  'body' => $msgarray['title'],
+              );
 
-        //       $fcmData = array(
-        //           'message' => $msgarray['msg'],
-        //           'body' => $msgarray['title'],
-        //       );
-
-        //       $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+              $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
              
-        //     }
+            }
             
-        //   }
-        // }
+          }
+        }
 
         $customerData = DB::table('quote')->select('quote.*', 'customer.id','customer.phonenumber','customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',array('2','3'))->limit('2')->orderBy('quote.id','DESC')->get();
 
@@ -107,9 +110,9 @@ class WorkerHomeController extends Controller
         $todaydate = date('l - F d, Y');
         $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"2")->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
 
-        $completedticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"3")->whereDate('created_at', Carbon::today())->count();
+        $completedticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"3")->where('givendate', $todaydate)->count();
         
-        $pendingticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',array('2','3'))->whereDate('created_at', Carbon::today())->count();
+        $pendingticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',array('2','3'))->where('givendate', $todaydate)->count();
         
         if($pendingticketcount!=0) {
         $dailyprogress = $completedticketcount/$pendingticketcount*100;

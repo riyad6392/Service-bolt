@@ -62,7 +62,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->successStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
@@ -94,15 +94,15 @@ class UserController extends Controller
                           "device_token"=>"$device_token"
                     ]);
                 }   
-            return response()->json(['message'=>__('You are successfully logged in.'),'token'=>$token,'data'=>$data1],$this->successStatus); 
+            return response()->json(['status'=>1,'message'=>__('You are successfully logged in.'),'token'=>$token,'data'=>$data1],$this->successStatus); 
         } 
         else{ 
-            return response()->json(['message'=>__('You have entered an invalid username or password.')],$this->successStatus); 
+            return response()->json(['status'=>0,'message'=>__('You have entered an invalid username or password.')],$this->successStatus); 
         }
     }
 
     public function loginerror() {
-        return response()->json(['message'=>'Unauthenticated'],$this->errorresultStatus);   
+        return response()->json(['status'=>0,'message'=>'Unauthenticated'],$this->errorresultStatus);   
     }
 
     public function getprofile(Request $request) {
@@ -125,9 +125,9 @@ class UserController extends Controller
                 }
 
         if ($pdetails) {
-                return response()->json(['message'=>'success','data'=>$data1],$this->successStatus);
+                return response()->json(['status'=>1,'message'=>'success','data'=>$data1],$this->successStatus);
         } else {
-            return response()->json(['message'=>'id not found'],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>'id not found'],$this->errorStatus);
         }
     }
 
@@ -156,7 +156,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->successStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
         $user = Auth::user();
@@ -171,10 +171,10 @@ class UserController extends Controller
                     $user->wpassword = $request->newpassword;
                     $user->save();
                 } else {
-                    return response()->json(['message'=>'Confirm Password did not match'],$this->successStatus);
+                    return response()->json(['status'=>0,'message'=>'Confirm Password did not match'],$this->successStatus);
                 }
             } else {
-                return response()->json(['message'=>'Current Password did not match'],$this->successStatus);
+                return response()->json(['status'=>0,'message'=>'Current Password did not match'],$this->successStatus);
             }
         }
         $personnel = Personnel::find($user->workerid);
@@ -210,7 +210,7 @@ class UserController extends Controller
         $personnel->vibration = $request->vibration;
         $personnel->notification = $request->notification;    
         $personnel->save();
-        return response()->json(['message'=>'Updated successfully'],$this->successStatus);
+        return response()->json(['status'=>1,'message'=>'Updated successfully'],$this->successStatus);
     }
 
     public function dashboardDetails(Request $request) {
@@ -226,7 +226,7 @@ class UserController extends Controller
         $todaydate = date('l - F d, Y');
         $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"2")->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
                 
-        return response()->json(['message'=>'success','todayticket'=>$todayservicecall,'customerData'=>$customerData,'scheduleData'=>$scheduleData],$this->successStatus);
+        return response()->json(['status'=>1,'message'=>'success','todayticket'=>$todayservicecall,'customerData'=>$customerData,'scheduleData'=>$scheduleData],$this->successStatus);
     }
 
     public function myticketData(Request $request) {
@@ -237,9 +237,9 @@ class UserController extends Controller
         $ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('2','3','4'))->get();
 
         if ($ticketdata) {
-                return response()->json(['message'=>'success','data'=>$ticketdata],$this->successStatus);
+                return response()->json(['status'=>1,'message'=>'success','data'=>$ticketdata],$this->successStatus);
         } else {
-            return response()->json(['message'=>'data not found'],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
     }
 
@@ -324,9 +324,9 @@ class UserController extends Controller
 
             $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->whereIn('quote.ticket_status',array('3','4'))->get();
 
-            return response()->json(['message'=>'success','data'=>$main_array,'totalprice'=>$totalprice,'checklistData'=>$checklistData,'priviousTicketData'=>$prequoteData],$this->successStatus);
+            return response()->json(['status'=>1,'message'=>'success','data'=>$main_array,'totalprice'=>$totalprice,'checklistData'=>$checklistData,'priviousTicketData'=>$prequoteData],$this->successStatus);
         } else {
-            return response()->json(['message'=>'data not found'],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
     }
 
@@ -349,9 +349,9 @@ class UserController extends Controller
         // $servicedetails = DB::table('quote')->whereIn('serviceid',$serviceidss)->whereIn('customerid',$customerids)->orderBy('id','DESC')->get();
 
         if ($servicedetails) {
-                return response()->json(['message'=>'success','data'=>$servicedetails],$this->successStatus);
+                return response()->json(['status'=>1,'message'=>'success','data'=>$servicedetails],$this->successStatus);
         } else {
-            return response()->json(['message'=>'data not found'],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
     }
     public function myproductData(Request $request) {
@@ -371,9 +371,9 @@ class UserController extends Controller
         
 
         if ($productdata) {
-                return response()->json(['message'=>'success','data'=>$productdata],$this->successStatus);
+                return response()->json(['status'=>1,'message'=>'success','data'=>$productdata],$this->successStatus);
         } else {
-            return response()->json(['message'=>'data not found'],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
     }
 
@@ -394,9 +394,9 @@ class UserController extends Controller
       $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get(); 
 
         if ($customerData) {
-                return response()->json(['message'=>'success','data'=>$customerData],$this->successStatus);
+                return response()->json(['status'=>1,'message'=>'success','data'=>$customerData],$this->successStatus);
         } else {
-            return response()->json(['message'=>'data not found'],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
     }
 
@@ -413,7 +413,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
         $customerid = $request->customerid;
@@ -453,9 +453,9 @@ class UserController extends Controller
         $recentTicket = Quote::where('customerid',$customerid)->orderBy('id','DESC')->get();
 
         if ($customerData) {
-                return response()->json(['message'=>'success','customerData'=>$data1,'connectedAddress'=>$customerAddress,'recentTickets'=>$recentTicket],$this->successStatus);
+                return response()->json(['status'=>1,'message'=>'success','customerData'=>$data1,'connectedAddress'=>$customerAddress,'recentTickets'=>$recentTicket],$this->successStatus);
         } else {
-            return response()->json(['message'=>'data not found'],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
     }
 
@@ -473,7 +473,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
         $date = $request->date;
@@ -483,7 +483,7 @@ class UserController extends Controller
 
         $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"2")->where('quote.givendate',$date)->orderBy('quote.id','ASC')->get();
                 
-        return response()->json(['message'=>'success','scheduleData'=>$scheduleData],$this->successStatus);
+        return response()->json(['status'=>1,'message'=>'success','scheduleData'=>$scheduleData],$this->successStatus);
     }
 
     public function myticketCompleted(Request $request) {
@@ -499,7 +499,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
         
         $ticketId = $request->ticketId;
@@ -508,9 +508,9 @@ class UserController extends Controller
         if($quoteData){
            $quoteData->ticket_status = "3";
            $quoteData->save();
-           return response()->json(['message'=>'Ticket Completed successfully'],$this->successStatus);
+           return response()->json(['status'=>1,'message'=>'Ticket Completed successfully'],$this->successStatus);
         } else {
-            return response()->json(['message'=>'data not found'],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
     }
 
@@ -527,7 +527,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
         $ticketId = $request->ticketId;
@@ -536,9 +536,9 @@ class UserController extends Controller
         if($quoteData) {
                 $quoteData->ticket_status = "4";
                 $quoteData->save();  
-                return response()->json(['message'=>'Ticket Pickup successfully'],$this->successStatus);
+                return response()->json(['status'=>1,'message'=>'Ticket Pickup successfully'],$this->successStatus);
         } else {
-            return response()->json(['message'=>'data not found'],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
     }
 
@@ -551,7 +551,7 @@ class UserController extends Controller
 
       $tenture = Tenture::select('tenturename')->where('status','Active')->get();
 
-      return response()->json(['message'=>'success','customer'=>$customer,'tenture'=>$tenture],$this->successStatus);
+      return response()->json(['status'=>1,'message'=>'success','customer'=>$customer,'tenture'=>$tenture],$this->successStatus);
 
     }
 
@@ -568,7 +568,7 @@ class UserController extends Controller
             $data['serviceData'] = Service::whereIn('id',$sid)->get(["servicename","id"]);
         }
 
-        return response()->json(['message'=>'success','data'=>$data],$this->successStatus);
+        return response()->json(['status'=>1,'message'=>'success','data'=>$data],$this->successStatus);
     }
 
     public function createticket(Request $request) {
@@ -642,7 +642,7 @@ class UserController extends Controller
           $message->from($app_email,$app_name);
         }); 
 
-       return response()->json(['message'=>'Ticket Created Successfully'],$this->successStatus);    
+       return response()->json(['status'=>1,'message'=>'Ticket Created Successfully'],$this->successStatus);    
     }
 
     public function servicedata(Request $request) {
@@ -651,7 +651,7 @@ class UserController extends Controller
 
         $services = Service::select('id','servicename')->where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->get();
 
-       return response()->json(['message'=>'success','services'=>$services],$this->successStatus);   
+       return response()->json(['status'=>1,'message'=>'success','services'=>$services],$this->successStatus);   
     }
 
     public function addcustomer(Request $request) {
@@ -685,7 +685,7 @@ class UserController extends Controller
         } 
         Customer::create($data);
 
-       return response()->json(['message'=>'Customer Created Successfully'],$this->successStatus);   
+       return response()->json(['status'=>1,'message'=>'Customer Created Successfully'],$this->successStatus);   
     }
 
     public function ticketupdate(Request $request) {
@@ -702,7 +702,7 @@ class UserController extends Controller
       $quote->customernotes =  $request->cnotes;
       
       $quote->save();
-      return response()->json(['message'=>'Ticket Updated successfully'],$this->successStatus); 
+      return response()->json(['status'=>1,'message'=>'Ticket Updated successfully'],$this->successStatus); 
     }
 
     public function serviceview(Request $request) {
@@ -723,7 +723,7 @@ class UserController extends Controller
         }
         
         //$productname = implode(',', $pname);
-        return response()->json(['message'=>'Success','product'=>$pname,'category'=>$catname],$this->successStatus); 
+        return response()->json(['status'=>1,'message'=>'Success','product'=>$pname,'category'=>$catname],$this->successStatus); 
     }
 
     public function sendinvoice(Request $request) {
@@ -782,7 +782,7 @@ class UserController extends Controller
           $message->from($app_email,$app_name);
         });
 
-      return response()->json(['message'=>'Invoice has been send successfully'],$this->successStatus); 
+      return response()->json(['status'=>1,'message'=>'Invoice has been send successfully'],$this->successStatus); 
     }
 
     public function allproducData(Request $request) {
@@ -794,13 +794,13 @@ class UserController extends Controller
 
         $productData = Inventory::select('id','productname')->where('user_id',$worker->userid)->orderBy('id','DESC')->get();
 
-        return response()->json(['message'=>'Success','product'=>$productData],$this->successStatus);    
+        return response()->json(['status'=>1,'message'=>'Success','product'=>$productData],$this->successStatus);    
     }
 
     public function googleplacekey(Request $request) {
         $googleplacekey = "AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc";
 
-    return response()->json(['message'=>'Success','google_place_key'=>$googleplacekey],$this->successStatus);    
+    return response()->json(['status'=>1,'message'=>'Success','google_place_key'=>$googleplacekey],$this->successStatus);    
     }
 
     public function manuallogin(Request $request) {
@@ -828,7 +828,7 @@ class UserController extends Controller
       Workerhour::create($data);
     
 
-    return response()->json(['message'=>'Success'],$this->successStatus); 
+    return response()->json(['status'=>1,'message'=>'Success'],$this->successStatus); 
     }
 
     public function clockstatus(Request $request) {
@@ -845,7 +845,7 @@ class UserController extends Controller
         else {
             $status = "Clock In";
         }
-        return response()->json(['message'=>'Success','clockstatus'=>$status],$this->successStatus);
+        return response()->json(['status'=>1,'message'=>'Success','clockstatus'=>$status],$this->successStatus);
     }
 
     public function clockin(Request $request) {
@@ -862,7 +862,7 @@ class UserController extends Controller
       $data['starttime'] = $starttime;
       $data['date'] = $fulldate;
       Workerhour::create($data);
-      return response()->json(['message'=>'Success'],$this->successStatus);     
+      return response()->json(['status'=>1,'message'=>'Success'],$this->successStatus);     
     }
 
     public function clockout(Request $request) {
@@ -891,7 +891,7 @@ class UserController extends Controller
       $workerhour->date1 = $date1;
       $workerhour->save();
 
-      return response()->json(['message'=>'Success'],$this->successStatus);     
+      return response()->json(['status'=>1,'message'=>'Success'],$this->successStatus);     
     }
 
     public function resendSchedule(Request $request) {
@@ -943,7 +943,7 @@ class UserController extends Controller
       $data['ticket_status'] = 1;
       Quote::create($data);
 
-      return response()->json(['message'=>'Ticket has been Scheduled Successfully'],$this->successStatus); 
+      return response()->json(['status'=>1,'message'=>'Ticket has been Scheduled Successfully'],$this->successStatus); 
     }
 
     public function getResendScheduleData(Request $request) {
@@ -964,7 +964,7 @@ class UserController extends Controller
         
         $frequency = Tenture::where('status','Active')->get();
 
-        return response()->json(['message'=>'Success','data'=>array($data[0]),'radiogroup'=>$radiogroup,'frequency'=>$frequency],$this->successStatus);
+        return response()->json(['status'=>1,'message'=>'Success','data'=>array($data[0]),'radiogroup'=>$radiogroup,'frequency'=>$frequency],$this->successStatus);
     }
 
     public function gettime(Request $request) {
@@ -972,7 +972,7 @@ class UserController extends Controller
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
 
       $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
-      return response()->json(['message'=>'Success','data'=>$userData],$this->successStatus);  
+      return response()->json(['status'=>1,'message'=>'Success','data'=>$userData],$this->successStatus);  
     }
 
     public function getservicedatabyid(Request $request) {
@@ -984,7 +984,7 @@ class UserController extends Controller
        $serviceData = Service::select('id','servicename')->whereIn('id',$sid)->orderBy('id','ASC')->get(); 
 
         if ($serviceData) {
-            return response()->json(['message'=>'success','services'=>$serviceData],$this->successStatus);
+            return response()->json(['status'=>1,'message'=>'success','services'=>$serviceData],$this->successStatus);
         }
          
     }
@@ -994,7 +994,7 @@ class UserController extends Controller
         $user = Auth::user();
         $pendingData = Quote::select('id','servicename','giventime','customername','price')->where('personnelid',$user->workerid)->where('ticket_status','2')->limit('2')->orderBy('id','DESC')->get();
 
-        return response()->json(['message'=>'Success','pendingdata'=>$pendingData],$this->successStatus);    
+        return response()->json(['status'=>1,'message'=>'Success','pendingdata'=>$pendingData],$this->successStatus);    
     }
 
     public function saveaddress(Request $request) {
@@ -1006,7 +1006,7 @@ class UserController extends Controller
         $data['customerid'] = $cid;
         $data['address'] = $request->address;
         Address::create($data);
-        return response()->json(['message'=>'address added successfully'],$this->successStatus);
+        return response()->json(['status'=>1,'message'=>'address added successfully'],$this->successStatus);
     }
 
     public function pto(Request $request) {
@@ -1028,7 +1028,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
         $auth_id = auth()->user()->id;
@@ -1052,7 +1052,7 @@ class UserController extends Controller
           Workertimeoff::create($data);
         }
       }
-        return response()->json(['message'=>'PTO added successfully'],$this->successStatus); 
+        return response()->json(['status'=>1,'message'=>'PTO added successfully'],$this->successStatus); 
     }
 
     public function ptolist(Request $request) {
@@ -1062,10 +1062,10 @@ class UserController extends Controller
         $timeoff = DB::table('timeoff')->where('workerid',$worker->workerid)->orderBy('id','desc')->get();
 
         if(count($timeoff)>0) {
-            return response()->json(['message'=>'Success','data'=>$timeoff],$this->successStatus);    
+            return response()->json(['status'=>1,'message'=>'Success','data'=>$timeoff],$this->successStatus);    
         } else {
             $timeoff = [];
-            return response()->json(['message'=>'Success','data'=>$timeoff],$this->successStatus);
+            return response()->json(['status'=>1,'message'=>'Success','data'=>$timeoff],$this->successStatus);
         }
         
     }
@@ -1096,7 +1096,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
             $fulldate = date('l - F d, Y', strtotime($request->date));
@@ -1120,7 +1120,7 @@ class UserController extends Controller
             $data['totalhours'] = $totalhours;
             Workersethour::create($data);
             
-            return response()->json(['message'=>'Success'],$this->successStatus);
+            return response()->json(['status'=>1,'message'=>'Success'],$this->successStatus);
     }
 
     public function timesheetview(Request $request) {
@@ -1137,7 +1137,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['status'=>1,'message'=>$msg_err],$this->successStatus);
         }
 
             $fulldate = date('l - F d, Y', strtotime($request->date));
@@ -1169,7 +1169,7 @@ class UserController extends Controller
             }
 
           
-        return response()->json(['message'=>'Success','data'=>$data,'latesttime'=>$lasttime],$this->successStatus);
+        return response()->json(['status'=>1,'message'=>'Success','data'=>$data,'latesttime'=>$lasttime],$this->successStatus);
     }
 
     public function deleteaddressbyid(Request $request) {
@@ -1185,12 +1185,12 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
         $address = Address::find($request->id)->delete();
 
-        return response()->json(['message'=>'Address deleted successfully!'],$this->successStatus);
+        return response()->json(['status'=>1,'message'=>'Address deleted successfully!'],$this->successStatus);
     }
 
     public function timesheetviewfilter(Request $request) {
@@ -1213,7 +1213,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['status'=>1,'message'=>$msg_err],$this->successStatus);
         }
 
             $fromdate = date('Y-m-d', strtotime($request->fromdate));
@@ -1236,7 +1236,7 @@ class UserController extends Controller
                 }
             }
             
-        return response()->json(['message'=>'Success','data'=>$data],$this->successStatus);
+        return response()->json(['status'=>1,'message'=>'Success','data'=>$data],$this->successStatus);
     }
 
     public function getbalancesheet(Request $request) {
@@ -1245,7 +1245,7 @@ class UserController extends Controller
 
       $balancesheet = Balancesheet::where('userid', $worker->userid)->where('workerid', $worker->workerid)->orderBy('id','DESC')->get();
 
-      return response()->json(['message'=>'Success','data'=>$balancesheet],$this->successStatus);  
+      return response()->json(['status'=>1,'message'=>'Success','data'=>$balancesheet],$this->successStatus);  
     }
 
     public function customerupdate(Request $request) {
@@ -1279,7 +1279,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
       $customerid = $request->customerid;
@@ -1311,7 +1311,7 @@ class UserController extends Controller
       }
       $customer->save();
       
-      return response()->json(['message'=>'Customer has been updated successfully'],$this->successStatus); 
+      return response()->json(['status'=>1,'message'=>'Customer has been updated successfully'],$this->successStatus); 
     }
 
     public function forgot_password(Request $request)
@@ -1344,9 +1344,9 @@ class UserController extends Controller
                   $message->from($app_email,$app_name);
                 }); 
 
-            return response()->json(['message'=>"We will send 4 digit code to your email for verification.","code"=>$code],$this->successStatus);
+            return response()->json(['status'=>1,'message'=>"We will send 4 digit code to your email for verification.","code"=>$code],$this->successStatus);
         } else {
-            return response()->json(['message'=>"This Email Address does not exists!"],$this->successStatus);
+            return response()->json(['status'=>0,'message'=>"This Email Address does not exists!"],$this->successStatus);
         }
     }
 
@@ -1357,8 +1357,8 @@ class UserController extends Controller
             'code' => 'required|integer',
         ]);
         if ($validator->fails()) {
-            $response = array('message' => $validator->errors()->toArray());
-            return response()->json($response,$this->errorStatus);
+            $response = array('status'=>0,'message' => $validator->errors()->toArray());
+            return response()->json($response,$this->successStatus);
         }
         $user = User::where("email", "=", $request->email)->where('role', 'worker')->first();
         if (!empty($user)) {
@@ -1373,19 +1373,19 @@ class UserController extends Controller
             if (!empty($user)) {
                 $hashedPassword = $user->token;
                 if (Hash::check($usercode, $hashedPassword)) {
-                    $response = array('message' => "Success");
+                    $response = array('status'=>1,'message' => "Success");
                     return response()->json($response,$this->successStatus);
                 } else {
 
-                    $response = array('message' => "OTP Code not validate");
+                    $response = array('status'=>0,'message' => "OTP Code not validate");
                     return response()->json($response,$this->successStatus);
                 }
             } else {
-                $response = array('message' => "Email Not Found");
+                $response = array('status'=>0,'message' => "Email Not Found");
                 return response()->json($response,$this->successStatus);
             }
         } else {
-            $response = array('message' => "This Email does not exists");
+            $response = array('status'=>0,'message' => "This Email does not exists");
             return response()->json($response,$this->successStatus);
         }
     }
@@ -1398,7 +1398,7 @@ class UserController extends Controller
             'password_confirmation' => 'min:6'
         ]);
         if ($validator->fails()) {
-            $response = array('message' => $validator->errors()->toArray());
+            $response = array('status'=>0,'message' => $validator->errors()->toArray());
             return response()->json($response,$this->successStatus);
         }
         $user = User::where("email", "=", $request->email)->where('role', 'worker')->first();
@@ -1406,14 +1406,14 @@ class UserController extends Controller
             $user->password = Hash::make($request->password);
             if ($user->save()) {
                 DB::table('password_resets')->where(['email'=> $request->email])->delete();
-                $response = array('message' => "Your password has been changed!");
+                $response = array('status'=>1,'message' => "Your password has been changed!");
                 return response()->json($response,$this->successStatus);       
             } else {
-                $response = array('message' =>"Something went wrong!");
+                $response = array('status'=>0,'message' =>"Something went wrong!");
                 return response()->json($response,$this->errorStatus);       
             }
         } else {
-            $response = array('message' => "Email Not Found");
+            $response = array('status'=>0,'message' => "Email Not Found");
             return response()->json($response,$this->successStatus);
         }
     }
@@ -1425,7 +1425,7 @@ class UserController extends Controller
 
       $notification = DB::table('appnotification')->where('pid', $worker->workerid)->orderBy('id','DESC')->get();
 
-      return response()->json(['message'=>'Success','data'=>$notification],$this->successStatus);  
+      return response()->json(['status'=>1,'message'=>'Success','data'=>$notification],$this->successStatus);  
     }
 
 }
