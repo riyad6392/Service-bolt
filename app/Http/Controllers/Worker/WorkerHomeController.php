@@ -9,6 +9,7 @@ use DB;
 use App\Models\Workerhour;
 use DateTime;
 use App\Models\User;
+use App\Models\AppNotification;
 
 class WorkerHomeController extends Controller
 {
@@ -36,11 +37,59 @@ class WorkerHomeController extends Controller
         } else {
            return redirect()->back();
         }
+
+        $cdate = Carbon::now();
+
+        $ctime =  date_format($cdate, 'g:i a');
+
+         $times = strtotime($ctime);
+         //echo $times; die;
+
+        $middle = strtotime($cdate);
+        $new_date = date('l - F d, Y', $middle); 
+        
+
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
         $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
         $workername = DB::table('personnel')->select('personnelname','ticketid')->where('id',$worker->workerid)->first();
 
         $todayservicecall = DB::table('quote')->where('personnelid',$worker->workerid)->where('ticket_status','2')->whereDate('created_at', Carbon::today())->limit('2')->orderBy('id','DESC')->get();
+
+        // if(count($todayservicecall)>0) {
+        //   foreach($todayservicecall as $key => $value) {
+
+        //     $tickettime= strtotime($value->giventime);
+
+        //     $tickettimeg= DB::table('quote')->where('personnelid',$worker->workerid)->where('ticket_status','2')->where('givendate', $new_date)->whereRaw('TIME_TO_SEC($cdate") AS time','>=', $tickettime)->get();
+        //     if(count($tickettimeg)>0) {
+
+        //       $notification = new AppNotification;
+        //       $notification->uid = $auth_id;
+        //       $notification->pid = $worker->workerid;
+        //       $notification->ticketid = $tickettimeg->id;
+        //       $notification->message =  "Your ticket #" .$tickettimeg->id. " have not picked it up yet";
+        //       $notification->save();
+
+        //       $puser = Personnel::select('device_token')->where("id", $worker->workerid)->first();
+
+        //       $msgarray = array (
+        //           'title' => 'Ticket have not picked it up yet',
+        //           'msg' => "Your ticket #" .$tickettimeg->id. " have not picked it up yet",
+        //           'type' => 'ticketnotpickedyet',
+        //       );
+
+        //       $fcmData = array(
+        //           'message' => $msgarray['msg'],
+        //           'body' => $msgarray['title'],
+        //       );
+
+        //       $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+             
+        //     }
+            
+        //   }
+        // }
 
         $customerData = DB::table('quote')->select('quote.*', 'customer.id','customer.phonenumber','customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',array('2','3'))->limit('2')->orderBy('quote.id','DESC')->get();
 
@@ -203,5 +252,48 @@ class WorkerHomeController extends Controller
       $workerhour->date1 = $date1;
       $workerhour->save();
       echo 1;
+    }
+
+    public function sendFirebaseNotification($puser, $msgarray, $fcmData) 
+    {
+        $url = 'https://fcm.googleapis.com/fcm/send';
+
+        $fcmApiKey = "AAAARQKM8JU:APA91bGX3j2-L9qPoU7PhhTrxIZzjUDDUa8XFkyMsyYHUVr8uqC5yHofDtQR73vlmUarnbQDAexn2TQVRGlWhf99gVkD8UcCvSIX_1DcqX5ZdLy8xu3JOfAMgJmN3Zl6NZ-H3WBKXJDl";
+
+        $fcmMsg = array(
+            'title' => $msgarray['title'],
+            'text' => $msgarray['msg'],
+            'type' => $msgarray['type'],
+            'vibrate' => 1,
+            "date_time" => date("Y-m-d H:i:s"),
+            'message' => $msgarray['msg'],
+        );
+
+        $fcmFields = array(
+            'to' => $puser->device_token,
+            'priority' => 'high',
+            'notification' => $fcmMsg,
+            'data' => $fcmMsg,
+        );
+
+        $headers = array(
+        'Authorization: key=' . $fcmApiKey,
+        'Content-Type: application/json',
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmFields));
+        $result = curl_exec($ch);
+
+        if ($result === false) {
+
+        }
+        curl_close($ch);
+        return $result;
     }
 }

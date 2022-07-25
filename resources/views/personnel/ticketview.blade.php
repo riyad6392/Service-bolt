@@ -124,7 +124,7 @@ Map / Directions</a>
 @php
   $datef = date('F d, Y', strtotime($quoteData->etc));
 @endphp
-  {{$datef}} - {{$quoteData->giventime}}</span>
+  {{$quoteData->givendate}} - {{$quoteData->giventime}}</span>
 </div>
 <div class="card-body">
 <div class="card-content">

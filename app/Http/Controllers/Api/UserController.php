@@ -265,7 +265,7 @@ class UserController extends Controller
         $sdata = Quote::select('serviceid')->where('id',$ticketId)->first();
         $checklistData = DB::table('checklist')->select('id','checklist')->where('serviceid',$sdata->serviceid)->get();
 
-        $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.giventime','quote.givenendtime','quote.description','quote.product_id','quote.serviceid', 'customer.phonenumber','quote.ticket_status','quote.customernotes')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
+        $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.description','quote.product_id','quote.serviceid', 'customer.phonenumber','quote.ticket_status','quote.customernotes')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
 
         if($quoteData) {
             $serviceidarray = explode(',', $quoteData->serviceid);
@@ -306,6 +306,7 @@ class UserController extends Controller
                    'latitude'=>$quoteData->latitude,
                    'longitude'=>$quoteData->longitude,
                    'etc'=>$quoteData->etc,
+                   'givendate'=>$quoteData->givendate,
                    'giventime'=>$quoteData->giventime,
                    'description'=>$quoteData->description,
                    'phonenumber'=>$quoteData->phonenumber,
