@@ -224,7 +224,7 @@ class UserController extends Controller
         $customerData = DB::table('quote')->select('quote.*', 'customer.id','customer.phonenumber','customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status','2')->limit('2')->orderBy('quote.id','DESC')->get();
 
         $todaydate = date('l - F d, Y');
-        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"2")->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[2,4])->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
                 
         return response()->json(['status'=>1,'message'=>'success','todayticket'=>$todayservicecall,'customerData'=>$customerData,'scheduleData'=>$scheduleData],$this->successStatus);
     }

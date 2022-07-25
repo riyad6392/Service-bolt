@@ -110,18 +110,19 @@ class WorkerTicketController extends Controller
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
         $currentDate = date('l - F d, Y');
         if($request->Pickup == "Pickup") {
-          $ticket = Quote::where('id', $request->ticketid)->get()->first();
+          $ticket = Quote::where('id', $request->ticketid)->first();
           $ticket->ticket_status = 4;
           $ticket->save();
 
           $pidarray = explode(',', $ticket->product_id);
 
-          foreach($pidarray as $key => $pid) {
-            $productd = Inventory::where('id', $pid)->first();
-            $productd->quantity = @$productd->quantity - 1;
-            $productd->save();
+          if(!empty($ticket->product_id)) {
+            foreach($pidarray as $key => $pid) {
+              $productd = Inventory::where('id', $pid)->first();
+              $productd->quantity = @$productd->quantity - 1;
+              $productd->save();
+            }
           }
-          
           date_default_timezone_set('Asia/Kolkata');
           $currentDateTime=date('m/d/Y H:i:s');
           $date1=date('Y-m-d');
@@ -160,7 +161,7 @@ class WorkerTicketController extends Controller
           return redirect()->route('worker.myticket');
         }
         if($request->closeout == "closeout") {
-            $ticket = Quote::where('id', $request->ticketid)->get()->first();
+            $ticket = Quote::where('id', $request->ticketid)->first();
             $ticket->ticket_status = 3;
             $ticket->save();
 
@@ -169,7 +170,7 @@ class WorkerTicketController extends Controller
             $date1=date('Y-m-d');
             $endtime = date('h:i A', strtotime($currentDateTime));
 
-            $sdata = Schedulerhours::where('ticketid', $request->ticketid)->get()->first();
+            $sdata = Schedulerhours::where('ticketid', $request->ticketid)->first();
             if($sdata) {
               $satrttime  = $sdata->starttime;
               $datetime1 = new DateTime($satrttime);
