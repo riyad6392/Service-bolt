@@ -231,14 +231,15 @@ class WorkerTicketController extends Controller
           $ticket = Quote::where('id', $request->ticketid)->get()->first();
           $ticket->ticket_status = 4;
           $ticket->save();
-
+        if(!empty($ticket->product_id)) {
           $pidarray = explode(',', $ticket->product_id);
 
           foreach($pidarray as $key => $pid) {
             $productd = Inventory::where('id', $pid)->first();
-            $productd->quantity = $productd->quantity - 1;
+            $productd->quantity = @$productd->quantity - 1;
             $productd->save();
           }
+        }
 
 
           date_default_timezone_set('Asia/Kolkata');
@@ -397,18 +398,22 @@ class WorkerTicketController extends Controller
         } 
         
         $servicename = implode(',', $sname);
-
-        $pidarray = explode(',', $quoteData->product_id);
-        $pdetails = Inventory::select('productname','id','price')->whereIn('id', $pidarray)->get();
         $sum1 = 0;
-        foreach ($pdetails as $key => $value) {
-          @$pname[] = $value['productname'];
-          $sum1+= (int)$value['price'];
+        if(!empty($quoteData->product_id)) {
+          $pidarray = explode(',', $quoteData->product_id);
+          $pdetails = Inventory::select('productname','id','price')->whereIn('id', $pidarray)->get();
+          foreach ($pdetails as $key => $value) {
+            @$pname[] = $value['productname'];
+            $sum1+= (int)$value['price'];
+          }
+
+          $totalprice = $sum+$sum1;
+          @$productname = implode(',', @$pname);
+        } else {
+          @$productname = "";
+          $totalprice = $quoteData->price;
         }
-
-        $totalprice = $sum+$sum1;
-
-        @$productname = implode(',', @$pname);
+        
         $cid = $quoteData->customerid;
         return view('personnel.ticketview',compact('quoteData','checklistData','sdata','prequoteData','servicename','productname','totalprice','productData','tenture','cid'));
     }
