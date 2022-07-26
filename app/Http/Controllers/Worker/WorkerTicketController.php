@@ -384,12 +384,21 @@ class WorkerTicketController extends Controller
 
       $sdata = Quote::select('serviceid')->where('id',$id)->first();
         $quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$id)->first();
-        $checklistData = DB::table('checklist')->select('*')->where('serviceid',$sdata->serviceid)->get();
+        if($sdata->serviceid!="") {
+          $serviceidarrays = explode(',', $sdata->serviceid);
+        } else {
+          $serviceidarrays = array();
+        }
+        
+        
+
+        $checklistData = DB::table('checklist')->select('*')->whereIn('serviceid',$serviceidarrays)->get();
+
         $sdata = Schedulerhours::where('ticketid', $quoteData->id)->get()->first();
         
         $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->whereIn('quote.ticket_status',array('3','4'))->get();
-
-        $serviceidarray = explode(',', $quoteData->serviceid);
+        if($quoteData->serviceid!="") {
+          $serviceidarray = explode(',', $quoteData->serviceid);
         $servicedetails = Service::select('servicename','price')->whereIn('id', $serviceidarray)->get();
         $sum = 0;
         foreach ($servicedetails as $key => $value) {
@@ -398,6 +407,10 @@ class WorkerTicketController extends Controller
         } 
         
         $servicename = implode(',', $sname);
+        } else {
+          $servicename = "";
+        }
+        
         $sum1 = 0;
         if(!empty($quoteData->product_id)) {
           $pidarray = explode(',', $quoteData->product_id);
@@ -407,7 +420,7 @@ class WorkerTicketController extends Controller
             $sum1+= (int)$value['price'];
           }
 
-          $totalprice = $sum+$sum1;
+          $totalprice = @$sum+@$sum1;
           @$productname = implode(',', @$pname);
         } else {
           @$productname = "";

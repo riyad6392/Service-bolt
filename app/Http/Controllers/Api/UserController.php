@@ -243,6 +243,20 @@ class UserController extends Controller
         }
     }
 
+    public function completedticketdata(Request $request) {
+        $user = Auth::user();
+        $auth_id = $user->id;
+
+        $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first(); 
+        $ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('3'))->get();
+
+        if ($ticketdata) {
+                return response()->json(['status'=>1,'message'=>'success','data'=>$ticketdata],$this->successStatus);
+        } else {
+            return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
+        }
+    }
+
     public function myticketDetail(Request $request) {
         $main_array =array();
         $user = Auth::user();
@@ -263,10 +277,17 @@ class UserController extends Controller
         $ticketId = $request->ticketId;
 
         $sdata = Quote::select('serviceid')->where('id',$ticketId)->first();
-        $checklistData = DB::table('checklist')->select('id','checklist')->where('serviceid',$sdata->serviceid)->get();
+
+        if($sdata->serviceid!="") {
+          $serviceidarrays = explode(',', $sdata->serviceid);
+        } else {
+          $serviceidarrays = array();
+        }
+
+        $checklistData = DB::table('checklist')->select('id','checklist')->whereIn('serviceid',$serviceidarrays)->get();
 
         $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.description','quote.product_id','quote.serviceid', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
-
+        
         if($quoteData) {
             $serviceidarray = explode(',', $quoteData->serviceid);
             $servicedetails = Service::select('id','servicename','price')->whereIn('id', $serviceidarray)->get();

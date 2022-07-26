@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::get('/myproduct', [App\Http\Controllers\Api\UserController::class, 'myproductData']);
 	Route::get('/mycustomer', [App\Http\Controllers\Api\UserController::class, 'mycustomerData']);
 	Route::post('/customerdetails', [App\Http\Controllers\Api\UserController::class, 'customerdetails'])->name('customerdetails');
+	Route::get('/completedticketdata', [App\Http\Controllers\Api\UserController::class, 'completedticketdata'])->name('completedticketdata');
 
 	Route::post('/schedulerdata', [App\Http\Controllers\Api\UserController::class, 'schedulerdata']);
 
