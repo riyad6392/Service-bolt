@@ -257,7 +257,7 @@ class UserController extends Controller
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['message'=>$msg_err],$this->errorStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
         $ticketId = $request->ticketId;
@@ -265,7 +265,7 @@ class UserController extends Controller
         $sdata = Quote::select('serviceid')->where('id',$ticketId)->first();
         $checklistData = DB::table('checklist')->select('id','checklist')->where('serviceid',$sdata->serviceid)->get();
 
-        $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.description','quote.product_id','quote.serviceid', 'customer.phonenumber','quote.ticket_status','quote.customernotes')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
+        $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.description','quote.product_id','quote.serviceid', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
 
         if($quoteData) {
             $serviceidarray = explode(',', $quoteData->serviceid);
@@ -297,6 +297,12 @@ class UserController extends Controller
               $sum1+= (int)$value['price'];
             }
 
+            if($quoteData->checklist!="") {
+                $pointbox =  explode(',', $quoteData->checklist);   
+            } else {
+                $pointbox = array();  
+            }
+
 
             array_push($main_array, [
                    'id'=>$quoteData->id,
@@ -311,6 +317,7 @@ class UserController extends Controller
                    'description'=>$quoteData->description,
                    'phonenumber'=>$quoteData->phonenumber,
                    'ticket_status'=>$quoteData->ticket_status,
+                   'pointcheckbox'=>$pointbox,
                    'servicedata'=>$serearray,
                    'productdata'=>$proarray,
                    'customernotes'=>$quoteData->customernotes,

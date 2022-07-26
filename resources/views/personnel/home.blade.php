@@ -42,7 +42,7 @@
           <tbody>
             @foreach($todayservicecall as $key =>$value)
             <tr>
-              <td>#{{$value->id}}</td>
+              <td><a href="{{url('personnel/myticket/view/')}}/{{$value->id}}" style="text-decoration: none;">#{{$value->id}}</a></td>
              <td><div class="ex-date"><h6>{{$value->servicename}}</h6> <span>{{$value->giventime}}</span></div></td>
               <td>{{$value->customername}}</td>
               <!-- <td>Example</td> -->
