@@ -3,10 +3,24 @@
 <div class="content">
 <div class="row">
 	<div class="col-md-12 mt-4">
-		<a href="{{ url()->previous() }}" class="back-btn">
+		<a href="{{ url('personnel/myticket/view/') }}/{{$quoteData->id}}" class="back-btn">
 	  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
 	   Back</a>
+	   <p>
+       @if(Session::has('success'))
+
+              <div class="alert alert-success" id="selector">
+
+                  {{Session::get('success')}}
+
+              </div>
+
+          @endif
+     </p>
+   
 	<div class="tabs">
+	@if($paymentpaid==1)
+  @else
   <ul id="tabs-nav" class="tabs-paynow-card">
     <li><a href="#tab1">
 	<div class="tabs-paynow">
@@ -30,6 +44,20 @@
 	</a></li>
    
   </ul> <!-- END tabs-nav -->
+  @endif
+  @if($paymentpaid==1)
+  	<p>TicketId: #{{$quoteData->id}} </p>
+  	<p>Customer Name: {{$quoteData->customername}}</p>
+    <div id="tab1" class="tab-content">
+    	<div class="card card-pay mb-3">
+	  <div class="card-body">
+	  <h4>You have to paid successfully.</h4>
+	  <h4>Total: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span></h4>
+	  
+	  
+	
+	  </div>
+	  @else
   <div id="tabs-content" class="p-3">
   	<p>TicketId: #{{$quoteData->id}} </p>
   	<p>Customer Name: {{$quoteData->customername}}</p>
@@ -104,20 +132,27 @@
 							Cash
 						  </button>
 						</h2>
+						<form method="post" action="{{route('worker.sendpayment')}}">
+							@csrf
 								<div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
 									<div class="accordion-body">
 									<div class="mb-3">
 									<label class="form-label">Enter Cash Ammount</label>
-									<input type="text" class="form-control form-control-2" placeholder="">
-
+									<input type="text" class="form-control form-control-2" value="{{number_format((float)$quoteData->price, 2, '.', '')}}" placeholder="Cash Amount" name="payment_amount" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
 									</div>
-																		<div class="mt-4 text-center">
-<button class="btn btn-add w-100 fw-bold">Pay</button>
-</div>
+									<input type="hidden" name="payment_mode" value="Cash">
+									<input type="hidden" value="{{$quoteData->id}}" name="tid">
+									<div class="mt-4 text-center">
+											<button class="btn btn-add w-100 fw-bold" type="submit">Pay</button>
+									</div>
 									
 									</div>
 								</div>
+							</form>
 							</div>
+
+							<form method="post" action="{{route('worker.sendpayment')}}">
+								@csrf
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="flush-headingTwo">
 						  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
@@ -127,22 +162,23 @@
 								<div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
 									<div class="accordion-body">
 									<div class="mb-3">
-									<label class="form-label">Check Number</label>
-									<input type="text" class="form-control form-control-2" placeholder="">
-
+										<label class="form-label">Check Number</label>
+										<input type="text" class="form-control form-control-2" placeholder="Check Number" name="checknumber" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" required>
 									</div>
-									
-										<div class="mb-3">
-									<label class="form-label">Ammount</label>
-									<input type="text" class="form-control form-control-2" placeholder="">
+									<input type="hidden" value="By Check" name="payment_mode">
 
+									<input type="hidden" value="{{$quoteData->id}}" name="tid">
+									<div class="mb-3">
+										<label class="form-label">Amount</label>
+										<input type="text" class="form-control form-control-2" placeholder="Amount" name="payment_amount" value="{{number_format((float)$quoteData->price, 2, '.', '')}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
 									</div>
-																											<div class="mt-4 text-center">
-								<button class="btn btn-add w-100 fw-bold">Pay</button>
+								<div class="mt-4 text-center">
+									<button class="btn btn-add w-100 fw-bold" type="submit">Pay</button>
 								</div>
 									</div>
 								</div>
 							</div>
+						</form>
 							
 	  </div>
 	  
@@ -180,6 +216,9 @@
     </div>
   
   </div> <!-- END tabs-content -->
+
+@endif
+
 </div>
 
 	</div>

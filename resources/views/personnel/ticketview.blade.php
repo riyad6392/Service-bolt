@@ -33,7 +33,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <div class="content">
      <div class="row">
       <div class="col-md-12">
-        <a href="{{url()->previous()}}" class="back-btn">
+        <a href="{{url('personnel/myticket')}}" class="back-btn">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
      Back</a>
         <div class="side-h3">
@@ -151,7 +151,7 @@ Map / Directions</a>
     @endif
     <div class="col-md-6">
       <div>
-        <p>Price: ${{$totalprice}}</p>
+        <p>Price: ${{$quoteData->price}}</p>
       </div>
     </div>
     
@@ -192,7 +192,7 @@ Map / Directions</a>
 <a href="javascript:void(0)" class="btn btn-personnal w-100" onClick="setFocus()">Customer Notes</a>
 </div> -->
 <div class="col-lg-12 mb-3">
-<a class="btn add-btn-yellow w-100" data-bs-toggle="modal" data-bs-target="#add-tickets" id="editTickets" data-id="{{$quoteData->id}}" data-price="{{$totalprice}}">Create Invoice</a>
+<a class="btn add-btn-yellow w-100" data-bs-toggle="modal" data-bs-target="#add-tickets" id="editTickets" data-id="{{$quoteData->id}}" data-price="{{$quoteData->price}}">Create Invoice</a>
 </div>
 </div>
 </div>

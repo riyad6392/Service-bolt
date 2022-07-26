@@ -349,6 +349,7 @@ Route::group([
     Route::any('/myticket/viewticketpopup', [WorkerTicketController::class, 'viewticketpopup'])->name('viewticketpopup');
     Route::any('/myticket/ticketupdate', [WorkerTicketController::class, 'ticketupdate'])->name('ticketupdate123');
     Route::any('/myticket/sendinvoice', [WorkerTicketController::class, 'sendinvoice'])->name('sendinvoice');
+    Route::any('/myticket/sendpayment', [WorkerTicketController::class, 'sendpayment'])->name('sendpayment');
     Route::any('/myticket/schedulecreate', [WorkerTicketController::class, 'schedulecreate'])->name('schedulecreate');
 
     Route::any('/myticket/getaddressbyid', [WorkerTicketController::class, 'getaddressbyid'])->name('getaddressbyid');

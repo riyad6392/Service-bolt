@@ -163,6 +163,7 @@ class WorkerTicketController extends Controller
         if($request->closeout == "closeout") {
             $ticket = Quote::where('id', $request->ticketid)->first();
             $ticket->ticket_status = 3;
+            $ticket->ticket_status = $ticket->price;
             $ticket->save();
 
             date_default_timezone_set('Asia/Kolkata');
@@ -229,6 +230,8 @@ class WorkerTicketController extends Controller
         $currentDate = date('l - F d, Y');
         if($request->Pickup == "Pickup") {
           $ticket = Quote::where('id', $request->ticketid)->get()->first();
+          //new logic
+
           $ticket->ticket_status = 4;
           $ticket->save();
         if(!empty($ticket->product_id)) {
@@ -281,6 +284,7 @@ class WorkerTicketController extends Controller
         }
         if($request->closeout == "closeout") {
             $ticket = Quote::where('id', $request->ticketid)->get()->first();
+            
             $ticket->ticket_status = 3;
             if($request->pointckbox) {
             $cheklist =implode(",", $request->pointckbox);
@@ -397,10 +401,12 @@ class WorkerTicketController extends Controller
         $sdata = Schedulerhours::where('ticketid', $quoteData->id)->get()->first();
         
         $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->whereIn('quote.ticket_status',array('3','4'))->get();
+        $sum = 0;
         if($quoteData->serviceid!="") {
           $serviceidarray = explode(',', $quoteData->serviceid);
+
         $servicedetails = Service::select('servicename','price')->whereIn('id', $serviceidarray)->get();
-        $sum = 0;
+        
         foreach ($servicedetails as $key => $value) {
           $sname[] = $value['servicename'];
           $sum+= (int)$value['price'];
@@ -454,7 +460,12 @@ class WorkerTicketController extends Controller
     public function paynow(Request $request ,$id) {
       
         $quoteData = DB::table('quote')->select('*')->where('id',$id)->first();
-        return view('personnel.paynow',compact('quoteData'));
+        if($quoteData->payment_mode !=""){
+          $paymentpaid = "1";
+        } else {
+          $paymentpaid = "0";
+        }
+        return view('personnel.paynow',compact('quoteData','paymentpaid'));
     }
 
     public function vieweditinvoicemodal(Request $request)
@@ -1036,6 +1047,22 @@ class WorkerTicketController extends Controller
         
         return json_encode(['address' =>$request->address]);
         die;
+    }
+
+    public function sendpayment(Request $request)
+    {
+
+      $quote = Quote::where('id', $request->tid)->first();
+      $quote->payment_amount = $request->payment_amount;
+      $quote->payment_mode = $request->payment_mode;
+      
+      if(!empty($request->checknumber)){
+        $quote->checknumber = $request->checknumber;
+      }
+
+      $quote->save();
+      $request->session()->flash('success', 'Payment has been successfully');
+      return redirect()->back();
     }
   
 }
