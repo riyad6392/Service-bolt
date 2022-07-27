@@ -551,6 +551,7 @@ class WorkerTicketController extends Controller
             <input type="text" class="form-control" placeholder="Notes" name="description" id="description" value="'.$quote->description.'">
           </div>
           </div><input type="hidden" name="id" id="id" value="'.$quote->id.'">';
+          
       if(in_array("Create Invoice for payment", $permissonarray)) {
        $html .= '<div class="row"><div class="col-lg-6 mb-2">
             <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;">Send Invoice</button>
@@ -559,15 +560,13 @@ class WorkerTicketController extends Controller
             <a href="'.$paynowurl.'" class="add-btn-yellow w-100" style="text-align:center;">Pay Now</a>
           </div></div>';
       }
-      if(in_array("Create Invoice for payment", $permissonarray)) {
-      } else {
-      if(in_array("Generate PDF for invoice", $permissonarray)) {
+      elseif(in_array("Generate PDF for invoice", $permissonarray)) {
        $html .= '<div class="row"><div class="col-lg-6 mb-2">
             <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;">Send Invoice</button>
           </div>
           </div>';
         }
-      }
+      
         $html .= '</div>';
         return json_encode(['html' =>$html]);
         die;

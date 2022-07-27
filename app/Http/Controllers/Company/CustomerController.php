@@ -46,14 +46,9 @@ class CustomerController extends Controller
         $services = Service::where('userid', $auth_id)->get();
         $products = Inventory::where('user_id', $auth_id)->get();
        
-        $days = $request->get('f');
-        $dateS = Carbon::now()->subDay($days);
-        $dateE = Carbon::now();
         $customerData = Customer::where('userid',$auth_id)->get();
         $customerAddress = Address::where('authid',$auth_id)->get();
-        //$customerData = Customer::select('Customer.id', 'Customer.customername', 'Customer.phonenumber', 'Customer.email', 'Customer.companyname', 'Customer.serviceid', 'services.servicename')
-          //      ->leftjoin('services', 'Customer.userid', '=', 'services.userid')->where('Customer.userid', $auth_id)->get();
-        //dd($customerData);  
+          
          $table="customer";
          $fields = DB::getSchemaBuilder()->getColumnListing($table);
         //dd($aaa);      
