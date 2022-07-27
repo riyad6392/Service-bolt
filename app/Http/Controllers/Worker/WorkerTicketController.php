@@ -710,7 +710,7 @@ class WorkerTicketController extends Controller
 
       $sid = explode(',',$customer[0]->serviceid);
 
-       $data['serviceData'] = Service::whereIn('id',$sid)->get(["servicename","id","time","minute"]);
+       $data['serviceData'] = Service::whereIn('id',$sid)->get(["servicename","id","time","minute","frequency","price"]);
        
         $data['address'] = Address::where("customerid",$request->customerid)
                     ->get(["address","id"]);
@@ -939,7 +939,7 @@ class WorkerTicketController extends Controller
             </div></div>
           <div class="col-md-12 mb-3">
             <label>Price</label>
-            <input type="text" class="form-control" placeholder="Price" name="price" id="price" value="'.$quotedetails[0]->price.'" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" required>
+            <input type="text" class="form-control" placeholder="Price" name="price" id="price12" value="'.$quotedetails[0]->price.'" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" required>
            </div>
            <div class="col-md-12 mb-3">
             <label style="position: relative;left: 0px;margin-bottom: 11px;">ETC</label>
@@ -963,6 +963,7 @@ class WorkerTicketController extends Controller
 
     public function schedulecreate(Request $request)
     {
+      
       $quote = Quote::where('id', $request->quoteid)->get()->first();
 
       $serviceid = implode(',', $request->serviceid);

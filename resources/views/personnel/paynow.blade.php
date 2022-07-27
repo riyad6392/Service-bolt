@@ -51,7 +51,7 @@
     <div id="tab1" class="tab-content">
     	<div class="card card-pay mb-3">
 	  <div class="card-body">
-	  <h4>You have to paid successfully.</h4>
+	  <h4>Paid succesfully.</h4>
 	  <h4>Total: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span></h4>
 	  
 	  

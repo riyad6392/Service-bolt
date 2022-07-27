@@ -301,9 +301,30 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         $("#time").val(h);
         $("#minute").val(realmin);
       }
+
+    function getprice() {
+	  	var price = 0;
+	  	$('select.selectpicker').find('option:selected').each(function() {
+			   	price += parseInt($(this).data('price'));
+			});
+			
+			$("#price").val(price);	
+	  }
+
+	  function getfrequency() {
+	  	var frequency = "";
+	  	$("#frequency option").removeAttr('selected');
+	  	$('select.selectpicker').find('option:selected').each(function() {
+			   	frequency = $(this).data('frequency');
+			});
+			$("#frequency option[value='"+frequency+"']").attr('selected', 'selected');
+			
+	  }
     
     $(document).on('change', 'select.selectpicker',function() {
       gethours();
+      getprice();
+			getfrequency();
     });
    $('#customerid1').on('change', function() {
 		var customerid = this.value;
@@ -328,9 +349,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 					$('#customerid').val(customerid);
 					$("#servicename").empty();
-
+					console.log(result.serviceData);
 					$.each(result.serviceData,function(key,value) {
-						$("#servicename").append('<option value="'+value.id+'" data-hour="'+value.time+'" data-min="'+value.minute+'">'+value.servicename+'</option>');
+						$("#servicename").append('<option value="'+value.id+'" data-hour="'+value.time+'" data-min="'+value.minute+'" data-price="'+value.price+'" data-frequency="'+value.frequency+'">'+value.servicename+'</option>');
 					});
 					
 					$('.selectpicker').selectpicker('refresh');

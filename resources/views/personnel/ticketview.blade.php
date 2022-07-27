@@ -562,7 +562,8 @@ Save
         })
     });
   $('#selector').delay(2000).fadeOut('slow');
- $(document).on('change','#serviceid',function(e) {
+  
+  $(document).on('change','#serviceid',function(e) {
     var serviceid = $('#serviceid').val();
     var productid = $('#productid').val(); 
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid;
@@ -577,7 +578,7 @@ Save
             $('#price12').val(data.totalprice);
           }
       })
-   });
+  });
    $(document).on('change','#productid',function(e) {
       var serviceid = $('#serviceid').val();
       var productid = $('#productid').val(); 

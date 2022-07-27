@@ -97,4 +97,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::get('/getbalancesheet', [App\Http\Controllers\Api\UserController::class, 'getbalancesheet'])->name('getbalancesheet');
 
 	Route::get('/getnotification', [App\Http\Controllers\Api\UserController::class, 'getnotification'])->name('getnotification');
+
+	Route::post('/paynow', [App\Http\Controllers\Api\UserController::class, 'paynow'])->name('paynow');
+	Route::post('/paynowsuccess', [App\Http\Controllers\Api\UserController::class, 'paynowsuccess'])->name('paynowsuccess');
 });

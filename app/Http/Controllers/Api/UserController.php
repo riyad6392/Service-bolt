@@ -286,7 +286,7 @@ class UserController extends Controller
 
         $checklistData = DB::table('checklist')->select('id','checklist')->whereIn('serviceid',$serviceidarrays)->get();
 
-        $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.description','quote.product_id','quote.serviceid', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
+        $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.description','quote.product_id','quote.serviceid', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist','quote.price')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
         
         if($quoteData) {
             $serviceidarray = explode(',', $quoteData->serviceid);
@@ -346,7 +346,8 @@ class UserController extends Controller
             
             //$servicename = implode(',', $sname);
 
-            $totalprice = $sum+$sum1;
+           // $totalprice = $sum+$sum1;
+            $totalprice = $quoteData->price;
 
            // $productname = implode(',', $pname);
 
@@ -1454,6 +1455,52 @@ class UserController extends Controller
       $notification = DB::table('appnotification')->where('pid', $worker->workerid)->orderBy('id','DESC')->get();
 
       return response()->json(['status'=>1,'message'=>'Success','data'=>$notification],$this->successStatus);  
+    }
+
+    public function paynow(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'ticketid' => 'required',
+            'payment_mode' => 'required',
+            'payment_amount' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            $response = array('status'=>0,'message' => $validator->errors()->toArray());
+            return response()->json($response,$this->successStatus);
+        }
+
+        $quote = Quote::where('id', $request->ticketid)->first();
+        $quote->payment_amount = $request->payment_amount;
+        $quote->payment_mode = $request->payment_mode;
+          
+        if(!empty($request->checknumber)) {
+            $quote->checknumber = $request->checknumber;
+        }
+
+        $quote->save();
+
+        return response()->json(['status'=>1,'message'=>'Payment has been successfully'],$this->successStatus);  
+    }
+
+    public function paynowsuccess(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'ticketid' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            $response = array('status'=>0,'message' => $validator->errors()->toArray());
+            return response()->json($response,$this->successStatus);
+        }
+
+        $quoteData = DB::table('quote')->select('*')->where('id',$request->ticketid)->first();
+        
+        if($quoteData->payment_mode !="") {
+          $paymentpaid = "1";
+        } else {
+          $paymentpaid = "0";
+        }
+
+        return response()->json(['status'=>1,'paymentstatus'=>$paymentpaid],$this->successStatus);  
     }
 
 }
