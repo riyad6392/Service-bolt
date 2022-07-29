@@ -49,13 +49,30 @@ class WorkerTicketController extends Controller
 
         $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
         //echo $worker->workerid; die; 
-        $ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('2','3','4'))->orderBy('id','desc')->get();
+        $ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('2','4'))->orderBy('id','desc')->get();
 //dd($ticketdata);
         //$workerh = DB::table('workerhour')->where('workerid',$worker->workerid)->whereDate('created_at', DB::raw('CURDATE()'))->first();
 
         $workerh = DB::table('workerhour')->where('workerid',$worker->workerid)->whereDate('created_at', DB::raw('CURDATE()'))->orderBy('id','desc')->first();
        
         return view('personnel.myticket',compact('auth_id','ticketdata','workerh'));
+    }
+
+  public function completedticket(Request $request) 
+  {
+     $auth_id = auth()->user()->id;
+       
+        if(auth()->user()->role == 'worker') {
+            $auth_id = auth()->user()->id;
+        } else {
+           return redirect()->back();
+        }
+
+        $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
+        
+        $ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('3'))->orderBy('id','desc')->get();
+       
+        return view('personnel.completeticket',compact('auth_id','ticketdata')); 
     }
 
     public function viewticketmodal(Request $request)

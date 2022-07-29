@@ -335,6 +335,8 @@ Route::group([
     Route::any('/home/workerclockhoursout', [WorkerHomeController::class, 'workerclockhoursout'])->name('workerclockhoursout');
 
     Route::get('/myticket', [WorkerTicketController::class, 'index'])->name('myticket');
+    
+    Route::get('/completedticket', [WorkerTicketController::class, 'completedticket'])->name('completedticket');
     Route::get('/createticket', [WorkerTicketController::class, 'createticket'])->name('createticket');
     Route::any('/myticket/viewticketmodal', [WorkerTicketController::class, 'viewticketmodal'])->name('viewticketmodal');
     Route::any('/myticket/update', [WorkerTicketController::class, 'update'])->name('myticketupdate');

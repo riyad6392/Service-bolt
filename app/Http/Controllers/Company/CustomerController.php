@@ -373,7 +373,7 @@ class CustomerController extends Controller
       if($targetid == 0) {
         $auth_id = auth()->user()->id;
         //$services = Service::where('userid',$auth_id)->orderBy('id','ASC')->get();
-        $quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber','personnel.phone','personnel.personnelname','services.image as serviceimage')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.customerid',$request->customerid1)->get();
+        $quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber','personnel.phone','personnel.personnelname','services.image as serviceimage')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.customerid',$request->customerid1)->orderBy('quote.id','asc')->get();
         $countdata = count($quoteData);
          $datacount = $countdata-1;
 

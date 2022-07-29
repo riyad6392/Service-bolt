@@ -22,6 +22,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     top: 0;
     width: auto;
 }
+
+ .table-new tbody tr.selectedrow:after {
+    /*background: #FDFBEC;*/
+    background: #FAED61 !important;
+  }
+
+  .card-body.customer-scroll-div {
+    height: 450px;
+    overflow-y: auto;
+  }
 </style>
 <div class="">
 <div class="content">
@@ -163,40 +173,69 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      <div class="col-md-8 mb-4">
              <div class="card">
        <div class="card-body">
+        <div class="card-body customer-scroll-div">
       <h5 class="mb-4">Recent Tickets</h5>
     
-    <div class="table-responsive">
-    <div class="th-listbox customers-list">
-    <ul class="list-group list-group-horizontal th-gray text-uppercase font-color mb-4 ">
-  <li>Ticket number</li>
-  <li>Service</li>
-  <li>Total</li>
- <li></li>
-</ul>
-@if(count($recentTicket)>0)
-@php
-  $i = 1;
-@endphp
-@foreach($recentTicket as $key => $value)
-  <ul class="list-group list-group-horizontal th-border mb-4 align-items-center list-group-active">
-    <li class="text-truncate"> #{{$value['id']}} </li>
-    <li> {{$value['servicename']}} </li>
-    <li> ${{$value['price']}} </li>
-    <li><a class="btn btn-ticket showSingle" target="{{$i}}" data-id="{{$value['customerid']}}" datat-id="{{$value['id']}}">View Ticket</a></li>
-  </ul>
-  @php
-    $i++;
-  @endphp
-@endforeach
-@else
-<div style="text-align: center;">No Record Found</div>
-@endif
-</div>
-    </div>
+    <div class="">
+    <table id="example" class="table no-wrap table-new table-list align-items-center">
+    <thead>
+    <tr>
+    <th>Ticket number</th>
+    <th>Price</th>
+    <th>Service Name</th>
+    <th>Action</th>
+    
+    </tr>
+    </thead>
+    <tbody>
+      @php
+      $i = 1;
+    @endphp
+      @foreach($recentTicket as $ticket)
+      @php
+        $explode_id = explode(',', $ticket->serviceid);
+        $servicedata = App\Models\Service::select('servicename')
+          ->whereIn('services.id',$explode_id)->get();
+      @endphp
+    <tr target="{{$i}}">
+    <td>#{{$ticket->id}}</td>
+    <td>{{$ticket->price}}</td>
+    <td>@php
+      $i=0;
+    @endphp
+    @foreach($servicedata as $servicename)
+        @php
+          if(count($servicedata) == 0){
+            $servicename = '-';
+          } else {
+            $servicename = $servicename->servicename;
+          }
+        @endphp
+
+        {{$servicename}}
+      @if(count($servicedata)>1) 
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" class="sup-dot service_list_dot" xmlns="http://www.w3.org/2000/svg" data-bs-toggle="modal" data-bs-target="#service-list-dot" id="service_list_dot" data-id="{{ $ticket->serviceid }}">
+          <circle cx="5" cy="5" r="5" fill="#FA8F61"></circle>
+        </svg>
+        @endif
+        @php
+        $i=1; break;
+      @endphp
+    @endforeach</td>
+    <td><a class=" showSingle" target="{{$i}}" data-id="{{$ticket->customerid}}" datat-id="{{$ticket->id}}">View</a>
+   </td>
+   </tr>
+      @php
+          $i++;
+        @endphp
+        @endforeach
+    </tbody>
+    </table>
+   </div>
     
     
      </div>
-        
+      </div>
 
        </div>
      </div>
@@ -295,6 +334,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 @section('script')
 <script type="text/javascript">
+  $(document).ready(function() {
+    // $('#example').DataTable({
+    //   "order": [[ 0, "desc" ]]
+    // });
+    $("#example tbody > tr:first-child").addClass('selectedrow');
+  });
+  
 	$.ajaxSetup({
       	headers: {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -411,5 +457,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             }
         })
  });
+
+  $('table tr').each(function(a,b) {
+    $(b).click(function() {
+         $(this).addClass('selectedrow').siblings().removeClass('selectedrow');
+    });
+  });
 </script>
 @endsection

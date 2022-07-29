@@ -149,7 +149,7 @@ class WorkerCustomerController extends Controller
       if($targetid == 0) {
         $auth_id = auth()->user()->id;
         //$services = Service::where('userid',$auth_id)->orderBy('id','ASC')->get();
-        $quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber','personnel.phone','personnel.personnelname','services.image as serviceimage')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.customerid',$request->customerid1)->get();
+        $quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber','personnel.phone','personnel.personnelname','services.image as serviceimage')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.customerid',$request->customerid1)->orderBy('quote.id','asc')->get();
         $countdata = count($quoteData);
          $datacount = $countdata-1;
 
@@ -159,63 +159,110 @@ class WorkerCustomerController extends Controller
         $imagepath = url('/').'/uploads/servicebolt-noimage.png';
       }
 
-      $html ='<div class="row"><h5 class="mb-4">Ticket Info</h5><div class="col-md-7">
-         <div class="padding-tree">
-           <h5>#'.$quoteData[$datacount]->id.' <span style="color: #B0B7C3;">'.$quoteData[$datacount]->servicename.'</span></h5>
+      $serviceid = explode(',', $quoteData[$datacount]->serviceid);
+
+       $servicedetails = Service::select('servicename')->whereIn('id', $serviceid)->get();
+
+      foreach ($servicedetails as $key => $value) {
+        $sname[] = $value['servicename'];
+      } 
+      $servicename = implode(',', $sname);
+
+      $html ='<div class="row"><h5 class="mb-4">Ticket Info #'.$quoteData[$datacount]->id.'</h5>
+      <div class="col-md-12">
+         
+          <div class="col-md-12 mb-2">
+           <div class="input_fields_wrap">
+              <div class="mb-3">
+              <label><strong>Customer Address</strong>:&nbsp;</label>
+                '.$quoteData[$datacount]->address.'
+              </div>
+          </div>
+        </div>
+        </div>
+        <div class="col-md-12 mb-3">
+        <div><strong>Personnel Info:</strong></div>
+           <div class="">Name: '.$quoteData[$datacount]->personnelname.'</div>
+           <div class="">Phone: '.$quoteData[$datacount]->phone.'</div>
          </div>
-         <div>
-           <p class="cstmr">Personnel Name</p>
-           <h6 class="billy">'.$quoteData[$datacount]->personnelname.'</h6>
+         
+         <div class="col-md-12 mb-3">
+           <div class=""><strong>Service Name:</strong> '.$servicename.'</div>
+           
          </div>
-         <div>
-           <p class="cstmr">Personnel Phone</p>
-           <h6 class="billy">'.$quoteData[$datacount]->phone.'</h6>
+         <div class="col-md-12 mb-2">
+            <strong><label>Frequency:&nbsp;</label></strong>'.$quoteData[$datacount]->frequency.'
+          </div>
+          <div class="col-md-12 mb-2">
+            <strong><label>Default Time: &nbsp;</label></strong>'.$quoteData[$datacount]->time.' '.$quoteData[$datacount]->minute.'
+            
+          </div>
+          <div class="col-md-12 mb-3">
+            <strong><label>Price:&nbsp;</label></strong>'.$quoteData[$datacount]->price.'
+          </div>
+         
+         <div class="col-md-12 mb-3">
+           <div class=""><strong>Date:</strong> '.$quoteData[$datacount]->etc.'</div>
          </div>
-         <div>
-           <p class="cstmr">Date</p>
-           <h6  class="billy">'.$quoteData[$datacount]->etc.'</h6>
-         </div>
-         </div>
-         <div class="col-md-5">
-        <div>
-          <img src="'.$imagepath.'" class="ticket-img">
-       </div>
-       </div></div>';
+         </div></div>';
       } else {
         $quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber','personnel.phone','personnel.personnelname','services.image as serviceimage')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.id',$request->ticketid)->first();
-
-        if(@$quoteData->serviceimage!=null) {
+      if($quoteData!=null) {
+        if($quoteData->serviceimage!=null) {
           $imagepath = url('/').'/uploads/services/'.$quoteData->serviceimage;
         } else {
           $imagepath = url('/').'/uploads/servicebolt-noimage.png';
         }
+      } 
+
+      $serviceid = explode(',', $quoteData->serviceid);
+
+       $servicedetails = Service::select('servicename')->whereIn('id', $serviceid)->get();
+
+      foreach ($servicedetails as $key => $value) {
+        $sname[] = $value['servicename'];
+      } 
+      $servicename = implode(',', $sname);
         
       $html =
 
-      '<div class="row">
-      <h5 class="mb-4">Ticket Info</h5>
-      <div class="col-md-7">
-         <div class="padding-tree">
-           <h5>#'.$quoteData->id.' <span style="color: #B0B7C3;">'.$quoteData->servicename.'</span></h5>
+      '<div class="row"><h5 class="mb-4">Ticket Info #'.$quoteData->id.'</h5>
+      <div class="col-md-12">
+         
+          <div class="col-md-12 mb-2">
+           <div class="input_fields_wrap">
+              <div class="mb-3">
+              <label><strong>Customer Address</strong>:&nbsp;</label>
+                '.$quoteData->address.'
+              </div>
+          </div>
+        </div>
+        </div>
+        <div class="col-md-12 mb-3">
+        <div><strong>Personnel Info:</strong></div>
+           <div class="">Name: '.$quoteData->personnelname.'</div>
+           <div class="">Phone: '.$quoteData->phone.'</div>
          </div>
-         <div>
-           <p class="cstmr">Personnel Name</p>
-           <h6 class="billy">'.$quoteData->personnelname.'</h6>
+         
+         <div class="col-md-12 mb-3">
+           <div class=""><strong>Service Name:</strong> '.$servicename.'</div>
+           
          </div>
-         <div>
-           <p class="cstmr">Personnel Phone</p>
-           <h6 class="billy">'.$quoteData->phone.'</h6>
+         <div class="col-md-12 mb-2">
+            <strong><label>Frequency:&nbsp;</label></strong>'.$quoteData->frequency.'
+          </div>
+          <div class="col-md-12 mb-2">
+            <strong><label>Default Time: &nbsp;</label></strong>'.$quoteData->time.' '.$quoteData->minute.'
+            
+          </div>
+          <div class="col-md-12 mb-3">
+            <strong><label>Price:&nbsp;</label></strong>'.$quoteData->price.'
+          </div>
+         
+         <div class="col-md-12 mb-3">
+           <div class=""><strong>Date:</strong> '.$quoteData->etc.'</div>
          </div>
-         <div>
-           <p class="cstmr">Date</p>
-           <h6  class="billy">'.$quoteData->etc.'</h6>
-         </div>
-         </div>
-         <div class="col-md-5">
-        <div>
-         <img src="'.$imagepath.'" class="ticket-img">
-       </div>
-       </div></div>';
+         </div></div>';
       }
       
         return json_encode(['html' =>$html]);

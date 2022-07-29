@@ -11,7 +11,7 @@
      <div class="row">
       <div class="col-md-12">
       <div class="side-h3">
-       <h3 class="align-items-center d-flex justify-content-between">Pending Tickets 
+       <h3 class="align-items-center d-flex justify-content-between">Completed Tickets 
      <div>
      <a href="{{route('worker.timesheet')}}" class="btn btn-dark py-2 px-5">Time Sheet</a>
         

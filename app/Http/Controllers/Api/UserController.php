@@ -219,7 +219,7 @@ class UserController extends Controller
 
         $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
 
-        $todayservicecall = DB::table('quote')->where('personnelid',$worker->workerid)->where('ticket_status','2')->whereDate('created_at', Carbon::today())->limit('2')->orderBy('id','DESC')->get();
+        $todayservicecall = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',['2','4'])->whereDate('created_at', Carbon::today())->limit('2')->orderBy('id','DESC')->get();
 
         $customerData = DB::table('quote')->select('quote.*', 'customer.id','customer.phonenumber','customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status','2')->limit('2')->orderBy('quote.id','DESC')->get();
 
