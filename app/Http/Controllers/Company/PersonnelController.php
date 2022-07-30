@@ -902,11 +902,15 @@ class PersonnelController extends Controller
       $paymentdata = PaymentSetting::where('pid',$id)->first();
       
       if($paymentdata == null) {
+        $comissionamount = PaymentSetting::where('pid',"")->where('type','amount')->first();
+        $comissionpercent = PaymentSetting::where('pid',"")->where('type','percent')->first();  
         $paymentdata = "1";
       } else {
+        $comissionamount = array();
+        $comissionpercent = array();
         $paymentdata = "0";
       }
-      return view('personnel.paymentsetting',compact('services','products','paymentdata'));
+      return view('personnel.paymentsetting',compact('services','products','paymentdata','comissionamount','comissionpercent'));
     }
 
     public function paymentsettingcreate(Request $request) {

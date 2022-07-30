@@ -293,8 +293,8 @@
         </div>
         <hr>
         <div class="first-section">
-          <label class="radio-div11 active">Hourly Payments 
-            <input type="radio" checked="checked" name="hourly" class="custom-radio firstradio">
+          <label class="radio-div11 active container-checkbox me-4">Hourly Payments 
+            <input type="checkbox" checked="checked" name="hourly" class="custom-radio firstradio">
             <span class="checkmark"></span>
           </label>
           <ul class="selection-div">
@@ -312,8 +312,8 @@
         </div>
         <hr>
         <div class="second-section">
-          <label class="radio-div1">Fixed Salary 
-            <input type="radio" name="fixedsalary" class="custom-radio secondradio">
+          <label class="radio-div1 container-checkbox me-4">Fixed Salary 
+            <input type="checkbox" name="fixedsalary" class="custom-radio secondradio">
             <span class="checkmark"></span>
           </label>
           <ul class="selection-div1">
@@ -361,14 +361,15 @@
         </div>
         <hr>
         <div class="third-section">
-         <label class="radio-div3">Commission Basis <input type="radio" name="method" class="custom-radio commisionchekbox">
+         <label class="radio-div3 container-checkbox me-4">Commission Basis <input type="checkbox" name="method" class="custom-radio commisionchekbox">
             <span class="checkmark"></span>
           </label>
+         
           <div class="row">
             <div class="col-md-6">
                  <div style="padding-left:35px">
-              <label class="radio-div3 ">Amount Wise 
-                <input type="radio" name="commission" class="custom-radio amountradio" value="amount">
+              <label class="radio-div3 container-checkbox me-4">Amount Wise 
+                <input type="checkbox" name="commission" class="custom-radio amountradio" value="amount">
                 <span class="checkmark"></span>
               </label>
             
@@ -414,8 +415,8 @@
         </div>
             <div class="col-md-6">
                
-              <label class="radio-div4">Percent Wise 
-                <input type="radio" name="commission" class="custom-radio percentradio" value="percent">
+              <label class="radio-div4 container-checkbox me-4">Percent Wise 
+                <input type="checkbox" name="commission" class="custom-radio percentradio" value="percent">
                 <span class="checkmark"></span>
               </label>
                 <ul class="selection-div4">
@@ -484,138 +485,20 @@
  </form>   
     @endsection @section('script')
     <script type="text/javascript">
-      $(document).ready(function() {
-        $('.selection-div1').addClass('pointerevent');
-         $('.selection-div4').addClass('pointerevent');
-         $('.selection-div3').addClass('pointerevent');
-         $(".secondradio").prop("checked",false);
-      });
-
-      $('.radio-div11').on('click', function() {
-        $(".commisionchekbox").prop("checked",false);
-        $(".secondradio").prop("checked",false);
-        $(".amountradio").prop("checked",false);
-        $(".percentradio").prop("checked",false);
-
-        $("#ckbCheckAll").prop("checked",false);
-        $(".amountall").prop("checked",false);
-
-        $("#ckbCheckAllpercent").prop("checked",false);
-        $(".allpercent").prop("checked",false);
-
-        $('.selection-div3').addClass('pointerevent');
-
-        $(".secondradio").removeAttr("checked");
-
-        $('.selection-div').removeClass('pointerevent');
-        
-        $('.selection-div1').addClass('pointerevent');
-
-        $('.radio-div1').removeClass('active');
-        $('.radio-div11').addClass('active');
-         $(".firstradio").attr('checked', 'checked');
-
-         $(".amountradio").removeAttr("checked");
-         
-
-
-      });
-
-      $('.radio-div1').on('click', function() {
-        $(".commisionchekbox").prop("checked",false);
-        $(".firstradio").prop("checked",false);
-        $(".amountradio").prop("checked",false);
-        $(".percentradio").prop("checked",false);
-
-        $("#ckbCheckAll").prop("checked",false);
-        $(".amountall").prop("checked",false);
-
-        $("#ckbCheckAllpercent").prop("checked",false);
-        $(".allpercent").prop("checked",false);
-
-         $(".firstradio").removeAttr("checked");
-          $('.selection-div1').removeClass('pointerevent');
-          $('.selection-div').addClass('pointerevent');
-          $('.radio-div1').addClass('active');
-          $('.radio-div11').removeClass('active');
-
-          $(".amountradio").removeAttr("checked");
-      });
-
-      $('.amountwise').on('click', function() {
-        if ($(this).is(':checked')) {
-          $(".amountall").attr('checked', 'checked');
-        } else {
-         $(".amountall").removeAttr("checked");
-        }
-      });
-
-      $('.percent-wise').on('click', function() {
-        alert('aaa');
-        if ($(this).is(':checked')) {
-          $(".allpercent").attr('checked', 'checked');
-        } else {
-         $(".allpercent").removeAttr("checked");
-        }
-      });
-
-      $('.radio-div4').on('click', function() {
-        $('.radio-div1').prop("checked",false);
-        $('.radio-div1').removeClass('active');
-        $("#ckbCheckAll").prop("checked",false);
-        $(".amountall").prop("checked",false);
-        $(".firstradio").prop("checked",false);
-         $(".secondradio").prop("checked",false);
-
-
-        $(".amountall").removeAttr("checked");
-        $(".amountwise").removeAttr("checked");
-        $('.selection-div4').removeClass('pointerevent');
-        $('.selection-div3').addClass('pointerevent');
-
-        $('.selection-div').addClass('pointerevent');
-         $('.selection-div1').addClass('pointerevent');
-
-         $(".commisionchekbox").attr('checked', 'checked');
-
-         $(".firstradio").removeAttr("checked");
-
-        $('.radio-div11').removeClass('active');
-
-      });
-
-      $('.radio-div3').on('click', function() {
-        $('.radio-div1').prop("checked",false);
-        $('.radio-div1').removeClass('active');
-        $(".secondradio").prop("checked",false);
-        $("#ckbCheckAllpercent").prop("checked",false);
-        $(".allpercent").prop("checked",false);
-        $(".firstradio").prop("checked",false);
-
-        $(".allpercent").removeAttr("checked");
-        $(".percent-wise").removeAttr("checked");
-        
+    $('.radio-div3').on('click', function() {
         $('.selection-div3').removeClass('pointerevent');
-         $('.selection-div4').addClass('pointerevent');
+    });
 
-         $('.selection-div').addClass('pointerevent');
-         $('.selection-div1').addClass('pointerevent');
-         $(".commisionchekbox").attr('checked', 'checked');
+    $('.radio-div4').on('click', function() {
+        $('.selection-div4').removeClass('pointerevent');
+    });
 
-         $(".firstradio").removeAttr("checked");
-
-          $('.radio-div11').removeClass('active');
-      });
-
-       $('.third-section').on('click', function() {
-          $('.radio-div11').removeClass('active');
-           $('.radio-div1').prop("checked",false);
-       });
-
-      
-    $(document).ready(function () {
+     $(document).ready(function () {
+        $(".commisionchekbox").attr('checked', 'checked');
         $("#ckbCheckAll").click(function () {
             $(".amountall").prop('checked', $(this).prop('checked'));
+             //$(".amountall").closest('li').find('input[type=text]').prop('disabled', !$(this).prop('checked'));
+           
         });
         
         $(".amountall").change(function(){
@@ -626,6 +509,7 @@
 
         $("#ckbCheckAllpercent").click(function () {
             $(".allpercent").prop('checked', $(this).prop('checked'));
+            //$(".allpercent").closest('li').find('input[type=text]').prop('disabled', !$(this).prop('checked'));
         });
         
         $(".allpercent").change(function() {
@@ -633,7 +517,11 @@
                 $("#ckbCheckAllpercent").prop("checked",false);
             }
         });
-    });
 
-    </script>
+        $(document).on('change','.amountall',function(){
+
+            //$(this).closest('li').find('input[type=text]').prop('disabled', !$(this).is(':checked'));
+        });
+    });
+</script>
      @endsection
