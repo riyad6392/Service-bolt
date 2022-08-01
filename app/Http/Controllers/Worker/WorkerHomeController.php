@@ -55,7 +55,7 @@ class WorkerHomeController extends Controller
         $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
         $workername = DB::table('personnel')->select('personnelname','ticketid')->where('id',$worker->workerid)->first();
 
-        $todayservicecall = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',[2,4])->where('givendate', $new_date)->limit('2')->orderBy('id','DESC')->get();
+        $todayservicecall = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',[2,3,4])->where('givendate', $new_date)->limit('2')->orderBy('id','DESC')->get();
 
         if(count($todayservicecall)>0) {
           foreach($todayservicecall as $key => $value) {
@@ -108,7 +108,7 @@ class WorkerHomeController extends Controller
         //dd($serviceinfo);
 
         $todaydate = date('l - F d, Y');
-        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"2")->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->join('services', 'services.servicename', '=', 'quote.servicename')->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
 
         $completedticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"3")->where('givendate', $todaydate)->count();
         
@@ -150,7 +150,7 @@ class WorkerHomeController extends Controller
 
         $worker = DB::table('users')->select('userid','workerid')->where('id',$personnelid)->first();
         //dd($worker);
-        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"2")->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->join('services', 'services.servicename', '=', 'quote.servicename')->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
         $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
       //dd($userData);
       $json = array();
@@ -192,20 +192,25 @@ class WorkerHomeController extends Controller
                 $imagepath = url('/').'/uploads/customer/'.$value->image;
               $html .='<li class="inner yellow-slide" id="drop_'.$value->id.'">
                         <div class="card">
-                          <div class="card-body">
+                          <div class="card-body" style="background-color:'.$value->color.'; border-radius: 12px;">
                             <div class="imgslider" style="display:none;">
                               <img src="'.$imagepath.'" alt=""/>
                             </div>
                             <input type="hidden" name="customerid" id="customerid" value="'.$value->customerid.'">
-                            <input type="hidden" name="quoteid" id="quoteid_'.$value->id.'" value="'.$value->id.'"><span>#'.$value->id.'</span>
-                            <h5>'.$value->customername.'</h5><a href="javascript:void(0);" class="info_link1" dataval="'.$value->id.'"></a>
+                            <input type="hidden" name="quoteid" id="quoteid_'.$value->id.'" value="'.$value->id.'"><span style="color: #fff;">#'.$value->id.'</span>
+                            <h5 style="color: #fff;">'.$value->customername.'</h5><a href="javascript:void(0);" class="info_link1" dataval="'.$value->id.'"></a>
                             <p>'.$value->servicename.'</p>
                             <p>Time : '.$value->giventime.' '.$givntime.'</p>
-                            <div class="grinding" style="display:block;"></a>';
-
+                            <div class="grinding" style="display:block;color: #fff;">
+                              <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="5" cy="5" r="5" fill="currentColor" style="display:none;">
+                              </svg>'.$value->time.' '.$value->minute.'</a>
+                              <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="5" cy="5" r="5" fill="currentColor" style="display:none;">
+                              </svg>'; 
                                 $date=date_create($value->etc);
                                 $dateetc = date_format($date,"F d, Y");
-                            $html .=' '.$value->time.' '.$value->minute.' ETC : '.$dateetc.'
+                            $html .='ETC : '.$dateetc.'</a>
                             </div>
                           </div>
                         </div>

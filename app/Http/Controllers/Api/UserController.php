@@ -1496,11 +1496,13 @@ class UserController extends Controller
         
         if($quoteData->payment_mode !="") {
           $paymentpaid = "1";
+          $payment_mode = $quoteData->payment_mode;
         } else {
           $paymentpaid = "0";
+          $payment_mode = "";
         }
 
-        return response()->json(['status'=>1,'paymentstatus'=>$paymentpaid],$this->successStatus);  
+        return response()->json(['status'=>1,'paymentstatus'=>$paymentpaid,'payment_mode'=>$payment_mode],$this->successStatus);  
     }
 
 }

@@ -302,17 +302,17 @@
                 @endphp
                 <li class="inner yellow-slide" id="drop_{{$value->id}}">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body" style="background-color: {{$value->color}};border-radius: 12px;">
             <div class="imgslider" style="display: none;">
               <img src="{{url('uploads/customer/')}}/{{$value->image}}" alt=""/>
             </div>
             <input type="hidden" name="customerid" id="customerid" value="{{$value->customerid}}">
             <input type="hidden" name="quoteid" id="quoteid_{{$value->id}}" value="{{$value->id}}">
-            <span>#{{$value->id}}</span>
-            <h5>{{$value->customername}}</h5>
+            <span style="color: #fff;">#{{$value->id}}</span>
+            <h5 style="color: #fff;">{{$value->customername}}</h5>
             <p>{{$value->servicename}}</p>
             <p>Time : {{$value->giventime}} @if($value->givenendtime!="") to {{$value->givenendtime}}@endif</p>
-            <div class="grinding" style="display: block;">
+            <div class="grinding" style="display: block;color: #fff;">
               <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="5" cy="5" r="5" fill="currentColor" style="display: none;">
               </svg> {{$value->time}} {{$value->minute}} </a>
