@@ -510,7 +510,7 @@ class UserController extends Controller
         
         $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
 
-        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"2")->where('quote.givendate',$date)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.servicename', '=', 'quote.servicename')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"2")->where('quote.givendate',$date)->orderBy('quote.id','ASC')->get();
                 
         return response()->json(['status'=>1,'message'=>'success','scheduleData'=>$scheduleData],$this->successStatus);
     }
