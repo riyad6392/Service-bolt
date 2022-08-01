@@ -598,29 +598,25 @@ Save
    $(document).ready(function () {
     $("#buttonin" ).click(function() {
        $("#closeout").val('closeout');
-      if($("#checklistcount").val() == undefined) {
+      //if($("#checklistcount").val() == undefined) {
         $( "#forminout" ).submit();
-      } else {
-        if($('input[name="pointckbox[]"]:checked').length == $("#checklistcount").val()) {
-          var allVals = [];
-          $( "#forminout" ).submit();
-        } else {
-          swal({
-             title: "Oops!", 
-             text: "Please check all service checklist!", 
-             type: "error"
-           },
-         function(){ 
-             location.reload();
-         }
-      );
-          // alert('Please check all service checklist!');
-          // location.reload();
-          // swal("Oops!", "Please check all service checklist!", "error").then(function() {
-          //     location.reload();
-          // });
-        }
-      }
+      //}  
+      // {
+      //   if($('input[name="pointckbox[]"]:checked').length == $("#checklistcount").val()) {
+      //     var allVals = [];
+      //     $( "#forminout" ).submit();
+      //   } else {
+      //     swal({
+      //        title: "Oops!", 
+      //        text: "Please check all service checklist!", 
+      //        type: "error"
+      //      },
+      //    function(){ 
+      //        location.reload();
+      //    }
+      // );
+      //   }
+      // }
     });
   });
 </script>
