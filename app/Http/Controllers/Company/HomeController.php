@@ -50,7 +50,8 @@ class HomeController extends Controller
         //$ticket = DB::table('quote')->select('product_id')->where('userid',$auth_id)->get();
         $inventoryinfo = DB::table('quote')
                  ->select('quote.product_id','quote.product_name', DB::raw('count(*) as total'),'products.pquantity','products.quantity')->join('products', 'products.id', '=', 'quote.product_id')->where('quote.userid',$auth_id)->where('quote.product_name', '!=',"")->limit(3)->orderBy('quote.product_id','DESC')
-                 ->groupBy('quote.product_id')->get();
+                 ->groupBy('quote.product_name')->get();
+                 //'quote.product_id'
                 // dd($inventoryinfo);   
         $serviceinfo = DB::table('quote')
                  ->select('quote.serviceid','services.servicename', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
@@ -92,7 +93,7 @@ class HomeController extends Controller
         //$ticket = DB::table('quote')->select('product_id')->where('userid',$auth_id)->get();
         $inventoryinfo = DB::table('quote')
                  ->select('quote.product_id','quote.product_name', DB::raw('count(*) as total'),'products.pquantity','products.quantity')->join('products', 'products.id', '=', 'quote.product_id')->where('quote.userid',$auth_id)->limit(3)->orderBy('quote.product_id','DESC')
-                 ->groupBy('quote.product_id')
+                 ->groupBy('quote.product_name')
                  ->get();     
         $serviceinfo = DB::table('quote')
                  ->select('quote.serviceid','services.servicename', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
