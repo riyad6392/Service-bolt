@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DB;
 use Auth;
+use Cache;
 
 class HomeController extends Controller
 {
@@ -121,9 +122,20 @@ class HomeController extends Controller
 
     public function mapdata(Request $request)
     {
-      $fulldate =  $request->fulldate;
       $auth_id = auth()->user()->id;
-      $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->orderBy('quote.id','ASC')->get();
+      $users = DB::table('users')->where('role','worker')->where('userid',$auth_id)->get();
+        $workerids = array();
+        foreach ($users as $user) {
+            if (Cache::has('user-is-online-' . $user->id)) {
+                $workerids[] = $user->workerid;
+            }
+        } 
+        //dd($workerids);
+    DB::enableQuerylog();
+    $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->rightJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('personnel.id',$workerids)->orderBy('quote.id','ASC')->get();
+
+     //$scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->orderBy('quote.id','ASC')->get();
+      //dd(DB::getQuerylog());
       //->where('quote.ticket_status',"2")
       $json = array();
       $data = [];
