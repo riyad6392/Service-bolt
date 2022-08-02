@@ -48,6 +48,10 @@
   @if($paymentpaid==1)
   	<p>TicketId: #{{$quoteData->id}} </p>
   	<p>Customer Name: {{$quoteData->customername}}</p>
+  	<p>Payment Mode: {{$quoteData->payment_mode}}</p>
+  	@if($quoteData->checknumber!="")
+  		<p>Check Number: {{$quoteData->checknumber}}</p>
+  	@endif
     <div id="tab1" class="tab-content">
     	<div class="card card-pay mb-3">
 	  <div class="card-body">

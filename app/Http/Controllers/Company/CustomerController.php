@@ -536,13 +536,13 @@ class CustomerController extends Controller
           <div class="col-md-12 mb-2">
             <label>Phone Number</label>
 
-            <input type="text" class="form-control" placeholder="Phone Number" value="'.$customer[0]->phonenumber.'" name="phonenumber" id="phonenumber" required>
+            <input type="text" class="form-control" placeholder="Phone Number" value="'.$customer[0]->phonenumber.'" name="phonenumber" id="phonenumber" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false" required>
           </div>
 
           <div class="col-md-12 mb-2">
             <label>Email</label>
 
-            <input type="text" class="form-control" placeholder="Email" value="'.$customer[0]->email.'" name="email" id="email" required>
+            <input type="email" class="form-control" placeholder="Email" value="'.$customer[0]->email.'" name="email" id="email" required>
           </div>
           <div class="col-md-12 mb-3">
           <label>Select Services</label>
