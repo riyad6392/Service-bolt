@@ -19,9 +19,9 @@
 </style>
 
    <div class="content-page">
-      <div class="content">
+      <div class="content p-3">
         <div class="row">
-
+        <h5>Manage Settings</h5>
         <div class="col-md-12">
           <div class="card">
             <div class="card-body">

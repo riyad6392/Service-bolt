@@ -6,8 +6,9 @@
 }
 </style>
 <div class="content-page">
-<div class="content">
+<div class="content p-3">
      <div class="row">
+      <h5>Manage Feature</h5>
      	<div class="col-md-12 mb-3 mt-3 text-end">
      		<button  data-bs-toggle="modal" data-bs-target="#add-product" class="btn btn-primary">Add</button></div>
       <div class="col-md-12">

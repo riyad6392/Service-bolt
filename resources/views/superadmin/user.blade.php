@@ -10,8 +10,9 @@
 </style>
 
 <div class="content-page">
-  <div class="content">
+  <div class="content p-3">
      <div class="row">
+      <h5>Manage Users</h5>
      <div class="col-lg-12 mt-4">
      <div class="table-responsive">
         <table id="example" class="table no-wrap table-new table-list" style="position: relative;">

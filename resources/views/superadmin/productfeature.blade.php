@@ -8,7 +8,7 @@
 <div class="content-page">
 <div class="content p-3">
      <div class="row">
-      <h5>Manage Tenure</h5>
+      <h5>Manage Product Feature Content</h5>
      	<div class="col-md-12 mb-3 mt-3 text-end">
      		<button  data-bs-toggle="modal" data-bs-target="#add-product" class="btn btn-primary">Add</button></div>
       <div class="col-md-12">
@@ -16,8 +16,8 @@
 	  <thead>
 	  <tr>
 	  <th>Sr. Nu.</th>
-	  <th>Tenure Name</th>
-	  <th>Days</th>
+	  <th>Product Feature</th>
+    <th>Image</th>
 	  <th>Status</th>
 	  <th>Action</th>
 	  </tr>
@@ -26,26 +26,22 @@
 	  	@php
 	  		$i=1;
 	  	@endphp
-	  	@foreach($tentureData as $key => $value)
+	  	@foreach($productfeature  as $key => $value)
+      @php
+        if($value->image!=null) {
+              $imagepath = url('/').'/uploads/productchecklist/thumbnail/'.$value->image;
+        } else {
+            $imagepath = url('/').'/uploads/servicebolt-noimage.png';
+        }
+      @endphp
 	  <tr>
 	  <td>{{$i}}</td>
-	  <td>{{$value->tenturename}}</td>
-	  <td>{{$value->day}}</td>
+	  <td>{{Str::limit($value->productfeature, 80) }}</td>
+    <td><img src="{{$imagepath}}" style="width:50px;height:50px;"></td>
 	  <td>{{$value->status}}</td>
 	  <td>
 	  	<i class="fa fa-trash-o text-danger" aria-hidden="true" id="delete" class="user-hover" data-id="{{$value->id}}"></i>
-	  	<i class="fa fa-pencil-square-o text-success" data-bs-toggle="modal" data-bs-target="#manage-users" id="manageusers" class="user-hover" data-id="{{$value->id}}"></i>
-	  	<div class="form-switch" style="display: inline;">
-        @if($value->status == "Active")
-         <a href="#" id="cactive" class="user-hover" data-id="{{$value->id}}">
-         <input class="form-check-input" type="checkbox" checked>
-         </a>
-        @else
-         <a href="#" id="cinactive" class="user-hover" data-id="{{$value->id}}">
-          <input class="form-check-input" type="checkbox">
-         </a>
-        @endif
-      	</div>
+	  	<i class="fa fa-pencil-square-o text-success" data-bs-toggle="modal" data-bs-target="#edit-feature" id="editfeature" class="user-hover" data-id="{{$value->id}}"></i>
 	  </td>
 	  </tr>
 	  	@php
@@ -64,7 +60,7 @@
    </div>
  </div>   
 <!-- Modal -->
-<form class="form-material m-t-40  form-valide" method="post" action="{{route('superadmin.managetenturecreate')}}">
+<form class="form-material m-t-40  form-valide" method="post" action="{{route('superadmin.productfeaturestore')}}" enctype="multipart/form-data">
 @csrf
 <div class="modal fade" id="add-product" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -76,30 +72,34 @@
       </div>
 	  <div class="row" style="margin: 0 30px;padding: 13px;">
 	   <div class="col-md-12 mb-3">
-	   Tenure name
-	   <input type="text" class="form-control" placeholder="Tenure name" name="tenturename" id="tenturename" required="">
-	   </div>
-	   <div class="col-md-12 mb-3">Days
-	   	<input type="text" class="form-control" placeholder="Days" name="day" id="day" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
-	   </div>
-     <div style="text-align: -webkit-center;">
+	   Product Feature Description
+	   <textarea class="form-control" name="description" id="description" required="" cols="10" rows="5"></textarea>
+	   </div> 
+     <div class="col-md-12 mb-3">
+      <div style="">Image</div>
+      <input type="file" class="dropify" name="image" id="image" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg" required>
+     </div>
+	   <div style="text-align: -webkit-center;">
 	   <div class="col-lg-6">
 	   	<button type="submit" class="btn btn-add btn-block">Save</button>
 	   </div>
    </div>
    </div>
+
+
+
 	</div>
    </div>
   </div>
 </form>
 
-	<form class="form-material m-t-40  form-valide" method="post" action="{{route('superadmin.tentureupdate')}}">
+	<form class="form-material m-t-40  form-valide" method="post" action="{{route('superadmin.productfeatureupdate')}}" enctype="multipart/form-data">
 		@csrf
-		<div class="modal fade" id="manage-users" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+		<div class="modal fade" id="edit-feature" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
 		  <div class="modal-dialog modal-dialog-centered">
 		    <div class="modal-content">
 		      <div class="modal-body">
-		        <div id="viewtenturemodal"></div>
+		        <div id="viewpmodal"></div>
 		      </div>
 		    </div>
 		  </div>
@@ -107,8 +107,11 @@
 	</form>
 </div>
 @endsection
-<script src="{{ asset('js/jquery.min.js')}}"></script>  
+<script src="{{ asset('js/jquery.min.js')}}"></script>
+ <script src="{{ asset('js/dropify.js')}}"></script>
+  
 <script type="text/javascript">
+  $('.dropify').dropify();
   $(document).ready(function() {
     $('#example').DataTable({
       "order": [[ 0, "asc" ]]
@@ -119,10 +122,10 @@
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
-$(document).on('click','#manageusers',function(e) {
+$(document).on('click','#editfeature',function(e) {
    var id = $(this).data('id');
    $.ajax({
-        url:'{{route('superadmin.viewtenturemodal')}}',
+        url:'{{route('superadmin.viewproductfeaturemodal')}}',
         data: {
           'id':id,
            '_token': '{{csrf_token()}}',
@@ -132,7 +135,7 @@ $(document).on('click','#manageusers',function(e) {
         refresh: true,
         success:function(data) {
           console.log(data.html);
-          $('#viewtenturemodal').html(data.html);
+          $('#viewpmodal').html(data.html);
         }
     })
   });
@@ -154,7 +157,7 @@ $(document).on('click','#cinactive',function(e) {
         function (isConfirm) {
           if (isConfirm) {
            $.ajax({
-                url:"{{route('superadmin.tenturestatus')}}",
+                url:"{{route('superadmin.featurestatus')}}",
                 data: {
                 'userid':userid,
                 'status':'Active',
@@ -178,7 +181,7 @@ $(document).on('click','#cinactive',function(e) {
 
   $(document).on('click','#cactive',function(e) {
     var userid = $(this).data('id');
-    var status = "InActive";
+    var status = "Inactive";
     swal({
           title: "Are you sure?",
           text: "Are you sure you want to Inactivate this!",
@@ -193,7 +196,7 @@ $(document).on('click','#cinactive',function(e) {
         function (isConfirm) {
           if (isConfirm) {
            $.ajax({
-                url:"{{route('superadmin.tenturestatus')}}",
+                url:"{{route('superadmin.featurestatus')}}",
                 data: {
                 'userid':userid,
                 'status':'Inactive',
@@ -231,7 +234,7 @@ $(document).on('click','#cinactive',function(e) {
         function (isConfirm) {
           if (isConfirm) {
            $.ajax({
-                url:"{{route('superadmin.tenturedelete')}}",
+                url:"{{route('superadmin.productfeaturedelete')}}",
                 data: {
                 'id':id,
                 'status':'Active',

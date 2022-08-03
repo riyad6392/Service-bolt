@@ -15,6 +15,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('css/stylesuperadmin.css')}}">
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css'>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/dropify.css')}}">
   <title>
   Services Bolt
   </title>
@@ -89,6 +90,36 @@
 </clipPath>
 </defs>
 </svg>Manage Feature</a></li>
+
+<li class="link">
+       <a href="{{ route('superadmin.productfeature') }}" >
+      <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0)">
+<path d="M9.75001 12.534C9.75001 12.1666 10.0035 11.8667 10.3125 11.8667H13.125V14.5359C13.125 15.027 13.461 15.4256 13.875 15.4256C14.289 15.4256 14.625 15.027 14.625 14.5359V11.8667H17.4375C17.7473 11.8667 18 12.1666 18 12.534V20.9864C18 21.3539 17.7473 21.6537 17.4375 21.6537H10.3125C10.0035 21.6537 9.75001 21.3539 9.75001 20.9864V12.534Z" fill="currentColor"/>
+<path d="M-7.72476e-05 12.534C-7.72476e-05 12.1666 0.253422 11.8667 0.562422 11.8667H3.37492V14.5359C3.37492 15.027 3.71092 15.4256 4.12492 15.4256C4.53891 15.4256 4.87491 15.027 4.87491 14.5359V11.8667H7.68741C7.99716 11.8667 8.24991 12.1666 8.24991 12.534V20.9864C8.24991 21.3539 7.99716 21.6537 7.68741 21.6537H0.562422C0.253422 21.6537 -7.72476e-05 21.3539 -7.72476e-05 20.9864V12.534Z" fill="currentColor"/>
+<path d="M4.87511 0.967616C4.87511 0.60105 5.12861 0.300323 5.4376 0.300323H8.2501V2.96949C8.2501 3.46062 8.5861 3.85922 9.0001 3.85922C9.4141 3.85922 9.7501 3.46062 9.7501 2.96949V0.300323H12.5626C12.8723 0.300323 13.1251 0.60105 13.1251 0.967616V9.41999C13.1251 9.78744 12.8723 10.0873 12.5626 10.0873H5.4376C5.12861 10.0873 4.87511 9.78744 4.87511 9.41999V0.967616Z" fill="currentColor"/>
+</g>
+<defs>
+<clipPath id="clip0">
+<rect width="18" height="21.3534" fill="white" transform="matrix(-1 0 0 1 18 0.300323)"/>
+</clipPath>
+</defs>
+</svg>Manage Product Feature</a></li>
+
+<li class="link">
+       <a href="{{ route('superadmin.managehomepagecontent') }}" >
+      <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0)">
+<path d="M9.75001 12.534C9.75001 12.1666 10.0035 11.8667 10.3125 11.8667H13.125V14.5359C13.125 15.027 13.461 15.4256 13.875 15.4256C14.289 15.4256 14.625 15.027 14.625 14.5359V11.8667H17.4375C17.7473 11.8667 18 12.1666 18 12.534V20.9864C18 21.3539 17.7473 21.6537 17.4375 21.6537H10.3125C10.0035 21.6537 9.75001 21.3539 9.75001 20.9864V12.534Z" fill="currentColor"/>
+<path d="M-7.72476e-05 12.534C-7.72476e-05 12.1666 0.253422 11.8667 0.562422 11.8667H3.37492V14.5359C3.37492 15.027 3.71092 15.4256 4.12492 15.4256C4.53891 15.4256 4.87491 15.027 4.87491 14.5359V11.8667H7.68741C7.99716 11.8667 8.24991 12.1666 8.24991 12.534V20.9864C8.24991 21.3539 7.99716 21.6537 7.68741 21.6537H0.562422C0.253422 21.6537 -7.72476e-05 21.3539 -7.72476e-05 20.9864V12.534Z" fill="currentColor"/>
+<path d="M4.87511 0.967616C4.87511 0.60105 5.12861 0.300323 5.4376 0.300323H8.2501V2.96949C8.2501 3.46062 8.5861 3.85922 9.0001 3.85922C9.4141 3.85922 9.7501 3.46062 9.7501 2.96949V0.300323H12.5626C12.8723 0.300323 13.1251 0.60105 13.1251 0.967616V9.41999C13.1251 9.78744 12.8723 10.0873 12.5626 10.0873H5.4376C5.12861 10.0873 4.87511 9.78744 4.87511 9.41999V0.967616Z" fill="currentColor"/>
+</g>
+<defs>
+<clipPath id="clip0">
+<rect width="18" height="21.3534" fill="white" transform="matrix(-1 0 0 1 18 0.300323)"/>
+</clipPath>
+</defs>
+</svg>Manage Home Page Content</a></li>
        
         
             <li class="link">
@@ -220,6 +251,7 @@
    <script src="{{ asset('js/chart.js')}}"></script>
    <script src="{{ asset('js/drop-zone.js')}}"></script>
    <script src="{{ asset('js/jquery-ui.js')}}"></script>
+   <script src="{{ asset('js/dropify.js')}}"></script>
   
 <script src="{{ asset('js/slick.min.js')}}"></script>
 <script src="{{ asset('js/main.min.js')}}"></script>
@@ -335,201 +367,6 @@ $(document).ready(function () {
   
 </script>
 
-
-
-<script >
-  var canvas = document.getElementById("canvas");
-var tooltipCanvas = document.getElementById("tooltip-canvas");
-
-var gradientBlue = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
-gradientBlue.addColorStop(0, '#5555FF');
-gradientBlue.addColorStop(1, '#9787FF');
-
-var gradientRed = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
-gradientRed.addColorStop(0, '#FF55B8');
-gradientRed.addColorStop(1, '#FF8787');
-
-var gradientGrey = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
-gradientGrey.addColorStop(0, '#888888');
-gradientGrey.addColorStop(1, '#AAAAAA');
-
-
-
-window.arcSpacing = 0.15;
-window.segmentHovered = false;
-
-function textInCenter(value, label) {
-  var ctx = tooltipCanvas.getContext('2d');
-  ctx.clearRect(0, 0, tooltipCanvas.width, tooltipCanvas.height)
-  
-  ctx.restore();
-    
-  // Draw value
-  ctx.fillStyle = '#333333';
-  ctx.font = '24px sans-serif';
-  ctx.textBaseline = 'middle';
-
-  // Define text position
-  var textPosition = {
-    x: Math.round((tooltipCanvas.width - ctx.measureText(value).width) / 2),
-    y: tooltipCanvas.height / 2,
-  };
-
-  ctx.fillText(value, textPosition.x, textPosition.y);
-
-  // Draw label
-  ctx.fillStyle = '#AAAAAA';
-  ctx.font = '8px sans-serif';
-
-  // Define text position
-  var labelTextPosition = {
-    x: Math.round((tooltipCanvas.width - ctx.measureText(label).width) / 2),
-    y: tooltipCanvas.height / 2,
-  };
-
-  ctx.fillText(label, labelTextPosition.x, labelTextPosition.y - 20);
-  ctx.save();
-}
-
-Chart.elements.Arc.prototype.draw = function() {
-  var ctx = this._chart.ctx;
-  var vm = this._view;
-  var sA = vm.startAngle;
-  var eA = vm.endAngle;
-
-  ctx.beginPath();
-  ctx.arc(vm.x, vm.y, vm.outerRadius, sA + window.arcSpacing, eA - window.arcSpacing);
-  ctx.strokeStyle = vm.backgroundColor;
-  ctx.lineWidth = vm.borderWidth;
-  ctx.lineCap = 'round';
-  ctx.stroke();
-  ctx.closePath();
-};
-
-var config = {
-    type: 'doughnut',
-    data: {
-        labels: ['Pink', 'Grey', 'Blue' , 'green'],
-        datasets: [
-          {
-              data: [400, 540, 290, 200],
-              backgroundColor: [
-                gradientRed,
-                gradientGrey,
-                gradientBlue,
-                gradientBlue,
-              ],
-          }
-        ]
-    },
-    options: {
-        cutoutPercentage: 80,
-        elements: {
-          arc: {
-            borderWidth: 12,
-          },
-        },
-        legend: {
-          display: false,
-        },
-        animation: {
-          onComplete: function(animation) {
-            if (!window.segmentHovered) {
-              var value = this.config.data.datasets[0].data.reduce(function(a, b) { 
-                return a + b;
-              }, 0);
-              var label = 'T O T A L';
-
-              textInCenter(value, label);
-            }
-          },
-        },
-        tooltips: {
-          enabled: false,
-          custom: function(tooltip) {
-            if (tooltip.body) {
-              var line = tooltip.body[0].lines[0],
-                parts = line.split(': ');
-              textInCenter(parts[1], parts[0].split('').join(' ').toUpperCase());
-              window.segmentHovered = true;
-            } else {
-              window.segmentHovered = false;
-            }
-          },
-        },
-    },
-};
-
-window.chart = new Chart(canvas, config);
-
-function addData(chart, label, data) {
-    chart.data.labels.push(label);
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
-    });
-    chart.update();
-}
-
-</script>
-
-
-    <script type="">
-      
-var icons = { parking: { icon: 'https://tarantelleromane.files.wordpress.com/2016/10/map-marker.png?w=50' } };
-
-
-// REPLACE WITH DATA FROM API
-//TITLE | POSITION - LAT , LNG | ICON | TITLE | CONTENT
-var airports = [
-  { 
-    title: 'Manchester Airport', 
-    position: { 
-      lat: 53.3588026, 
-      lng: -2.274919 }, 
-    icon: 'parking',  
-    content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
-  },
-  { 
-    title: 'Leeds Airport', 
-    position: { 
-      lat: 53.8679434, 
-      lng: -1.6637193 }, 
-    icon: 'parking',  
-    content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
-  },
-  { 
-    title: 'Belfast Airport', 
-    position: { 
-      lat: 54.661781, 
-      lng: -6.2184331 }, 
-    icon: 'parking',  
-    content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
-  },
-  { 
-    title: 'Edinburgh Airport', 
-    position: { 
-      lat: 55.950785, 
-      lng: -3.3636419 }, 
-    icon: 'parking',  
-    content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
-  },
-  { 
-    title: 'Cardiff Airport', 
-    position: { 
-      lat: 51.3985498, 
-      lng: -3.3416461 }, 
-    icon: 'parking',  
-    content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
-  },
-  { 
-    title: 'Heathrow Airport', 
-    position: { 
-      lat: 51.4700223, 
-      lng: -0.4542955 }, 
-    icon: 'parking',  
-  content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'}
-];
-</script>
 <script type="">
   $(".circle_percent").each(function() {
     var $this = $(this),

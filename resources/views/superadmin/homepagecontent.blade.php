@@ -8,44 +8,31 @@
 <div class="content-page">
 <div class="content p-3">
      <div class="row">
-      <h5>Manage Tenure</h5>
+      <h5>Manage Home Page Content</h5>
      	<div class="col-md-12 mb-3 mt-3 text-end">
-     		<button  data-bs-toggle="modal" data-bs-target="#add-product" class="btn btn-primary">Add</button></div>
+     		</div>
       <div class="col-md-12">
 	   <table class="table no-wrap table-new table-list align-items-center" id="example">
 	  <thead>
 	  <tr>
-	  <th>Sr. Nu.</th>
-	  <th>Tenure Name</th>
-	  <th>Days</th>
-	  <th>Status</th>
+	  <th>Section</th>
+    <th>Title</th>
+    <th>Content</th>
 	  <th>Action</th>
 	  </tr>
 	  </thead>
 	  <tbody>
 	  	@php
 	  		$i=1;
+        $none = "---";
 	  	@endphp
-	  	@foreach($tentureData as $key => $value)
+	  	@foreach($homepagecontent as $key => $value)
 	  <tr>
-	  <td>{{$i}}</td>
-	  <td>{{$value->tenturename}}</td>
-	  <td>{{$value->day}}</td>
-	  <td>{{$value->status}}</td>
+    <td>{{$value->title}}</td>
+    <td>@if($value->title1!=""){{Str::limit($value->title1, 20) }} @else {{$none}} @endif</td>
+    <td>{{Str::limit($value->content, 60) }}</td>
 	  <td>
-	  	<i class="fa fa-trash-o text-danger" aria-hidden="true" id="delete" class="user-hover" data-id="{{$value->id}}"></i>
 	  	<i class="fa fa-pencil-square-o text-success" data-bs-toggle="modal" data-bs-target="#manage-users" id="manageusers" class="user-hover" data-id="{{$value->id}}"></i>
-	  	<div class="form-switch" style="display: inline;">
-        @if($value->status == "Active")
-         <a href="#" id="cactive" class="user-hover" data-id="{{$value->id}}">
-         <input class="form-check-input" type="checkbox" checked>
-         </a>
-        @else
-         <a href="#" id="cinactive" class="user-hover" data-id="{{$value->id}}">
-          <input class="form-check-input" type="checkbox">
-         </a>
-        @endif
-      	</div>
 	  </td>
 	  </tr>
 	  	@php
@@ -64,7 +51,7 @@
    </div>
  </div>   
 <!-- Modal -->
-<form class="form-material m-t-40  form-valide" method="post" action="{{route('superadmin.managetenturecreate')}}">
+<form class="form-material m-t-40  form-valide" method="post" action="{{route('superadmin.managefeaturecreate')}}">
 @csrf
 <div class="modal fade" id="add-product" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -76,13 +63,10 @@
       </div>
 	  <div class="row" style="margin: 0 30px;padding: 13px;">
 	   <div class="col-md-12 mb-3">
-	   Tenure name
-	   <input type="text" class="form-control" placeholder="Tenure name" name="tenturename" id="tenturename" required="">
+	   Feature Description
+	   <textarea class="form-control" name="description" id="description" required="" cols="10" rows="5"></textarea>
 	   </div>
-	   <div class="col-md-12 mb-3">Days
-	   	<input type="text" class="form-control" placeholder="Days" name="day" id="day" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
-	   </div>
-     <div style="text-align: -webkit-center;">
+	   <div style="text-align: -webkit-center;">
 	   <div class="col-lg-6">
 	   	<button type="submit" class="btn btn-add btn-block">Save</button>
 	   </div>
@@ -93,7 +77,7 @@
   </div>
 </form>
 
-	<form class="form-material m-t-40  form-valide" method="post" action="{{route('superadmin.tentureupdate')}}">
+	<form class="form-material m-t-40  form-valide" method="post" action="{{route('superadmin.homepagecontentupdate')}}">
 		@csrf
 		<div class="modal fade" id="manage-users" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
 		  <div class="modal-dialog modal-dialog-centered">
@@ -122,7 +106,7 @@
 $(document).on('click','#manageusers',function(e) {
    var id = $(this).data('id');
    $.ajax({
-        url:'{{route('superadmin.viewtenturemodal')}}',
+        url:'{{route('superadmin.viewhomepagemodal')}}',
         data: {
           'id':id,
            '_token': '{{csrf_token()}}',
@@ -154,7 +138,7 @@ $(document).on('click','#cinactive',function(e) {
         function (isConfirm) {
           if (isConfirm) {
            $.ajax({
-                url:"{{route('superadmin.tenturestatus')}}",
+                url:"{{route('superadmin.featurestatus')}}",
                 data: {
                 'userid':userid,
                 'status':'Active',
@@ -178,7 +162,7 @@ $(document).on('click','#cinactive',function(e) {
 
   $(document).on('click','#cactive',function(e) {
     var userid = $(this).data('id');
-    var status = "InActive";
+    var status = "Inactive";
     swal({
           title: "Are you sure?",
           text: "Are you sure you want to Inactivate this!",
@@ -193,7 +177,7 @@ $(document).on('click','#cinactive',function(e) {
         function (isConfirm) {
           if (isConfirm) {
            $.ajax({
-                url:"{{route('superadmin.tenturestatus')}}",
+                url:"{{route('superadmin.featurestatus')}}",
                 data: {
                 'userid':userid,
                 'status':'Inactive',
@@ -231,7 +215,7 @@ $(document).on('click','#cinactive',function(e) {
         function (isConfirm) {
           if (isConfirm) {
            $.ajax({
-                url:"{{route('superadmin.tenturedelete')}}",
+                url:"{{route('superadmin.featuredelete')}}",
                 data: {
                 'id':id,
                 'status':'Active',

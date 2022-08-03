@@ -593,7 +593,6 @@ Route::group([
     Route::any('/manageChecklist/updatechecklist', [AdminchecklistController::class, 'updatechecklist'])->name('updatechecklist');
     Route::any('/manageChecklist/ckdelete', [AdminchecklistController::class, 'ckdelete'])->name('ckdelete');
 
-
     Route::get('/manageCmspages', [AdminCmspageController::class, 'index'])->name('manageCmspages');
     Route::any('/cmspagestatus', [AdminCmspageController::class, 'cmspagestatus'])->name('cmspagestatus');
     Route::any('/viewcmspagemodal', [AdminCmspageController::class, 'viewcmspagemodal'])->name('viewcmspagemodal');
@@ -608,6 +607,19 @@ Route::group([
 
     Route::get('/changepassword', [SuperadminChangepasswordController::class, 'index'])->name('changepassword');
     Route::any('/updatepassword', [SuperadminChangepasswordController::class, 'update'])->name('updatepassword');
+
+    Route::get('/productfeature', [AdminfeatureController::class, 'productfeature'])->name('productfeature');
+    Route::post('/productfeature/store', [AdminfeatureController::class, 'store'])->name('productfeaturestore');
+    Route::any('/productfeature/viewproductfeaturemodal', [AdminfeatureController::class, 'viewproductfeaturemodal'])->name('viewproductfeaturemodal');
+    Route::any('/productfeature/productfeatureupdate', [AdminfeatureController::class, 'productfeatureupdate'])->name('productfeatureupdate');
+    Route::any('/productfeature/productfeaturedelete', [AdminfeatureController::class, 'productfeaturedelete'])->name('productfeaturedelete');
+
+    Route::get('/managehomepagecontent', [AdminfeatureController::class, 'managehomepagecontent'])->name('managehomepagecontent');
+    Route::any('/managehomepagecontent/viewhomepagemodal', [AdminfeatureController::class, 'viewhomepagemodal'])->name('viewhomepagemodal');
+    Route::any('/managehomepagecontent/homepagecontentupdate', [AdminfeatureController::class, 'homepagecontentupdate'])->name('homepagecontentupdate');
+    
+    
+
  });
 
 //superadmin end
