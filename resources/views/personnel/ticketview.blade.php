@@ -240,6 +240,32 @@ Map / Directions</a>
 <div class="mb-3">
 <textarea class="summernote form-control customer-height mb-4" name="cnotes" name="description" placeholder="Customer Notes">{{$quoteData->customernotes}}</textarea>
 </div>
+<div class="mb-3">
+  Browse Images or Videos
+  <input class="form-control" type="file" name="image[]" id="image" multiple>
+</div>
+  @php
+    if($quoteData->imagelist!="") 
+    {
+      $imagelist = explode(',',$quoteData->imagelist);
+      foreach($imagelist as $key =>$image) {
+         $imgtype= explode('.',$image);
+        @endphp
+        <div class="removediv">
+          @if($imgtype[1]!="mp4")
+          <img src="{{url('/')}}/uploads/ticketnote/{{$image}}" style="width: 80px;height: 80px;">
+          @else
+          <video width="200" height="200" controls>
+            <source src="{{url('/')}}/uploads/ticketnote/{{$image}}" type="video/mp4">
+          </video>
+          @endif
+          <i class="fa fa-trash delete"></i><input type="hidden" name="oldimage[]" value="{{$image}}"/>
+        </div>
+        @php
+      }
+    }
+  @endphp
+
 <div class="row">
 
 <div class="col-lg-6 mb-3">
@@ -526,6 +552,19 @@ Save
   $(document).ready(function() {
     $('.summernote').summernote({
       height: 300,
+       toolbar: [
+            [ 'style', [ 'style' ] ],
+            [ 'font', [ 'bold', 'italic', 'underline', 'clear'] ],
+            //[ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
+            [ 'fontname', [ 'fontname' ] ],
+            [ 'fontsize', [ 'fontsize' ] ],
+            [ 'color', [ 'color' ] ],
+            [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+            //[ 'table', [ 'table' ] ],
+            [ 'insert', [ 'link'] ],
+            //[ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
+            [ 'view', [ 'undo', 'redo', 'fullscreen', 'help' ] ]
+        ]
     });
     
     $("#add-product").modal({
@@ -626,6 +665,11 @@ Save
             }
         })
      });
+
+    $(document).on('click',".delete" ,function() {
+      $(this).closest(".removediv" ).remove();
+    });
+
    $(document).ready(function () {
     $("#buttonin" ).click(function() {
        $("#closeout").val('closeout');

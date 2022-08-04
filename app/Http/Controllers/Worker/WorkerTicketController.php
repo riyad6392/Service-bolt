@@ -19,6 +19,7 @@ use Mail;
 use App\Models\Tenture;
 use App\Models\Notification;
 use App\Events\MyEvent;
+use Image;
 
 class WorkerTicketController extends Controller
 {
@@ -241,6 +242,8 @@ class WorkerTicketController extends Controller
 
     public function update1(Request $request)
     {
+
+
       //dd($request->all());
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
@@ -380,6 +383,48 @@ class WorkerTicketController extends Controller
           if($request->cnotes) {
             $ticket->customernotes =  $request->cnotes;
           }
+        //for image upload
+        $files=array();
+        if(!empty($request->file('image'))) {
+          foreach ($request->file('image') as $media) {
+              if (!empty($media)) {
+                  $datetime = date('YmdHis');
+                  $image = $media->getClientOriginalName();
+                  $imageName = $datetime . '_' . $image;
+                  $media->move(public_path('uploads/ticketnote/'), $imageName);
+                  array_push($files,$imageName);
+              }
+          }
+        }
+          $olddataarray = explode(',',$ticket->imagelist);
+          //dd($olddataarray);
+          if(!empty($ticket->imagelist)) {
+            $oldnewarray = array();
+            if(!empty($request->oldimage)) {
+              $oldnewarray = $request->oldimage;
+            }
+            
+           // dd($oldnewarray);
+            $result=array_diff($olddataarray,$oldnewarray);
+
+            if(count($result)>0) {
+              foreach($result as $image)
+              {   
+                $path = 'uploads/ticketnote/';
+                
+                $stories_path=$path.$image;;
+                @unlink($stories_path);
+              }
+            }
+
+            foreach($oldnewarray as $name) {
+               array_push($files,$name);
+            }
+          }
+          
+          $newimagestring = implode(',',$files);
+          $ticket->imagelist = $newimagestring;
+        
           $ticket->save();
           $request->session()->flash('success', 'Updated successfully');
           return redirect()->back();
