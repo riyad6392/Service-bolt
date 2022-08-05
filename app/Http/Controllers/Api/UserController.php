@@ -730,6 +730,50 @@ class UserController extends Controller
         $quote->checklist = null;
       }
       $quote->customernotes =  $request->cnotes;
+
+      //for image upload
+      //dd($request->file('image'));
+        $files=array();
+        if(!empty($request->file('image'))) {
+          foreach ($request->file('image') as $media) {
+              if (!empty($media)) {
+                  $datetime = date('YmdHis');
+                  $image = $media->getClientOriginalName();
+                  $imageName = $datetime . '_' . $image;
+                  $media->move(public_path('uploads/ticketnote/'), $imageName);
+                  array_push($files,$imageName);
+              }
+          }
+        }
+          $olddataarray = explode(',',$quote->imagelist);
+          //dd($olddataarray);
+          if(!empty($quote->imagelist)) {
+            $oldnewarray = array();
+            if(!empty($request->oldimage)) {
+              $oldnewarray = $request->oldimage;
+            }
+            
+           // dd($oldnewarray);
+            $result=array_diff($olddataarray,$oldnewarray);
+
+            if(count($result)>0) {
+              foreach($result as $image)
+              {   
+                $path = 'uploads/ticketnote/';
+                
+                $stories_path=$path.$image;;
+                @unlink($stories_path);
+              }
+            }
+
+            foreach($oldnewarray as $name) {
+               array_push($files,$name);
+            }
+          }
+          
+          $newimagestring = implode(',',$files);
+          $quote->imagelist = $newimagestring;
+
       
       $quote->save();
       return response()->json(['status'=>1,'message'=>'Ticket Updated successfully'],$this->successStatus); 
