@@ -532,7 +532,7 @@ p {
 .promo_section .images img{
     border-radius: 10px;
     margin-bottom: 15px;
-    height: 130px;
+    height: 100px;
     width: 188px;
 }
 
@@ -807,10 +807,10 @@ Map / Directions</a>
   
         
           @if($imgtype[1]=="mp4" || $imgtype[1]=="3gp" || $imgtype[1]=="mov" || $imgtype[1]=="avi" || $imgtype[1]=="wmv" || $imgtype[1]=="flv" || $imgtype[1]=="m3u8")
-          <div class="col-lg-6 col-sm-6">
+          <div class="col-lg-4 col-sm-4">
             <div class="removediv">
               <div class="images position-relative">
-                  <a href="{{url('/')}}/uploads/ticketnote/{{$image}}" target="_blank"><video width="200" height="120" controls>
+                  <a href="{{url('/')}}/uploads/ticketnote/{{$image}}" target="_blank"><video width="130" height="100" controls>
                     <source src="{{url('/')}}/uploads/ticketnote/{{$image}}" type="video/mp4">
                   </video></a>
 
@@ -822,7 +822,7 @@ Map / Directions</a>
           </div>
           
           @else
-          <div class="col-lg-6 col-sm-6">
+          <div class="col-lg-4 col-sm-4">
             <div class="removediv">
               <div class="images position-relative">
                  <a href="{{url('/')}}/uploads/ticketnote/{{$image}}" target="_blank"><img src="{{url('/')}}/uploads/ticketnote/{{$image}}"class="img-fluid"></a>
@@ -846,11 +846,11 @@ Map / Directions</a>
       @php
     }
   @endphp
-        <div class="col-12">
+        <div class="col-12" style="margin-top: -45px;">
             <span>Note - Maximum Upload size of 2 MB</span>
             <div class="main-upload text-center">
                 <i class="fa fa-cloud-upload" aria-hidden="true"></i>
-                <p>Browse Videos or images</p>
+                <p style="color:black;">Browse Videos or images</p>
                 <div class="file btn btn-lg upload-btn" >
                     <!-- Upload -->
                   <input id="image" name="image[]" type="file" accept="image/*,video/*" multiple>
@@ -4330,7 +4330,7 @@ Save
             } else {
                 //console.log(e.target.files[0].size);
                 if(e.target.files[0].size>="2110000") {
-                    swal('Not allowed maximum upload size of > 2 MB');
+                    swal('Not allowed maximum upload size of 2 MB');
                     return false;
                 }
                 //console.log(e.target.files[0].size);

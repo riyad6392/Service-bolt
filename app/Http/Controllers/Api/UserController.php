@@ -332,12 +332,15 @@ class UserController extends Controller
                     $imgtype= explode('.',$value);
                     if($imgtype[1]=="mp4" || $imgtype[1]=="3gp" || $imgtype[1]=="mov" || $imgtype[1]=="avi" || $imgtype[1]=="wmv" || $imgtype[1]=="flv" || $imgtype[1]=="m3u8") {
                         $type = "video";
+                        $videothumb = url('images/videothumb.PNG');
                     } else {
                         $type = "image";
+                        $videothumb = "";
                     }
                     $imagearray[] = array (
                         'name' =>$value,
                         'type' => $type,
+                        'videothumb'=>$videothumb
                          
                     );
                 }
