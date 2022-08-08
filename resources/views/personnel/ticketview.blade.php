@@ -155,7 +155,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .krajee-default.file-preview-frame .file-thumbnail-footer {
-    height: 70px;
+    height: 5px;
 }
 
 .krajee-default .file-preview-image {
@@ -532,6 +532,8 @@ p {
 .promo_section .images img{
     border-radius: 10px;
     margin-bottom: 15px;
+    height: 130px;
+    width: 188px;
 }
 
 
@@ -560,6 +562,7 @@ p {
   .promo_section .main-upload.text-center {
     border: dashed;
     padding: 15px;
+    border-radius: 17 px;
 }
 
 .main-upload input#image {
@@ -576,6 +579,8 @@ p {
 .main-upload.text-center {
     border: dashed;
     margin-bottom: 14px;
+    border-radius: 17px;
+    color: darkgrey;
 }
 
 i.fa.fa-trash.icon.remove {
@@ -805,12 +810,12 @@ Map / Directions</a>
           <div class="col-lg-6 col-sm-6">
             <div class="removediv">
               <div class="images position-relative">
-                  <video width="200" height="130" controls>
+                  <a href="{{url('/')}}/uploads/ticketnote/{{$image}}" target="_blank"><video width="200" height="120" controls>
                     <source src="{{url('/')}}/uploads/ticketnote/{{$image}}" type="video/mp4">
-                  </video>
+                  </video></a>
 
-                  <div class="delete-icon ">
-                      <i class="fa fa-trash icon delete"></i><input type="hidden" name="oldimage[]" value="{{$image}}"/>
+                  <div class="delete-icon">
+                      <i class="fa fa-trash icon delete"></i><input type="hidden" name="oldimage[]" value="{{$image}}">
                   </div>
               </div>
             </div>
@@ -820,7 +825,7 @@ Map / Directions</a>
           <div class="col-lg-6 col-sm-6">
             <div class="removediv">
               <div class="images position-relative">
-                  <img src="{{url('/')}}/uploads/ticketnote/{{$image}}"class="img-fluid">
+                 <a href="{{url('/')}}/uploads/ticketnote/{{$image}}" target="_blank"><img src="{{url('/')}}/uploads/ticketnote/{{$image}}"class="img-fluid"></a>
 
                   <div class="delete-icon ">
                       <i class="fa fa-trash icon delete"></i><input type="hidden" name="oldimage[]" value="{{$image}}"/>
@@ -841,17 +846,17 @@ Map / Directions</a>
       @php
     }
   @endphp
-          <div class="col-12">
-             <div class="main-upload text-center">
+        <div class="col-12">
+            <span>Note - Maximum Upload size of 2 MB</span>
+            <div class="main-upload text-center">
                 <i class="fa fa-cloud-upload" aria-hidden="true"></i>
                 <p>Browse Videos or images</p>
                 <div class="file btn btn-lg upload-btn" >
                     <!-- Upload -->
                   <input id="image" name="image[]" type="file" accept="image/*,video/*" multiple>
                 </div>
-                
-             </div>
             </div>
+        </div>
  
 
 <div class="row">
@@ -1645,8 +1650,7 @@ Save
                 '<div class="kv-upload-progress hide"></div>\n' +
                 '</div>';
             tMain2 = '{preview}\n<div class="kv-upload-progress hide"></div>\n{remove}\n{cancel}\n{upload}\n{browse}\n';
-            tPreview = '<div class="file-preview {class}">\n' +
-                '    {close}' +
+            tPreview = '<div class="">\n' +
                 '    <div class="{dropClass}">\n' +
                 '    <div class="file-preview-thumbnails">\n' +
                 '    </div>\n' +
@@ -1681,14 +1685,13 @@ Save
                 '    </div>\n' +
                 '  </div>\n' +
                 '</div>\n';
-            tProgress = '<div class="progress">\n' +
-                '    <div class="{class}" role="progressbar"' +
+            tProgress = '<div class="{class}" role="progressbar"' +
                 ' aria-valuenow="{percent}" aria-valuemin="0" aria-valuemax="100" style="width:{percent}%;">\n' +
                 '        {status}\n' +
                 '     </div>\n' +
                 '</div>';
             tSize = ' <samp>({sizeText})</samp>';
-            tFooter = '<div class="file-thumbnail-footer">\n' +
+            tFooter = '<div class="file-thumbnail-footer" style="height:18px;">\n' +
                 '    <div class="file-footer-caption" title="{caption}">{caption}<br>{size}</div>\n' +
                 '    {progress} {actions}\n' +
                 '</div>';
@@ -1837,15 +1840,9 @@ Save
                     showUpload: true,
                     showZoom: true,
                     showDrag: true,
-                    removeIcon: '<i class="fa fa-trash text-danger"></i>',
+                    removeIcon: '<i class="fa fa-trash text-danger" style="font-size:20px;"></i>',
                     removeClass: 'btn btn-xs btn-default',
                     removeTitle: 'Remove file',
-                    uploadIcon: '<i class="glyphicon glyphicon-upload text-info"></i>', 
-                    uploadClass: 'btn btn-xs btn-default',
-                    //uploadTitle: 'Upload file',
-                    zoomIcon: '<i class="glyphicon glyphicon-zoom-in"></i>',
-                    zoomClass: 'btn btn-xs btn-default',
-                    zoomTitle: 'View Details',
                     dragIcon: '<i class="glyphicon glyphicon-menu-hamburger"></i>',
                     dragClass: 'text-info',
                     dragTitle: 'Move / Rearrange',
@@ -4266,18 +4263,6 @@ Save
                     .replace(/\{dataUrl}/g, vUrl)
                     .replace(/\{dataKey}/g, vKey);
             }
-            if (showUpload) {
-                btnUpload = self._getLayoutTemplate('actionUpload')
-                    .replace(/\{uploadClass}/g, config.uploadClass)
-                    .replace(/\{uploadIcon}/g, config.uploadIcon)
-                    .replace(/\{uploadTitle}/g, config.uploadTitle);
-            }
-            if (showZoom) {
-                btnZoom = self._getLayoutTemplate('actionZoom')
-                    .replace(/\{zoomClass}/g, config.zoomClass)
-                    .replace(/\{zoomIcon}/g, config.zoomIcon)
-                    .replace(/\{zoomTitle}/g, config.zoomTitle);
-            }
             if (showDrag && isInit) {
                 css = 'drag-handle-init ' + config.dragClass;
                 btnDrag = self._getLayoutTemplate('actionDrag').replace(/\{dragClass}/g, css)
@@ -4313,6 +4298,7 @@ Save
             fileIds.push(fileId);
         },
         _change: function (e) {
+
             var self = this, $el = self.$element;
             if (!self.isUploadable && $h.isEmpty($el.val()) && self.fileInputCleared) { // IE 11 fix
                 self.fileInputCleared = false;
@@ -4342,6 +4328,12 @@ Save
                     }
                 });
             } else {
+                //console.log(e.target.files[0].size);
+                if(e.target.files[0].size>="2110000") {
+                    swal('Not allowed maximum upload size of > 2 MB');
+                    return false;
+                }
+                //console.log(e.target.files[0].size);
                 if (e.target && e.target.files === undefined) {
                     files = e.target.value ? [{name: e.target.value.replace(/^.+\\/, '')}] : [];
                 } else {

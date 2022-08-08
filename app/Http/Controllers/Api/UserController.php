@@ -287,7 +287,7 @@ class UserController extends Controller
 
         $checklistData = DB::table('checklist')->select('id','checklist')->whereIn('serviceid',$serviceidarrays)->get();
 
-        $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.description','quote.product_id','quote.serviceid', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist','quote.price')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
+        $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.description','quote.product_id','quote.serviceid','quote.imagelist', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist','quote.price')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
         
         if($quoteData) {
             $serviceidarray = explode(',', $quoteData->serviceid);
@@ -325,6 +325,25 @@ class UserController extends Controller
                 $pointbox = array();  
             }
 
+            if($quoteData->imagelist!="") {
+                $imagearray1 = explode(',', $quoteData->imagelist);
+                
+                foreach ($imagearray1 as $key => $value) {
+                    $imgtype= explode('.',$value);
+                    if($imgtype[1]=="mp4" || $imgtype[1]=="3gp" || $imgtype[1]=="mov" || $imgtype[1]=="avi" || $imgtype[1]=="wmv" || $imgtype[1]=="flv" || $imgtype[1]=="m3u8") {
+                        $type = "video";
+                    } else {
+                        $type = "image";
+                    }
+                    $imagearray[] = array (
+                        'name' =>$value,
+                        'type' => $type,
+                         
+                    );
+                }
+            } else {
+               $imagearray = array(); 
+            }
 
             array_push($main_array, [
                    'id'=>$quoteData->id,
@@ -339,6 +358,7 @@ class UserController extends Controller
                    'description'=>$quoteData->description,
                    'phonenumber'=>$quoteData->phonenumber,
                    'ticket_status'=>$quoteData->ticket_status,
+                   'imagevideo'=>$imagearray,
                    'pointcheckbox'=>$pointbox,
                    'servicedata'=>$serearray,
                    'productdata'=>$proarray,
@@ -732,9 +752,10 @@ class UserController extends Controller
       $quote->customernotes =  $request->cnotes;
 
       //for image upload
-      //dd($request->file('image'));
+      
         $files=array();
         if(!empty($request->file('image'))) {
+
           foreach ($request->file('image') as $media) {
               if (!empty($media)) {
                   $datetime = date('YmdHis');
