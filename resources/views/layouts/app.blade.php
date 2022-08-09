@@ -8,7 +8,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>ServiceBolt</title>
-
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{url('/')}}/uploads/serviceboltfavicon.png" />
     <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css')}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">

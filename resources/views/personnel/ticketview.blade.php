@@ -846,8 +846,8 @@ Map / Directions</a>
       @php
     }
   @endphp
-        <div class="col-12" style="margin-top: -45px;">
-            <span>Note - Maximum Upload size of 2 MB</span>
+        <div class="col-12" style="margin-top: -7px;">
+            <!-- <span>Note - Maximum Upload size of 2 MB</span> -->
             <div class="main-upload text-center">
                 <i class="fa fa-cloud-upload" aria-hidden="true"></i>
                 <p style="color:black;">Browse Videos or images</p>

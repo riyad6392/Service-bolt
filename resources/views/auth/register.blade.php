@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html class="h-100">
 <head>
-        <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Favicon -->
+<link rel="shortcut icon" href="{{url('/')}}/uploads/serviceboltfavicon.png" />
 <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css')}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">

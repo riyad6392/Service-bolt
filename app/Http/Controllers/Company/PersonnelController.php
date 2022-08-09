@@ -899,18 +899,32 @@ class PersonnelController extends Controller
       $services = Service::select('id','servicename')->where('userid',$auth_id)->get();
       $products = Inventory::select('id','productname')->where('user_id',$auth_id)->get();
 
-      $paymentdata = PaymentSetting::where('pid',$id)->first();
+      $paymentdata = PaymentSetting::where('pid',$id)->get();
       
-      if($paymentdata == null) {
-        $comissionamount = PaymentSetting::where('pid',"")->where('type','amount')->first();
-        $comissionpercent = PaymentSetting::where('pid',"")->where('type','percent')->first();  
-        $paymentdata = "1";
-      } else {
-        $comissionamount = array();
-        $comissionpercent = array();
-        $paymentdata = "0";
-      }
-      return view('personnel.paymentsetting',compact('services','products','paymentdata','comissionamount','comissionpercent'));
+      //if($paymentdata == null) {
+        $commissiondata = PaymentSetting::where('uid',$auth_id)->whereNull('pid')->where('type','amount')->get();
+        $commissionpdata = PaymentSetting::where('uid',$auth_id)->whereNull('pid')->where('type','percent')->get();  
+        if(count($commissiondata) == 0) { 
+            $commissiondata = "";
+            $type = ""; 
+        } else {
+            @$commissiondata = json_decode(@$commissiondata[0]->content,true);
+            $type = "amount";
+        }
+
+        if(count($commissionpdata) == 0) { 
+           $commissionpdata = "";
+           $type1 = ""; 
+        } else {
+            $commissionpdata = json_decode(@$commissionpdata[0]->content,true);
+            $type1 = "percent";   
+        }
+      // } else {
+      //   $commissiondata = array();
+      //   $commissionpdata = array();
+      //   $paymentdata = "0";
+      // }
+      return view('personnel.paymentsetting',compact('services','products','commissiondata','commissionpdata','type','type1','paymentdata'));
     }
 
     public function paymentsettingcreate(Request $request) {
@@ -923,77 +937,135 @@ class PersonnelController extends Controller
          return redirect()->back();
       }
 
-      $datajson = array();
+      $iscomisiondata = PaymentSetting::where('uid',$auth_id)->where('pid',$request->pid)->get();
+      
+      if(count($iscomisiondata) > 0) {
+        PaymentSetting::where('uid',$auth_id)->where('pid',$request->pid)->delete();
+      } 
 
-      $paymentSetting = new PaymentSetting;
-      $paymentSetting->uid = $auth_id;
-      $paymentSetting->pid = $request->pid;
-      $paymentSetting->hiredate = $request->hiredate;
+      $paymentSetting2 = new PaymentSetting;
+      $paymentSetting2->uid = $auth_id;
+      $paymentSetting2->pid = $request->pid;
+      $paymentSetting2->hiredate = $request->hiredate;
 
-      // $data['uid'] = $auth_id;
-      // $data['pid'] = $request->pid;
-      // $data['hiredate'] = $request->hiredate;
       if($request->hourly=="on") {
+        $datajson = array();
         if($request->hourlypaymentamount!="") {
-          $paymentSetting->paymentbase = "hourly";
+          $paymentSetting2->paymentbase = "hourly";
 
           array_push($datajson,['hourly'=>$request->hourlypaymentamount]);
-          $paymentSetting->content=json_encode($datajson);
+          $paymentSetting2->content=json_encode($datajson);
+          $paymentSetting2->type="hourly";
+          $paymentSetting2->save();
         }
       }
 
+      
+      $paymentSetting3 = new PaymentSetting;
+      $paymentSetting3->uid = $auth_id;
+      $paymentSetting3->pid = $request->pid;
+      $paymentSetting3->hiredate = $request->hiredate;
       if($request->fixedsalary == "on") {
         
-        $paymentSetting->paymentbase = "fixedsalary";
+        $paymentSetting3->paymentbase = "fixedsalary";
 
         $requestsalary = $request->salary;
         
         if($requestsalary == "monthlysalaryamount") {
-          array_push($datajson,['monthlysalary'=>$request->monthlysalaryamount]);
-          $paymentSetting->content=json_encode($datajson);
+          $datajson3 = array();
+          array_push($datajson3,['monthlysalary'=>$request->monthlysalaryamount]);
+          $paymentSetting3->content=json_encode($datajson3);
+          $paymentSetting3->type="monthlysalaryamount";
+          $paymentSetting3->save();
         }
 
         if($requestsalary == "bimonthlysalaryamount") {
-          array_push($datajson,['bimonthlysalary'=>$request->bimonthlysalaryamount]);
-          $paymentSetting->content=json_encode($datajson);
+          $datajson3 = array();
+          array_push($datajson3,['bimonthlysalary'=>$request->bimonthlysalaryamount]);
+          $paymentSetting3->content=json_encode($datajson3);
+          $paymentSetting3->type="bimonthlysalaryamount";
+          $paymentSetting3->save();
         }
 
         if($requestsalary == "weeklysalaryamount") {
-          array_push($datajson,['weeklysalary'=>$request->weeklysalaryamount]);
-          $paymentSetting->content=json_encode($datajson);
+          $datajson3 = array();
+          array_push($datajson3,['weeklysalary'=>$request->weeklysalaryamount]);
+          $paymentSetting3->content=json_encode($datajson3);
+          $paymentSetting3->type="weeklysalaryamount";
+          $paymentSetting3->save();
         }
 
         if($requestsalary == "biweeklysalaryamount") {
-          array_push($datajson,['biweeklysalary'=>$request->biweeklysalaryamount]);
-          $paymentSetting->content=json_encode($datajson);
+          $datajson3 = array();
+          array_push($datajson3,['biweeklysalary'=>$request->biweeklysalaryamount]);
+          $paymentSetting3->content=json_encode($datajson3);
+          $paymentSetting3->type="biweeklysalaryamount";
+          $paymentSetting3->save();
         }
       }
-      
 
-      if(isset($request->commission)) {
-        $amountarray = $request->amountwise;
-        $amountvaluearray = array_filter($request->amountvalue);
-        foreach($amountarray as $key=> $value) {
-          $servicename = $value;
-          $servicevalue = $amountvaluearray[$key];
-          array_push($datajson,[$servicename=>$servicevalue]);
+      $services = Service::select('id','servicename')->where('userid',$auth_id)->get();
+        $products = Inventory::select('id','productname')->where('user_id',$auth_id)->get();
+
+      foreach($services as $key=>$value) {
+            $servrname[] = $value->servicename;
         }
-       
-       $paymentSetting->paymentbase = "commission";
-       if($request->commission == "amount") {
-         $typevalue = $request->commission;
-       }
+        foreach($products as $key1=>$value1) {
+            $productname[] = $value1->productname;
+        }
 
-       if($request->commission == "percent") {
-          $typevalue = $request->commission;
-       }
-        $datajson=array (
-          $typevalue=>$datajson
-        );
-         $paymentSetting->content=json_encode($datajson);
-      }
-        
-      $paymentSetting->save();
+        $mainarray = array_merge($servrname,$productname); 
+
+        $paymentSetting = new PaymentSetting;
+        $paymentSetting->uid = $auth_id;
+        $paymentSetting->pid = $request->pid;
+        $paymentSetting->hiredate = $request->hiredate;
+        if($request->commission == "amount") {
+            $datajson = array();
+            //$amountarray = array_filter($request->amountwise);
+            //$amountvaluearray = array_filter($request->amountvalue);
+            $amountvaluearray = $request->amountvalue;
+            $typevalue = $request->commission;
+            $paymentSetting->paymentbase = "commission";
+
+            
+            foreach($mainarray as $key=> $value) {
+              $servicename = $value;
+              if($amountvaluearray[$key]==null){
+                $amountvaluearray[$key] = 0;
+              }
+              $servicevalue = $amountvaluearray[$key];
+              array_push($datajson,[$servicename=>$servicevalue]);
+            }
+
+            $paymentSetting->content=json_encode($datajson);
+            $paymentSetting->type=$typevalue;
+            $paymentSetting->save();
+        }  
+      $paymentSetting4 = new PaymentSetting;
+      $paymentSetting4->uid = $auth_id;
+      $paymentSetting4->pid = $request->pid;
+      $paymentSetting4->hiredate = $request->hiredate;
+        if($request->commission1 == "percent") {
+            $datajson1 = array();
+            //$parray = $request->percentwise;
+            $pvaluearray = $request->percentvalue;
+            $typevalue = $request->commission1;
+            $paymentSetting4->paymentbase = "commission";
+
+            foreach($mainarray as $key=> $value1) {
+              $servicename1 = $value1;
+              if($pvaluearray[$key]==null) {
+                $pvaluearray[$key] = 0;
+              }
+              $servicevalue1 = $pvaluearray[$key];
+              array_push($datajson1,[$servicename1=>$servicevalue1]);
+            }
+
+            $paymentSetting4->content=json_encode($datajson1);
+            $paymentSetting4->type=$typevalue;
+            $paymentSetting4->save();
+        }
 
       // if(isset($request->commission)) {
       //   if($request->commission == "amount") {
@@ -1013,6 +1085,33 @@ class PersonnelController extends Controller
       //   }
       // }
       // PaymentSetting::create($data);
+
+      // if(isset($request->commission)) {
+      //   $amountarray = $request->amountwise;
+      //   $amountvaluearray = array_filter($request->amountvalue);
+
+      //   foreach($amountarray as $key=> $value) {
+      //     $servicename = $value;
+      //     $servicevalue = $amountvaluearray[$key];
+      //     array_push($datajson,[$servicename=>$servicevalue]);
+      //   }
+       
+      //  $paymentSetting->paymentbase = "commission";
+      //  if($request->commission == "amount") {
+      //    $typevalue = $request->commission;
+      //  }
+
+      //  if($request->commission == "percent") {
+      //     $typevalue = $request->commission;
+      //  }
+      //   $datajson=array (
+      //     $typevalue=>$datajson
+      //   );
+      //    $paymentSetting->content=json_encode($datajson);
+      // }
+
+      // $paymentSetting = new PaymentSetting;
+      // $paymentSetting->uid = $auth_id;
       return redirect()->back();
     }
 }
