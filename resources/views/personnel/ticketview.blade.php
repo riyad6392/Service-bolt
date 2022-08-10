@@ -801,7 +801,7 @@ Map / Directions</a>
       <div class="row">
       @php
       foreach($imagelist as $key =>$image) {
-         $imgtype= explode('.',$image);
+         $imgtype= explode('.',strtolower($image));
         @endphp
         
   
