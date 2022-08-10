@@ -51,7 +51,10 @@ class WorkerSettingController extends Controller
         $uid = $userData->userid;
 
         $commissiondata = PaymentSetting::where('uid',$userData->userid)->whereNull('pid')->where('type','amount')->get();
-        $commissionpdata = PaymentSetting::where('uid',$userData->userid)->whereNull('pid')->where('type','percent')->get();  
+        $commissionpdata = PaymentSetting::where('uid',$userData->userid)->whereNull('pid')->where('type','percent')->get();
+
+        $commissiondata1 = PaymentSetting::select('allspvalue')->where('uid',$userData->userid)->whereNull('pid')->where('type','amount')->get();
+        $commissionpdata1 = PaymentSetting::select('allspvalue')->where('uid',$userData->userid)->whereNull('pid')->where('type','percent')->get();    
         
         if(count($commissiondata) == 0) { 
             $commissiondata = "";
@@ -65,7 +68,7 @@ class WorkerSettingController extends Controller
             $commissionpdata = json_decode(@$commissionpdata[0]->content,true);
         }
 
-        return view('personnel.setting',compact('auth_id','workerData','paymentdata','services','products','wid','uid','commissiondata','commissionpdata'));
+        return view('personnel.setting',compact('auth_id','workerData','paymentdata','services','products','wid','uid','commissiondata','commissionpdata','commissiondata1','commissionpdata1'));
     }
 
     public function update(Request $request, $id = null) {

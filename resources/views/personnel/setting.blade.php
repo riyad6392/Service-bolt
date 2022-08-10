@@ -254,6 +254,21 @@
                             $commissionpdata = json_decode(@$commissionpdata[0]->content,true);
                             $type1 = "percent";   
                         }
+
+                        $commissiondata1 = App\Models\PaymentSetting::select('allspvalue')->where('uid',$uid)->where('pid',$wid)->where('type','amount')->get();
+
+                        $commissionpdata1 = App\Models\PaymentSetting::where('uid',$uid)->where('pid',$wid)->where('type','percent')->get();
+
+                        if($commissiondata1[0]->allspvalue!=null) {
+                            $allspvalueamount = $commissiondata1[0]->allspvalue;
+                            $allspvalueamountchecked = "checked";
+                        }
+
+                        if($commissionpdata1[0]->allspvalue!=null) {
+                            $allspvaluepercent = $commissionpdata1[0]->allspvalue;
+                            $allspvaluepercentchecked = "checked";
+                        }
+
                     @endphp
                     <!-- commission start here -->
                   <div class="third-section">
@@ -272,7 +287,7 @@
                             <li class="d-flex">
                               <label class="container-checkbox active me-4">All Services/Products
                                </label>
-                              <p></p>
+                              <p>{{@$allspvalueamount}}</p>
                             </li>
                             
                              @foreach($services as $key => $value)
@@ -299,7 +314,7 @@
                           <li class="d-flex">
                             <label class="container-checkbox me-4">All Services/Products
                              </label>
-                             <p></p>
+                             <p>{{@$allspvaluepercent}}</p>
                           </li>
                         @foreach($services as $key => $value)
                           <li class="d-flex">
@@ -321,7 +336,15 @@
                   </div>
                 @php
                   } else {
-                    
+                    if($commissiondata1[0]->allspvalue!=null) {
+                      $allspvalueamount = $commissiondata1[0]->allspvalue;
+                      $allspvalueamountchecked = "checked";
+                    }
+
+                    if($commissionpdata1[0]->allspvalue!=null) {
+                        $allspvaluepercent = $commissionpdata1[0]->allspvalue;
+                        $allspvaluepercentchecked = "checked";
+                    }
                 @endphp
                 <!-- commision end here -->
                   <div class="third-section">
@@ -340,7 +363,7 @@
                             <li class="d-flex">
                               <label class="container-checkbox active me-4">All Services/Products
                                </label>
-                              <p></p>
+                              <p>{{@$allspvalueamount}}</p>
                             </li>
                             
                              @foreach($services as $key => $value)
@@ -367,7 +390,7 @@
                           <li class="d-flex">
                             <label class="container-checkbox me-4">All Services/Products
                              </label>
-                             <p></p>
+                             <p>{{@$allspvaluepercent}}</p>
                           </li>
                         @foreach($services as $key => $value)
                           <li class="d-flex">

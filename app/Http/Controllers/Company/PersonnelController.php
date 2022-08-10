@@ -907,7 +907,7 @@ class PersonnelController extends Controller
 
         $commissiondata1 = PaymentSetting::select('allspvalue')->where('uid',$auth_id)->whereNull('pid')->where('type','amount')->get();
         $commissionpdata1 = PaymentSetting::select('allspvalue')->where('uid',$auth_id)->whereNull('pid')->where('type','percent')->get();
-        
+
         if(count($commissiondata) == 0) { 
             $commissiondata = "";
             $type = ""; 
@@ -960,6 +960,9 @@ class PersonnelController extends Controller
           array_push($datajson,['hourly'=>$request->hourlypaymentamount]);
           $paymentSetting2->content=json_encode($datajson);
           $paymentSetting2->type="hourly";
+          if($request->hiredate!=null) {
+             $paymentSetting2->hiredate = $request->hiredate; 
+          }
           $paymentSetting2->save();
         }
       }
@@ -968,7 +971,6 @@ class PersonnelController extends Controller
       $paymentSetting3 = new PaymentSetting;
       $paymentSetting3->uid = $auth_id;
       $paymentSetting3->pid = $request->pid;
-      $paymentSetting3->hiredate = $request->hiredate;
       if($request->fixedsalary == "on") {
         
         $paymentSetting3->paymentbase = "fixedsalary";
@@ -980,6 +982,9 @@ class PersonnelController extends Controller
           array_push($datajson3,['monthlysalary'=>$request->monthlysalaryamount]);
           $paymentSetting3->content=json_encode($datajson3);
           $paymentSetting3->type="monthlysalaryamount";
+          if($request->hiredate!=null) {
+             $paymentSetting3->hiredate = $request->hiredate; 
+          }
           $paymentSetting3->save();
         }
 
@@ -988,6 +993,9 @@ class PersonnelController extends Controller
           array_push($datajson3,['bimonthlysalary'=>$request->bimonthlysalaryamount]);
           $paymentSetting3->content=json_encode($datajson3);
           $paymentSetting3->type="bimonthlysalaryamount";
+          if($request->hiredate!=null) {
+             $paymentSetting3->hiredate = $request->hiredate; 
+          }
           $paymentSetting3->save();
         }
 
@@ -996,6 +1004,9 @@ class PersonnelController extends Controller
           array_push($datajson3,['weeklysalary'=>$request->weeklysalaryamount]);
           $paymentSetting3->content=json_encode($datajson3);
           $paymentSetting3->type="weeklysalaryamount";
+          if($request->hiredate!=null) {
+             $paymentSetting3->hiredate = $request->hiredate; 
+          }
           $paymentSetting3->save();
         }
 
@@ -1004,6 +1015,9 @@ class PersonnelController extends Controller
           array_push($datajson3,['biweeklysalary'=>$request->biweeklysalaryamount]);
           $paymentSetting3->content=json_encode($datajson3);
           $paymentSetting3->type="biweeklysalaryamount";
+          if($request->hiredate!=null) {
+             $paymentSetting3->hiredate = $request->hiredate; 
+          }
           $paymentSetting3->save();
         }
       }
@@ -1044,6 +1058,9 @@ class PersonnelController extends Controller
 
             $paymentSetting->content=json_encode($datajson);
             $paymentSetting->type=$typevalue;
+            if($request->hiredate!=null) {
+             $paymentSetting->hiredate = $request->hiredate; 
+            }
             $paymentSetting->save();
         }  
       $paymentSetting4 = new PaymentSetting;
@@ -1068,6 +1085,9 @@ class PersonnelController extends Controller
 
             $paymentSetting4->content=json_encode($datajson1);
             $paymentSetting4->type=$typevalue;
+            if($request->hiredate!=null) {
+             $paymentSetting4->hiredate = $request->hiredate; 
+            }
             $paymentSetting4->save();
         }
 
