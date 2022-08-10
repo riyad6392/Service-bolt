@@ -287,7 +287,17 @@
 <div class="card-body payment-page">
 	   
         <div class="third-section">
-        
+        @php
+            if($commissiondata1[0]->allspvalue!=null) {
+                $allspvalueamount = $commissiondata1[0]->allspvalue;
+                $allspvalueamountchecked = "checked";
+            }
+
+            if($commissionpdata1[0]->allspvalue!=null) {
+                $allspvaluepercent = $commissionpdata1[0]->allspvalue;
+                $allspvaluepercentchecked = "checked";
+            }
+        @endphp
     <!-- commission code start here -->
           <div class="row">
             <div class="col-md-6">
@@ -299,12 +309,12 @@
                 <ul class="selection-div3">
                     <li class="d-flex">
                         <label class="container-checkbox me-4">All Services/Products  
-                            <input type="checkbox" name="amountall" class="amount-wise1" id="ckbCheckAll">
+                            <input type="checkbox" name="amountall" class="amount-wise1" id="ckbCheckAll" {{@$allspvalueamountchecked}}>
                           <span class="checkmark"></span>
                         </label>   
                         <div class="input-group mb-3">
                           <span class="input-group-text">$</span>
-                          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountallamount">
+                          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountallamount" value="{{@$allspvalueamount}}">
                         </div>
                     </li>
                     @php
@@ -353,11 +363,11 @@
                 <ul class="selection-div4">
                     <li class="d-flex">
           <label class="container-checkbox me-4">All Services/Products 
-            <input type="checkbox" name="percentall" class="percent-wise1" id="ckbCheckAllpercent">
+            <input type="checkbox" name="percentall" class="percent-wise1" id="ckbCheckAllpercent" {{@$allspvaluepercentchecked}}>
             <span class="checkmark"></span>
           </label>
         <div class="input-group mb-3">
-            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="percentallamount"><span class="input-group-text">%</span>
+            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="percentallamount" value="{{@$allspvaluepercent}}"><span class="input-group-text">%</span>
         </div>
     </li>
         @foreach($services as $key => $value)

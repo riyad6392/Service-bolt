@@ -904,6 +904,10 @@ class PersonnelController extends Controller
       //if($paymentdata == null) {
         $commissiondata = PaymentSetting::where('uid',$auth_id)->whereNull('pid')->where('type','amount')->get();
         $commissionpdata = PaymentSetting::where('uid',$auth_id)->whereNull('pid')->where('type','percent')->get();  
+
+        $commissiondata1 = PaymentSetting::select('allspvalue')->where('uid',$auth_id)->whereNull('pid')->where('type','amount')->get();
+        $commissionpdata1 = PaymentSetting::select('allspvalue')->where('uid',$auth_id)->whereNull('pid')->where('type','percent')->get();
+        
         if(count($commissiondata) == 0) { 
             $commissiondata = "";
             $type = ""; 
@@ -924,7 +928,7 @@ class PersonnelController extends Controller
       //   $commissionpdata = array();
       //   $paymentdata = "0";
       // }
-      return view('personnel.paymentsetting',compact('services','products','commissiondata','commissionpdata','type','type1','paymentdata'));
+      return view('personnel.paymentsetting',compact('services','products','commissiondata','commissionpdata','type','type1','paymentdata','commissiondata1','commissionpdata1'));
     }
 
     public function paymentsettingcreate(Request $request) {

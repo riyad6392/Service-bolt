@@ -150,7 +150,48 @@
                   </div>
                 </div>
                 <div class="personal-setting">
-                 
+                  @php
+                    if(count($paymentdata)>0) {
+                        foreach($paymentdata as $key=>$value) {
+                             if($value->type == "hourly") {
+                               $hchecked = "checked";
+                               $hvalue =json_decode($value->content);
+                               $hvalue = $hvalue[0]->hourly; 
+                             }
+                             if($value->paymentbase == "fixedsalary") {
+                               $fixedchecked = "checked"; 
+                               if($value->type=="monthlysalaryamount") {
+                                $monthlysalaryamount = json_decode($value->content);
+                                $monthlysalaryamount = $monthlysalaryamount[0]->monthlysalary;
+                                $mchecked = "checked"; 
+                               }
+
+                               if($value->type=="bimonthlysalaryamount") {
+                                $bimonthlysalaryamount = json_decode($value->content);
+                                $bimonthlysalaryamount = $bimonthlysalaryamount[0]->bimonthlysalary; 
+                                $bchecked = "checked"; 
+                               }
+
+                               if($value->type=="weeklysalaryamount") {
+                                $weeklysalaryamount = json_decode($value->content);
+                                $weeklysalaryamount = $weeklysalaryamount[0]->weeklysalary; 
+                                $wchecked = "checked";
+                               }
+
+                               if($value->type=="biweeklysalaryamount") {
+                                $biweeklysalaryamount = json_decode($value->content);
+                                $biweeklysalaryamount = $biweeklysalaryamount[0]->biweeklysalary;
+                                $bwchecked = "checked"; 
+                               }
+
+                               $fixevalue =json_decode($value->content);
+                               
+                             } else {
+                                $fixedchecked = "";
+                             }
+                        }    
+                    }
+                  @endphp
                   <hr>
                   <div class="first-section">
                     <label class="radio-div active">Hourly Payment
@@ -159,7 +200,7 @@
                       <li class="d-flex">
                         <label class="radio-div me-2">Amount Per Hour :
                          </label>
-                        <p>$80</p>
+                        <p>{{@$hvalue}}</p>
                       </li>
                     </ul>
                   </div>
@@ -171,26 +212,50 @@
                       <li class="d-flex">
                         <label class="radio-div me-2">Monthly Salary Amount :
                          </span> </label>
-                        <p>$100</p>
+                        <p>{{@$monthlysalaryamount}}</p>
                       </li>
                       <li class="d-flex">
                         <label class="radio-div me-2">Bi Monthly Salary Amount :
                           </label>
-                       <p>$120</p>
+                       <p>{{@$bimonthlysalaryamount}}</p>
                       </li>
                       <li class="d-flex">
                         <label class="radio-div me-2">Weekly Salary Amount :
                           </label>
-                        <p>$230</p>
+                        <p>{{@$weeklysalaryamount}}</p>
                       </li>
                       <li class="d-flex">
                         <label class="radio-div me-2">Bi Weekly Salary Amount :
                           </label>
-                        <p>$440</p>
+                        <p>{{@$biweeklysalaryamount}}</p>
                       </li>
                     </ul>
                   </div>
                   <hr>
+                  @php
+                    if(count($paymentdata) > 0) {
+                       
+                        $commissiondata = App\Models\PaymentSetting::where('uid',$uid)->where('pid',$wid)->where('type','amount')->get();
+
+                        if(count($commissiondata) == 0) { 
+                            $commissiondata = "";
+                            $type = ""; 
+                        } else {
+                            @$commissiondata = json_decode(@$commissiondata[0]->content,true);
+                            $type = "amount";
+                        }
+
+                        $commissionpdata = App\Models\PaymentSetting::where('uid',$uid)->where('pid',$wid)->where('type','percent')->get();
+
+                        if(count($commissionpdata) == 0) { 
+                           $commissionpdata = "";
+                           $type1 = ""; 
+                        } else {
+                            $commissionpdata = json_decode(@$commissionpdata[0]->content,true);
+                            $type1 = "percent";   
+                        }
+                    @endphp
+                    <!-- commission start here -->
                   <div class="third-section">
                     <label class="radio-div">Commission Basis
                      </label>
@@ -199,22 +264,31 @@
                         <div style="padding-left:35px">
                           <label class="radio-div ">Amount Wise
                             </label>
+                             @php
+                                $totlcount = count($services);
+                            @endphp
                           <ul class="selection-div">
+                           
                             <li class="d-flex">
                               <label class="container-checkbox active me-4">All Services/Products
                                </label>
-                              <p>$30</p>
+                              <p></p>
                             </li>
+                            
+                             @foreach($services as $key => $value)
                             <li class="d-flex">
-                              <label class="container-checkbox me-4">Service 1 :
+                              <label class="container-checkbox me-4">{{$value->servicename}} :
                                </label>
-                              <p>$770</p>
+                               <p>{{@$commissiondata[$key][$value->servicename]}}</p>
                             </li>
+                            @endforeach
+                            @foreach($products as $key1 => $product)
                             <li class="d-flex">
-                              <label class="container-checkbox me-4">Products 1 :
+                              <label class="container-checkbox me-4">{{$product->productname}} :
                               </label>
-                              <p>$40</p>
+                              <p>{{@$commissiondata[$key1+$totlcount][$product->productname]}}</p>
                             </li>
+                            @endforeach
                           </ul>
                         </div>
                       </div>
@@ -225,23 +299,99 @@
                           <li class="d-flex">
                             <label class="container-checkbox me-4">All Services/Products
                              </label>
-                             <p>20%</p>
+                             <p></p>
                           </li>
+                        @foreach($services as $key => $value)
                           <li class="d-flex">
-                            <label class="container-checkbox me-4">Service 1 :
+                            <label class="container-checkbox me-4">{{$value->servicename}} :
                                </label>
-                             <p>40%</p>
+                             <p>{{@$commissionpdata[$key][$value->servicename]}}</p>
                           </li>
+                          @endforeach
+                          @foreach($products as $key1 => $product)
                           <li class="d-flex">
-                            <label class="container-checkbox me-4">Product 1 :
+                            <label class="container-checkbox me-4">{{$product->productname}} :
                               </label>
-                            <p>20%</p>
+                            <p>{{@$commissionpdata[$key1+$totlcount][$product->productname]}}</p>
                           </li>
+                          @endforeach
                         </ul>
                       </div>
                     </div>
                   </div>
+                @php
+                  } else {
+                    
+                @endphp
+                <!-- commision end here -->
+                  <div class="third-section">
+                    <label class="radio-div">Commission Basis
+                     </label>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div style="padding-left:35px">
+                          <label class="radio-div ">Amount Wise
+                            </label>
+                             @php
+                                $totlcount = count($services);
+                            @endphp
+                          <ul class="selection-div">
+                           
+                            <li class="d-flex">
+                              <label class="container-checkbox active me-4">All Services/Products
+                               </label>
+                              <p></p>
+                            </li>
+                            
+                             @foreach($services as $key => $value)
+                            <li class="d-flex">
+                              <label class="container-checkbox me-4">{{$value->servicename}} :
+                               </label>
+                               <p>{{@$commissiondata[$key][$value->servicename]}}</p>
+                            </li>
+                            @endforeach
+                            @foreach($products as $key1 => $product)
+                            <li class="d-flex">
+                              <label class="container-checkbox me-4">{{$product->productname}} :
+                              </label>
+                              <p>{{@$commissiondata[$key1+$totlcount][$product->productname]}}</p>
+                            </li>
+                            @endforeach
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="radio-div">Percent Wise
+                          </label>
+                        <ul class="selection-div">
+                          <li class="d-flex">
+                            <label class="container-checkbox me-4">All Services/Products
+                             </label>
+                             <p></p>
+                          </li>
+                        @foreach($services as $key => $value)
+                          <li class="d-flex">
+                            <label class="container-checkbox me-4">{{$value->servicename}} :
+                               </label>
+                             <p>{{@$commissionpdata[$key][$value->servicename]}}</p>
+                          </li>
+                          @endforeach
+                          @foreach($products as $key1 => $product)
+                          <li class="d-flex">
+                            <label class="container-checkbox me-4">{{$product->productname}} :
+                              </label>
+                            <p>{{@$commissionpdata[$key1+$totlcount][$product->productname]}}</p>
+                          </li>
+                          @endforeach
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                @php
+                  }
+                @endphp
                 </div>
+
               </div>
               <!-- -=-=-=-=-=end new form-=-=-=-=-= -->
             </div>

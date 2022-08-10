@@ -839,6 +839,42 @@ class SchedulerController extends Controller
     return view('scheduler.weekview',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker'));
   }
 
+  //new calendar function
+    public function weekviewall(Request $request) 
+    {
+    $auth_id = auth()->user()->id;
+    if(auth()->user()->role == 'company') {
+        $auth_id = auth()->user()->id;
+    } else {
+       return redirect()->back();
+    }
+    //$ticketData = Quote::where('userid',$auth_id)->where('ticket_status',"1")->orderBy('id','ASC')->get();
+
+    $ticketData = DB::table('quote')->select('quote.*', 'customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"1")->orderBy('quote.id','ASC')->get();
+
+    if(isset($_REQUEST['date'])) {
+        $todaydate = Carbon::createFromFormat('Y-m-d', $_REQUEST['date'])->format('l - F d, Y');
+    } else {
+        $todaydate = date('l - F d, Y');
+    }
+    
+    $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
+
+    $customer = Customer::where('userid',$auth_id)->orderBy('id','DESC')->get();
+    $services = Service::where('userid', $auth_id)->get();
+    $worker = Personnel::where('userid', $auth_id)->offset(0)->limit(6)->get();
+    $workercount = Personnel::where('userid', $auth_id)->get();
+    $wcount = count($workercount);
+    $productData = Inventory::where('user_id',$auth_id)->orderBy('id','ASC')->get();
+    $userData = User::select('openingtime','closingtime')->where('id',$auth_id)->first();
+    $tenture = Tenture::where('status','Active')->get();
+    
+    $allworker = Personnel::where('userid', $auth_id)->get();
+    $id = "15";
+    return view('scheduler.weekviewall',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker'));
+  }
+  //end
+
   public function personnelschedulerdata(Request $request)
   {
    $fulldate =  $request->fulldate;

@@ -43,6 +43,9 @@ class CommissionController extends Controller
         
         $commissiondata = PaymentSetting::where('uid',$auth_id)->whereNull('pid')->where('type','amount')->get();
         $commissionpdata = PaymentSetting::where('uid',$auth_id)->whereNull('pid')->where('type','percent')->get();
+
+        $commissiondata1 = PaymentSetting::select('allspvalue')->where('uid',$auth_id)->whereNull('pid')->where('type','amount')->get();
+        $commissionpdata1 = PaymentSetting::select('allspvalue')->where('uid',$auth_id)->whereNull('pid')->where('type','percent')->get();
         
         if(count($commissiondata) == 0) { 
             $commissiondata = "";
@@ -60,11 +63,12 @@ class CommissionController extends Controller
             $type1 = "percent";   
         }
        
-        return view('commission.index',compact('services','products','commissiondata','type','type1','commissionpdata'));
+        return view('commission.index',compact('services','products','commissiondata','type','type1','commissionpdata','commissiondata1','commissionpdata1'));
     }
 
     public function commissioncreate(Request $request) {
 
+     
       $auth_id = auth()->user()->id;
       
       if(auth()->user()->role == 'company') {
@@ -108,6 +112,12 @@ class CommissionController extends Controller
               array_push($datajson,[$servicename=>$servicevalue]);
             }
 
+            if($request->amountall=="on") {
+              if($request->amountallamount!=null) {
+                $paymentSetting->allspvalue = $request->amountallamount;
+              }
+            }
+
             $paymentSetting->content=json_encode($datajson);
             $paymentSetting->type=$typevalue;
             $paymentSetting->save();
@@ -128,6 +138,12 @@ class CommissionController extends Controller
               }
               $servicevalue1 = $pvaluearray[$key];
               array_push($datajson1,[$servicename1=>$servicevalue1]);
+            }
+
+            if($request->percentall=="on") {
+              if($request->percentallamount!=null) {
+                $paymentSetting1->allspvalue = $request->percentallamount;
+              }
             }
 
             $paymentSetting1->content=json_encode($datajson1);

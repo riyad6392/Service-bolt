@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Personnel;
 use App\Models\User;
+use App\Models\PaymentSetting;
+use App\Models\Service;
+use App\Models\Inventory;
 
 use Auth;
 use Image;
@@ -36,9 +39,33 @@ class WorkerSettingController extends Controller
         } else {
            return redirect()->back();
         }
-        $userData = User::select('workerid')->where('id',$auth_id)->first();
+        $userData = User::select('userid','workerid')->where('id',$auth_id)->first();
         $workerData = Personnel::where('id',$userData->workerid)->first();
-        return view('personnel.setting',compact('auth_id','workerData'));
+
+        $paymentdata = PaymentSetting::where('pid',$userData->workerid)->get();
+        
+        $services = Service::select('id','servicename')->where('userid',$userData->userid)->get();
+        
+        $products = Inventory::select('id','productname')->where('user_id',$userData->userid)->get();
+        $wid = $userData->workerid;
+        $uid = $userData->userid;
+
+        $commissiondata = PaymentSetting::where('uid',$userData->userid)->whereNull('pid')->where('type','amount')->get();
+        $commissionpdata = PaymentSetting::where('uid',$userData->userid)->whereNull('pid')->where('type','percent')->get();  
+        
+        if(count($commissiondata) == 0) { 
+            $commissiondata = "";
+        } else {
+            @$commissiondata = json_decode(@$commissiondata[0]->content,true);
+        }
+
+        if(count($commissionpdata) == 0) { 
+           $commissionpdata = "";
+        } else {
+            $commissionpdata = json_decode(@$commissionpdata[0]->content,true);
+        }
+
+        return view('personnel.setting',compact('auth_id','workerData','paymentdata','services','products','wid','uid','commissiondata','commissionpdata'));
     }
 
     public function update(Request $request, $id = null) {
