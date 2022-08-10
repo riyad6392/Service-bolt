@@ -5,6 +5,16 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
+.add-btn-day{
+    display: inline-block;
+    background: #F7F9FA;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #232322;
+    padding: 10.5px 16px;
+    font-size: 16px;
+    font-weight: 300;
+}
     .fc-time-grid-event .fc-content {
         overflow:visible;
     }
@@ -328,7 +338,7 @@ span.closeon i {
 
 .use {
     position: absolute;
-    top: 68%;
+    top: 63%;
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -451,6 +461,64 @@ background: transparent!important;
 .bootstrap-select{
         border: 1px solid #c1c1c1!important;
 }
+.hstack {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: stretch;
+}
+.switch-field {
+    display: flex;
+    margin-bottom: 36px;
+    overflow: hidden;
+}
+
+.switch-field input {
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    width: 1px;
+    border: 0;
+    overflow: hidden;
+}
+
+.switch-field label {
+    background-color:#fff;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    line-height: 1;
+    text-align: center;
+    padding: 8px 8px;
+    margin-right: -1px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    width:100%;
+    transition: all 0.1s ease-in-out;
+    display:block;
+}
+
+.switch-field label:hover {
+    cursor: pointer;
+}
+
+.switch-field input:checked + label {
+    background-color: #FEE200;
+    box-shadow: none;
+    color: #000;
+    width: 100%;
+    display: block;
+}
+
+.switch-field label:first-of-type {
+    border-radius: 5px;
+}
+
+.switch-field label:last-of-type {
+    border-radius: 5px;
+}
+.userbox{width:50px;}
+
+
+
 
 </style>
 <div class="row">
@@ -508,33 +576,93 @@ background: transparent!important;
                         </div>
                         <div class="card-personal" id="external-events">
                             <div class="gallery portfolio_slider  slider">
-                                @if(count($ticketData)>0)  
-                                <ul id="sortable1" class="connectedSortable" style="width:50000px">
-                                    @foreach($ticketData as $key => $value)
-                                       @php
-                                          $servicecolor = App\Models\Service::select('color')
-                                            ->where('services.servicename',$value->servicename)->get()->first();
-                                        @endphp
+                               
+                                <ul class="switch-field">
+                                    
                                         <li class="inner red-slide">
-                                            <div class='fc-event' style="background-color: {{$servicecolor->color}};" data-color='{{$servicecolor->color}}' data-id='{{$value->id}}' data-bs-toggle='modal' data-bs-target='#exampleModal' id="editsticket">
-                                                <div class="tickets_div">
-                                                    <h6>#{{$value->id}}</h6>
-                                                    <p> {{$value->customername}}</p>
-                                                    <p>{{$value->servicename}}</p>
-                                                </div>
-                                            </div>
+                                        <input type="checkbox" id="radio-three" name="switch1" value="yes"/>
+        <label for="radio-three">
+                                                 <div class="hstack gap-2">
+  <div class="userbox"><img src="http://servicebolt.digitalmonkindia.com/uploads/personnel/thumbnail/1655289915.png" alt=""></div>
+  <div class="usertext">User Name</div>
+ 
+</div>
+        </label>
+
                                         </li>
-                                   @endforeach 
+                                        
+                                        <li class="inner red-slide">
+                                        <input type="checkbox" id="radio-four" name="switch2" value="maybe" />
+        <label for="radio-four">
+        <div class="hstack gap-2">
+  <div class="userbox"><img src="http://servicebolt.digitalmonkindia.com/uploads/personnel/thumbnail/1655289915.png" alt=""></div>
+  <div class="usertext">User Name</div>
+ 
+</div>
+        </label>
+        
+                                                 
+        
+
+                                        </li>
+                                        
+                                        <li class="inner red-slide">
+                                        <input type="checkbox" id="radio-five" name="switch3" value="maybe" />
+        <label for="radio-five">
+        <div class="hstack gap-2">
+  <div class="userbox"><img src="http://servicebolt.digitalmonkindia.com/uploads/personnel/thumbnail/1655289915.png" alt=""></div>
+  <div class="usertext">User Name</div>
+ 
+</div>
+        </label>
+        
+                                                 
+        
+
+                                        </li>
+                                        
+                                        
+                                        <li class="inner red-slide">
+                                        <input type="checkbox" id="radio-six" name="switch4" value="maybe" />
+        <label for="radio-six">
+        <div class="hstack gap-2">
+  <div class="userbox"><img src="http://servicebolt.digitalmonkindia.com/uploads/personnel/thumbnail/1655289915.png" alt=""></div>
+  <div class="usertext">User Name</div>
+ 
+</div>
+        </label>
+        
+                                                 
+        
+
+                                        </li>
+                                        
+                                        <li class="inner red-slide">
+                                        <input type="checkbox" id="radio-siven" name="switch5" value="maybe" />
+        <label for="radio-siven">
+        <div class="hstack gap-2">
+  <div class="userbox"><img src="http://servicebolt.digitalmonkindia.com/uploads/personnel/thumbnail/1655289915.png" alt=""></div>
+  <div class="usertext">User Name</div>
+ 
+</div>
+        </label>
+        
+                                                 
+        
+
+                                        </li>
+                                        
+                                 
                                 </ul>
-                                @else
-                                    <div style="text-align: center;">
-                                        No Tickets To Schedule
-                                    </div>
-                                @endif
+                               
                             </div>
                         </div>
-                         <div class="col-md-4  offset-md-8 mb-2 d-flex align-items-center">
-                               <label style="white-space:nowrap;"> Select Team member - </label> <select class="selectpicker3 form-control" data-live-search="true" name="personnelid" id="personnelid">';
+                         <div class="col-md-4  offset-md-8 mb-2 d-flex align-items-center justify-content-end mt-3">
+                         <div class="hstack gap-2">
+                         <a href='#' class="add-btn-day px-4">Day</a>
+                         <a href='#' class="btn add-btn-yellow">Week</a>
+                         </div>
+                               <!--<label style="white-space:nowrap;"> Select Team member - </label> <select class="selectpicker3 form-control" data-live-search="true" name="personnelid" id="personnelid">';
 
                                   @foreach($allworker as $key => $value)
                                   @php
@@ -546,7 +674,7 @@ background: transparent!important;
                                      @endphp
                                     <option value="{{$value->id}}" data-id="{{$value->id}}" {{$selectedp}}>{{$value->personnelname}}</option>
                                   @endforeach
-                                </select>
+                                </select>-->
                             </div>
                     </div>
                     @if(count($ticketData)>0)
@@ -1079,10 +1207,10 @@ background: transparent!important;
                 textElement.append('<b><img src="'+ url +'" alt=""/>' + title[0] + '</b>');
             },
             unselectAuto: false,
-            selectable: true,
+            selectable: false,
             selectHelper: false,
-            editable: true,
-            droppable: true,
+            editable: false,
+            droppable: false,
             dayClick: function (date) {
                 //alert('clicked ' + date.format());
             },
