@@ -43,6 +43,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 8px 34px;
     box-shadow: 0px 0px 10px #ccc;
 }
+.bootstrap-select.show-tick .dropdown-menu .selected span.check-mark {
+    position: absolute;
+    display: inline-block;
+    right: 15px;
+    top: 5px;
+    color: black;
+}
 </style>
 <div class="content">
     <div class="row">

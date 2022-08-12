@@ -278,6 +278,8 @@ div#bs-select-1 {
 }
 .blues {
     padding: 0!important;
+    margin-left: 0px;
+    background: #fff;
 }
 .fc-time-grid-event .fc-time {
   text-align: center;
@@ -518,8 +520,6 @@ background: transparent!important;
 .userbox{width:50px;}
 
 
-
-
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -530,12 +530,11 @@ background: transparent!important;
                         <div class="row mb-0">
                             <div class="col-md-6">
                                 <div class="side-h3">
-                                    <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch (Week View)
-                                    </h3>
                                     <a href="{{url('company/scheduler')}}" class="back-btn">
                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
-                                       Back</a><br>
-                                    <p style="margin: 0; font-weight: 500;color: #000;">Tickets to Assign</p>
+                                       Back <h3 style="font-weight: 500;color: #000;margin: auto;" onclick="return false">Scheduler & Dispatch (Week View)
+                                    </h3></a>
+                                    
                                 </div>
                             </div>
                            
@@ -571,10 +570,13 @@ background: transparent!important;
                                 </div>
                             </div>
                             <div class="col-lg-4 text-end mb-2 offset-lg-4">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#add-tickets" class="add-btn-yellow">New Ticket Assign + </a>
+                                <a href='{{url("/")}}/company/scheduler' class="add-btn-day px-4">Day</a>
+                                <a class="btn add-btn-yellow">Week</a>
                             </div>
                         </div>
+                         <span style="margin: 21px; font-weight: 500;color: #000;">Personnel</span>
                         <div class="card-personal" id="external-events">
+
                             <div class="gallery portfolio_slider  slider">
                                
                                 <ul class="switch-field">
@@ -658,10 +660,7 @@ background: transparent!important;
                             </div>
                         </div>
                          <div class="col-md-4  offset-md-8 mb-2 d-flex align-items-center justify-content-end mt-3">
-                         <div class="hstack gap-2">
-                         <a href='#' class="add-btn-day px-4">Day</a>
-                         <a href='#' class="btn add-btn-yellow">Week</a>
-                         </div>
+                        
                                <!--<label style="white-space:nowrap;"> Select Team member - </label> <select class="selectpicker3 form-control" data-live-search="true" name="personnelid" id="personnelid">';
 
                                   @foreach($allworker as $key => $value)
@@ -978,6 +977,14 @@ background: transparent!important;
 
 <script type="">
     $(document).ready(function () {
+       $("#hide-top").hide();
+       // $("#close").html('<a href="" style="position: relative;left: 0;top:0px;color: black;"> <i class="fa fa-times" aria-hidden="true" style="font-size: 32px;"></i></a>');
+      // (".top-bar").css('display','none');
+        $(".top-bar").toggle();
+        $(".content-page").toggleClass("blues");
+        (".sidebar").css('display','none');
+        (".sidebar pt-2").css('display','none');
+
         $('.selectpicker3').selectpicker();
         $('.selectpicker1').selectpicker();
         function gethours1() {
@@ -1022,6 +1029,7 @@ background: transparent!important;
         $("#close").html('<a href="" style="position: relative;left: 0;top:0px;color: black;"> <i class="fa fa-times" aria-hidden="true" style="font-size: 32px;"></i></a>');
         $(".top-bar").toggle();
         $(".content-page").toggleClass("blues");
+        (".sidebar pt-2").css('display','none');
     });
 </script>
 <script type="">
@@ -1204,7 +1212,7 @@ background: transparent!important;
                     var url = "{{url('uploads/servicebolt-noimage.png')}}";
                 }
                 var textElement = eventTd.empty();
-                textElement.append('<b><img src="'+ url +'" alt=""/>' + title[0] + '</b>');
+                textElement.append('<b style="height:40px;display:inline-block;"></b>');
             },
             unselectAuto: false,
             selectable: false,

@@ -42,6 +42,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 8px 34px;
     box-shadow: 0px 0px 10px #ccc;
 }
+
+.bootstrap-select.show-tick .dropdown-menu .selected span.check-mark {
+	position: absolute;
+    display: inline-block;
+    right: 15px;
+    top: 5px;
+    background: #000;
+}
 </style>
 <div class="">
 <div class="content">
@@ -545,7 +553,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 				      	<option value="{{$value->id}}">{{$value->customername}}</option>
 				      @endforeach
 			  		</select>
-			    </div>
+			  	</div>
 			</div>
 	 	</div>
 
@@ -966,6 +974,80 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   </div>
 </div>
 </div>
+
+<!-- Add customer modal -->
+<div class="modal fade" id="add-customer" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box  overflow-hidden">
+     <form class="form-material m-t-40  form-valide" method="post" action="{{route('worker.customercreate1')}}" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+       <div class="add-customer-modal">
+     <h5>Add a new customer</h5>
+     </div>
+     
+     <div class="row customer-form">
+     <div class="col-md-12 mb-3">
+     
+     <input type="text" class="form-control" placeholder="Customer Full Name" name="customername" id="customername" required="">
+  
+     </div>
+     
+     <div class="col-md-6 mb-3">
+     
+     <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="">
+     
+     </div>
+     
+     <div class="col-md-6 mb-3">
+    
+     <input type="email" class="form-control" placeholder="Email" name="email" id="email" required="">
+     
+     </div>
+     
+     <div class="col-md-12 mb-3">
+    
+     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname" required="">
+     
+     </div>
+     <div class="col-md-12 mb-3">
+      <div class="d-flex align-items-center">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+          @foreach ($services as $service)
+            <option value="{{$service->id}}">{{$service->servicename}}</option>
+          @endforeach
+        </select>
+        <div class="wrapper" style="display: none;">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+ 			<div class="tooltip">If you are not seeing the services in dropdown then create some services in service section then select here.</div>
+		</div>
+     </div>
+   </div>
+   <div class="col-lg-12 mb-3">
+      <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
+      <div class="drop-zone">
+    <span class="drop-zone__prompt text-center">
+  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></small>
+  Drop file here or click to upload</span>
+    <input type="file" name="image" id="image" class="drop-zone__input" accept="image/png, image/gif, image/jpeg">
+  </div>
+     </div>
+     
+     
+     <div class="col-lg-6 mb-3">
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+     <button type="submit" class="btn btn-add btn-block">Add Customer</button>
+     </div>
+     
+     </div>
+      </div>
+     </form>
+    </div>
+  </div>
+</div>
+<!-- end modal -->
 @section('script')
 <script type="text/javascript">
   $(document).on('click','.emailinvoice',function(e) {
@@ -987,6 +1069,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       }
     });
   }) 
+
+  $("#add-customer").click(function() {
+  	alert('ddff');
+  	$("#add-tickets").css("opacity","0");
+  });
   $(document).ready(function() {
      $('#example').DataTable( {
         "order": [[ 0, "desc" ]]

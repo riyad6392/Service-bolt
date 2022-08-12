@@ -1098,7 +1098,7 @@ class WorkerTicketController extends Controller
         die;
     }
 
-    public function addaddress (Request $request)
+    public function addaddress(Request $request)
     {
         $cid = $request->customerid;
         $auth_id = auth()->user()->id;

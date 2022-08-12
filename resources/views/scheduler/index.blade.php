@@ -436,6 +436,16 @@ th.fc-resource-cell img {
     font-size: 12px;
 }
 
+.add-btn-day {
+    display: inline-block;
+    background: #F7F9FA;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #232322;
+    padding: 10.5px 16px;
+    font-size: 16px;
+    font-weight: 300;
+}
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -449,6 +459,9 @@ th.fc-resource-cell img {
                                     <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch 
                                         <span class="counter">{{count($scheduleData)}}</span>
                                     </h3>
+
+                                
+                            
                                     <p style="margin: 0; font-weight: 500;color: #000;">Tickets to Assign</p>
                                 </div>
                             </div>
@@ -460,6 +473,7 @@ th.fc-resource-cell img {
                             <input type="hidden" name="openingtime" id="openingtime" value="00:00">
                             <input type="hidden" name="closingtime" id="closingtime" value="24:00">
                             @endif
+
                             <div class="col-md-3 ms-auto">
                                 <div class="datess">
                                     @if(request()->date)
@@ -483,10 +497,13 @@ th.fc-resource-cell img {
                                     <span id="close"></span>
                                 </div>
                             </div>
-                            <div class="col-lg-4 text-end mb-2 offset-lg-4">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#add-tickets" class="add-btn-yellow">New Ticket Assign + </a>
+
+                            <div class="col-lg-5 text-end mb-2 offset-lg-3">
+                                <a class="btn add-btn-yellow">Day</a>
+                                <a href='{{url("/")}}/company/scheduler/detailweek' class="add-btn-day px-4">Week</a> <a href="#" data-bs-toggle="modal" data-bs-target="#add-tickets" class="add-btn-yellow">New Ticket Assign + </a>
                             </div>
                         </div>
+                       
                         <div class="card-personal" id="external-events">
                             <div class="gallery portfolio_slider  slider">
                                 @if(count($ticketData)>0)  
