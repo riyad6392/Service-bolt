@@ -497,7 +497,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 
 
-<div class="modal fade" id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+<div class="modal fade" id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
      
@@ -553,7 +553,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 				      	<option value="{{$value->id}}">{{$value->customername}}</option>
 				      @endforeach
 			  		</select>
-			  	</div>
+
+			  		<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+			  			<a href="#"  data-bs-toggle="modal" data-bs-target="#add-customer" class="" id="hidequote"><i class="fa fa-plus"></i></a>
+			  		</div>
+					</div>
 			</div>
 	 	</div>
 
@@ -563,6 +567,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 			    	<select class="form-select" name="address" id="address1" required>
 			    		<option value="">Select Customer Address</option>
 			      	</select>
+			      	<div id="addressicon"></div>
 			    </div>
 			</div>
 	 	</div>
@@ -670,7 +675,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 </div>
 </div>
 <!-- Add Direct Ticket's -->
-<div class="modal fade" id="add-tickets1" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+<div class="modal fade" id="add-tickets1" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
      
@@ -728,9 +733,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 				      	<option value="{{$value->id}}">{{$value->customername}}</option>
 				      @endforeach
 			  		</select>
+			  		<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+			  			<a href="#"  data-bs-toggle="modal" data-bs-target="#add-customer2" class="" id="hideticket"><i class="fa fa-plus"></i></a>
+			  		</div>
+					</div>
 			    </div>
 			</div>
-	 	</div>
 
 	 	<div class="col-md-12 mb-2">
 		   <div class="input_fields_wrap">
@@ -738,6 +746,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 			    	<select class="form-select" name="address" id="address2" required>
 			    		<option value="">Select Customer Address</option>
 			      	</select>
+			      	<div id="addressicon1"></div>
 			    </div>
 			</div>
 	 	</div>
@@ -974,24 +983,80 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   </div>
 </div>
 </div>
-
-<!-- Add customer modal -->
-<div class="modal fade" id="add-customer" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
+<!-- Add address modal -->
+<div class="modal fade" id="add-address" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box  overflow-hidden">
-     <form class="form-material m-t-40  form-valide" method="post" action="{{route('worker.customercreate1')}}" enctype="multipart/form-data">
+      <div class="modal-body">
+       <div class="add-customer-modal">
+     <h5>Add Address</h5>
+     </div>
+     
+    <div class="row customer-form">
+     
+    <div class="col-md-12 mb-3">
+     	<input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address5" required="">
+  	</div>
+
+		<div class="col-lg-6 mb-3">
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel1">Cancel</button>
+    </div>
+    <div class="col-lg-6 mb-3">
+     	<button id="saveaddress" class="btn btn-add btn-block">Add Address</button>
+    </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add address2 modal -->
+<div class="modal fade" id="add-address2" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box  overflow-hidden">
+      <div class="modal-body">
+       <div class="add-customer-modal">
+     <h5>Add Address</h5>
+     </div>
+     
+    <div class="row customer-form">
+     
+    <div class="col-md-12 mb-3">
+     	<input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address6" required="">
+  	</div>
+
+		<div class="col-lg-6 mb-3">
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="ticketcancel1">Cancel</button>
+    </div>
+    <div class="col-lg-6 mb-3">
+     	<button id="saveaddress2" class="btn btn-add btn-block">Add Address</button>
+    </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add customer modal -->
+<div class="modal fade" id="add-customer" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box  overflow-hidden">
+     <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.createcticket')}}" enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
        <div class="add-customer-modal">
      <h5>Add a new customer</h5>
      </div>
      
-     <div class="row customer-form">
-     <div class="col-md-12 mb-3">
+    <div class="row customer-form">
      
-     <input type="text" class="form-control" placeholder="Customer Full Name" name="customername" id="customername" required="">
-  
-     </div>
+    <div class="col-md-12 mb-3">
+     	<input type="text" class="form-control" placeholder="Customer Full Name" name="customername" id="customername" required="">
+  	</div>
+
+  	<div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="Address" name="address" id="address" required="">
+    </div>
      
      <div class="col-md-6 mb-3">
      
@@ -1035,7 +1100,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      
      
      <div class="col-lg-6 mb-3">
-     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal">Cancel</button>
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel">Cancel</button>
      </div>
      <div class="col-lg-6 mb-3">
      <button type="submit" class="btn btn-add btn-block">Add Customer</button>
@@ -1047,6 +1112,86 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     </div>
   </div>
 </div>
+
+<!-- Add customer2 modal -->
+<div class="modal fade" id="add-customer2" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box  overflow-hidden">
+     <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.createcticket')}}" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+       <div class="add-customer-modal">
+     <h5>Add a new customer</h5>
+     </div>
+     
+    <div class="row customer-form">
+     
+    <div class="col-md-12 mb-3">
+     	<input type="text" class="form-control" placeholder="Customer Full Name" name="customername" id="customername" required="">
+  	</div>
+
+  	<div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="Address" name="address" id="address" required="">
+    </div>
+     
+     <div class="col-md-6 mb-3">
+     
+     <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="">
+     
+     </div>
+     
+     <div class="col-md-6 mb-3">
+    
+     <input type="email" class="form-control" placeholder="Email" name="email" id="email" required="">
+     
+     </div>
+     
+     <div class="col-md-12 mb-3">
+    
+     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname" required="">
+     
+     </div>
+     <div class="col-md-12 mb-3">
+      <div class="d-flex align-items-center">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+          @foreach ($services as $service)
+            <option value="{{$service->id}}">{{$service->servicename}}</option>
+          @endforeach
+        </select>
+        <div class="wrapper" style="display: none;">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+ 			<div class="tooltip">If you are not seeing the services in dropdown then create some services in service section then select here.</div>
+		</div>
+     </div>
+   </div>
+   <div class="col-lg-12 mb-3">
+      <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
+      <div class="drop-zone">
+    <span class="drop-zone__prompt text-center">
+  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></small>
+  Drop file here or click to upload</span>
+    <input type="file" name="image" id="image" class="drop-zone__input" accept="image/png, image/gif, image/jpeg">
+  </div>
+     </div>
+     
+     
+     <div class="col-lg-6 mb-3">
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="ticketcancel">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+     <button type="submit" class="btn btn-add btn-block">Add Customer</button>
+     </div>
+     
+     </div>
+      </div>
+     </form>
+    </div>
+  </div>
+</div>
+
+
+
+
 <!-- end modal -->
 @section('script')
 <script type="text/javascript">
@@ -1070,10 +1215,43 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     });
   }) 
 
-  $("#add-customer").click(function() {
-  	alert('ddff');
-  	$("#add-tickets").css("opacity","0");
-  });
+   $("#hideticket").click(function() {
+  	$("#add-tickets1").hide();
+	});
+
+  $("#hidequote").click(function() {
+  	$("#add-tickets").hide();
+	});
+
+	$("#ticketcancel").click(function() {
+		$("#add-tickets1").show();
+  	$("#add-customer2").hide();
+	});
+	
+
+  $("#quotecancel").click(function() {
+		$("#add-tickets").show();
+  	$("#add-customer").hide();
+	});
+
+	$('html').on('click','#hidequote1',function() {
+  	$("#add-tickets").hide();
+	});
+
+  $('html').on('click','#hideticket1',function() {
+  	$("#add-tickets1").hide();
+	});
+
+	$("#quotecancel1").click(function() {
+		$("#add-tickets").show();
+  	$("#add-address").hide();
+	});
+
+	$("#ticketcancel1").click(function() {
+		$("#add-tickets1").show();
+  	$("#add-address2").hide();
+	});
+  
   $(document).ready(function() {
      $('#example').DataTable( {
         "order": [[ 0, "desc" ]]
@@ -1097,6 +1275,53 @@ input[type="date"]::-webkit-calendar-picker-indicator {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
+   $(document).on('click','#saveaddress',function(e) {
+      var customerid = $('#customerid').val();
+	    var address = $('#address5').val();
+		  if(address=="") {
+		   	alert('address field is required');
+		   }
+	   $.ajax({
+            url:"{{url('personnel/myticket/addaddress')}}",
+            data: {
+              address: address,
+              customerid: customerid,
+     		},
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+            	
+              $("#add-address").modal('hide');
+              $("#address1").append("<option value="+data.address+">"+data.address+"</option>");
+              $("#add-tickets").show();
+            }
+        })
+	})
+
+   	$(document).on('click','#saveaddress2',function(e) {
+      var customerid = $('#customerid1').val();
+	    var address = $('#address6').val();
+		  if(address=="") {
+		   	alert('address field is required');
+		   }
+	   $.ajax({
+            url:"{{url('personnel/myticket/addaddress')}}",
+            data: {
+              address: address,
+              customerid: customerid,
+     		},
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+            	
+              $("#add-address2").modal('hide');
+              $("#address2").append("<option value="+data.address+">"+data.address+"</option>");
+               $("#add-tickets1").show();
+            }
+        })
+		})
    $(".add-ticket-alert").click(function() {
    		var id = $(this).data('id');
    		$.ajax({
@@ -1269,6 +1494,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		$('#customerid').on('change', function() {
 			var customerid = this.value;
 			$("#address1").html('');
+			$("#addressicon").html('');
 				$.ajax({
 					url:"{{url('company/quote/getaddressbyid')}}",
 					type: "POST",
@@ -1278,10 +1504,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 					},
 					dataType : 'json',
 					success: function(result) {
+
 					$('#address1').html('<option value="">Select Customer Address</option>'); 
 						$.each(result.address,function(key,value) {
 							$("#address1").append('<option value="'+value.address+'">'+value.address+'</option>');
 						});
+						$('#addressicon').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address" id="hidequote1" class=""><i class="fa fa-plus"></i></a></div>');
 					}
 			});
 		});
@@ -1289,6 +1517,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		$('#customerid1').on('change', function() {
 			var customerid = this.value;
 			$("#address2").html('');
+			$("#addressicon").html('');
+
 				$.ajax({
 					url:"{{url('company/quote/getaddressbyid')}}",
 					type: "POST",
@@ -1302,6 +1532,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 						$.each(result.address,function(key,value) {
 							$("#address2").append('<option value="'+value.address+'">'+value.address+'</option>');
 						});
+						$('#addressicon1').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address2" class="" id="hideticket1"><i class="fa fa-plus"></i></a></div>');
 					}
 			});
 		});    

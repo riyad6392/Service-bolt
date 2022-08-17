@@ -326,24 +326,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/eonasdan-bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
 <script>
-    $('.dropify').dropify();
-    function initAutocomplete() {
+  $('.dropify').dropify();
+  function initAutocomplete() {
+    var input = document.getElementById('address');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+      // autocomplete.setComponentRestrictions(
+      // {'country': ['us']});
 
-  var input = document.getElementById('address');
-           var autocomplete = new google.maps.places.Autocomplete(input);
-            // autocomplete.setComponentRestrictions(
-            // {'country': ['us']});
-
-           autocomplete.addListener('place_changed', function() {
-               var place = autocomplete.getPlace();
-                autocomplete.setComponentRestrictions(
-            {'country': ['us']});
-
-           
-           });
-
-  
-}
+    autocomplete.addListener('place_changed', function() {
+         var place = autocomplete.getPlace();
+          autocomplete.setComponentRestrictions(
+      {'country': ['us']});
+    });
+  }
 </script>
 <script type="text/javascript">
   $(document).ready(function() {

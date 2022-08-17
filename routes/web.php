@@ -20,6 +20,7 @@ use App\Http\Controllers\Company\TimeoffController;
 use App\Http\Controllers\Company\PaymentsettingController;
 use App\Http\Controllers\Company\CommissionController;
 use App\Http\Controllers\Company\NotificationController;
+use App\Http\Controllers\Company\ComissionController;
 
 use App\Http\Controllers\Worker\WorkerHomeController;
 use App\Http\Controllers\Worker\WorkerTicketController;
@@ -142,6 +143,11 @@ Route::group([
     //customer create
     Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
     Route::any('/customer/create', [CustomerController::class, 'create'])->name('customercreate');
+    Route::any('/customer/createcticket', [CustomerController::class, 'createcticket'])->name('createcticket');
+
+    //commission report
+    Route::get('/commisionreport', [ComissionController::class, 'index'])->name('commisionreport');
+
     Route::any('/customer/viewservicepopup', [CustomerController::class, 'viewservicepopup'])->name('viewservicepopup');
     Route::any('/customer/view/{id}', [CustomerController::class, 'view'])->name('customerview');
     Route::any('/customer/address', [CustomerController::class, 'address'])->name('customeraddresscreate');

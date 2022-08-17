@@ -988,7 +988,7 @@ th.fc-resource-cell img {
             groupByResource: true,
             eventOverlap: true,
            // defaultEventMinutes: 30, 
-            //defaultTimedEventDuration: '01:00',
+            //defaultTimedEventDuration: '04:00',
             //forceEventDuration: true,
             resources: function (callback) {
                 @if(request()->start)
@@ -1165,7 +1165,6 @@ th.fc-resource-cell img {
                 //var fulldate = date.format("dddd - MMMM DD, YYYY");
                 
                 var fulldate = "{{$requestdate}}";
-
 
                 form_data = new FormData();
                 form_data.append('quoteid',ticketid);

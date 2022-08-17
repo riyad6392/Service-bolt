@@ -97,6 +97,43 @@ class CustomerController extends Controller
             
             return redirect()->route('company.customer');
     }
+    
+    public function createcticket(Request $request)
+    {
+      $auth_id = auth()->user()->id;
+      $logofile = $request->file('image');
+      if (isset($logofile)) {
+         $new_file = $logofile;
+         $path = 'uploads/customer/';
+         $thumbnailpath = 'uploads/customer/thumbnail/';
+         $imageName = custom_fileupload1($new_file,$path,$thumbnailpath);
+
+         $data['image'] = $imageName; 
+      }
+          $data['userid'] = $auth_id;
+          $data['customername'] = $request->customername;
+          $data['phonenumber'] = $request->phonenumber;
+          $data['email'] = $request->email;
+          $data['companyname'] = $request->companyname;
+          if(isset($request->serviceid)) {
+              $data['serviceid'] = implode(',', $request->serviceid);
+          } else {
+              $data['serviceid'] = null;
+          } 
+      $cinfo = Customer::create($data);
+
+      $lastId = $cinfo->id;
+
+      $cid = $lastId;
+      $data['authid'] = $auth_id;
+      $data['customerid'] = $cid;
+      $data['address'] = $request->address;
+      Address::create($data);
+
+      $request->session()->flash('success', 'Customer added successfully');
+      
+      return redirect()->route('company.quote');
+    }
 
     public function address(Request $request)
     {
