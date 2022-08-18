@@ -491,16 +491,19 @@ th.fc-resource-cell img {
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-lg-4 mb-0" id="srcoll-here">
-                                <div class="show-fillter">
-                                    <button class="menubar" id="hide-top" style="    background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen</button>
+                            <div class="col-lg-5" id="srcoll-here">
+                                <div class="show-fillter" style="display: flex;justify-content:space-between;">
+                                    <button class="menubar" id="hide-top" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Day View</button>
+                                    <a href='{{url("/")}}/company/scheduler/detailweek' class="add-btn-yellow" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Week View</a>
                                     <span id="close"></span>
                                 </div>
+
                             </div>
 
-                            <div class="col-lg-5 text-end mb-2 offset-lg-3">
-                                <a class="btn add-btn-yellow">Day</a>
-                                <a href='{{url("/")}}/company/scheduler/detailweek' class="add-btn-day px-4">Week</a> <a href="#" data-bs-toggle="modal" data-bs-target="#add-tickets" class="add-btn-yellow">New Ticket Assign + </a>
+                            <div class="col-lg-3 text-end mb-2 offset-lg-4">
+                                
+                                <span id="close"></span>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#add-tickets" class="add-btn-yellow">New Ticket Assign + </a>
                             </div>
                         </div>
                        

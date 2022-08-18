@@ -1713,8 +1713,8 @@ border-radius: 8px;
 
 /* When the checkbox is checked, add a blue background */
 .container-checkbox input:checked ~ .checkmark {
-    /*background: #FEE200;*/
-    background: #000;
+    background: #FEE200;
+    /*background: #000;*/
 }
 
 
@@ -1736,7 +1736,8 @@ border-radius: 8px;
     top: 5px;
     width: 5px;
     height: 10px;
-    border: solid white;
+    /*border: solid white;*/
+    border: solid black;
     border-width: 0 3px 3px 0;
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
@@ -3008,4 +3009,15 @@ h5.dew {
     background: transparent;
     box-shadow: none;
     color: #000;
+}
+
+.bootstrap-select.show-tick .dropdown-menu .selected span.check-mark {
+    position: absolute;
+    display: inline-block;
+    right: 15px;
+    top: 5px;
+    /*background: #000;*/
+}
+.bootstrap-select .bs-ok-default:after{
+    color: black;
 }

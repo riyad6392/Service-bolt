@@ -50,6 +50,52 @@
     padding: 8px 34px;
     box-shadow: 0px 0px 10px #ccc;
 }
+
+ i.fa.fa-cog {
+        color: gray;
+        font-size: 25px;
+    }
+
+    input#flexCheckDefault {
+        outline: navajowhite;
+        width: 20px;
+        height: 20px;
+        margin: 2px 5px;
+        box-shadow: none;
+        border: 1px solid gray;
+        border-radius: 0;
+    }
+
+    .table>thead>tr>th {
+        border: navajowhite;
+    }
+
+    th,td{
+        border: none !important;
+    }
+
+    button.exploder {
+        background: white;
+        outline: none;
+        color: black;
+        border: none;
+        box-shadow: none;
+    }
+
+    .btn-danger:hover {
+        background: white;
+        color: black;
+        outline: none;
+        border: none;
+        box-shadow: none;
+    }
+
+    .btn-danger.focus, .btn-danger:focus {
+        background: white;
+        color: black;
+        outline: none;
+        border: none;
+    }
 </style>
 <div class="content">
      <div class="row">
@@ -96,28 +142,119 @@
      <div class="table-responsive">
       <table id="example" class="table no-wrap table-new table-list" style="position: relative;">
           <thead>
-            <tr>
-              <th style="display: none;">Id</th>
-              <th>Personnel NAME</th>
-              <th>Tickets Worked</th>
-              <th>Flat Amount</th>
-              <th>Variable Amount</th>
-              <th>Total Payout Amount</th>
-              <th>Action</th>
-            </tr>
+           <tr style="border-bottom: 2px solid;">
+                    <th style="font-weight:400;">Personal Name</th>
+                    <th style="font-weight:400;">Tickets Worked</th>
+                    <th style="font-weight:400;">Flat Amount</th>
+                    <th style="font-weight:400;">Variable Amount</th>
+                    <th style="font-weight:400;">Totol Payout Amount</th>
+                    <th colspan="" style="font-weight:400;">Action</th>
+                </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style="display: none;"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>
-                
-              </td>
-            </tr>
+            <tr class="sub-container">
+                    <td><button type="button" class="exploder">
+                        - Adom Norsworthy
+                        </button></td>
+                    <td>2</td>
+                    <td>$65.00</td>
+                    <td>$7.55</td>
+                    <td>$72.55</td>
+                    <td>
+                        <i class="fa fa-cog" aria-hidden="true"></i>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    </td>
+                </tr>
+
+                <tr class="explode hide">
+                    <td colspan="8" style="display: none; border:none;">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr style="font-family: system-ui;">
+                                    <th>Date</th>
+                                    <th>Ticket#</th>
+                                    <th>Services</th>
+                                    <th>Products</th>
+                                    <th>Flat Amount</th>
+                                    <th>Variable Amount</th>
+                                    <th>Total Payout</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="font-size: 17px; border:none; background:white;">
+                                    <td>8-16-22</td>
+                                    <td>169</td>
+                                    <td>Moving , Weed Eet</td>
+                                    <td>iron Pipe</td>
+                                    <td>$25</td>
+                                    <td>$7.55</td>
+                                    <td>$32.55</td>
+                                </tr>
+                                <tr style="font-size: 17px;">
+                                    <td>8-16-22</td>
+                                    <td>169</td>
+                                    <td>Moving , Weed Eet</td>
+                                    <td>iron Pipe</td>
+                                    <td>$25</td>
+                                    <td>$7.55</td>
+                                    <td>$32.55</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr class="sub-container">
+                    <td><button type="button" class="exploder">
+                        - Adom Norsworthy
+                        </button></td>
+                    <td>2</td>
+                    <td>$65.00</td>
+                    <td>$7.55</td>
+                    <td>$72.55</td>
+                    <td>
+                        <i class="fa fa-cog" aria-hidden="true"></i>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    </td>
+                </tr>
+
+                <tr class="explode hide">
+                    <td colspan="8" style="display: none; border:none;">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr style="font-size: 18px;font-family: system-ui;">
+                                    <th>Date</th>
+                                    <th>Ticket#</th>
+                                    <th>Services</th>
+                                    <th>Products</th>
+                                    <th>Flat Amount</th>
+                                    <th>Variable Amount</th>
+                                    <th>Total Payout</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="font-size: 17px; border:none; background:white;">
+                                    <td>8-16-22</td>
+                                    <td>169</td>
+                                    <td>Moving , Weed Eet</td>
+                                    <td>iron Pipe</td>
+                                    <td>$25</td>
+                                    <td>$7.55</td>
+                                    <td>$32.55</td>
+                                </tr>
+                                <tr style="font-size: 17px;">
+                                    <td>8-16-22</td>
+                                    <td>169</td>
+                                    <td>Moving , Weed Eet</td>
+                                    <td>iron Pipe</td>
+                                    <td>$25</td>
+                                    <td>$7.55</td>
+                                    <td>$32.55</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
            
           </tbody>
         </table>
@@ -155,6 +292,20 @@
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
+
+    $(".exploder").click(function () {
+
+            $(this).children("span").toggleClass("glyphicon-search glyphicon-zoom-out");
+
+            $(this).closest("tr").next("tr").toggleClass("hide");
+
+            if ($(this).closest("tr").next("tr").hasClass("hide")) {
+                $(this).closest("tr").next("tr").children("td").slideUp();
+            }
+            else {
+                $(this).closest("tr").next("tr").children("td").slideDown(350);
+            }
+        });
 $(document).on('click','#service_list_dot',function(e) {
    var id = $(this).data('id');
    var name = $(this).data('name');

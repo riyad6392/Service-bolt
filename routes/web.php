@@ -180,6 +180,7 @@ Route::group([
     Route::any('/services/leftbarservicedata', [ServicesController::class, 'leftbarservicedata'])->name('leftbarservicedata');
     Route::any('/services/createquote', [ServicesController::class, 'createquote'])->name('servicecreatequote');
     Route::any('/services/savefieldservice', [ServicesController::class, 'savefieldservice'])->name('savefieldservice');
+    Route::any('/services/createservice', [ServicesController::class, 'createservice'])->name('createservice');
 
     //personnel Create
     Route::get('/personnel', [PersonnelController::class, 'index'])->name('personnel');

@@ -101,6 +101,49 @@ class ServicesController extends Controller
       return redirect()->route('company.services');
     }
 
+    public function createservice(Request $request)
+    {
+      //dd($request->all());
+        $auth_id = auth()->user()->id;
+        $logofile = $request->file('image');
+        if (isset($logofile)) {
+          $new_file = $logofile;
+          $path = 'uploads/services/';
+          $imageName = custom_fileupload($new_file,$path);
+
+          $data['image'] = $imageName;
+        } 
+          if(isset($request->defaultproduct)) {
+            $data['productid'] = implode(',', $request->defaultproduct);
+          } else {
+             $data['productid'] = null;
+          }
+          $data['userid'] = $auth_id;
+          $data['servicename'] = $request->servicename;
+          $data['price'] = $request->price;
+          //$data['productid'] = $request->defaultproduct;
+          $data['type'] = $request->radiogroup;
+          $data['frequency'] = $request->frequency;
+          if($request->time!=null || $request->time!=0) {
+            $data['time'] = $request->time.' Hours';
+          }
+          if($request->minute!=null || $request->minute!=0) {
+            $data['minute'] = $request->minute.' Minutes';;
+          }
+          
+          if(isset($request->serviceid)) {
+              $data['serviceid'] = implode(',', $request->serviceid);
+          } else {
+             $data['serviceid'] = null;
+          }
+      //$color = substr(md5(rand()), 0, 6);
+      //$data['color'] = "#".$color;
+      $data['color'] = $request->colorcode;
+      $servicedata = Service::create($data);
+      return json_encode(['id' =>$servicedata->id,'servicename' =>$request->servicename]);
+        die;
+    }
+
     public function viewservicemodal(Request $request)
     {
        $json = array();

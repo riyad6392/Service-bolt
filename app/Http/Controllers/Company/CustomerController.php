@@ -51,8 +51,11 @@ class CustomerController extends Controller
           
          $table="customer";
          $fields = DB::getSchemaBuilder()->getColumnListing($table);
-        //dd($aaa);      
-        return view('customer.index',compact('auth_id','services','customerData','products','customerAddress','fields'));
+        //dd($aaa);   
+        $serviceData = Service::where('userid',$auth_id)->orderBy('id','ASC')->get();
+        $productData = Inventory::where('user_id',$auth_id)->orderBy('id','ASC')->get();
+        $tenture = Tenture::where('status','Active')->get();   
+        return view('customer.index',compact('auth_id','services','customerData','products','customerAddress','fields','serviceData','productData','tenture'));
     }
 
     public function create(Request $request)
