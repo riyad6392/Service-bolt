@@ -603,12 +603,9 @@ $(document).on('click','#service_list_dot',function(e) {
         })
   });
   
-   // $("#serviceform").submit(function(event) {
-      $('#serviceform').on('submit', function(event) {
+  $('#serviceform').on('submit', function(event) {
       event.preventDefault();
-      //var formData = new FormData(this);
-     // console.log(formData);
-     var url = "{{url('company/services/createservice')}}";
+      var url = "{{url('company/services/createservice')}}";
        $.ajax({
             url:url,
             data: new FormData(this),
@@ -625,7 +622,8 @@ $(document).on('click','#service_list_dot',function(e) {
               $("#add-customer").show();
             }
         })
-    });
+  });
+  
   $(document).on('click','#serviceform1',function(e) {
 
       var servicename = $('#servicename').val();

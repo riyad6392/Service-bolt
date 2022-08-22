@@ -103,7 +103,6 @@ class ServicesController extends Controller
 
     public function createservice(Request $request)
     {
-      //dd($request->all());
         $auth_id = auth()->user()->id;
         $logofile = $request->file('image');
         if (isset($logofile)) {

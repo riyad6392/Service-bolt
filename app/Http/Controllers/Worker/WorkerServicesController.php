@@ -180,4 +180,53 @@ class WorkerServicesController extends Controller
         return json_encode(['html' =>$html]);
         die;
     }
+
+    public function createservice(Request $request)
+    {
+
+       $auth_id = auth()->user()->id;
+
+       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+       
+
+        $logofile = $request->file('image');
+        if (isset($logofile)) {
+          $new_file = $logofile;
+          $path = 'uploads/services/';
+          $imageName = custom_fileupload($new_file,$path);
+
+          $data['image'] = $imageName;
+        } 
+          if(isset($request->defaultproduct)) {
+            $data['productid'] = implode(',', $request->defaultproduct);
+          } else {
+             $data['productid'] = null;
+          }
+          //dd($data['productid']);
+          $data['userid'] = $worker->userid;
+          $data['workerid'] = $worker->workerid;
+
+          $data['servicename'] = $request->servicename;
+          $data['price'] = $request->price;
+         // $data['productid'] = $request->defaultproduct;
+          $data['type'] = $request->radiogroup;
+          $data['frequency'] = $request->frequency;
+          if($request->time!=null || $request->time!=0) {
+            $data['time'] = $request->time.' Hours';
+          }
+          if($request->minute!=null || $request->minute!=0) {
+            $data['minute'] = $request->minute.' Minutes';;
+          }
+          
+          if(isset($request->serviceid)) {
+              $data['serviceid'] = implode(',', $request->serviceid);
+          } else {
+             $data['serviceid'] = null;
+          }
+      $data['color'] = $request->colorcode;
+      //dd($data);
+      $servicedata = Service::create($data);
+      return json_encode(['id' =>$servicedata->id,'servicename' =>$request->servicename]);
+        die;
+    }
 }

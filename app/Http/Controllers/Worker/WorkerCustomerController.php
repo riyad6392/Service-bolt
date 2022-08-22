@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DB;
 use App\Models\Service;
+use App\Models\Inventory;
 use App\Models\Customer;
 use App\Models\Address;
 use App\Models\Quote;
+use App\Models\Tenture;
 use Image;
 
 
@@ -55,9 +57,12 @@ class WorkerCustomerController extends Controller
     // }
       $services = Service::where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->get();
 
+      $productData = Inventory::where('user_id',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
+
       $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+      $tenture = Tenture::where('status','Active')->get(); 
       //$customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get(); 
-      return view('personnel.mycustomer',compact('auth_id','customerData','services'));
+      return view('personnel.mycustomer',compact('auth_id','customerData','services','productData','tenture'));
     }
 
     public function viewservicepopup(Request $request)

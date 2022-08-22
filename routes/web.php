@@ -378,6 +378,7 @@ Route::group([
     Route::get('/services', [WorkerServicesController::class, 'index'])->name('services');
 
     Route::any('/services/viewserviceticketmodal', [WorkerServicesController::class, 'viewserviceticketmodal'])->name('viewserviceticketmodal');
+    Route::any('/services/createservice', [WorkerServicesController::class, 'createservice'])->name('createservice');
 
     //worker admin services module
     Route::get('/manageservices', [WorkerAdminServicesController::class, 'index'])->name('manageservices');

@@ -124,16 +124,19 @@ i.fa.fa-angle-down {
   -webkit-animation: spin 2s linear infinite; /* Safari */
   animation: spin 2s linear infinite;
 }
+
 .loadershow {
     height: 100%;
-    position: absolute;
+    position: fixed;
     left: 0;
     width: 100%;
-    z-index: 10;
+    z-index: 1000;
     background: rgb(35 35 34 / 43%);
-    padding-top: 15%;
+    padding-top: 0;
     display: flex;
     justify-content: center;
+    top: 0;
+    align-items: center;
 }
 
 /* Safari */
