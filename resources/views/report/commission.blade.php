@@ -99,7 +99,7 @@
 </style>
 <div class="content">
      <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="side-h3">
        <h3>Commission Report</h3>
         @if(Session::has('success'))
@@ -113,7 +113,15 @@
           @endif
      </div>
      </div>
-     <div class="col-md-4">
+        <div class="col-md-2" style="padding:7px;">
+          <label style="visibility:hidden;">Select Date Range</label>
+          <input type="date" id="since" value="" name="since" class="form-control date1">
+        </div>
+        <div class="col-md-2" style="padding:7px;">
+          <label style="visibility:hidden;">To Date</label>
+          <input type="date" id="until" value="" name="until" class="form-control date2">
+        </div>
+     <div class="col-md-2">
         <div class="side-h3">
           <select class="form-select puser" name="pid" id="pid" required="">
             <option value="all">All Personnel</option> 
@@ -142,7 +150,7 @@
      <div class="table-responsive">
       <table id="example" class="table no-wrap table-new table-list" style="position: relative;">
           <thead>
-           <tr style="border-bottom: 2px solid;">
+           <tr>
                     <th style="font-weight:400;">Personal Name</th>
                     <th style="font-weight:400;">Tickets Worked</th>
                     <th style="font-weight:400;">Flat Amount</th>
@@ -153,21 +161,23 @@
           </thead>
           <tbody>
             <tr class="sub-container">
-                    <td><button type="button" class="exploder">
-                        - Adom Norsworthy
-                        </button></td>
+                <td>
+                 <span class="glyphicon glyphicon-plus plusIcon">+</span>
+                 <span class="glyphicon glyphicon-minus plusIcon" style="display:none">-</span>
+                    Adom Norsworthy
+                </td>
                     <td>2</td>
                     <td>$65.00</td>
                     <td>$7.55</td>
                     <td>$72.55</td>
                     <td>
                         <i class="fa fa-cog" aria-hidden="true"></i>
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <input class="form-check-input flexCheckDefault" type="checkbox" value="" id="flexCheckDefault">
                     </td>
                 </tr>
 
-                <tr class="explode hide">
-                    <td colspan="8" style="display: none; border:none;">
+                <tr class="explode hide" style="display:none;">
+                    <td colspan="8" id="toggle_text">
                         <table class="table table-condensed">
                             <thead>
                                 <tr style="font-family: system-ui;">
@@ -203,26 +213,30 @@
                         </table>
                     </td>
                 </tr>
+          </tbody>
 
-                <tr class="sub-container">
-                    <td><button type="button" class="exploder">
-                        - Adom Norsworthy
-                        </button></td>
+          <tbody>
+            <tr class="sub-container">
+                <td>
+                 <span class="glyphicon glyphicon-plus plusIcon">+</span>
+                 <span class="glyphicon glyphicon-minus plusIcon" style="display:none">-</span>
+                    Mike Norsworthy
+                </td>
                     <td>2</td>
                     <td>$65.00</td>
                     <td>$7.55</td>
                     <td>$72.55</td>
                     <td>
                         <i class="fa fa-cog" aria-hidden="true"></i>
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <input class="form-check-input flexCheckDefault" type="checkbox" value="" id="flexCheckDefault">
                     </td>
                 </tr>
 
-                <tr class="explode hide">
-                    <td colspan="8" style="display: none; border:none;">
+                <tr class="explode hide" style="display:none;">
+                    <td colspan="8" id="toggle_text">
                         <table class="table table-condensed">
                             <thead>
-                                <tr style="font-size: 18px;font-family: system-ui;">
+                                <tr style="font-family: system-ui;">
                                     <th>Date</th>
                                     <th>Ticket#</th>
                                     <th>Services</th>
@@ -255,8 +269,8 @@
                         </table>
                     </td>
                 </tr>
-           
           </tbody>
+
         </table>
       </div>
      </div>
@@ -273,180 +287,46 @@
 
 @section('script')
 <script type="text/javascript">
-  $('.dropify').dropify();
-  $(document).ready(function() {
-    $('#example').DataTable({
-      
+    $('.dropify').dropify();
+    $(document).ready(function() {
+     $('#example').DataTable({
       "order": [[ 0, "desc" ]]
+      });
     });
-    //   $('#example').DataTable( {
-    //     dom: 'Bfrtip',
-    //     buttons: [
-    //         'csv'
-    //     ]
-    // } );
 
-  });
-   $.ajaxSetup({
+    $.ajaxSetup({
       headers: {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
-   });
-
-    $(".exploder").click(function () {
-
-            $(this).children("span").toggleClass("glyphicon-search glyphicon-zoom-out");
-
-            $(this).closest("tr").next("tr").toggleClass("hide");
-
-            if ($(this).closest("tr").next("tr").hasClass("hide")) {
-                $(this).closest("tr").next("tr").children("td").slideUp();
-            }
-            else {
-                $(this).closest("tr").next("tr").children("td").slideDown(350);
-            }
-        });
-$(document).on('click','#service_list_dot',function(e) {
-   var id = $(this).data('id');
-   var name = $(this).data('name');
-   //var dataString =  'id='+ id,'name='+ name;
-   //alert(dataString);
-   $.ajax({
-            url:'{{route('company.viewservicepopup')}}',
-            data: {
-              'id':id,
-              'name':name
-            },
-            method: 'post',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-
-              console.log(data.html);
-              $('#viewservicelistdata').html(data.html);
-            }
-        })
-  });
-$('#selector').delay(2000).fadeOut('slow');
-
-$(document).on('click','#editCustomer',function(e) {
-  $('.selectpicker').selectpicker();
-   var id = $(this).data('id');
-   var dataString =  'id='+ id;
-   $.ajax({
-            url:'{{route('company.viewcustomermodal')}}',
-            data: dataString,
-            method: 'post',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-              $('#viewmodaldata').html(data.html);
-              $('.dropify').dropify();
-              $('.selectpicker').selectpicker({
-                size: 3
-              });
-            }
-        })
-  });
-
-  function readURL(input) {
-     if (input.files && input.files[0]) {
-         var reader = new FileReader();
-         reader.onload = function(e) {
-             $('#bannerPreview12').css('background-image', 'url('+e.target.result +')');
-             $('#bannerPreview12').hide();
-             $('#bannerPreview12').fadeIn(650);
-         }
-         reader.readAsDataURL(input.files[0]);
-     }
-   }
-   $('html').on('change','.bannerUpload',function(){
-   //$(document).on("change","#bannerUpload",function() {
-      $('.defaultimage').hide();
-       $('#bannerPreview12').show();
-     readURL(this);
-   });
-
-  $('html').on('click','.info_link1',function() {
-        var customerid = $(this).attr('dataval');
-        swal({
-          title: "Are you sure?",
-          text: "Are you sure you want to delete this customer!",
-          type: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, delete it!",
-          cancelButtonText: "No!",
-          closeOnConfirm: false,
-          closeOnCancel: false
-        },
-        function (isConfirm) {
-          if (isConfirm) {
-           $.ajax({
-                url:"{{url('company/customer/deleteCustomer')}}",
-                data: {
-                  id: customerid 
-                },
-                method: 'post',
-                dataType: 'json',
-                refresh: true,
-                success:function(data) {
-                 swal("Done!","Customer deleted succesfully!","success");
-                location.reload();
-                }
-            })
-          } 
-          else {
-            location.reload(); //swal("Cancelled", "Your customer is safe :)", "error");
-          }
-        }
-      );
-  });
-  $(window).on('load', function () {
-      $('.loadershow1').hide();
-    })
-
-  // $('#save_value').click(function() {
-     
-  //   $('.checkcolumn:checked').each(function() {
-  //     alert($(this).val());
-  //   });
-  // });
-  $(document).ready(function () {
-    $("#btnSubmit").click(function (event) {
-      //stop submit the form, we will post it manually.
-      event.preventDefault();
-      // Get form
-      var form = $('#my-form')[0];
-      // FormData object 
-      var data = new FormData(form);
-      // If you want to add an extra field for the FormData
-      data.append("page", "companycustomer");
-      // disabled the submit button
-      $("#btnSubmit").prop("disabled", true);
-      $.ajax({
-        url:'{{route('company.savefieldpage')}}',
-        data: data,
-        processData: false,
-        contentType: false,
-        cache: false,
-        timeout: 800000,
-        method: 'post',
-        dataType: 'json',
-        success: function (data) {
-            $("#output").text(data);
-            console.log("SUCCESS : ", data);
-            $("#btnSubmit").prop("disabled", false);
-            location.reload();
-        },
-        error: function (e) {
-            $("#output").text(e.responseText);
-            console.log("ERROR : ", e);
-            $("#btnSubmit").prop("disabled", false);
-        }
-      });
     });
-  });
+
+    $(".plusIcon").on("click",function() {
+      var obj = $(this);
+      if( obj.hasClass("glyphicon-plus") ){
+        obj.hide();
+        obj.next().show();            
+        obj.parent().parent().next().show();
+      }else{
+         obj.hide();
+         obj.prev().show();
+         obj.parent().parent().next().hide();
+      }
+    });
+
+    $(".exploder1").click(function () {
+        //$('#toggle_icon').text('-');
+
+        $(this).children("span").toggleClass("glyphicon-search glyphicon-zoom-out");
+
+        $(this).closest("tr").next("tr").toggleClass("hide");
+
+        if ($(this).closest("tr").next("tr").hasClass("hide")) {
+            $(this).closest("tr").next("tr").children("td").slideUp();
+        }
+        else {
+            $(this).closest("tr").next("tr").children("td").slideDown(350);
+        }
+    });
 </script>
 @endsection
 

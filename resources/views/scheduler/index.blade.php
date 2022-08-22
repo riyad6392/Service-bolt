@@ -960,11 +960,13 @@ th.fc-resource-cell img {
     
     $(function() {
         $('#external-events .fc-event').each(function() {
+
             // store data so the calendar knows to render an event upon drop
             $(this).data('event', {
                 title: $.trim($(this).text()), // use the element's text as the event title
                 stick: true, // maintain when user navigates (see docs on the renderEvent method)
-                color: $(this).data('color')
+                color: $(this).data('color'),
+                //duration: '03:00'
             });
             // make the event draggable using jQuery UI
             $(this).draggable({
@@ -990,8 +992,8 @@ th.fc-resource-cell img {
             defaultView: 'agendaDay',
             groupByResource: true,
             eventOverlap: true,
-           // defaultEventMinutes: 30, 
-            //defaultTimedEventDuration: '04:00',
+            //defaultEventMinutes: 30, 
+            //defaultTimedEventDuration: '4:15',
             //forceEventDuration: true,
             resources: function (callback) {
                 @if(request()->start)
@@ -1149,7 +1151,7 @@ th.fc-resource-cell img {
             },
 
             drop: function (date, jsEvent, ui, resourceId) {
-                
+
                 var hours = date._i[3];
                 var minutes = date._i[4];
                 const ampm = hours >= 12 ? 'pm' : 'am';
@@ -1195,6 +1197,7 @@ th.fc-resource-cell img {
                 });
             },  
             eventDrop: function(event,delta, revertFunc, jsEvent, ui, view ) {
+
                 //console.log(event.start._d);
                 var ticketid = event.id;
                 var resourceId = event.resourceId;
