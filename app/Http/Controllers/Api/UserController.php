@@ -1577,4 +1577,21 @@ class UserController extends Controller
         return response()->json(['status'=>1,'paymentstatus'=>$paymentpaid,'payment_mode'=>$payment_mode,'checknumber'=>$checknumber],$this->successStatus);  
     }
 
+    public function updatelivelocation(Request $request) {
+        $user = Auth::user();
+        $auth_id = $user->id;
+        $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
+
+        $workerid = $worker->workerid;
+        if($request->latitude!=null && $request->longitude!=null) {
+            DB::table('personnel')->where('id','=',$workerid)
+              ->update([ 
+                  "livelat"=>"$request->latitude",
+                  "livelong"=>"$request->longitude",
+            ]);
+        } 
+
+        return response()->json(['status'=>1],$this->successStatus);                      
+    }
+
 }

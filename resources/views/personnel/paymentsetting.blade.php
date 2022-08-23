@@ -431,12 +431,12 @@
                     $type1 = "percent";   
                 }
 
-                if($commissiondata1[0]->allspvalue!=null) {
+                if(@$commissiondata1[0]->allspvalue!=null) {
                     $allspvalueamount = $commissiondata1[0]->allspvalue;
                     $allspvalueamountchecked = "checked";
                 }
 
-                if($commissionpdata1[0]->allspvalue!=null) {
+                if(@$commissionpdata1[0]->allspvalue!=null) {
                     $allspvaluepercent = $commissionpdata1[0]->allspvalue;
                     $allspvaluepercentchecked = "checked";
                 }

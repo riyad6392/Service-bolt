@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::get('/profileDetails', [App\Http\Controllers\Api\UserController::class, 'getprofile']);
 	Route::post('/updateprofile', [App\Http\Controllers\Api\UserController::class, 'updateprofile']);
 	Route::get('/dashboard', [App\Http\Controllers\Api\UserController::class, 'dashboardDetails']);
+	Route::post('/updatelivelocation', [App\Http\Controllers\Api\UserController::class, 'updatelivelocation']);
 	Route::get('/myticket', [App\Http\Controllers\Api\UserController::class, 'myticketData']);
 	Route::post('/myticketDetail', [App\Http\Controllers\Api\UserController::class, 'myticketDetail']);
 	Route::post('/myticketPickup', [App\Http\Controllers\Api\UserController::class, 'myticketPickup']);

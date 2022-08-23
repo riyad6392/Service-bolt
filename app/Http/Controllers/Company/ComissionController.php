@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Personnel;
+use App\Models\Service;
+use App\Models\Inventory;
+use App\Models\Quote;
 use Illuminate\Support\Str;
 use DB;
 
@@ -34,7 +37,10 @@ class ComissionController extends Controller
         } else {
            return redirect()->back();
         }
+
         $pdata = Personnel::where('userid',$auth_id)->get();
+        $tickedata = Quote::where('personnelid',15)->orderBy('id','desc')->first();
+        //PaymentSetting::where('pid',15)->where('paymentbase','')
         return view('report.commission',compact('auth_id','pdata'));
     }
 }

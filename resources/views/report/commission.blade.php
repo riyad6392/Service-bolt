@@ -141,11 +141,6 @@
       <div class="card">
      <div class="card-body">
   
-     @php
-      $pagedata = App\Models\Managefield::select('*')
-      ->where('page','companycustomer')->where('userid',$auth_id)->get();
-     $cpagedta = count($pagedata);
-     @endphp
      <div class="col-lg-12">
      <div class="table-responsive">
       <table id="example" class="table no-wrap table-new table-list" style="position: relative;">

@@ -132,7 +132,7 @@ class HomeController extends Controller
         } 
         //dd($workerids);
     DB::enableQuerylog();
-    $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->rightJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('personnel.id',$workerids)->orderBy('quote.id','ASC')->get();
+    $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long')->rightJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('personnel.id',$workerids)->orderBy('quote.id','ASC')->get();
 
      //$scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->orderBy('quote.id','ASC')->get();
       //dd(DB::getQuerylog());

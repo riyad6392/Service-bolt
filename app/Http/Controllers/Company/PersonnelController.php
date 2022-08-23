@@ -932,7 +932,6 @@ class PersonnelController extends Controller
     }
 
     public function paymentsettingcreate(Request $request) {
-      
       $auth_id = auth()->user()->id;
       
       if(auth()->user()->role == 'company') {
@@ -1061,6 +1060,10 @@ class PersonnelController extends Controller
             if($request->hiredate!=null) {
              $paymentSetting->hiredate = $request->hiredate; 
             }
+
+            if($request->amountallamount!=null) {
+             $paymentSetting->allspvalue = $request->amountallamount; 
+            }
             $paymentSetting->save();
         }  
       $paymentSetting4 = new PaymentSetting;
@@ -1087,6 +1090,9 @@ class PersonnelController extends Controller
             $paymentSetting4->type=$typevalue;
             if($request->hiredate!=null) {
              $paymentSetting4->hiredate = $request->hiredate; 
+            }
+            if($request->percentallamount!=null) {
+             $paymentSetting4->allspvalue = $request->percentallamount; 
             }
             $paymentSetting4->save();
         }
