@@ -65,7 +65,7 @@ class UserController extends Controller
             return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
+        if(Auth::attempt(['email' => request('email'), 'password' => request('password'), 'role' => 'worker'])){ 
             $user = Auth::user(); 
             $token =  auth()->user()->createToken('API Token')->plainTextToken;
             
