@@ -96,6 +96,83 @@
         outline: none;
         border: none;
     }
+
+    .table-new tbody td,
+    .table-new thead th {
+        z-index: 1;
+        padding: 15px 6px !important;
+    }
+
+    .glyphicon.glyphicon-plus.plusIcon {
+        background: yellow;
+        width: 25px;
+        height: 25px;
+        /* align-items: center; */
+        justify-content: center;
+        display: flex;
+        margin: 0px 4px;
+        border-radius: 50px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .glyphicon.glyphicon-minus.plusIcon {
+        background: yellow;
+        width: 25px;
+        height: 25px;
+        /* align-items: center; */
+        justify-content: center;
+        display: flex;
+        margin: 0px 4px;
+        border-radius: 50px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    input#flexCheckDefault::before {
+        background-color: red;
+    }
+
+    input#flexCheckDefault {
+        border-radius: 5px;
+        outline: none;
+        border: 1px solid gray;
+    }
+
+    .table-new tbody tr::after {
+        content: '';
+        width: 100%;
+        position: absolute;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        height: 100%;
+        z-index: 0;
+        /* border: 1px solid yellow; */
+        border-radius: 15px;
+    }
+
+    /* .checkbox:checked:before {
+        background-color: yellow;
+        outline: none;
+        border: none;
+        
+    }
+
+    input#flexCheckDefault {
+        background-color: yellow;
+        outline: none;
+        border: none;
+        
+    } */
+
+    tr.explode.hide {
+    border: 2px solid yellow;
+}
+
+/* table#example {
+    border: 2px solid red;
+} */
 </style>
 <div class="content">
      <div class="row">
@@ -146,76 +223,22 @@
       <table id="example" class="table no-wrap table-new table-list" style="position: relative;">
           <thead>
            <tr>
-                    <th style="font-weight:400;">Personal Name</th>
-                    <th style="font-weight:400;">Tickets Worked</th>
-                    <th style="font-weight:400;">Flat Amount</th>
-                    <th style="font-weight:400;">Variable Amount</th>
-                    <th style="font-weight:400;">Totol Payout Amount</th>
-                    <th colspan="" style="font-weight:400;">Action</th>
+                    <th style="font-weight:400;font-size:15px;">Personal Name</th>
+                    <th style="font-weight:400;font-size:15px;">Tickets Worked</th>
+                    <th style="font-weight:400;font-size:15px;">Flat Amount</th>
+                    <th style="font-weight:400;font-size:15px;">Variable Amount</th>
+                    <th style="font-weight:400;font-size:15px;">Totol Payout Amount</th>
+                    <th colspan="" style="font-weight:400;font-size:15px;">Action</th>
                 </tr>
           </thead>
+          
+
           <tbody>
             <tr class="sub-container">
-                <td>
-                 <span class="glyphicon glyphicon-plus plusIcon">+</span>
-                 <span class="glyphicon glyphicon-minus plusIcon" style="display:none">-</span>
+                <td style="display: flex;">
+                    <div class="glyphicon glyphicon-plus plusIcon">+</div>
+                    <div class="glyphicon glyphicon-minus plusIcon" style="display:none">-</div>
                     Adom Norsworthy
-                </td>
-                    <td>2</td>
-                    <td>$65.00</td>
-                    <td>$7.55</td>
-                    <td>$72.55</td>
-                    <td>
-                        <i class="fa fa-cog" aria-hidden="true"></i>
-                        <input class="form-check-input flexCheckDefault" type="checkbox" value="" id="flexCheckDefault">
-                    </td>
-                </tr>
-
-                <tr class="explode hide" style="display:none;">
-                    <td colspan="8" id="toggle_text">
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr style="font-family: system-ui;">
-                                    <th>Date</th>
-                                    <th>Ticket#</th>
-                                    <th>Services</th>
-                                    <th>Products</th>
-                                    <th>Flat Amount</th>
-                                    <th>Variable Amount</th>
-                                    <th>Total Payout</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="font-size: 17px; border:none; background:white;">
-                                    <td>8-16-22</td>
-                                    <td>169</td>
-                                    <td>Moving , Weed Eet</td>
-                                    <td>iron Pipe</td>
-                                    <td>$25</td>
-                                    <td>$7.55</td>
-                                    <td>$32.55</td>
-                                </tr>
-                                <tr style="font-size: 17px;">
-                                    <td>8-16-22</td>
-                                    <td>169</td>
-                                    <td>Moving , Weed Eet</td>
-                                    <td>iron Pipe</td>
-                                    <td>$25</td>
-                                    <td>$7.55</td>
-                                    <td>$32.55</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-          </tbody>
-
-          <tbody>
-            <tr class="sub-container">
-                <td>
-                 <span class="glyphicon glyphicon-plus plusIcon">+</span>
-                 <span class="glyphicon glyphicon-minus plusIcon" style="display:none">-</span>
-                    Mike Norsworthy
                 </td>
                     <td>2</td>
                     <td>$65.00</td>
