@@ -447,8 +447,10 @@ class UserController extends Controller
 
       $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get(); 
 
+     $tenture = Tenture::select('tenturename')->where('status','Active')->get();  
+
         if ($customerData) {
-                return response()->json(['status'=>1,'message'=>'success','data'=>$customerData],$this->successStatus);
+                return response()->json(['status'=>1,'message'=>'success','customer'=>$customerData,'tenture'=>$tenture],$this->successStatus);
         } else {
             return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
