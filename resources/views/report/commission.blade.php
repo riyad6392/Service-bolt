@@ -278,7 +278,7 @@
                         $ptamount1 = 0;
                         foreach($pexplode_id as $key=>$pid) {
                             $pdata = App\Models\Inventory::select('id','price')->where('products.id',$pid)->first();
-                            $ptamount1 += $pdata->price*$percentall[0]->allspvalue/100;               
+                            @$ptamount1 += @$pdata->price*@$percentall[0]->allspvalue/100;               
                         }  
                         $ptamounttotal =$ptamount+$ptamount1;
                     }
@@ -348,9 +348,8 @@
 
                                          foreach($pdata as $key2=>$value2) {
 
-                                           $ptamount1 += $value2->price*$percentall[0]->allspvalue/100;
-                                           $ptamount1333 =  $ptamount1 *count($servicedata);
-                                           $pname[] = $value2->productname;
+                                           @$ptamount1 += @$value2->price*@$percentall[0]->allspvalue/100;
+                                           @$pname[] = @$value2->productname;
                                            $productname = implode(',',$pname);
                                          }
                                          $ptamounttotal =$ptamount+$ptamount1;
