@@ -170,9 +170,19 @@
     border: 2px solid yellow;
 }
 
-/* table#example {
-    border: 2px solid red;
-} */
+.table-new .tbody-1:after {
+        content: '';
+        width: 100%;
+        position: absolute;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        height: 100%;
+        z-index: 0;
+        border: 1px solid yellow;
+        border-radius: 15px;
+        top:0px;
+    }
 </style>
 <div class="content">
      <div class="row">
@@ -233,7 +243,9 @@
           </thead>
           
 
-          <tbody>
+          
+
+          <tbody class="tbody-1">
             <tr class="sub-container">
                 <td style="display: flex;">
                     <div class="glyphicon glyphicon-plus plusIcon">+</div>
