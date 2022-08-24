@@ -1425,8 +1425,8 @@ class SchedulerController extends Controller
             'vibrate' => 1,
             "date_time" => date("Y-m-d H:i:s"),
             'message' => $msgarray['msg'],
-            "badge":1,
-            "sound":"default"
+            "badge"=>1,
+            "sound"=>"default"
         );
 
         $fcmFields = array(
