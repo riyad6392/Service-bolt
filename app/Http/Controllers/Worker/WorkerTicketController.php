@@ -306,13 +306,14 @@ class WorkerTicketController extends Controller
             $ticket = Quote::where('id', $request->ticketid)->get()->first();
             
             $ticket->ticket_status = 3;
+            $ticket->ticketdate = date('Y-m-d');
             if($request->pointckbox) {
-            $cheklist =implode(",", $request->pointckbox);
-            $ticket->checklist =  $cheklist;
-          } else {
-            $ticket->checklist = null;
-          }
-
+              $cheklist =implode(",", $request->pointckbox);
+              $ticket->checklist =  $cheklist;
+            } else {
+              $ticket->checklist = null;
+            }
+          
             $ticket->save();
 
 

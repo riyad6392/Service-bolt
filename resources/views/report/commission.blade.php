@@ -185,6 +185,8 @@
     }
 </style>
 <div class="content">
+    <form method="post" action="{{route('company.commisionreport') }}" class="row pe-0">
+      @csrf
      <div class="row">
       <div class="col-md-4">
         <div class="side-h3">
@@ -208,16 +210,18 @@
           <label style="visibility:hidden;">To Date</label>
           <input type="date" id="until" value="" name="until" class="form-control date2">
         </div>
+    
+      <input type="hidden" name="phiddenid" id="phiddenid" value="">
      <div class="col-md-2">
         <div class="side-h3">
           <select class="form-select puser" name="pid" id="pid" required="">
-            <option value="all">All Personnel</option> 
             @foreach($pdata as $key => $value)
             <option value="{{$value->id}}" @if(@$personnelid ==  $value->id) selected @endif> {{$value->personnelname}}</option>
             @endforeach
           </select>
         </div>
      </div>
+    
      <div class="col-md-2">
        <div class="side-h3">
          <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
@@ -243,25 +247,58 @@
           </thead>
           
 
-          
-
           <tbody class="tbody-1">
-            <tr class="sub-container">
-                <td style="display: flex;">
-                    <div class="glyphicon glyphicon-plus plusIcon">+</div>
-                    <div class="glyphicon glyphicon-minus plusIcon" style="display:none">-</div>
-                    Adom Norsworthy
-                </td>
-                    <td>2</td>
-                    <td>$65.00</td>
-                    <td>$7.55</td>
-                    <td>$72.55</td>
+            @foreach($tickedata as $key => $value)
+
+                @php
+                  $ttlflat = 0;
+                  $ptamounttotal = 0;
+                  $explode_id = explode(',', $value->serviceid);
+                  $servicedata = App\Models\Service::select('servicename','price')
+                    ->whereIn('services.id',$explode_id)->get();
+
+                  $pexplode_id = explode(',', $value->product_id);
+                  $pdata = App\Models\Inventory::select('id','price')
+                    ->whereIn('products.id',$pexplode_id)->get();
+                     
+                    if(count($amountall)>0) {
+                        $flatvalue = $amountall[0]->allspvalue;
+                        $flatv = $flatvalue*count($explode_id);
+                        $pvalue = $flatvalue *count($pexplode_id);
+                        $ttlflat = $flatv+$pvalue;
+                    }
+
+                    if(count($percentall)>0) {
+                        $ptamount = 0;
+                        foreach($explode_id as $key=>$serviceid) {
+                            $servicedata = App\Models\Service::select('servicename','price')
+                            ->where('services.id',$serviceid)->first();
+                            $ptamount += $servicedata->price*$percentall[0]->allspvalue/100;               
+                         }   
+                        $ptamount1 = 0;
+                        foreach($pexplode_id as $key=>$pid) {
+                            $pdata = App\Models\Inventory::select('id','price')->where('products.id',$pid)->first();
+                            $ptamount1 += $pdata->price*$percentall[0]->allspvalue/100;               
+                        }  
+                        $ptamounttotal =$ptamount+$ptamount1;
+                    }
+                @endphp
+                <tr class="sub-container">
+                    <td style="display: flex;">
+                                                    <div class="glyphicon glyphicon-plus plusIcon">+</div>
+                                                    <div class="glyphicon glyphicon-minus plusIcon" style="display:none">-</div>
+                        {{$value->personnelname}}
+                    </td>
+                    <td>{{$value->counttotal}}</td>
+                    <td>${{@$ttlflat}}</td>
+                    <td>${{@$ptamounttotal}}</td>
+                    <td>${{@$ttlflat+@$ptamounttotal}}</td>
                     <td>
                         <i class="fa fa-cog" aria-hidden="true"></i>
                         <input class="form-check-input flexCheckDefault" type="checkbox" value="" id="flexCheckDefault">
                     </td>
                 </tr>
-
+            @endforeach
                 <tr class="explode hide" style="display:none;">
                     <td colspan="8" id="toggle_text">
                         <table class="table table-condensed">
@@ -277,30 +314,64 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr style="font-size: 17px; border:none; background:white;">
-                                    <td>8-16-22</td>
-                                    <td>169</td>
-                                    <td>Moving , Weed Eet</td>
-                                    <td>iron Pipe</td>
-                                    <td>$25</td>
-                                    <td>$7.55</td>
-                                    <td>$32.55</td>
-                                </tr>
-                                <tr style="font-size: 17px;">
-                                    <td>8-16-22</td>
-                                    <td>169</td>
-                                    <td>Moving , Weed Eet</td>
-                                    <td>iron Pipe</td>
-                                    <td>$25</td>
-                                    <td>$7.55</td>
-                                    <td>$32.55</td>
-                                </tr>
+                                @foreach($tickedatadetails as $key=>$value)
+                                    @php
+                                      $explode_id = explode(',', $value->serviceid);
+                                      $servicedata = App\Models\Service::select('servicename','price')
+                                        ->whereIn('services.id',$explode_id)->get();
+
+                                      $pexplode_id = explode(',', $value->product_id);
+                                      $pdata = App\Models\Inventory::select('id','price','productname')
+                                        ->whereIn('products.id',$pexplode_id)->get();
+                                        $ttlflat = 0;
+                                        $ptamounttotal = 0;
+                                        if(count($amountall)>0) {
+                                            $flatvalue = $amountall[0]->allspvalue;
+
+                                            $flatv = $flatvalue*count($explode_id); 
+                                            $pvalue  =  $flatvalue*count($pexplode_id);
+                                            
+                                            $ttlflat = $flatv+$pvalue;
+                                        }
+
+                                        if(count($percentall)>0) {
+                                         $ptamount = 0;
+                                         $sname = array();
+                                         foreach($servicedata as $key1=>$value1) {
+                                           $ptamount += $value1->price*$percentall[0]->allspvalue/100;
+                                           $ptamount222 =  $ptamount *count($servicedata);
+                                           $sname[] = $value1->servicename;
+                                           $servname = implode(',',$sname);
+                                         }
+                                         $ptamount1 = 0;
+                                         $pname = array();
+
+                                         foreach($pdata as $key2=>$value2) {
+
+                                           $ptamount1 += $value2->price*$percentall[0]->allspvalue/100;
+                                           $ptamount1333 =  $ptamount1 *count($servicedata);
+                                           $pname[] = $value2->productname;
+                                           $productname = implode(',',$pname);
+                                         }
+                                         $ptamounttotal =$ptamount+$ptamount1;
+                                         
+                                        }
+                                    @endphp
+                                    <tr style="font-size: 17px; border:none; background:white;">
+                                        <td>{{$value->ticketdate}}</td>
+                                        <td>{{$value->id}}</td>
+                                        <td>{{@$servname}}</td>
+                                        <td>{{@$productname}}</td>
+                                        <td>${{@$ttlflat}}</td>
+                                        <td>${{@$ptamounttotal}}</td>
+                                        <td>${{@$ttlflat+@$ptamounttotal}}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </td>
                 </tr>
           </tbody>
-
         </table>
       </div>
      </div>
@@ -310,6 +381,7 @@
      </div>
      </div>
   </div>
+</form>
    </div>
   </div>
      
@@ -319,9 +391,9 @@
 <script type="text/javascript">
     $('.dropify').dropify();
     $(document).ready(function() {
-     $('#example').DataTable({
-      "order": [[ 0, "desc" ]]
-      });
+     // $('#example').DataTable({
+     //  "order": [[ 0, "desc" ]]
+     //  });
     });
 
     $.ajaxSetup({
@@ -356,6 +428,12 @@
         else {
             $(this).closest("tr").next("tr").children("td").slideDown(350);
         }
+    });
+
+    $('.puser').on('change', function() {
+      var pid = this.value;
+      $("#phiddenid").val(pid);
+      this.form.submit();
     });
 </script>
 @endsection

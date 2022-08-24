@@ -38,14 +38,26 @@ class ComissionController extends Controller
         } else {
            return redirect()->back();
         }
-
+        
         @$pdata = Personnel::where('userid',$auth_id)->get();
-        @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',15)->where('quote.ticket_status',3)->groupBy('quote.personnelid')->get();
+
+        if($request->pid==null) {
+            $personnelid = $pdata[0]->id;
+        } else {
+            $personnelid = $request->pid;
+        }
+
+        @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->where('quote.ticket_status',3)->groupBy('quote.personnelid')->get();
+
+        @$tickedatadetails = Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->where('quote.ticket_status',3)->get();
 
         //->select(DB::raw('quote.*, GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS agreements'),'personnel.personnelname')
         //dd($tickedata);
-        @$percentall=PaymentSetting::where('pid',15)->where('paymentbase','commission')->where('type','percent')->get();
-        @$amountall=PaymentSetting::where('pid',15)->where('paymentbase','commission')->where('type','amount')->get();
-        return view('report.commission',compact('auth_id','pdata','tickedata','percentall','amountall'));
+        @$percentall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','percent')->get();
+        
+        //$comisiondata = json_decode($percentall[0]->contentcommission);
+        //dd($comisiondata);
+        @$amountall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','amount')->get();
+        return view('report.commission',compact('auth_id','pdata','tickedata','percentall','amountall','tickedatadetails','personnelid'));
     }
 }
