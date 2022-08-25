@@ -219,7 +219,7 @@ class CustomerController extends Controller
         $wclass = "active-focus";
        }
       $html ='<div class="add-customer-modal">
-                <h5>Create New Quote</h5>
+                <h5>Create New Ticket</h5>
                </div>';
          
              
@@ -243,7 +243,7 @@ class CustomerController extends Controller
       </div>
     </div>
     <div class="col-md-12 mb-3">
-        <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="servicename[]" id="servicename" style="height:auto;">';
+        <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="servicename[]" id="servicename" style="height:auto;" required="">';
               foreach($services as $key => $value) {
                 $html .='<option value="'.$value->id.'" data-hour="'.$value->time.'" data-min="'.$value->minute.'">'.$value->servicename.'</option>';
               }
@@ -293,7 +293,7 @@ class CustomerController extends Controller
      </div> <div class="col-lg-6 mb-3">
       <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
     </div><div class="col-lg-6 mb-3">
-      <button class="btn btn-add btn-block" type="submit">Add a Quote</button>
+      <button class="btn btn-add btn-block" type="submit">Add a Ticket</button>
     </div><div class="col-lg-12">
      <button class="btn btn-dark btn-block btn-lg p-2" type="submit"><img src="images/share-2.png"  alt=""/> Share</button>
     </div></div>';
@@ -582,7 +582,7 @@ class CustomerController extends Controller
           <div class="col-md-12 mb-2">
             <label>Email</label>
 
-            <input type="email" class="form-control" placeholder="Email" value="'.$customer[0]->email.'" name="email" id="email" required>
+            <input type="email" class="form-control" placeholder="Email" value="'.$customer[0]->email.'" name="email" id="email">
           </div>
           <div class="col-md-12 mb-3">
           <label>Select Services</label>
