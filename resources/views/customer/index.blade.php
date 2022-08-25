@@ -222,7 +222,7 @@
                   <td>{{$customer->phonenumber}}</td>
                   @endif
                   @if($pagecolumn->columname=="email")
-                  <td>{{$customer->email}}</td>
+                  <td>@if($customer->email) {{$customer->email}} @else ---- @endif</td>
                   @endif
                   @if($pagecolumn->columname=="companyname")
                   <td>{{$customer->companyname}}</td>
@@ -324,7 +324,7 @@
      
      <div class="col-md-6 mb-3">
     
-     <input type="email" class="form-control" placeholder="Email" name="email" id="email" required="">
+     <input type="email" class="form-control" placeholder="Email" name="email" id="email" >
      
      </div>
      

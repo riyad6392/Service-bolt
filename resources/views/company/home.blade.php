@@ -240,7 +240,6 @@
 
   <div class="row mt-4">
     @php
-
       $i=1;
     @endphp
     
@@ -274,6 +273,7 @@
       @endphp
   @endforeach
   </div>
+ 
   
 </div>
   
@@ -341,7 +341,7 @@
      
      </div>
 
-     <div class="col-md-5 mb-4">
+     <div class="col-md-5 mb-4 ">
 
        <div class="card">
         <div class="card-body text-center pt-4">
@@ -360,7 +360,7 @@
       
      </div>
 
-     <div class="col-md-12 mb-4">
+     <div class="col-md-12 mb-4 d-none">
       <div class="card">
      <div class="card-body">
      <div class="card-header transperent">
@@ -598,7 +598,7 @@ Chart.elements.Arc.prototype.draw = function() {
 var config = {
     type: 'doughnut',
     data: {
-        labels: ['Blue','Pink','Grey','green'],
+        labels: ['{{@$serviceinfo[0]->servicename}}', '{{@$serviceinfo[1]->servicename}}', '{{@$serviceinfo[2]->servicename}}', '{{@$serviceinfo[3]->servicename}}'],
         datasets: [
           {
               data: [{{@$serviceinfo[0]->total}}, {{@$serviceinfo[1]->total}}, {{@$serviceinfo[2]->total}}, {{@$serviceinfo[3]->total}}],
