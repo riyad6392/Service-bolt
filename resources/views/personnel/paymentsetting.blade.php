@@ -688,7 +688,8 @@
     width: 100%;margin: 0;
     padding-top: 10px;
     padding-bottom: 12px;">1. Hire Date:</p>
-          <input type="date" name="hiredate" class="form-control dates_picker">
+
+          <input type="date" name="hiredate" value="{{@$paymentdata[0]->hiredate}}" class="form-control dates_picker">
         </div>
          <div class="col-md-12 text-center" >
             <button type="submit" class="btn btn-add px-5 text-center" style="pointer-events: block;">Save</button></div>

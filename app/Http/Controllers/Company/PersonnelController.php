@@ -1062,7 +1062,7 @@ class PersonnelController extends Controller
 
             foreach($mainarray1 as $key=> $value) {
                 $jsonaary =array(
-                  "id"=>$value,
+                  "id"=>"{$value}",
                   "price"=>$amountvaluearray[$key],
                 );
               array_push($datajsonp,$jsonaary);
@@ -1108,7 +1108,7 @@ class PersonnelController extends Controller
                 $pvaluearray[$key] = 0;
               } 
                 $jsonaary =array(
-                  "id"=>$value1,
+                  "id"=>"{$value1}",
                   "price"=>$pvaluearray[$key],
                 );
               array_push($datajsonp1,$jsonaary);

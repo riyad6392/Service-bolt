@@ -55,9 +55,11 @@ class ComissionController extends Controller
         //dd($tickedata);
         @$percentall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','percent')->get();
         
-        //$comisiondata = json_decode($percentall[0]->contentcommission);
-        //dd($comisiondata);
+        @$comisiondatapercent = $percentall[0]->contentcommission;
+        
         @$amountall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','amount')->get();
-        return view('report.commission',compact('auth_id','pdata','tickedata','percentall','amountall','tickedatadetails','personnelid'));
+        @$comisiondataamount = $amountall[0]->contentcommission;
+        //dd($comisiondataamount);
+        return view('report.commission',compact('auth_id','pdata','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent'));
     }
 }

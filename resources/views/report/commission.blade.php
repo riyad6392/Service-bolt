@@ -236,7 +236,7 @@
      <div class="table-responsive">
       <table id="example" class="table no-wrap table-new table-list" style="position: relative;">
           <thead>
-           <tr>
+                <tr>
                     <th style="font-weight:400;font-size:15px;">Personal Name</th>
                     <th style="font-weight:400;font-size:15px;">Tickets Worked</th>
                     <th style="font-weight:400;font-size:15px;">Flat Amount</th>
@@ -254,6 +254,7 @@
                   $ttlflat = 0;
                   $ptamounttotal = 0;
                   $explode_id = explode(',', $value->serviceid);
+                  
                   $servicedata = App\Models\Service::select('servicename','price')
                     ->whereIn('services.id',$explode_id)->get();
 
