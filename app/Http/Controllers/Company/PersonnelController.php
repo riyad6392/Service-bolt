@@ -1024,14 +1024,16 @@ class PersonnelController extends Controller
       $services = Service::select('id','servicename')->where('userid',$auth_id)->get();
         $products = Inventory::select('id','productname')->where('user_id',$auth_id)->get();
 
-      foreach($services as $key=>$value) {
+        foreach($services as $key=>$value) {
             $servrname[] = $value->servicename;
             $sid[] = $value->id;
         }
+
         foreach($products as $key1=>$value1) {
             $productname[] = $value1->productname;
             $pid[] = $value1->id;
         }
+
 
         $mainarray = array_merge($servrname,$productname);
         $mainarray1 = array_merge($sid,$pid);  
@@ -1060,17 +1062,31 @@ class PersonnelController extends Controller
               
             }
 
-            foreach($mainarray1 as $key=> $value) {
+            /*foreach($mainarray1 as $key=> $value) {
                 $jsonaary =array(
                   "id"=>"{$value}",
                   "price"=>$amountvaluearray[$key],
                 );
               array_push($datajsonp,$jsonaary);
+            }*/
+            foreach($sid as $key=>$value) {
+              $jsonaary =array(
+                  "id"=>"{$value}",
+                  "price"=>$amountvaluearray[$key],
+                );
+              array_push($datajsonp,$jsonaary);
+            }
+            $datajsonpp = array();
+            foreach($pid as $key=>$value) {
+              $jsonaary =array(
+                  "id"=>"{$value}",
+                  "price"=>$amountvaluearray[$key+count($sid)],
+                );
+              array_push($datajsonpp,$jsonaary);
             }
 
+            $paymentSetting->contentcommission=json_encode(array('service'=>$datajsonp,'product'=>$datajsonpp));
             $paymentSetting->content=json_encode($datajson);
-
-            $paymentSetting->contentcommission=json_encode($datajsonp);
 
             $paymentSetting->type=$typevalue;
             if($request->hiredate!=null) {
@@ -1103,20 +1119,42 @@ class PersonnelController extends Controller
               array_push($datajson1,[$servicename1=>$servicevalue1]);
             }
 
-            foreach($mainarray1 as $key=> $value1) {
-             if($pvaluearray[$key]==null) {
-                $pvaluearray[$key] = 0;
-              } 
-                $jsonaary =array(
-                  "id"=>"{$value1}",
-                  "price"=>$pvaluearray[$key],
-                );
-              array_push($datajsonp1,$jsonaary);
-            }
+            // foreach($mainarray1 as $key=> $value1) {
+            //  if($pvaluearray[$key]==null) {
+            //     $pvaluearray[$key] = 0;
+            //   } 
+            //     $jsonaary =array(
+            //       "id"=>"{$value1}",
+            //       "price"=>$pvaluearray[$key],
+            //     );
+            //   array_push($datajsonp1,$jsonaary);
+            // }
+
+          foreach($sid as $key=>$value1) {
+            // if($pvaluearray[$key]==null) {
+            //   $pvaluearray[$key] = 0;
+            // } 
+            $jsonaary =array(
+                "id"=>"{$value1}",
+                "price"=>$pvaluearray[$key],
+              );
+            array_push($datajsonp1,$jsonaary);
+          }
+          $datajsonpp2 = array();
+          foreach($pid as $key=>$value1) {
+            $jsonaary =array(
+                "id"=>"{$value1}",
+                "price"=>$pvaluearray[$key+count($sid)],
+              );
+            array_push($datajsonpp2,$jsonaary);
+          }
+
+            $paymentSetting4->contentcommission=json_encode(array('service'=>$datajsonp1,'product'=>$datajsonpp2));
+
+            //$paymentSetting4->contentcommission=json_encode($datajsonp1);
 
             $paymentSetting4->content=json_encode($datajson1);
-            $paymentSetting4->contentcommission=json_encode($datajsonp1);
-
+            
             $paymentSetting4->type=$typevalue;
             if($request->hiredate!=null) {
              $paymentSetting4->hiredate = $request->hiredate; 

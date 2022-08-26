@@ -237,11 +237,11 @@
       <table id="example" class="table no-wrap table-new table-list" style="position: relative;">
           <thead>
                 <tr>
-                    <th style="font-weight:400;font-size:15px;">Personal Name</th>
+                    <th style="font-weight:400;font-size:15px;">Personnel Name</th>
                     <th style="font-weight:400;font-size:15px;">Tickets Worked</th>
                     <th style="font-weight:400;font-size:15px;">Flat Amount</th>
                     <th style="font-weight:400;font-size:15px;">Variable Amount</th>
-                    <th style="font-weight:400;font-size:15px;">Totol Payout Amount</th>
+                    <th style="font-weight:400;font-size:15px;">Totol Payout</th>
                     <th colspan="" style="font-weight:400;font-size:15px;">Action</th>
                 </tr>
           </thead>
@@ -261,25 +261,89 @@
                   $pexplode_id = explode(',', $value->product_id);
                   $pdata = App\Models\Inventory::select('id','price')
                     ->whereIn('products.id',$pexplode_id)->get();
+                     $ttlflat=0;
                      
+                     $ttlflat2 = 0;
+
                     if(count($amountall)>0) {
-                        $flatvalue = $amountall[0]->allspvalue;
-                        $flatv = $flatvalue*count($explode_id);
-                        $pvalue = $flatvalue *count($pexplode_id);
-                        $ttlflat = $flatv+$pvalue;
+                        if($amountall[0]->allspvalue==null) {
+                            foreach($explode_id as $servicekey =>$servicevalue) {
+
+                                  foreach($comisiondataamount->service as $key=>$sitem)
+                                  {
+                                    if($sitem->id==$servicevalue && $sitem->price!=0)
+                                    {
+                                                $servicevalue."==={$sitem->id}price==".  $sitem->price."<br>";
+                                        $ttlflat2 += $sitem->price;
+                                    }
+                                  }
+                                  $ttlflat1 = 0;
+
+                                foreach($pexplode_id as $servicekey =>$servicevalue) {
+                                  $ttlflat1 = 0;
+
+                                  foreach($comisiondataamount->product as $key=>$sitem1)
+                                      {
+                                        if($sitem1->id==$servicevalue && $sitem1->price!=0)
+                                        {
+                                                   // $servicevalue."==={$sitem->id}price==".  $sitem1->price."<br>";
+                                            $ttlflat1 += $sitem1->price;
+                                        }
+                                      }
+                                }     
+                                 
+                                  $ttlflat =$ttlflat1+$ttlflat2;
+                            } 
+                        } else {
+                            $flatvalue = $amountall[0]->allspvalue;
+                            $flatv = $flatvalue*count($explode_id);
+                            $pvalue = $flatvalue *count($pexplode_id);
+                            $ttlflat = $flatv+$pvalue;
+                        }
                     }
 
                     if(count($percentall)>0) {
                         $ptamount = 0;
-                        foreach($explode_id as $key=>$serviceid) {
-                            $servicedata = App\Models\Service::select('servicename','price')
-                            ->where('services.id',$serviceid)->first();
-                            $ptamount += $servicedata->price*$percentall[0]->allspvalue/100;               
-                         }   
                         $ptamount1 = 0;
-                        foreach($pexplode_id as $key=>$pid) {
-                            $pdata = App\Models\Inventory::select('id','price')->where('products.id',$pid)->first();
-                            @$ptamount1 += @$pdata->price*@$percentall[0]->allspvalue/100;               
+                        if($percentall[0]->allspvalue==null) {
+                            foreach($explode_id as $servicekey =>$servicevalue) {
+                                foreach($comisiondatapercent->service as $key=>$sitem)
+                                {
+                                  if($sitem->id==$servicevalue && $sitem->price!=0)
+                                  {
+                                    //echo $servicevalue."==={$sitem->id}price==".  $sitem->price."<br>";
+
+                                    $servicedata = App\Models\Service::select('servicename','price')
+                                    ->where('services.id',$sitem->id)->first();
+
+                                    $ptamount += $servicedata->price*$sitem->price/100;               
+                                  }
+                                }
+                                
+                          } 
+                          
+                          foreach($pexplode_id as $key=>$pid) {
+                                foreach($comisiondatapercent->product as $key=>$sitem)
+                                {
+                                  if($sitem->id==$pid && $sitem->price!=0)
+                                  {
+                                    $pdata = App\Models\Inventory::select('id','price')->where('products.id',$sitem->id)->first();
+                                    
+                                    @$ptamount1 += @$pdata->price*@$sitem->price/100;               
+                                  }
+                                }
+                          }
+                        } else {
+                            foreach($explode_id as $key=>$serviceid) {
+                                $servicedata = App\Models\Service::select('servicename','price')
+                                ->where('services.id',$serviceid)->first();
+                                $ptamount += $servicedata->price*$percentall[0]->allspvalue/100;               
+                             }   
+                            $ptamount1 = 0;
+                            foreach($pexplode_id as $key=>$pid) {
+                                $pdata = App\Models\Inventory::select('id','price')->where('products.id',$pid)->first();
+                                @$ptamount1 += @$pdata->price*@$percentall[0]->allspvalue/100;               
+                            }
                         }  
                         $ptamounttotal =$ptamount+$ptamount1;
                     }
@@ -317,6 +381,7 @@
                             <tbody>
                                 @foreach($tickedatadetails as $key=>$value)
                                     @php
+
                                       $explode_id = explode(',', $value->serviceid);
                                       $servicedata = App\Models\Service::select('servicename','price')
                                         ->whereIn('services.id',$explode_id)->get();
@@ -327,32 +392,84 @@
                                         $ttlflat = 0;
                                         $ptamounttotal = 0;
                                         if(count($amountall)>0) {
-                                            $flatvalue = $amountall[0]->allspvalue;
 
-                                            $flatv = $flatvalue*count($explode_id); 
-                                            $pvalue  =  $flatvalue*count($pexplode_id);
-                                            
-                                            $ttlflat = $flatv+$pvalue;
+                                            if($amountall[0]->allspvalue==null) {
+                                                
+                                                foreach($explode_id as $servicekey =>$servicevalue) {
+                                                    foreach($comisiondataamount->service as $key=>$sitem)
+                                                    {
+                                                        if($sitem->id==$servicevalue && $sitem->price!=0)
+                                                        {
+                                                        //echo $servicevalue."==={$sitem->id}price==".  $sitem->price."<br>";
+                                                          $ttlflat += $sitem->price;
+                                                        }
+                                                    }
+                                                }
+                                                foreach($pexplode_id as $servicekey =>$servicevalue) {
+                                                    foreach($comisiondataamount->product as $key=>$sitem1)
+                                                    {
+                                                        if($sitem->id==$servicevalue && $sitem1->price!=0)
+                                                        {
+                                                        //echo $servicevalue."==={$sitem->id}price==".  $sitem->price."<br>";
+                                                          $ttlflat += $sitem1->price;
+                                                        }
+                                                    }
+                                                }
+                                                
+                                            } else {
+                                                $flatvalue = $amountall[0]->allspvalue;
+
+                                                $flatv = $flatvalue*count($explode_id); 
+                                                $pvalue  =  $flatvalue*count($pexplode_id);
+                                                
+                                                $ttlflat = $flatv+$pvalue;
+                                            }
                                         }
 
                                         if(count($percentall)>0) {
                                          $ptamount = 0;
                                          $sname = array();
+                                         $ptamount1 = 0;
+                                         $pname = array();
+
+                                         if($percentall[0]->allspvalue == null) {
+                                            foreach($explode_id as $servicekey =>$servicevalue) {
+                                                foreach($comisiondatapercent->service as $key=>$sitem)
+                                                {
+                                                  if($sitem->id==$servicevalue && $sitem->price!=0)
+                                                  {
+                                                    $servicedata = App\Models\Service::select('servicename','price')
+                                                    ->where('services.id',$sitem->id)->first();
+                                                    $ptamount += $servicedata->price*$sitem->price/100;               
+                                                  }
+                                                }
+                                            }
+                                            foreach($pexplode_id as $key=>$pid) {
+                                                foreach($comisiondatapercent->product as $key=>$sitem)
+                                                {
+                                                  if($sitem->id==$pid && $sitem->price!=0)
+                                                  {
+                                                    $pdata = App\Models\Inventory::select('id','price')->where('products.id',$sitem->id)->first();
+                                                    
+                                                    @$ptamount1 += @$pdata->price*@$sitem->price/100;               
+                                                  }
+                                                }
+                                            }
+                                         } else {
                                          foreach($servicedata as $key1=>$value1) {
                                            $ptamount += $value1->price*$percentall[0]->allspvalue/100;
                                            $ptamount222 =  $ptamount *count($servicedata);
                                            $sname[] = $value1->servicename;
                                            $servname = implode(',',$sname);
                                          }
-                                         $ptamount1 = 0;
-                                         $pname = array();
-
+                                         
                                          foreach($pdata as $key2=>$value2) {
 
                                            @$ptamount1 += @$value2->price*@$percentall[0]->allspvalue/100;
                                            @$pname[] = @$value2->productname;
                                            $productname = implode(',',$pname);
                                          }
+                                     }
                                          $ptamounttotal =$ptamount+$ptamount1;
                                          
                                         }
