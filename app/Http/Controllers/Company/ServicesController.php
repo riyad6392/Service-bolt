@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use App\Models\Service;
 use App\Models\Inventory;
 use App\Models\Customer;
+use App\Models\Address;
 use App\Models\Personnel;
 use App\Models\Quote;
 use App\Models\Managefield;
@@ -456,7 +457,7 @@ class ServicesController extends Controller
             $checked2 = "checked";
         }
         $html ='<div class="add-customer-modal">
-                <h5>Create New Quote</h5>
+                <h5>Create New Quote </h5>
                </div>';
                if(count($customer)>0) {
                    $cname = "";
@@ -471,7 +472,8 @@ class ServicesController extends Controller
             $html .='<div style="color:red;">Final Step: Then add a new quote.</div>';    
                 }
         $html .='<div class="row customer-form"><div class="col-md-12 mb-2">';
-        $html .='<input type="hidden" name="serviceid" id="serviceid" value="'.$request->id.'"><div class="input_fields_wrap">
+        $html .='
+        <input type="hidden" name="serviceid" id="serviceid" value="'.$request->id.'"><div class="input_fields_wrap">
           <div class="mb-3">
             <select class="form-select '.$cname.'" name="customerid" id="customerid_service" required>
               <option selected="" value="">Select a customer </option>';
@@ -479,6 +481,9 @@ class ServicesController extends Controller
                 $html .='<option value="'.$value->id.'">'.$value->customername.'</option>';
               }
         $html .='</select>
+        <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+			  			<a href="#"  data-bs-toggle="modal" data-bs-target="#add-customer" class="" id="hidequote"><i class="fa fa-plus"></i></a>
+			  		</div>
           </div>
         </div>
       </div>
@@ -488,6 +493,7 @@ class ServicesController extends Controller
             <select class="form-select" name="address" id="address_service" required>
               <option value="">Select Customer Address</option>
               </select>
+              <div id="addressicon"></div>
           </div>
       </div>
     </div>
@@ -616,4 +622,62 @@ class ServicesController extends Controller
       }
       echo "1";
     }
+    
+    public function createserviceticket(Request $request)
+    {
+      $auth_id = auth()->user()->id;
+      // $validate = Validator($request->all(), [
+      //     'image' => 'mimes:jpeg,png',
+      // ]);
+      // if ($validate->fails()) {
+      //     return redirect()->route('company.customercreate')->withInput($request->all())->withErrors($validate);
+      // }
+      $logofile = $request->file('image');
+      if (isset($logofile)) {
+         $new_file = $logofile;
+         $path = 'uploads/customer/';
+         $thumbnailpath = 'uploads/customer/thumbnail/';
+         $imageName = custom_fileupload1($new_file,$path,$thumbnailpath);
+
+         $data['image'] = $imageName; 
+      }
+          $data['userid'] = $auth_id;
+          $data['customername'] = $request->customername;
+          $data['phonenumber'] = $request->phonenumber;
+          $data['email'] = $request->email;
+          $data['companyname'] = $request->companyname;
+          if(isset($request->serviceid)) {
+              $data['serviceid'] = implode(',', $request->serviceid);
+          } else {
+              $data['serviceid'] = null;
+          } 
+      $cinfo = Customer::create($data);
+
+      $lastId = $cinfo->id;
+
+      $cid = $lastId;
+      $data['authid'] = $auth_id;
+      $data['customerid'] = $cid;
+      $data['address'] = $request->address;
+      Address::create($data);
+
+     
+      return json_encode(['id' =>$cinfo->id,'customername' =>$cinfo->customername]);
+        
+     
   }
+
+  public function create_service_address(Request $request)
+    {
+        $cid = $request->customerid;
+        $auth_id = auth()->user()->id;
+        $data['authid'] = $auth_id;
+        $data['customerid'] = $cid;
+        $data['address'] = $request->address;
+        Address::create($data);
+        
+        return json_encode(['address' =>$request->address]);
+    }
+
+    
+}

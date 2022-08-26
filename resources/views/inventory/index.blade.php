@@ -239,12 +239,16 @@
 	   
 	   </div>
 	   
-	   <div class="col-md-12 mb-3">
+	   <div class="col-md-6 mb-3">
 	  
 	   <input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" required="">
 	   
 	   </div>
+     <div class="col-md-6 mb-3">
+	   <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit" required="">
+	  
 	   
+	   </div>  
 	   <div class="col-md-12 mb-3">
 	   	<i class="fa fa-dollar" style="position: absolute;top:406px;left: 35px;"></i>
 	  	<input type="text" class="form-control" placeholder="Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">

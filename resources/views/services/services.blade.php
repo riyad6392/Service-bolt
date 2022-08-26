@@ -386,6 +386,110 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   </div>
 </div>
 <!-- dots Modal End -->
+
+<!-- Add customer modal -->
+<div class="modal fade" id="add-customer" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box  overflow-hidden">
+     <form class="form-material m-t-40  form-valide" id="createserviceticket" method="post"  enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+       <div class="add-customer-modal">
+     <h5>Add a new customer</h5>
+     </div>
+     
+    <div class="row customer-form">
+     
+    <div class="col-md-12 mb-3">
+     	<input type="text" class="form-control" placeholder="Customer Full Name" name="customername" id="customername" required="">
+  	</div>
+
+  	<div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="Address" name="address" id="address" required="">
+    </div>
+     
+     <div class="col-md-6 mb-3">
+     
+     <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="">
+     
+     </div>
+     
+     <div class="col-md-6 mb-3">
+    
+     <input type="email" class="form-control" placeholder="Email" name="email" id="email" required="">
+     
+     </div>
+     
+     <div class="col-md-12 mb-3">
+    
+     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname" required="">
+     
+     </div>
+     <div class="col-md-12 mb-3">
+      <div class="d-flex align-items-center">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+          @php $services = App\Models\Service::select('id','servicename')->where('userid', auth()->user()->id)->get(); @endphp
+          @foreach ($services as $service)
+            <option value="{{$service->id}}">{{$service->servicename}}</option>
+          @endforeach
+        </select>
+        <div class="wrapper" style="display: none;">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+ 			<div class="tooltip">If you are not seeing the services in dropdown then create some services in service section then select here.</div>
+		</div>
+     </div>
+   </div>
+   <div class="col-lg-12 mb-3">
+      <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
+      <div class="drop-zone">
+    <span class="drop-zone__prompt text-center">
+  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></small>
+  Drop file here or click to upload</span>
+    <input type="file" name="image" id="image" class="drop-zone__input" accept="image/png, image/gif, image/jpeg">
+  </div>
+     </div>
+     
+     
+     <div class="col-lg-6 mb-3">
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+     <button type="submit" class="btn btn-add btn-block">Add Customer</button>
+     </div>
+     
+     </div>
+      </div>
+     </form>
+    </div>
+  </div>
+</div>
+<!-- end modAL -->
+<!-- Add address modal -->
+<div class="modal fade" id="add-address" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box  overflow-hidden">
+      <div class="modal-body">
+       <div class="add-customer-modal">
+     <h5>Add Address</h5>
+     </div>
+     
+    <div class="row customer-form">
+     
+    <div class="col-md-12 mb-3">
+     	<input type="text" class="form-control" placeholder="Addresses" name="address" id="address5" required="">
+  	</div>
+
+		<div class="col-lg-6 mb-3">
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel1">Cancel</button>
+    </div>
+    <div class="col-lg-6 mb-3">
+     	<button id="saveaddress" class="btn btn-add btn-block">Add Address</button>
+    </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('script')
@@ -531,6 +635,7 @@ $(document).on('click','#editService',function(e) {
    $('html').on('change','#customerid_service',function() {
       var customerid = this.value;
       $("#address_service").html('');
+      $("#addressicon").html('');
         $.ajax({
           url:"{{url('company/quote/getaddressbyid')}}",
           type: "POST",
@@ -544,7 +649,9 @@ $(document).on('click','#editService',function(e) {
             $.each(result.address,function(key,value) {
               $("#address_service").append('<option value="'+value.address+'">'+value.address+'</option>');
             });
+            $('#addressicon').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address" id="hidequote1" class=""><i class="fa fa-plus"></i></a></div>');
           }
+          
       });
     });    
   });
@@ -589,6 +696,77 @@ $(document).on('click','#editService',function(e) {
       });
     });
   });
+
+  
+  $('#createserviceticket').on('submit', function(event) {
+      event.preventDefault();
+      var url = "{{url('company/services/create-service-ticket')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+              console.log(data);
+              $("#add-customer").modal('hide');
+              $("#customerid_service").append("<option value="+data.id+">"+data.customername+"</option>");
+              //$("#customerid_service").selectpicker('refresh');
+              $("#create-tickets").show();
+            }
+        })
+  });
+
+
+  $('#createserviceticket').on('submit', function(event) {
+      event.preventDefault();
+      var url = "{{url('company/services/create-service-address')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+              console.log(data);
+              $("#add-customer").modal('hide');
+              $("#customerid_service").append("<option value="+data.id+">"+data.customername+"</option>");
+              //$("#customerid_service").selectpicker('refresh');
+              $("#create-tickets").show();
+            }
+        })
+  });
+
+  $(document).on('click','#saveaddress',function(e) {
+      var customerid = $('#customerid_service').val();
+	    var address = $('#address5').val();
+		  if(address=="") {
+		   	alert('address field is required');
+        return false;
+		   }
+	   $.ajax({
+            url:"{{url('company/services/create-service-address')}}",
+            data: {
+              address: address,
+              customerid: customerid,
+     		},
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+            	
+              $("#add-address").modal('hide');
+              $("#address_service").append("<option value="+data.address+">"+data.address+"</option>");
+              $("#add-tickets").show();
+            }
+        })
+	})
+
+
 </script>
 @endsection
 

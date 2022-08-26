@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Inventory extends Model
 {
     protected $table = 'products';
-    protected $fillable = ['user_id','workerid','productname','serviceid','quantity','pquantity','sku','price','category','description','image'];
+    protected $fillable = ['user_id','workerid','productname','serviceid','quantity','pquantity','sku','unit','price','category','description','image'];
 }

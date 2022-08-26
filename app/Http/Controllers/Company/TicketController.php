@@ -482,8 +482,11 @@ class TicketController extends Controller
       $data['description'] = $request->description;
       
       Quote::create($data);
-      $request->session()->flash('success', 'Quote added successfully');
       
+      $request->session()->flash('success', 'Quote added successfully');
+      if($request->serviceticket==1){
+        return redirect()->route('company.services');
+      }
       return redirect()->route('company.services');
     }
 

@@ -224,6 +224,7 @@ class CustomerController extends Controller
          
              
       $html  .='<div class="row customer-form"><div class="col-md-12 mb-2">';
+
         $html .='<input type="hidden" name="customername" id="customername" value="'.$customer[0]->customername.'"><div class="input_fields_wrap">
           <div class="mb-3">
             <select class="form-select" name="customerid" id="customerid" required="" readonly="">';

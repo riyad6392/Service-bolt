@@ -181,7 +181,9 @@ Route::group([
     Route::any('/services/createquote', [ServicesController::class, 'createquote'])->name('servicecreatequote');
     Route::any('/services/savefieldservice', [ServicesController::class, 'savefieldservice'])->name('savefieldservice');
     Route::any('/services/createservice', [ServicesController::class, 'createservice'])->name('createservice');
-
+    Route::any('/services/create-service-ticket', [ServicesController::class, 'createserviceticket'])->name('createserviceticket');
+    Route::any('/services/create-service-address', [ServicesController::class, 'create_service_address'])->name('create_service_address');
+    
     //personnel Create
     Route::get('/personnel', [PersonnelController::class, 'index'])->name('personnel');
 

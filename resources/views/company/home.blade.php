@@ -309,7 +309,7 @@
             <tr>
               <td>{{$value->id}}</td>
               <td class="text-truncate">{{$value->servicename}}</td>
-              <td>{{$value->etc}}</td>
+              <td>{{date("m-d-Y", strtotime($value->etc));}}</td>
               <td>${{$value->price}}</td>
               <td>{{$value->time}} {{$value->minute}}</td>
               @if($value->ticket_status == "3")

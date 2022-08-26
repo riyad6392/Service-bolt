@@ -77,6 +77,7 @@ class InventoryController extends Controller
                 $data['quantity'] = $request->quantity;
                 $data['pquantity'] = $request->pquantity;
                 $data['sku'] = $request->sku;
+                $data['unit'] = $request->unit;
                 $data['price'] = $request->price;
                 $data['category'] = $request->category;
                 $data['description'] = $request->description;
@@ -152,9 +153,13 @@ class InventoryController extends Controller
       <label>Preferred Quantity</label>
       <input type="text" class="form-control" placeholder="Preferred Quantity" value="'.$inventory[0]->pquantity.'" name="pquantity" required>
      </div>
-     <div class="col-md-12 mb-3">
+     <div class="col-md-6 mb-3">
       <label>SKU</label>
      <input type="text" class="form-control" placeholder="SKU #" value="'.$inventory[0]->sku.'" name="sku" required>
+     </div>
+     <div class="col-md-6 mb-3">
+      <label>Unit</label>
+     <input type="text" class="form-control" placeholder="Unit #" value="'.$inventory[0]->unit.'" name="unit" required>
      </div>
      <div class="col-md-12 mb-3">
       <label>Price</label>
@@ -212,6 +217,7 @@ class InventoryController extends Controller
           $inventory->quantity = $request->quantity;
           $inventory->pquantity = $request->pquantity;
           $inventory->sku = $request->sku;
+          $inventory->unit = $request->unit;
           $inventory->price = $request->price;
           $inventory->category = $request->category;
           $inventory->description = $request->description;
