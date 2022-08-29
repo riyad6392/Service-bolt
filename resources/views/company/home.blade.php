@@ -306,9 +306,11 @@
           </thead>
           <tbody>
             @foreach($ticket as $key =>$value)
+            
             <tr>
-              <td>{{$value->id}}</td>
-              <td class="text-truncate">{{$value->servicename}}</td>
+            
+            <td><a class="btn w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$value->id}}">{{$value->id}}</a></td>
+              <td class="text-truncate"><a class="btn w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$value->id}}">{{$value->servicename}}</a></td>
               <td>{{date("m-d-Y", strtotime($value->etc));}}</td>
               <td>${{$value->price}}</td>
               <td>{{$value->time}} {{$value->minute}}</td>
@@ -319,7 +321,9 @@
               @else
                 <td><a href="#" class="btn-pending btn-block">Pending</a></td>
               @endif
+      
             </tr>
+      
             @endforeach
           </tbody>
         </table>
@@ -382,6 +386,18 @@
      </div>
    </div>
    <input type="hidden" name="dateval" id="dateval" value="{{ date('l - F d, Y') }}">
+
+<!-- view tickets on popup -->
+   <div class="modal fade" id="view-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+        <div id="viewcompletedmodal"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end -->
    @endsection
 
 @section('script')
@@ -389,6 +405,23 @@
           type="text/javascript"></script>
 <script type="text/javascript">
   $(document).ready(function() {
+
+    $(document).on('click','#viewTickets',function(e) {
+   var id = $(this).data('id');
+   var dataString =  'id='+ id;
+   $.ajax({
+            url:'{{route('company.viewcompleteticketmodal')}}',
+            data: dataString,
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              console.log(data.html);
+              $('#viewcompletedmodal').html(data.html);
+            }
+        })
+  });
+
     $('#example').DataTable();
   });
    $.ajaxSetup({

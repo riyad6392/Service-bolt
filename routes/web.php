@@ -245,6 +245,7 @@ Route::group([
 
      Route::any('/quote/leftbarinvoice', [TicketController::class, 'leftbarinvoice'])->name('leftbarinvoice');
      Route::any('/quote/sharequote', [TicketController::class, 'sharequote'])->name('sharequote');
+     Route::any('/quote/customercreate', [TicketController::class, 'customercreate'])->name('customer.create');
 
     //Scheduler Listing
     Route::get('/scheduler', [SchedulerController::class, 'index'])->name('scheduler');

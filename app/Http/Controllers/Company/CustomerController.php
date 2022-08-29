@@ -45,7 +45,7 @@ class CustomerController extends Controller
         }
         $services = Service::where('userid', $auth_id)->get();
         $products = Inventory::where('user_id', $auth_id)->get();
-       
+        
         $customerData = Customer::where('userid',$auth_id)->get();
         $customerAddress = Address::where('authid',$auth_id)->get();
           
@@ -133,6 +133,9 @@ class CustomerController extends Controller
       $data['address'] = $request->address;
       Address::create($data);
 
+      if($request->ajax()){
+        return json_encode(['id' => $cinfo->id,'customername' =>$request->customername]);
+    }
       $request->session()->flash('success', 'Customer added successfully');
       
       return redirect()->route('company.quote');

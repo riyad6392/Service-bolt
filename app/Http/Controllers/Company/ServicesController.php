@@ -96,7 +96,11 @@ class ServicesController extends Controller
       //$color = substr(md5(rand()), 0, 6);
       //$data['color'] = "#".$color;
       $data['color'] = $request->colorcode;
-      Service::create($data);
+      $serviceData = Service::create($data);
+      if($request->ajax()){
+        return json_encode(['id' => $serviceData->id,'time' => $serviceData->time,'minute' => $serviceData->minute,
+        'frequency' => $serviceData->frequency,'price' => $serviceData->price,'servicename' =>$serviceData->servicename]);
+    }
       $request->session()->flash('success', 'Service added successfully');
       
       return redirect()->route('company.services');

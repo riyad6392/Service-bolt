@@ -482,7 +482,7 @@ th.fc-resource-cell img {
                                         $newdate = Carbon\Carbon::createFromFormat('Y-m-d', $todaydate)->format('m/d/Y');
                                         $requestdate = request()->date;
                                       @endphp
-                                        <input type="text" placeholder="{{ date('m/d/Y') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('d-m-Y', strtotime(request()->date ))}}">
+                                        <input type="text" placeholder="{{ date('m/d/Y') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('m-d-Y', strtotime(request()->date ))}}">
                                     @else
                                     @php
                                         $requestdate = date('m-d-y');

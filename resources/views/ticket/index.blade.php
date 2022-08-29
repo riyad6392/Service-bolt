@@ -593,6 +593,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
 			@endforeach
 			</select>
+			<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus"></i></a>
+        </div>
 	  </div>
 	   
 	   <div class="col-md-6 mb-3" style="display: none;">
@@ -759,11 +762,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	 		}
 	 	@endphp
 		<div class="col-md-12 mb-3">
-	  	<select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
+	  	<select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" class="service" required="" multiple aria-label="Default select example" data-live-search="true">
 	  		@foreach($services as $key =>$value)
 				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price1="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
 			@endforeach
 		</select>
+		<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services1" class="" id="hidequoteservice2"><i class="fa fa-plus"></i></a>
+        </div>
 	   </div>
 	   
 	   <div class="col-md-6 mb-3" style="display: none;">
@@ -836,6 +842,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	</div>
   </div>
 </div>
+
 
 
 
@@ -1035,7 +1042,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <div class="modal fade" id="add-customer" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box  overflow-hidden">
-     <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.createcticket')}}" enctype="multipart/form-data">
+     <form class="form-material m-t-40  form-valide" method="post" id="createserviceticket"  enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
        <div class="add-customer-modal">
@@ -1182,13 +1189,299 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     </div>
   </div>
 </div>
-
-
-
-
 <!-- end modal -->
+<!-- Modal -->
+<div class="modal fade" id="add-services" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box overflow-hidden">
+      <form class="form-material m-t-40 form-valide" id="serviceform" method="post" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+        <div class="add-customer-modal">
+          <h5>Add a new Service</h5>
+        </div>
+        @php
+		$productData = App\Models\Inventory::where('user_id',auth()->user()->id)->orderBy('id','ASC')->get();
+        if(count($productData)>0) {
+            $pname= "";
+        } else {
+            $pname= "active-focus";
+        }
+        
+        @endphp
+        <div class="row customer-form" id="product-box-tabs">
+          <div class="col-md-12 mb-2">
+            <input type="text" class="form-control" placeholder="Service Name" name="servicename" id="servicename" required="">
+          </div>
+          <div class="col-md-12 mb-2 position-relative">
+            <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
+  <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="d-flex align-items-center">
+            <select class="selectpicker form-control me-2 {{$pname}}" multiple aria-label="Default select example" data-placeholder="Select Products" data-live-search="true" name="defaultproduct[]" id="defaultproduct" >
+              <!-- <option selected="" value="">Select Product</option> -->
+              @foreach($productData as $product)
+                <option value="{{$product->id}}">{{$product->productname}}</option>
+              @endforeach
+            </select>
+           <div class="wrapper" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <div class="tooltip">If you are not seeing the products in dropdown then add it in inventory section then select here.</div>
+          </div>
+          </div>
+        </div>
+          <div class="col-md-12 mb-2">
+            <div class="align-items-center justify-content-lg-between d-flex services-list">
+              <p>
+                <input type="radio" id="test1" name="radiogroup" value="perhour" class="radiogrp" checked>
+                <label for="test1">Per Hour</label>
+              </p>
+              <p>
+                <input type="radio" id="test2" name="radiogroup" value="flatrate" class="radiogrp">
+                <label for="test2">Flate Rate</label>
+              </p>
+              <p>
+                <input type="radio" id="test3" name="radiogroup" value="recurring" class="radiogrp">
+                <label for="test3">Recurring</label>
+              </p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <select class="form-select" name="frequency" id="frequency" required="">
+              <option selected="" value="">Service Frequency</option>
+			  @php $tenture = App\Models\Tenture::where('status','Active')->get(); @endphp
+              @foreach($tenture as $key=>$value)
+                <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label>Default Time (hh:mm)</label><br>
+            <div class="timepicker timepicker1" style="display:inline-block;">
+              <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <label>Choose Color</label><br>
+            <span class="color-picker">
+              <label for="colorPicker">
+                <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
+              </label>
+            </span>
+          </div>
+          <div class="col-md-12">
+            <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
+              <input type="file" class="dropify" name="image" id="image"data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+          </div>
+          <div class="col-md-12 mb-2" style="display: none;">
+            <p class="create-gray mb-2">Create default checklist</p>
+            <div class="align-items-center  d-flex services-list" style="flex-flow:wrap;">
+              <label class="container-checkbox me-3">Point 1
+                <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point1"> <span class="checkmark"></span>
+              </label>
+              <label class="container-checkbox me-3">Point 2
+                <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point2"> <span class="checkmark"></span>
+              </label>
+              
+            </div>
+          </div>
+          <div class="row mt-3">
+          <div class="col-lg-6 mb-2">
+            <button class="btn btn-cancel btn-block" id="quotecancel3" data-bs-dismiss="modal">Cancel</button>
+          </div>
+          <div class="col-lg-6">
+            <button type="submit" class="btn btn-add btn-block">Add a Service</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="add-services1" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box overflow-hidden">
+      <form class="form-material m-t-40 form-valide" id="serviceform1" method="post" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+        <div class="add-customer-modal">
+          <h5>Add a new Service</h5>
+        </div>
+        @php
+		$productData = App\Models\Inventory::where('user_id',auth()->user()->id)->orderBy('id','ASC')->get();
+        if(count($productData)>0) {
+            $pname= "";
+        } else {
+            $pname= "active-focus";
+        }
+        
+        @endphp
+        <div class="row customer-form" id="product-box-tabs">
+          <div class="col-md-12 mb-2">
+            <input type="text" class="form-control" placeholder="Service Name" name="servicename" id="servicename" required="">
+          </div>
+          <div class="col-md-12 mb-2 position-relative">
+            <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
+  <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="d-flex align-items-center">
+            <select class="selectpicker form-control me-2 {{$pname}}" multiple aria-label="Default select example" data-placeholder="Select Products" data-live-search="true" name="defaultproduct[]" id="defaultproduct" >
+              <!-- <option selected="" value="">Select Product</option> -->
+              @foreach($productData as $product)
+                <option value="{{$product->id}}">{{$product->productname}}</option>
+              @endforeach
+            </select>
+           <div class="wrapper" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <div class="tooltip">If you are not seeing the products in dropdown then add it in inventory section then select here.</div>
+          </div>
+          </div>
+        </div>
+          <div class="col-md-12 mb-2">
+            <div class="align-items-center justify-content-lg-between d-flex services-list">
+              <p>
+                <input type="radio" id="test1" name="radiogroup" value="perhour" class="radiogrp" checked>
+                <label for="test1">Per Hour</label>
+              </p>
+              <p>
+                <input type="radio" id="test2" name="radiogroup" value="flatrate" class="radiogrp">
+                <label for="test2">Flate Rate</label>
+              </p>
+              <p>
+                <input type="radio" id="test3" name="radiogroup" value="recurring" class="radiogrp">
+                <label for="test3">Recurring</label>
+              </p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <select class="form-select" name="frequency" id="frequency" required="">
+              <option selected="" value="">Service Frequency</option>
+			  @php $tenture = App\Models\Tenture::where('status','Active')->get(); @endphp
+              @foreach($tenture as $key=>$value)
+                <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label>Default Time (hh:mm)</label><br>
+            <div class="timepicker timepicker1" style="display:inline-block;">
+              <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <label>Choose Color</label><br>
+            <span class="color-picker">
+              <label for="colorPicker">
+                <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
+              </label>
+            </span>
+          </div>
+          <div class="col-md-12">
+            <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
+              <input type="file" class="dropify" name="image" id="image"data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+          </div>
+          <div class="col-md-12 mb-2" style="display: none;">
+            <p class="create-gray mb-2">Create default checklist</p>
+            <div class="align-items-center  d-flex services-list" style="flex-flow:wrap;">
+              <label class="container-checkbox me-3">Point 1
+                <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point1"> <span class="checkmark"></span>
+              </label>
+              <label class="container-checkbox me-3">Point 2
+                <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point2"> <span class="checkmark"></span>
+              </label>
+              
+            </div>
+          </div>
+          <div class="row mt-3">
+          <div class="col-lg-6 mb-2">
+            <button class="btn btn-cancel btn-block" id="quotecancel4" data-bs-dismiss="modal">Cancel</button>
+          </div>
+          <div class="col-lg-6">
+            <button type="submit" class="btn btn-add btn-block">Add a Service</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
 @section('script')
 <script type="text/javascript">
+$('.dropify').dropify();
+$('#createserviceticket').on('submit', function(event) {
+      event.preventDefault();
+      var url = "{{url('company/customer/createcticket')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+              console.log(data);
+			  swal("Done!", "Customer Created Successfully!", "success");
+              $("#add-customer").modal('hide');
+              $("#customerid").append("<option value="+data.id+">"+data.customername+"</option>");
+              //$("#customerid_service").selectpicker('refresh');
+              $("#add-tickets").show();
+            }
+        })
+  });
+  
+  
+$('#serviceform').on('submit', function(event) {
+      event.preventDefault();
+      var url = "{{url('company/services/create')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+              console.log(data);
+			  swal("Done!", "Service Created Successfully!", "success");
+              $("#add-services").modal('hide');
+              $("#servicename").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");
+              $("#servicename").selectpicker('refresh');
+              $("#add-tickets").show();
+            }
+        })
+  });
+
+  $('#serviceform1').on('submit', function(event) {
+      event.preventDefault();
+      var url = "{{url('company/services/create')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+              console.log(data);
+			  swal("Done!", "Service Created Successfully!", "success");
+              $("#add-services1").modal('hide');
+              $(".service").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");
+              $(".service").selectpicker('refresh');
+              $("#add-tickets1").show();
+            }
+        })
+  });
+
   $(document).on('click','.emailinvoice',function(e) {
    var id = $(this).data('id');
    var email = $(this).data('email');
@@ -1217,6 +1510,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   	$("#add-tickets").hide();
 	});
 
+	$("#hidequoteservice").click(function() {
+  	$("#add-tickets").hide();
+	});
+	$("#hidequoteservice1").click(function() {
+  	$("#add-tickets1").hide();
+	});
+
+	$("#hidequoteservice2").click(function() {
+  	$("#add-tickets1").hide();
+	});
+
 	$("#ticketcancel").click(function() {
 		$("#add-tickets1").show();
   	$("#add-customer2").hide();
@@ -1228,6 +1532,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   	$("#add-customer").hide();
 	});
 
+	$("#quotecancel3").click(function() {
+		$("#add-tickets").show();
+  	$("#add-customer").hide();
+	});
+
+	$("#quotecancel4").click(function() {
+		$("#add-tickets1").show();
+  	$("#add-services1").hide();
+	});
+	
 	$('html').on('click','#hidequote1',function() {
   	$("#add-tickets").hide();
 	});
