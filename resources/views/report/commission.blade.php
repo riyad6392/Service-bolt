@@ -202,19 +202,32 @@
           @endif
      </div>
      </div>
+
+     @if(isset($from))
         <div class="col-md-2" style="padding:7px;">
           <label style="visibility:hidden;">Select Date Range</label>
-          <input type="date" id="since" value="" name="since" class="form-control date1">
+          <input type="date" id="since" name="since" value="{{$from}}" class="form-control date1">
         </div>
         <div class="col-md-2" style="padding:7px;">
           <label style="visibility:hidden;">To Date</label>
-          <input type="date" id="until" value="" name="until" class="form-control date2">
+          <input type="date" id="until" name="until" value="{{$to}}" class="form-control date2">
         </div>
+      @else
+      <div class="col-md-2" style="padding:7px;">
+          <label style="visibility:hidden;">Select Date Range</label>
+          <input type="date" id="since"  name="since" value="" class="form-control date1">
+        </div>
+        <div class="col-md-2" style="padding:7px;">
+          <label style="visibility:hidden;">To Date</label>
+          <input type="date" id="until" name="until" value="" class="form-control date2">
+        </div>
+      @endif  
     
       <input type="hidden" name="phiddenid" id="phiddenid" value="">
      <div class="col-md-2">
         <div class="side-h3">
           <select class="form-select puser" name="pid" id="pid" required="">
+            <option value="All"> All </option>
             @foreach($pdata as $key => $value)
             <option value="{{$value->id}}" @if(@$personnelid ==  $value->id) selected @endif> {{$value->personnelname}}</option>
             @endforeach
@@ -246,10 +259,9 @@
                 </tr>
           </thead>
           
-
-          <tbody class="tbody-1">
+        
             @foreach($tickedata as $key => $value)
-
+            <tbody class="tbody-1">
                 @php
                   $ttlflat = 0;
                   $ptamounttotal = 0;
@@ -269,31 +281,29 @@
                         if($amountall[0]->allspvalue==null) {
                             foreach($explode_id as $servicekey =>$servicevalue) {
 
-                                  foreach($comisiondataamount->service as $key=>$sitem)
-                                  {
-                                    if($sitem->id==$servicevalue && $sitem->price!=0)
-                                    {
-                                                $servicevalue."==={$sitem->id}price==".  $sitem->price."<br>";
-                                        $ttlflat2 += $sitem->price;
-                                    }
-                                  }
-                                  $ttlflat1 = 0;
+                              foreach($comisiondataamount->service as $key=>$sitem)
+                              {
+                                if($sitem->id==$servicevalue && $sitem->price!=0)
+                                {
+                                    //echo $servicevalue."==={$sitem->id} price==".  $sitem->price."<br>";
+                                    $ttlflat2 += $sitem->price;
+                                }
 
-                                foreach($pexplode_id as $servicekey =>$servicevalue) {
-                                  $ttlflat1 = 0;
-
-                                  foreach($comisiondataamount->product as $key=>$sitem1)
-                                      {
-                                        if($sitem1->id==$servicevalue && $sitem1->price!=0)
-                                        {
-                                                   // $servicevalue."==={$sitem->id}price==".  $sitem1->price."<br>";
-                                            $ttlflat1 += $sitem1->price;
-                                        }
-                                      }
-                                }     
-                                 
-                                  $ttlflat =$ttlflat1+$ttlflat2;
+                              }
                             } 
+                            
+                            $ttlflat1 = 0;
+                            foreach($pexplode_id as $servicekey =>$servicevalue) {
+                                foreach($comisiondataamount->product as $key=>$sitem1)
+                                {
+                                    if($sitem1->id==$servicevalue && $sitem1->price!=0)
+                                    {
+                                               //echo  $servicevalue."==={$sitem1->id} price==".  $sitem1->price."<br>";
+                                        $ttlflat1 += $sitem1->price;
+                                    }
+                                }  
+                            }  
+                             $ttlflat =$ttlflat1+$ttlflat2;
                         } else {
                             $flatvalue = $amountall[0]->allspvalue;
                             $flatv = $flatvalue*count($explode_id);
@@ -319,8 +329,7 @@
                                     $ptamount += $servicedata->price*$sitem->price/100;               
                                   }
                                 }
-                                
-                          } 
+                            } 
                           
                           foreach($pexplode_id as $key=>$pid) {
                                 foreach($comisiondatapercent->product as $key=>$sitem)
@@ -363,7 +372,6 @@
                         <input class="form-check-input flexCheckDefault" type="checkbox" value="" id="flexCheckDefault">
                     </td>
                 </tr>
-            @endforeach
                 <tr class="explode hide" style="display:none;">
                     <td colspan="8" id="toggle_text">
                         <table class="table table-condensed">
@@ -379,7 +387,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($tickedatadetails as $key=>$value)
+                                @php
+                                    @$tickedatadetailsrrr = \App\Models\Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$value->personnelid)->where('quote.ticket_status',3)->get();
+                                @endphp
+                                @foreach($tickedatadetailsrrr as $key=>$value)
                                     @php
 
                                       $explode_id = explode(',', $value->serviceid);
@@ -394,27 +405,39 @@
                                         if(count($amountall)>0) {
 
                                             if($amountall[0]->allspvalue==null) {
-                                                
+                                                foreach($servicedata as $key1=>$value1) {
+                                                  $sname[] = $value1->servicename;
+                                                   $servname = implode(',',$sname);
+                                                }
+
+                                                foreach($pdata as $key2=>$value2) {
+                                                   @$pname[] = @$value2->productname;
+                                                   $productname = implode(',',$pname);
+                                                 }
+
+                                                $ttlflat1 = 0;
                                                 foreach($explode_id as $servicekey =>$servicevalue) {
                                                     foreach($comisiondataamount->service as $key=>$sitem)
                                                     {
                                                         if($sitem->id==$servicevalue && $sitem->price!=0)
                                                         {
-                                                        //echo $servicevalue."==={$sitem->id}price==".  $sitem->price."<br>";
-                                                          $ttlflat += $sitem->price;
+                                                        //echo $servicevalue."==={$sitem->id} price==".  $sitem->price."<br>";
+                                                          $ttlflat1 += $sitem->price;
                                                         }
                                                     }
                                                 }
+                                                $ttlflat2 = 0;
                                                 foreach($pexplode_id as $servicekey =>$servicevalue) {
                                                     foreach($comisiondataamount->product as $key=>$sitem1)
                                                     {
-                                                        if($sitem->id==$servicevalue && $sitem1->price!=0)
+                                                        if($sitem1->id==$servicevalue && $sitem1->price!=0)
                                                         {
-                                                        //echo $servicevalue."==={$sitem->id}price==".  $sitem->price."<br>";
-                                                          $ttlflat += $sitem1->price;
+                                                        //echo $servicevalue."==={$sitem1->id}price==".  $sitem1->price."<br>";
+                                                          $ttlflat2 += $sitem1->price;
                                                         }
                                                     }
                                                 }
+                                                $ttlflat = $ttlflat1 +$ttlflat2;
                                                 
                                             } else {
                                                 $flatvalue = $amountall[0]->allspvalue;
@@ -433,6 +456,7 @@
                                          $pname = array();
 
                                          if($percentall[0]->allspvalue == null) {
+                                            
                                             foreach($explode_id as $servicekey =>$servicevalue) {
                                                 foreach($comisiondatapercent->service as $key=>$sitem)
                                                 {
@@ -488,7 +512,10 @@
                         </table>
                     </td>
                 </tr>
-          </tbody>
+                </tbody>
+            @endforeach
+                
+          
         </table>
       </div>
      </div>
