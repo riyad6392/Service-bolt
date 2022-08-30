@@ -67,9 +67,10 @@ use Image;
       }
       //$stimesheetData  = DB::table('timeoff')->where('workerid',$pid)->get();
       //$stimesheetData  = DB::table('timeoff')->where('userid',$auth_id)->get();
+      $stimesheetData = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('COUNT(timeoff.id) as counttotal'),'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->groupBy('timeoff.created_at')->get();
 
-      $stimesheetData  = DB::table('timeoff')->select('timeoff.*', 'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->get();
-      
+      //$stimesheetData  = DB::table('timeoff')->select('timeoff.*','GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids',DB::raw('COUNT(timeoff.id) as counttotal'),'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->groupBy('timeoff.created_at')->get();
+      //dd($stimesheetData);
       return view('timeoff.index',compact('auth_id','personnelUser','currentdate','name','stimesheetData'));
     }
 

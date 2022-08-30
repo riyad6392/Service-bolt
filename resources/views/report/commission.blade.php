@@ -388,9 +388,13 @@
                             </thead>
                             <tbody>
                                 @php
-                                    @$tickedatadetailsrrr = \App\Models\Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$value->personnelid)->where('quote.ticket_status',3)->get();
+                                    if($from!=null && $to!=null) {
+                                        @$tickedatadetailsdata = \App\Models\Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$value->personnelid)->where('quote.ticket_status',3)->whereBetween('quote.ticketdate', [$from, $to])->get();
+                                    } else {
+                                        @$tickedatadetailsdata = \App\Models\Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$value->personnelid)->where('quote.ticket_status',3)->get();
+                                    }
                                 @endphp
-                                @foreach($tickedatadetailsrrr as $key=>$value)
+                                @foreach($tickedatadetailsdata as $key=>$value)
                                     @php
 
                                       $explode_id = explode(',', $value->serviceid);
@@ -501,8 +505,8 @@
                                     <tr style="font-size: 17px; border:none; background:white;">
                                         <td>{{$value->ticketdate}}</td>
                                         <td>{{$value->id}}</td>
-                                        <td>{{@$servname}}</td>
-                                        <td>{{@$productname}}</td>
+                                        <td >{{Str::limit(@$servname, 20)}}</td>
+                                        <td>{{Str::limit(@$productname, 20)}}</td>
                                         <td>${{@$ttlflat}}</td>
                                         <td>${{@$ptamounttotal}}</td>
                                         <td>${{@$ttlflat+@$ptamounttotal}}</td>
