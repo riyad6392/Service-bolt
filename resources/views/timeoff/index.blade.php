@@ -157,16 +157,16 @@
             <tr>
               <td style="display: none;">{{$value->id}}</td>
               <td>{{$value->personnelname}}</td>
-              <td>{{$value->date1}}</td>
+              <td>{{--$value->date1--}}{{$value->counttotal}} Day</td>
               <td style="white-space:break-spaces;width:300px!important">{{$value->notes}}</td>
               <td>{{$submittedby}}</td>
               <td>
                 @if($value->status!=null)
-                  <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="'.$value->id.'" style="pointer-events:none;">{{$value->status}}</a>
+                  <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="'.$value->ids.'" style="pointer-events:none;">{{$value->status}}</a>
                 @else
-                  <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="{{$value->id}}">Accept</a>
-                  <a class="btn btn-edit reject-btn p-3 w-auto" id="reject" data-id="{{$value->id}}">Reject</a>
-                  <a class="btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->id}}">Delete</a>
+                  <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="{{$value->ids}}">Accept</a>
+                  <a class="btn btn-edit reject-btn p-3 w-auto" id="reject" data-id="{{$value->ids}}">Reject</a>
+                  <a class="btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->ids}}">Delete</a>
                 @endif
               </td>
               

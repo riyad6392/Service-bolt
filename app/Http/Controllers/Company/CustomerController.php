@@ -357,6 +357,7 @@ class CustomerController extends Controller
 
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
+        $data['ticket_status'] = 1;
       Quote::create($data);
 
       $app_name = 'ServiceBolt';
@@ -370,7 +371,7 @@ class CustomerController extends Controller
           $message->from($app_email,$app_name);
         });
 
-      $request->session()->flash('success', 'Quote added successfully');
+      $request->session()->flash('success', 'Ticket added successfully');
       
       return redirect()->route('company.quote');
     }

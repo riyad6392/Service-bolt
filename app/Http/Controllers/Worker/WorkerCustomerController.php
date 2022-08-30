@@ -12,6 +12,7 @@ use App\Models\Customer;
 use App\Models\Address;
 use App\Models\Quote;
 use App\Models\Tenture;
+use App\Models\Personnel;
 use Image;
 
 
@@ -59,7 +60,18 @@ class WorkerCustomerController extends Controller
 
       $productData = Inventory::where('user_id',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
 
-      $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+      @$workersdata = Personnel::where('id',$worker->workerid)->first();
+      @$permissonarray = explode(',',$workersdata->ticketid);
+    if(in_array("View All Customers", $permissonarray)) {
+      $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get(); 
+    } else {
+      $pdata = Quote::select('customerid')->where('personnelid',$worker->workerid)->get();
+      foreach($pdata as $key => $value) {
+        $cids[] = $value->customerid;
+      }
+      $customerData = DB::table('customer')->whereIn('id',$cids)->orderBy('id','DESC')->get();
+    }
+      
       $tenture = Tenture::where('status','Active')->get(); 
       //$customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get(); 
       return view('personnel.mycustomer',compact('auth_id','customerData','services','productData','tenture'));

@@ -327,6 +327,7 @@ class PersonnelController extends Controller
                 '5'=>"Create Ticket",
                 '6'=>"Add Customer",
                 '4'=>"Edit Customer",
+                '3'=>"View All Customers",
                 '8'=>"Add Service",
                 '9'=>"Add Product",
                 '1'=>"Create Invoice for payment",
@@ -864,26 +865,38 @@ class PersonnelController extends Controller
 
     public function accepttime(Request $request)
     {
-      $id = $request->id;
-      $timeoff = Workertimeoff::where('id', $id)->get()->first();
-      $timeoff->status = "Accepted";
-      $timeoff->save();
+      
+      $ids = explode(',', $request->id);
+      
+      // $timeoff = Workertimeoff::whereIn('id', $ids)->get()->first();
+
+      // $timeoff->status = "Accepted";
+      // $timeoff->save();
+
+       Workertimeoff::whereIn('id',$ids)
+          ->update([ 
+              "status"=>"Accepted"
+        ]);
       echo "1";
     }
 
     public function rejecttime(Request $request)
     {
-      $id = $request->id;
-      $timeoff = Workertimeoff::where('id', $id)->get()->first();
-      $timeoff->status = "Rejected";
-      $timeoff->save();
+      $ids = explode(',', $request->id);
+      // $timeoff = Workertimeoff::where('id', $id)->get()->first();
+      // $timeoff->status = "Rejected";
+      // $timeoff->save();
+      Workertimeoff::whereIn('id',$ids)
+          ->update([ 
+              "status"=>"Rejected"
+        ]);
       echo "1";
     }
 
     public function deleterequest(Request $request) 
     {
-      $id = $request->id;
-      Workertimeoff::where('id', $id)->delete();
+      $ids = explode(',', $request->id);
+      Workertimeoff::whereIn('id', $ids)->delete();
       echo "1";
     }
 

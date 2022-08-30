@@ -242,6 +242,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	  		'5'=>"Create Ticket",
 	  		'6'=>"Add Customer",
         '4'=>"Edit Customer",
+        '3'=>"View All Customers",
         '8'=>"Add Service",
         '9'=>"Add Product",
         '1'=>"Create Invoice for payment",
