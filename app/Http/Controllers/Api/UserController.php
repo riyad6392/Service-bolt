@@ -506,7 +506,7 @@ class UserController extends Controller
         }
 
         $customerAddress = Address::where('customerid',$customerid)->get();
-        $recentTicket = Quote::where('customerid',$customerid)->orderBy('id','DESC')->get();
+        $recentTicket = Quote::where('customerid',$customerid)->where('givendate',!=null)->orderBy('id','DESC')->get();
 
         if ($customerData) {
                 return response()->json(['status'=>1,'message'=>'success','customerData'=>$data1,'connectedAddress'=>$customerAddress,'recentTickets'=>$recentTicket],$this->successStatus);

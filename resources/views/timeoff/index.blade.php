@@ -147,12 +147,11 @@
             @if(isset($stimesheetData))
             @foreach($stimesheetData as $key => $value)
             @php
-            if($value->submitted_by!="") {
-               $submittedby = $value->submitted_by; 
-            } else {
-              $submittedby = "-";
-            }
-
+              if($value->submitted_by!="") {
+                 $submittedby = $value->submitted_by; 
+              } else {
+                $submittedby = "-";
+              }
             @endphp
             <tr>
               <td style="display: none;">{{$value->id}}</td>
