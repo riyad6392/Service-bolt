@@ -986,7 +986,7 @@ th.fc-resource-cell img {
             },
             snapDuration: '00:05:00',
             minTime: $("#openingtime").val(),
-            maxTime: $("#closingtime").val(),  
+            maxTime: $("#closingtime").val()+1,  
             allDaySlot: false,
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
             defaultView: 'agendaDay',

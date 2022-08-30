@@ -595,10 +595,10 @@ class ServicesController extends Controller
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
-      
-      Mail::send('mail_templates.sharequote', ['address'=>$request->address, 'servicename'=>$servicedetails->servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
+      $subjetline ='Service Quote from ' . auth()->user()->companyname;
+      Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$request->address, 'servicename'=>$servicedetails->servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email,$subjetline) {
           $message->to($user_exist->email)
-          ->subject('Quot details!');
+          ->subject($subjetline);
           $message->from($app_email,$app_name);
       });
 

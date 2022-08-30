@@ -69,18 +69,18 @@
         <div class="side-h3 d-flex justify-content-between">
        <h3>PTO</h3>
      
-        @if(Session::has('success'))
-
-              <div class="alert alert-success" id="selector">
-
-                  {{Session::get('success')}}
-
-              </div>
-
-          @endif
+      
      </div>
      </div>
+     @if(Session::has('success'))
 
+<div class="alert alert-success" id="selector">
+
+    {{Session::get('success')}}
+
+</div>
+
+@endif
 
      <div class="col-md-12">
       <div class="card">
@@ -161,10 +161,11 @@
               <td>{{$submittedby}}</td>
               <td>
                 @if($value->status!=null)
-                  <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="'.$value->ids.'" style="pointer-events:none;">{{$value->status}}</a>
+                  <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="{{$value->ids}}" style="pointer-events:none;">{{$value->status}}</a>
                 @else
                   <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="{{$value->ids}}">Accept</a>
-                  <a class="btn btn-edit reject-btn p-3 w-auto" id="reject" data-id="{{$value->ids}}">Reject</a>
+                  <!-- <a class="btn btn-edit reject-btn p-3 w-auto" id="reject" data-id="{{$value->ids}}">Reject</a> -->
+                  <a  class="btn btn-edit reject-btn p-3 w-auto" id="rejectpop" data-id="{{$value->ids}}">Reject</a>
                   <a class="btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->ids}}">Delete</a>
                 @endif
               </td>
@@ -223,6 +224,36 @@
 </div>
 </div>
 </form>
+
+
+<div class="modal fade" id="add-reason" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box  overflow-hidden">
+      <div class="modal-body">
+       <div class="add-customer-modal">
+     <h5>Add Reason</h5>
+     </div>
+     <form action="{{route('company.rejecttime')}}" method="post" >
+      @csrf
+    <div class="row customer-form">
+     
+    <div class="col-md-12 mb-3">
+      <input type="hidden" id="ids" name="ids" value="" >
+     	<textarea class="form-control" placeholder="Reason" col="5" row="10" name="reason" id="reason" required=""></textarea>
+  	</div>
+
+		<div class="col-lg-6 mb-3">
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel1">Cancel</button>
+    </div>
+    <div class="col-lg-6 mb-3">
+     	<button type="submit" class="btn btn-add btn-block">Add Reason</button>
+    </div>
+    </div>
+          </form>
+    </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('script')
@@ -284,21 +315,13 @@ $('#selector').delay(2000).fadeOut('slow');
   });
 
 
-$('html').on('click','#reject',function() {
+  $('html').on('click','#rejectpop',function() {
+  $('#add-reason').modal('show');
    var id = $(this).data('id');
-   var dataString =  'id='+ id;
-   $.ajax({
-            url:'{{route('company.rejecttime')}}',
-            data: dataString,
-            method: 'post',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-               swal("Done!","It was succesfully Rejected!","success");
-               location.reload();
-            }
-        })
+   $('#ids').val(id);
+   //var dataString =  'id='+ id;
   });
+
 
 $('html').on('click','#delete',function() {
    var id = $(this).data('id');

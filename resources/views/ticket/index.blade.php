@@ -53,6 +53,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
        <h3>Ticket and Quotes</h3>
      </div>
      </div>
+	 @if(Session::has('success'))
+
+              <div class="alert alert-success" id="selector">
+
+                  {{Session::get('success')}}
+
+              </div>
+
+          @endif
 <div class="col-lg-12">
 <div class="card mb-3 h-auto">
 <div class="card-body">

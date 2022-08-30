@@ -882,15 +882,20 @@ class PersonnelController extends Controller
 
     public function rejecttime(Request $request)
     {
-      $ids = explode(',', $request->id);
+      $ids = explode(',', $request->ids);
+      //dd($request->all());
       // $timeoff = Workertimeoff::where('id', $id)->get()->first();
       // $timeoff->status = "Rejected";
       // $timeoff->save();
-      Workertimeoff::whereIn('id',$ids)
+      $update = Workertimeoff::whereIn('id',$ids)
           ->update([ 
-              "status"=>"Rejected"
+              "status"=>"Rejected",
+              "reason"=>$request->reason
         ]);
-      echo "1";
+        if($update) {
+          $request->session()->flash('success', 'Reason Updated successfully');
+        return redirect()->route('company.timeoff');
+        }
     }
 
     public function deleterequest(Request $request) 
