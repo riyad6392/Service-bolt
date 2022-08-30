@@ -141,6 +141,8 @@ class CustomerController extends Controller
       return redirect()->route('company.quote');
     }
 
+
+    
     public function address(Request $request)
     {
         $cid = $request->customerid;

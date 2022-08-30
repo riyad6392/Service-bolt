@@ -58,6 +58,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           <h3>Services</h3>
         </div>
       </div>
+      @if(Session::has('success'))
+
+                    <div class="alert alert-success" id="selector">
+
+                        {{Session::get('success')}}
+
+                    </div>
+
+                @endif
       @if(count($serviceData)>0)
       <div class="col-md-4 mb-4">
         <div class="card">
@@ -81,15 +90,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           <div class="card-body">
             <div class="row">
               <div class="col-lg-9 mb-2">
-                @if(Session::has('success'))
-
-                    <div class="alert alert-success" id="selector">
-
-                        {{Session::get('success')}}
-
-                    </div>
-
-                @endif
+                
                 <h5 class="mb-4">Your Services</h5>
                 <div class="show-fillter" style="display: none;">
                   <input type="text" class="form-control" placeholder="Search Services" />
