@@ -598,7 +598,7 @@ class SchedulerController extends Controller
           ]);
 
         $appnotifiction = AppNotification::where('pid',$workerid)->where('ticketid',$quoteid)->get(); 
-        if(count($appnotifiction)==0) {
+        //if(count($appnotifiction)==0) {
 
             $notification = new AppNotification;
             $notification->uid = $auth_id;
@@ -621,7 +621,7 @@ class SchedulerController extends Controller
             );
 
             $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
-        }
+        //}
 
     }
 
@@ -1410,6 +1410,30 @@ class SchedulerController extends Controller
           ->update([ 
               "giventime"=>"$time","givenendtime"=>"$request->endtime","time"=>"$hours","minute"=>"$minutes"
           ]);
+        $workerid = $request->workerid;
+        $appnotifiction = AppNotification::where('pid',$workerid)->where('ticketid',$quoteid)->get(); 
+
+            $notification = new AppNotification;
+            $notification->uid = $auth_id;
+            $notification->pid = $workerid;
+            $notification->ticketid = $quoteid;
+            $notification->message =  "Ticket #" .$quoteid. " has been changed";
+            $notification->save();
+
+            $puser = Personnel::select('device_token')->where("id", $workerid)->first();
+
+            $msgarray = array (
+                'title' => 'Ticket Changed',
+                'msg' => "Ticket #" .$quoteid. " has been changed",
+                'type' => 'ticketchanged',
+            );
+
+            $fcmData = array(
+                'message' => $msgarray['msg'],
+                'body' => $msgarray['title'],
+            );
+
+            $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
     }
 
     public function sendFirebaseNotification($puser, $msgarray, $fcmData) 

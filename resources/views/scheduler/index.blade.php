@@ -1132,6 +1132,7 @@ th.fc-resource-cell img {
                 form_data.append('quoteid',ticketid);
                 form_data.append('time',giventime);
                 form_data.append('endtime',givenendtime);
+                form_data.append('workerid',workerid);
                 $.ajax({
                     url:"{{url('company/scheduler/updatesortdata')}}",
                     method:"POST",

@@ -235,7 +235,7 @@ class UserController extends Controller
         $auth_id = $user->id;
 
         $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first(); 
-        $ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('2','3','4'))->get();
+        $ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('2','4'))->get();
 
         if ($ticketdata) {
                 return response()->json(['status'=>1,'message'=>'success','data'=>$ticketdata],$this->successStatus);
