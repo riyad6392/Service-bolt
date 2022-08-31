@@ -181,7 +181,6 @@ class WorkerTicketController extends Controller
         if($request->closeout == "closeout") {
             $ticket = Quote::where('id', $request->ticketid)->first();
             $ticket->ticket_status = 3;
-            $ticket->ticket_status = $ticket->price;
             $ticket->save();
 
             date_default_timezone_set('Asia/Kolkata');
