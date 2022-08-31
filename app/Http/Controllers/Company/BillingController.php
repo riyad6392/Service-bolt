@@ -37,19 +37,30 @@ class BillingController extends Controller
      */
     public function index(Request $request)
     {
+      
         $auth_id = auth()->user()->id;
         if(auth()->user()->role == 'company') {
             $auth_id = auth()->user()->id;
         } else {
            return redirect()->back();
         }
-
+      
       $totalbillingData = DB::table('quote')
-        ->select(DB::raw('etc as date'), DB::raw('sum(price) as totalprice'),'id')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")
+        ->select(DB::raw('etc as date'),'customer.customername','personnel.personnelname', DB::raw('sum(price) as totalprice'),'quote.id')
+        ->join('customer', 'customer.id', '=', 'quote.customerid')
+        ->join('personnel', 'personnel.id', '=', 'quote.personnelid')
+        ->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")
         ->groupBy(DB::raw('date') )
         ->get();
-        $billingData = DB::table('quote')->select('quote.id','quote.serviceid','quote.price','quote.givendate','quote.payment_status','quote.personnelid', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->orderBy('quote.id','desc')->get();
-
+       //dd($totalbillingData);
+        
+        $billingData = DB::table('quote')
+        ->select('quote.id','quote.serviceid','quote.price','quote.givendate','customer.customername','quote.payment_status','quote.personnelid','personnel.personnelname','services.servicename')
+        ->join('customer', 'customer.id', '=', 'quote.customerid')
+        ->join('services', 'services.id', '=', 'quote.serviceid')
+        ->join('personnel', 'personnel.id', '=', 'quote.personnelid')
+        ->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->orderBy('quote.id','desc')->get();
+        //dd($billingData);
         $table="quote";
         $fields = DB::getSchemaBuilder()->getColumnListing($table);
 
@@ -112,8 +123,9 @@ class BillingController extends Controller
       $json = array();
       if($targetid == 0) {
         $auth_id = auth()->user()->id;
-        $billingData = DB::table('quote')->select('quote.id','quote.price','quote.givendate','quote.payment_status','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->orderBy('quote.id','asc')->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->orderBy('quote.id','asc')->get();
         $countdata = count($billingData);
+       // dd($billingData);
          $datacount = $countdata-1;
       if($billingData[$datacount]->image!=null) {
         $imagepath = url('/').'/uploads/services/'.$billingData[$datacount]->image;
@@ -127,14 +139,19 @@ class BillingController extends Controller
         $invoiceid = "-";
       }
 
-      if($billingData[$datacount]->payment_status!=null) {
-          $style = "disabled";
-          $pstatus1 = 'Completed'; 
-      } else {
-          $style = "";
-           $pstatus1 = 'Pending';
-      }
      
+     
+      $pstatus1 = 'Completed';  
+      if($billingData[0]->payment_status==null && $billingData[0]->payment_mode==null) {
+          $pstatus1 = 'Pending';           
+      } 
+           
+      if($pstatus1 =='Completed')  {
+        $style1 = "disabled";
+    } else {
+        $style1 = "";
+    }
+
       $html ='<div>
           <div class="card">
             <div class="card-body p-4">
@@ -172,7 +189,7 @@ class BillingController extends Controller
                     <p class="number-1">Payment Status</p>
                     <h6 class="heading-h6">'.$pstatus1.'</h6>
                   </div>
-                  <button type="submit" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" '.$style.'>Collect Payment</button>
+                  <button type="submit" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" '.$style1.'>Collect Payment</button>
                   <a class="btn btn-edit w-100 p-3 mb-3">Invoice</a>
                   <a class="btn btn-dark w-100 p-3 emailinvoice" data-id="'.$billingData[$datacount]->id.'" data-email="'.$billingData[$datacount]->email.'" data-bs-toggle="modal" data-bs-target="#edit-address"><img class=" m-0 me-2" style="width:auto;" src="images/share-2.png" alt="">Email Invoice</a>
                 </div>
@@ -181,7 +198,7 @@ class BillingController extends Controller
           </div>
         </div>';
       } else {
-        $billingData = DB::table('quote')->select('quote.id','quote.price','quote.givendate','quote.payment_status','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.price','quote.givendate','quote.payment_status','quote.payment_mode','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
         if($billingData[0]->image!=null) {
         $imagepath = url('/').'/uploads/services/'.$billingData[0]->image;
       } else {
@@ -192,18 +209,17 @@ class BillingController extends Controller
       } else {
         $invoiceid = "-";
       }
-      if($billingData[0]->payment_status!=null) {
-          $style = "disabled";
-      } else {
-          $style = "";
-      }
-
-      if($billingData[0]->payment_status==null) {
+      
+      $pstatus = 'Completed';  
+      if($billingData[0]->payment_status==null && $billingData[0]->payment_mode==null) {
           $pstatus = 'Pending';           
-      } else {
-          $pstatus = 'Completed';  
-      }
-                 
+      } 
+           
+      if($pstatus =='Completed')  {
+        $style = "disabled";
+    } else {
+        $style = "";
+    }
         
       $html ='<div>
           <div class="card">
@@ -243,9 +259,9 @@ class BillingController extends Controller
                     <p class="number-1">Payment Status</p>
                     <h6 class="heading-h6">'.$pstatus.'</h6>
                   </div>';
-
+                   
                   $html .='<button type="submit" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" '.$style.'>Collect Payment</button>
-                  <a class="btn btn-edit w-100 p-3 mb-3">Invoice</a>
+                    <a class="btn btn-edit w-100 p-3 mb-3">Invoice</a>
                   <a class="btn btn-dark w-100 p-3 emailinvoice" data-id="'.$billingData[0]->id.'" data-email="'.$billingData[0]->email.'" data-bs-toggle="modal" data-bs-target="#edit-address"><img class=" m-0 me-2" style="width:auto;" src="images/share-2.png" alt=""> Email Invoice</a>
                 </div>
               </div>

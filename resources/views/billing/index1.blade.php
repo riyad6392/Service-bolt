@@ -74,7 +74,9 @@
      <table id="example" class="table no-wrap table-new table-list align-items-center">
     <thead>
     <tr>
-        <th>Date</th>
+    <th>Date</th>
+    <th>Customer Name</th>
+    <th>Personnel Name</th>
         <th>Ticket Total</th>
         <th>Billing Total</th>
         <th>Action</th>
@@ -86,7 +88,9 @@
     @endphp
     @foreach($totalbillingData as $key=>$value)
       <tr class="" target="{{$i}}" data-id="{{$value->id}}">
-        <td>{{$value->date}}</td>
+      <td>{{$value->date}}</td>
+      <td>{{$value->customername}}</td>
+      <td>{{$value->personnelname}}</td>
         <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
         <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
         <td><a href="{{url('company/billing/billingview/')}}/{{$value->date}}" class="user-hover" style="color:#29DBBA;">View</a></td>

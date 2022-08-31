@@ -522,6 +522,7 @@ class ServicesController extends Controller
       </div><div class="col-md-6 mb-2">
        <input type="text" class="form-control" readonly="" name="frequency" placeholder="Service Frequency" value="'.$services[0]->frequency.'">
       </div><div class="col-md-6 mb-2">
+      <label>Default Service Time</label><br>
       <div class="timepicker timepicker1" style="display:inline-block;">
       <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" value="'.$services[0]->time.'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" readonly>:
             <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" value="'.$services[0]->minute.'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" readonly></div>

@@ -646,6 +646,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	   </div>
 	   
 	    <div class="col-md-6 mb-2">
+		<label>Default Service Time</label><br>
             <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
             <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
             <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
@@ -817,6 +818,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	   </div>
 	   
 	   <div class="col-md-6 mb-2">
+	   <label>Default Service Time</label><br>
             <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
             <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
             <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
