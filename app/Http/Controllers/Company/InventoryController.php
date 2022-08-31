@@ -159,7 +159,7 @@ class InventoryController extends Controller
      </div>
      <div class="col-md-6 mb-3">
       <label>Unit</label>
-     <input type="text" class="form-control" placeholder="Unit #" value="'.$inventory[0]->unit.'" name="unit" required>
+     <input type="text" class="form-control" placeholder="Unit #" value="'.$inventory[0]->unit.'" name="unit">
      </div>
      <div class="col-md-12 mb-3">
       <label>Price</label>

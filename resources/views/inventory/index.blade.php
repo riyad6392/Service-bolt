@@ -245,7 +245,7 @@
 	   
 	   </div>
      <div class="col-md-6 mb-3">
-	   <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit" required="">
+	   <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit">
 	  
 	   
 	   </div>  
