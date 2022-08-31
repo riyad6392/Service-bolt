@@ -136,9 +136,10 @@ Route::group([
      Route::any('/searchtimeoff', [TimeoffController::class, 'searchtimeoff'])->name('searchtimeoff');
 
      Route::any('/timeoffpto', [TimeoffController::class, 'timeoffpto'])->name('timeoffpto');
-    
+     Route::any('/viewdatepopup', [TimeoffController::class, 'viewdatepopup'])->name('viewdatepopup');
      Route::get('/notification', [NotificationController::class, 'index'])->name('notification');
      Route::any('/notification/deletenotification', [NotificationController::class, 'deletenotification'])->name('deletenotification');
+
 
     //customer create
     Route::get('/customer', [CustomerController::class, 'index'])->name('customer');

@@ -156,13 +156,21 @@
             <tr>
               <td style="display: none;">{{$value->id}}</td>
               <td>{{$value->personnelname}}</td>
-              <td>{{--$value->date1--}}{{$value->counttotal}} Day</td>
+              <td>{{--$value->date1--}}{{$value->counttotal}} Day
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" class="sup-dot service_list_dot" xmlns="http://www.w3.org/2000/svg" data-bs-toggle="modal" data-bs-target="#date-list-dot" id="date_list_dot" data-id="{{$value->ids}}">
+		      <circle cx="5" cy="5" r="5" fill="#FA8F61"></circle>
+		    </svg>
+              </td>
               <td style="white-space:break-spaces;width:300px!important">{{$value->notes}}</td>
               <td>{{$submittedby}}</td>
               <td>
                 @if($value->status!=null)
+                  @if($value->status == 'Accepted')
                   <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="{{$value->ids}}" style="pointer-events:none;">{{$value->status}}</a>
-                @else
+                  @else
+                <a class="btn btn-edit reject-btn p-3 w-auto" id="accept" data-id="{{$value->ids}}" style="pointer-events:none;">{{$value->status}}</a>
+                  @endif
+                @else  
                   <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="{{$value->ids}}">Accept</a>
                   <!-- <a class="btn btn-edit reject-btn p-3 w-auto" id="reject" data-id="{{$value->ids}}">Reject</a> -->
                   <a  class="btn btn-edit reject-btn p-3 w-auto" id="rejectpop" data-id="{{$value->ids}}">Reject</a>
@@ -251,6 +259,15 @@
     </div>
           </form>
     </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="date-list-dot" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+       <div id="viewdatelistdata"></div>
     </div>
   </div>
 </div>
@@ -388,6 +405,27 @@ $('#datepicker2old').datepicker({
          
         }
   });
+
+  $(document).on('click','#date_list_dot',function(e) {
+   var id = $(this).data('id');
+   var name = "Dates";
+  
+   $.ajax({
+	    url:'{{route('company.viewdatepopup')}}',
+	    data: {
+	      'id':id,
+	      'name':name
+	    },
+	    method: 'post',
+	    dataType: 'json',
+	    refresh: true,
+	    success:function(data) {
+        //alert(data);
+	      console.log(data.html);
+	      $('#viewdatelistdata').html(data.html);
+	    }
+	})
+ });
 </script>
 @endsection
 

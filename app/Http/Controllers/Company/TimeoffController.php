@@ -183,4 +183,31 @@ use Image;
       $request->session()->flash('success', 'PTO added successfully');
       return redirect()->back();
     }
+
+    
+    public function viewdatepopup(Request $request)
+    {
+      //dd($request->all());
+       $json = array();
+       $explode_id = explode(',', $request->id);
+       $dates = Workertimeoff::select('date')->whereIn('id', $explode_id)->get();
+       
+       $html ='<div class="modal-header">'.$request->name.'
+        <h5 class="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div><div class="modal-body"> <div class="add-customer-modal"></div>
+            <div class="row service-list-dot"><div class="col-md-12 mb-3"><ul>';
+            foreach($dates as $servicevalue){
+                
+                    $html .='<li>'.$servicevalue->date.'</li>';
+                }
+                $html .='</ul>
+            </div>
+        </div></div>';
+
+      return json_encode(['html' =>$html]);
+        die;
+       
   }
+  
+}
