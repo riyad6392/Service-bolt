@@ -603,7 +603,7 @@
                         </label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]" value="{{@$commissiondata[$key][$value->servicename]}}">
+                            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]" @if(isset($commissiondata)) value="{{@$commissiondata[$key][$value->servicename]}}" @endif>
                         </div>
                     </li>
                 @endforeach

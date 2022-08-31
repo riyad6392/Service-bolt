@@ -1423,7 +1423,7 @@ class SchedulerController extends Controller
             $puser = Personnel::select('device_token')->where("id", $workerid)->first();
 
             $msgarray = array (
-                'title' => 'Ticket Assign',
+                'title' => 'Ticket Changed',
                 'msg' => "Ticket #" .$quoteid. " has been changed",
                 'type' => 'ticketchanged',
             );
