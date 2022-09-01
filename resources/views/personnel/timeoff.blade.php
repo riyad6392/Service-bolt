@@ -69,7 +69,7 @@
                   @if($value->status==null)
                   Pending
                   @else
-                  {{$value->status}}
+                  {{$value->status}} @if($value->reason!="") ({{$value->reason}}) @endif
                 @endif</td>
               </tr>
             @endforeach

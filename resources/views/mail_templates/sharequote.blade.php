@@ -1,5 +1,5 @@
 <div>
-	<p>Thanks for your interest in ServiceBolt. Your {{$name}} details are below. </p>
+	<p>Thanks for your interest in {{auth()->user()->companyname}}. Your {{$name}} details are below. </p>
     Address: {{ $address }}
     <br>
     Service Name: {{ $servicename }}

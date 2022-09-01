@@ -691,8 +691,8 @@ class UserController extends Controller
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
-        
-      Mail::send('mail_templates.sharequote', ['address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->hour,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
+      $name = "Ticket";  
+      Mail::send('mail_templates.sharequote', ['address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->hour,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description,'name'=>$name], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Ticket details!');
           $message->from($app_email,$app_name);
@@ -714,7 +714,11 @@ class UserController extends Controller
 
       $auth_id = auth()->user()->id;
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
-
+      $cdata = Customer::where('email',$request->email)->get();
+      
+      if(count($cdata)>=1) {
+        return response()->json(['status'=>0,'message'=>'This Email id already exist.'],$this->successStatus);   
+      }
       $data['userid'] = $worker->userid;
       $data['workerid'] = $worker->workerid;
       $data['customername'] = $request->customername;
@@ -1383,10 +1387,15 @@ class UserController extends Controller
             return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
+      $cdata = Customer::where('email',$request->email)->get();
+      
+      if(count($cdata)>1) {
+        return response()->json(['status'=>0,'message'=>'This Email id already exist.'],$this->successStatus);   
+      }
+
       $customerid = $request->customerid;
 
       $customer = Customer::where('id', $customerid)->get()->first();
-      
       if($request->serviceid!="") {
         $customer->serviceid = $request->serviceid;
       }
