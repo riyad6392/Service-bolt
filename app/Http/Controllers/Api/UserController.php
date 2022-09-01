@@ -714,7 +714,11 @@ class UserController extends Controller
 
       $auth_id = auth()->user()->id;
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
-
+      $cdata = Customer::where('email',$request->email)->get();
+      
+      if(count($cdata)>=1) {
+        return response()->json(['status'=>0,'message'=>'This Email id already exist.'],$this->successStatus);   
+      }
       $data['userid'] = $worker->userid;
       $data['workerid'] = $worker->workerid;
       $data['customername'] = $request->customername;
@@ -1383,10 +1387,15 @@ class UserController extends Controller
             return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
+      $cdata = Customer::where('email',$request->email)->get();
+      
+      if(count($cdata)>=1) {
+        return response()->json(['status'=>0,'message'=>'This Email id already exist.'],$this->successStatus);   
+      }
+
       $customerid = $request->customerid;
 
       $customer = Customer::where('id', $customerid)->get()->first();
-      
       if($request->serviceid!="") {
         $customer->serviceid = $request->serviceid;
       }

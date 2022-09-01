@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use DB;
 use Auth;
 use Cache;
+use App\Models\Inventory;
 
 class HomeController extends Controller
 {
@@ -46,6 +47,24 @@ class HomeController extends Controller
         $dateE = Carbon::now();
         $ticket = DB::table('quote')->where('userid',$auth_id)->where('ticket_status', '!=' ,'0')->limit('3')->orderBy('id','DESC')->get();
         
+        $inventoryData = Inventory::where('user_id',$auth_id)->get();
+        $goodproduct =  array();
+        $lowproduct =  array();
+        $restockproduct =  array();
+        foreach($inventoryData as $key =>$value) {
+            $fifypercent = $value->pquantity*50/100;
+            $twentyfivepercent = $value->pquantity*25/100;
+            
+            if($value->quantity>=$fifypercent) {
+                $goodproduct[] = $value->productname;
+            }
+            elseif($value->quantity>=$twentyfivepercent) {
+                $lowproduct[] = $value->productname;
+            }
+            elseif($value->quantity<=$twentyfivepercent) {
+                $restockproduct[] = $value->productname;
+            }
+        }
         $customerData = DB::table('quote')->select('quote.*', 'customer.id','customer.phonenumber','customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status', '!=' ,'0')->where('quote.ticket_status', '!=' ,'1')->limit('2')->orderBy('quote.id','DESC')->get();
 
         //$ticket = DB::table('quote')->select('product_id')->where('userid',$auth_id)->get();
@@ -71,8 +90,7 @@ class HomeController extends Controller
         } else {
           $dailyprogress = 0;
         }
-       
-        return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress'));
+        return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct'));
     }
 
     public function index1(Request $request)
