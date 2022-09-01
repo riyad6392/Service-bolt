@@ -1389,7 +1389,7 @@ class UserController extends Controller
 
       $cdata = Customer::where('email',$request->email)->get();
       
-      if(count($cdata)>=1) {
+      if(count($cdata)>1) {
         return response()->json(['status'=>0,'message'=>'This Email id already exist.'],$this->successStatus);   
       }
 
