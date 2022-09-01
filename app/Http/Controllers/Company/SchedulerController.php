@@ -746,10 +746,12 @@ class SchedulerController extends Controller
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
-        
-      Mail::send('mail_templates.sharequote', ['address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
+        $name = 'service ticket';
+      Mail::send('mail_templates.sharequote',
+       ['address'=>$request->address,'name'=>$name, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description],
+        function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
-          ->subject('Quot details!');
+          ->subject('Service Quote from ' .  auth()->user()->companyname);
           $message->from($app_email,$app_name);
         });
 

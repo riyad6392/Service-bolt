@@ -702,4 +702,23 @@ class CustomerController extends Controller
       return json_encode(['totalprice' =>$totalprice]);
         die;
     }
+
+
+    public function checkemail(Request $request) {
+      $givenemail = $_GET['email'];
+  
+      $emailData = Customer::where('email','=',$givenemail)->first();
+
+      if($emailData) {
+        echo '<div class="email_msg alert alert-danger" >
+        <strong>Data Duplicate!</strong> Email is already exits.
+          </div>';
+      }
+      else {
+        echo '<div class="email_msg alert alert-danger" style="display:none;">
+        <strong>Data Duplicate!</strong> Email is already exits.
+        </div>';
+      }
+      
+        }
 }

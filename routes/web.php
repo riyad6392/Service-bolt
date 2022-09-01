@@ -145,9 +145,11 @@ Route::group([
     Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
     Route::any('/customer/create', [CustomerController::class, 'create'])->name('customercreate');
     Route::any('/customer/createcticket', [CustomerController::class, 'createcticket'])->name('createcticket');
+    Route::any('/customer/checkemail', [CustomerController::class, 'checkemail'])->name('checkemail');
 
     //commission report
     Route::any('/commisionreport', [ComissionController::class, 'index'])->name('commisionreport');
+   
 
     Route::any('/customer/viewservicepopup', [CustomerController::class, 'viewservicepopup'])->name('viewservicepopup');
     Route::any('/customer/view/{id}', [CustomerController::class, 'view'])->name('customerview');
@@ -304,7 +306,7 @@ Route::group([
     
     Route::any('/scheduler/geteventdata', [SchedulerController::class, 'geteventdata'])->name('geteventdata');
 
-    Route::get('/report', [ReportController::class, 'index'])->name('report');
+    Route::any('/report', [ReportController::class, 'index'])->name('report');
     Route::get('/managecommission', [CommissionController::class, 'index'])->name('managecommission');
     Route::any('/personnel/managecommissioncreate', [CommissionController::class, 'commissioncreate'])->name('commissioncreate');
 

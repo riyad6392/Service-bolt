@@ -1204,12 +1204,12 @@ th.fc-resource-cell img {
                 });
             },  
             eventDrop: function(event,delta, revertFunc, jsEvent, ui, view ) {
-
-                //alert(event+delta+ revertFunc+ jsEvent+ ui+ view);
+              
                 var ticketid = event.id;
                 var resourceId = event.resourceId;
                 
                 if(event.start._i[0].length==1) {
+                 
                     var datetime = event.start._i;
                     
                     var datetime = datetime.split(" ");
@@ -1230,8 +1230,11 @@ th.fc-resource-cell img {
 
                     var fulldate = "{{$requestdate}}";
                 } else {
+                 
                     var hours = event.start._i[3];
                     var minutes = event.start._i[4];
+                    alert(minutes);
+                    alert(hours);
                     const ampm = hours >= 12 ? 'pm' : 'am';
 
                     hours %= 12;

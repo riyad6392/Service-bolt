@@ -325,8 +325,10 @@
      <div class="col-md-6 mb-3">
     
      <input type="email" class="form-control" placeholder="Email" name="email" id="email" >
-     
      </div>
+     <div class="col-md-12 mb-3 email_msg">
+     
+                  </div>
      
      <div class="col-md-12 mb-3">
     
@@ -562,6 +564,21 @@
 
 @section('script')
 <script type="text/javascript">
+
+$(document).ready(function(){
+  $("#email").blur(function(){
+     email =$('#email').val();
+    var url = "{{url('/company/customer/checkemail')}}"+'?'+'email='+email;
+   var res = $(".email_msg").load(url);
+   
+   
+  });
+});
+
+
+
+
+
   $('.dropify').dropify();
   $(document).ready(function() {
     $('#example').DataTable({
@@ -786,6 +803,9 @@ $(document).on('click','#editCustomer',function(e) {
       });
     });
   });
+
+
+  
 </script>
 @endsection
 
