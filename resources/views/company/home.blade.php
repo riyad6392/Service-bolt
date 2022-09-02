@@ -249,38 +249,22 @@
   </div>
 
   <div class="row mt-4">
-    @php
-      $i=1;
-    @endphp
+
     
     <input type="hidden" name="cservice" id="cservice" value="{{count($serviceinfo)}}">
+    
   @foreach($serviceinfo as $key => $value)
-    @php
-    if($i==1) {
-          $color = "5555FF";
-        }
-        if($i==2) {
-          $color = "FFC0CB";
-        }
-        if($i==3) {
-          $color = "888888";
-        }
-        if($i==4) {
-          $color = "28B463";
-        }
-    @endphp
+   
     <div class="col-lg-6 mb-3">
       <div class="serices">
         <a href="#" style="white-space: normal;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
           
-          <path fill="#{{$color}}" d="M12 18a6 6 0 100-12 6 6 0 000 12z"></path>
+          <path fill="{{$value->color}}" d="M12 18a6 6 0 100-12 6 6 0 000 12z"></path>
          
         </svg> {{$value->servicename}}</a>
       </div>
     </div>
-     @php
-     $i++;
-      @endphp
+    
   @endforeach
   </div>
  
@@ -567,21 +551,21 @@ var tooltipCanvas = document.getElementById("tooltip-canvas");
 for(var i=1; i<=colorcount; i++) {
   if (i == "1") {
     var gradientBlue = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
-    gradientBlue.addColorStop(0, '#5555FF');
+    gradientBlue.addColorStop(0, '{{@$serviceinfo[0]->color}}');
   }
 
   if (i == "2") {
     var gradientRed = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
-    gradientRed.addColorStop(0, '#FFC0CB');
+    gradientRed.addColorStop(0, '{{@$serviceinfo[1]->color}}');
   }
 
   if (i == "3") {
     var gradientGrey = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
-    gradientGrey.addColorStop(0, '#888888');
+    gradientGrey.addColorStop(0, '{{@$serviceinfo[2]->color}}');
   }
   if (i == "4") {
     var gradientGreen = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
-    gradientGreen.addColorStop(0, '#28B463');
+    gradientGreen.addColorStop(0, '{{@$serviceinfo[3]->color}}');
   }
 }
 

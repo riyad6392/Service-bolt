@@ -324,9 +324,9 @@
      
      <div class="col-md-6 mb-3">
     
-     <input type="email" class="form-control" placeholder="Email" name="email" id="email" >
+     <input type="email" class="form-control email" placeholder="Email" name="email" id="email" >
      </div>
-     <div class="col-md-12 mb-3 email_msg">
+     <div class="col-md-12 mb-3 email_msg " style="display:none;">
      
                   </div>
      
@@ -565,16 +565,41 @@
 @section('script')
 <script type="text/javascript">
 
-$(document).ready(function(){
-  $("#email").blur(function(){
-     email =$('#email').val();
-    var url = "{{url('/company/customer/checkemail')}}"+'?'+'email='+email;
-   var res = $(".email_msg").load(url);
-   
-   
-  });
+$(document).ready(function() {
+    $(document).on('blur', '.email', function() {
+        email = $(this).val();
+        //alert(email);
+        var url = "{{url('/company/customer/checkemail')}}" + '?' + 'email=' + email;
+        //alert('f');
+
+        $.ajax({
+            url: url,
+            method: 'get',
+            dataType: 'json',
+            refresh: true,
+            success: function(data) {
+
+                if (data == 1) {
+                    // $("#email_msg").remove();
+                    $(".email_msg").empty();
+                    $(".email_msg").append("<div class='alert alert-danger'<strong>Data Duplicate!</strong> Email is already exits.</div>");
+                    $(".email_msg").show();
+                    $('.btn-add').attr("disabled", true);
+                } else {
+                    $(".email_msg").empty();
+                    $(".email_msg").hide();
+                    $('.btn-add').attr("disabled", false);
+
+                }
+
+            }
+        });
+    });
 });
 
+
+
+   
 
 
 

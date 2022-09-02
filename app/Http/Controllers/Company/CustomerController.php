@@ -589,7 +589,10 @@ class CustomerController extends Controller
           <div class="col-md-12 mb-2">
             <label>Email</label>
 
-            <input type="email" class="form-control" placeholder="Email" value="'.$customer[0]->email.'" name="email" id="email">
+            <input type="email" class="form-control email" placeholder="Email" value="'.$customer[0]->email.'" name="email" >
+          </div>
+          <div class="col-md-12 mb-3 email_msg " style="display:none;">
+     
           </div>
           <div class="col-md-12 mb-3">
           <label>Select Services</label>
@@ -710,14 +713,10 @@ class CustomerController extends Controller
       $emailData = Customer::where('email','=',$givenemail)->first();
 
       if($emailData) {
-        echo '<div class="email_msg alert alert-danger" >
-        <strong>Data Duplicate!</strong> Email is already exits.
-          </div>';
+        echo 1;
       }
       else {
-        echo '<div class="email_msg alert alert-danger" style="display:none;">
-        <strong>Data Duplicate!</strong> Email is already exits.
-        </div>';
+        echo 0;
       }
       
         }

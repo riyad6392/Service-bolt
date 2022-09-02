@@ -687,6 +687,27 @@ Service Report</div>
       $("#phiddenid").val(pid);
       this.form.submit();
     });
+
+
+
+
+  
+    $(function() {
+            var lastTab = localStorage.getItem('lastTab');
+            $('#myTab').removeClass('hidden');
+            if (lastTab) {
+                $('[data-bs-target="' + lastTab + '"]').tab('show');
+                localStorage.removeItem('lastTab');
+            }
+            $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+                localStorage.setItem('lastTab', $(this).data('bs-target'));
+            });
+        });
+
+
+        window.onbeforeunload = function(e) {
+          
+    }
 </script>
 @endsection
 

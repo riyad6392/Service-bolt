@@ -74,7 +74,7 @@ class HomeController extends Controller
                  //'quote.product_id'
                 // dd($inventoryinfo);   
         $serviceinfo = DB::table('quote')
-                 ->select('quote.serviceid','services.servicename', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
+                 ->select('quote.serviceid','services.servicename','services.color', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
                  ->orderBy('total','DESC')
                  ->groupBy('quote.serviceid')
                  ->get();

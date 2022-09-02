@@ -1,6 +1,7 @@
 @extends('layouts.header')
 @section('content')
 <style type="text/css">
+	
   .input-container input {
     border: none;
     box-sizing: border-box;
