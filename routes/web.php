@@ -429,6 +429,7 @@ Route::group([
 
     //balance-sheet module
     Route::get('/balancesheet', [WorkerBalancesheetController::class, 'index'])->name('balancesheet');
+    Route::post('/balancesheetfilter', [WorkerBalancesheetController::class, 'balancesheetfilter'])->name('balancesheetfilter');
 
     Route::any('/customer/vieweditaddressmodal', [WorkerCustomerController::class, 'vieweditaddressmodal'])->name('vieweditaddressmodal');
     Route::any('/customer/updateaddress', [WorkerCustomerController::class, 'updateaddress'])->name('updateaddress');

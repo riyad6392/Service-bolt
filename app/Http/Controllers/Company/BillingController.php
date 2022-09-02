@@ -15,6 +15,7 @@ use App\Models\Service;
 use App\Models\Customer;
 use App\Models\Personnel;
 use App\Models\Inventory;
+use App\Models\User;
 
 use Mail;
 
@@ -111,9 +112,10 @@ class BillingController extends Controller
          $datef = date('l - F d, Y',$sdate);
          
         $billingData = DB::table('quote')->select('quote.id','quote.serviceid','quote.price','quote.givendate','quote.etc','quote.payment_status','quote.personnelid', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->where('quote.etc',$date)->orderBy('quote.id','desc')->get();
+
         $table="quote";
         $fields = DB::getSchemaBuilder()->getColumnListing($table);
-        return view('billing.index2',compact('auth_id','billingData','fields','datef'));
+        return view('billing.index2',compact('auth_id','billingData','fields','datef','date'));
     }
 
     public function leftbarbillingdata(Request $request) {
@@ -123,7 +125,9 @@ class BillingController extends Controller
       $json = array();
       if($targetid == 0) {
         $auth_id = auth()->user()->id;
-        $billingData = DB::table('quote')->select('quote.id','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->orderBy('quote.id','asc')->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->where('quote.etc',$request->date)->orderBy('quote.id','asc')->get();
+
+
         $countdata = count($billingData);
        // dd($billingData);
          $datacount = $countdata-1;
@@ -363,7 +367,7 @@ class BillingController extends Controller
           die;
     }
 
-    public function sendbillinginvoice(Request $request)
+    public function sendbillinginvoiceold(Request $request)
     {
       $tdata = Quote::where('id', $request->ticketid)->get()->first();
 
@@ -390,6 +394,70 @@ class BillingController extends Controller
       }
       
        Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'address'=>$tdata->address,'servicename'=>$servicename,'price'=>$tdata->price,'date'=>$tdata->givendate], function($message) use ($contactList,$app_name,$app_email,$contactbccList,$cc) {
+          $message->to($contactList);
+          if($cc!=null) {
+            $message->cc($contactbccList);
+          }
+          $message->subject('Billing Invoice!');
+          $message->from($app_email,$app_name);
+        });
+
+       $request->session()->flash('success', 'Billing Invoice shared successfully');
+       return redirect()->back();
+    }
+
+    public function sendbillinginvoice(Request $request)
+    {
+      $tdata = Quote::where('id', $request->ticketid)->get()->first();
+
+      $serviceid = explode(',', $tdata->serviceid);
+      //dd($serviceid);
+      $servicedetails = Service::select('servicename','productid')->whereIn('id', $serviceid)->get();
+       
+      foreach ($servicedetails as $key => $value) {
+        $pid[] = $value['productid'];
+        $sname[] = $value['servicename'];
+      } 
+
+      $servicename = implode(',', $sname);
+      $productids = explode(',', $tdata->productid);
+
+      $pdetails = Inventory::select('productname','id')->whereIn('id', $productids)->get();
+      if(count($pdetails)>0) {
+      foreach ($pdetails as $key => $value) {
+        $pname[] = $value['productname'];
+      } 
+
+
+      $productname = implode(',', $pname);
+    } else {
+      $productname = "--";
+    }
+
+      $company = User::where('id', $tdata->userid)->get()->first();
+      if($company->image!=null) {
+        $companyimage = url('').'/userimage/'.$company->image;
+      } else {
+        $companyimage = url('').'/uploads/servicebolt-noimage.png';
+      }
+
+      $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
+
+      $app_name = 'ServiceBolt';
+      $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
+
+      $contacttoemail = explode(',', $request->to);
+      
+      foreach($contacttoemail as $key => $contact) {
+        $contactList[] = $contact;
+      }
+      $cc = $request->cc;
+      $contactbccemail = explode(',', $request->cc);
+      foreach($contactbccemail as $key => $contactbcc) {
+        $contactbccList[] = $contactbcc;
+      }
+      
+       Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$company->companyname,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids], function($message) use ($contactList,$app_name,$app_email,$contactbccList,$cc) {
           $message->to($contactList);
           if($cc!=null) {
             $message->cc($contactbccList);

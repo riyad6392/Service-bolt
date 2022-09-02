@@ -46,7 +46,18 @@
      </div>
      
      </div>
-     
+     <form action="{{ route('worker.balancesheetfilter') }}" method="post">
+      @csrf
+      <div class="row">
+      <div class="col-md-4">
+      </div><div class="col-md-3">
+      </div><div class="col-md-3">
+      </div>
+      <div class="col-md-2">
+       <button class="btn add-btn-yellow py-2 px-5" type="submit" name="search" value="excel">{{ __('Export') }}</button>
+      </div>
+    </div>
+     </form>
      <div class="col-lg-12 mt-4">
      <div class="table-responsive">
       <table id="example" class="table no-wrap table-new table-list" style="

@@ -751,11 +751,11 @@ th.fc-resource-cell img {
       <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
      </div>
      <div class="col-lg-6 mb-3">
-      <button type="submit" class="btn btn-add btn-block" type="submit">Add a Ticket</button>
+      <button type="submit" class="btn btn-add btn-block" name="ticket" value="ticket">Add a Ticket</button>
      </div>
      
      <div class="col-lg-12">
-     <button class="btn btn-dark btn-block btn-lg p-2"> Share</button>
+     <button type="submit" class="btn btn-dark btn-block btn-lg p-2" name="share" value="share"> Share</button>
      </div>
      </div>
     </form> 
@@ -774,6 +774,8 @@ th.fc-resource-cell img {
 <script  src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
 <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
+<script src="http://localhost/servicebolt/public/js/bootstrap-select.min.js"></script>
+
 
 <script type="">
       $.ajaxSetup({
@@ -882,6 +884,7 @@ th.fc-resource-cell img {
         }
         
         $(document).on('change', 'select.selectpicker1',function() {
+            
             gethours1();
             getprice1();
             getfrequency1();
