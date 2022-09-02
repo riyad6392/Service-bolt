@@ -26,6 +26,7 @@
 <div class="content">
    <form method="post" action="{{ url('company/billing/update') }}" enctype="multipart/form-data">
       @csrf
+      <input type="hidden" name="date" id="date" value="{{$date}}">
      <div class="row">
 
       <div class="col-md-12">
@@ -200,15 +201,18 @@
       }
    });
   jQuery(function() {
+     var date = $("#date").val();
     $(document).on('click','.showSingle',function(e) {
         var targetid = $(this).attr('target');
         var serviceid = $(this).attr('data-id');
+        //var date = $(this).attr('data-etc');
         $.ajax({
             url:"{{url('company/billing/leftbarbillingdata')}}",
             data: {
               targetid: targetid,
-              serviceid: serviceid 
-            },
+              serviceid: serviceid,
+               date: date
+             },
             method: 'post',
             dataType: 'json',
             refresh: true,
@@ -223,7 +227,8 @@
             url:"{{url('company/billing/leftbarbillingdata')}}",
             data: {
               targetid: 0,
-              serviceid: 0 
+              serviceid: 0,
+              date: date
             },
             method: 'post',
             dataType: 'json',

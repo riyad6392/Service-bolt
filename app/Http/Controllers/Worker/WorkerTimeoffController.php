@@ -39,7 +39,10 @@ class WorkerTimeoffController extends Controller
 
       $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
       $todaydate = date('l - F d, Y');
-      $timeoff = DB::table('timeoff')->where('workerid',$worker->workerid)->get();
+      //$timeoff = DB::table('timeoff')->where('workerid',$worker->workerid)->get();
+
+      $timeoff = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('COUNT(timeoff.id) as counttotal'))->where('timeoff.workerid',$worker->workerid)->groupBy('timeoff.created_at')->get();
+
 
       $timeoff1 = DB::table('timeoff')->where('workerid',$worker->workerid)->where('date', $todaydate)->first();
       return view('personnel.timeoff',compact('auth_id','timeoff','timeoff1'));

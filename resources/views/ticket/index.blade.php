@@ -575,14 +575,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 			    </div>
 			</div>
 	 	</div>
-
-	 	<!-- <div class="col-md-12 mb-2">
-		   <div class="input_fields_wrap">
-	    		<div class="mb-3">
-			    	<input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address" required="">
-			    </div>
-			</div>
-	 	</div> -->
 	 	@php
 	 		if(count($services)>0) {
 	 			$cname = "";
@@ -670,11 +662,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	   	<button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
 	   </div>
 	   <div class="col-lg-6 mb-3">
-	   	<button type="submit" class="btn btn-add btn-block" type="submit">Add a Quote</button>
+	   	<button type="submit" class="btn btn-add btn-block" type="submit" name="quote" value="quote">Add a Quote</button>
 	   </div>
 	   
 	   <div class="col-lg-12">
-	   <button class="btn btn-dark btn-block btn-lg p-2"><img src="images/share-2.png"  alt=""/> Share</button>
+	   <button type="submit" class="btn btn-dark btn-block btn-lg p-2" name="share" value="share"><img src="images/share-2.png"  alt=""/> Share</button>
 	   </div>
 	   </div>
 	  </form> 
@@ -843,11 +835,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	   	<button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
 	   </div>
 	   <div class="col-lg-6 mb-3">
-	   	<button type="submit" class="btn btn-add btn-block" type="submit">Add a Ticket</button>
+	   	<button type="submit" class="btn btn-add btn-block" name="ticket" value="ticket">Add a Ticket</button>
 	   </div>
 	   
 	   <div class="col-lg-12">
-	   <button class="btn btn-dark btn-block btn-lg p-2"><img src="images/share-2.png"  alt=""/> Share</button>
+	   <button type="submit" class="btn btn-dark btn-block btn-lg p-2" name="share" value="share"><img src="images/share-2.png"  alt=""/> Share</button>
 	   </div>
 	   </div>
 	  </form> 
@@ -1227,7 +1219,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           </div>
           <div class="col-md-12 mb-2 position-relative">
             <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
-  <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+  <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
           </div>
           <div class="col-md-12 mb-2">
             <div class="d-flex align-items-center">
@@ -1260,7 +1252,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             </div>
           </div>
           <div class="col-md-6 mb-2">
-            <select class="form-select" name="frequency" id="frequency" required="">
+            <select class="form-select" name="frequency" id="frequency10" required="">
               <option selected="" value="">Service Frequency</option>
 			  @php $tenture = App\Models\Tenture::where('status','Active')->get(); @endphp
               @foreach($tenture as $key=>$value)
@@ -1271,8 +1263,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           <div class="col-md-6 mb-2">
             <label>Default Time (hh:mm)</label><br>
             <div class="timepicker timepicker1" style="display:inline-block;">
-              <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+              <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
             </div>
           </div>
           <div class="col-md-12">
@@ -1338,7 +1330,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           </div>
           <div class="col-md-12 mb-2 position-relative">
             <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
-  <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+  <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price11" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
           </div>
           <div class="col-md-12 mb-2">
             <div class="d-flex align-items-center">
@@ -1371,7 +1363,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             </div>
           </div>
           <div class="col-md-6 mb-2">
-            <select class="form-select" name="frequency" id="frequency" required="">
+            <select class="form-select" name="frequency" id="frequency11" required="">
               <option selected="" value="">Service Frequency</option>
 			  @php $tenture = App\Models\Tenture::where('status','Active')->get(); @endphp
               @foreach($tenture as $key=>$value)
@@ -1382,8 +1374,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           <div class="col-md-6 mb-2">
             <label>Default Time (hh:mm)</label><br>
             <div class="timepicker timepicker1" style="display:inline-block;">
-              <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+              <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time11" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute11" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
             </div>
           </div>
           <div class="col-md-12">
@@ -1741,7 +1733,6 @@ $('#serviceform').on('submit', function(event) {
 				var realmin = m % 60;
     		var hours = Math.floor(m / 60);
     		h = h+hours;
-				
 		    $("#time").val(h);
 				$("#minute").val(realmin);
 	    }

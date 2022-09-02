@@ -755,8 +755,11 @@ class SchedulerController extends Controller
           $message->from($app_email,$app_name);
         });
 
+        if($request->share =='share') {
+          $request->session()->flash('success', 'Ticket share successfully');
+        } else {
           $request->session()->flash('success', 'Ticket added successfully');
-            
+        }
           return redirect()->route('company.scheduler');
     }
 

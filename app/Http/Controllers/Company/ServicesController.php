@@ -538,9 +538,9 @@ class ServicesController extends Controller
      </div> <div class="col-lg-6 mb-3">
       <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
     </div><div class="col-lg-6 mb-3">
-      <button class="btn btn-add btn-block" type="submit">Add a Quote</button>
+      <button class="btn btn-add btn-block" type="submit" name="ticket" value="ticket">Add a Quote</button>
     </div><div class="col-lg-12">
-     <button class="btn btn-dark btn-block btn-lg p-2" type="submit"><img src="images/share-2.png"  alt=""/> Share</button>
+     <button class="btn btn-dark btn-block btn-lg p-2" type="submit" name="share" value="share"><img src="images/share-2.png"  alt=""/> Share</button>
     </div></div>';
       return json_encode(['html' =>$html]);
         die;
@@ -602,9 +602,11 @@ class ServicesController extends Controller
           ->subject($subjetline);
           $message->from($app_email,$app_name);
       });
-
-      $request->session()->flash('success', 'Quote added successfully');
-      
+        if($request->share =='share') {
+          $request->session()->flash('success', 'Quote share successfully');
+        } else {
+          $request->session()->flash('success', 'Quote added successfully');
+        }
       return redirect()->route('company.services');
     }
 

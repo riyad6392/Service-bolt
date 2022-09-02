@@ -68,7 +68,7 @@ class TicketController extends Controller
 
     public function quotecreate(Request $request)
     {
-      
+        
         $serviceid = implode(',', $request->servicename);
 
         $customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
@@ -142,9 +142,12 @@ class TicketController extends Controller
           ->subject('Service Quote from ' . auth()->user()->companyname);
           $message->from($app_email,$app_name);
         });
-
-      	  $request->session()->flash('success', 'Quote added successfully');
-            
+        if($request->share =='share') {
+      	  $request->session()->flash('success', 'Quote share successfully');
+         } else {
+          $request->session()->flash('success', 'Quote added successfully');    
+         }
+         
           return redirect()->route('company.quote');
     }
 
@@ -564,10 +567,13 @@ class TicketController extends Controller
           ->subject('Service Quote from '. auth()->user()->companyname);
           $message->from($app_email,$app_name);
         });
-
-          $request->session()->flash('success', 'Ticket added successfully');
-            
-          return redirect()->route('company.quote');
+        
+        if($request->share =='share') {
+          $request->session()->flash('success', 'Ticket share successfully');
+        } else {
+          $request->session()->flash('success', 'Ticket added successfully');  
+        }
+        return redirect()->route('company.quote');
     }
 
     public function vieweditticketmodal(Request $request)
