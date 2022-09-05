@@ -580,11 +580,22 @@ class SchedulerController extends Controller
 
     public function sortdata(Request $request)
     {
-        //DB::table('sethours')->where('workerid',$request->workerid)
-        $auth_id = auth()->user()->id;
+        //dd($request->all());
+        // $defaultitme = DB::table('quote')->select('time','minute')->where('id',$request->quoteid)->first();
+        // $hours = preg_replace("/[^0-9]/", '', $defaultitme->time);
+        // $minutes = preg_replace("/[^0-9]/", '', $defaultitme->minute);
+        
+        // //$time = "09:00 am";
+
+        // $time1 = strtotime($request->time);
+        
+        // $newtime = date('Y-m-d h:i A',strtotime("+ {$hours} hours + {$minutes} hours"));
+        // $newtime1=date('H:i A',strtotime($newtime));
+        // dd($newtime1);
+
+         $auth_id = auth()->user()->id;
         $quoteid = $request->quoteid;
         $time = $request->time;
-
         $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
 
 
@@ -1485,5 +1496,38 @@ class SchedulerController extends Controller
         curl_close($ch);
         return $result;
     }
+
+    public function monthviewall(Request $request) 
+    {
+    $auth_id = auth()->user()->id;
+    if(auth()->user()->role == 'company') {
+        $auth_id = auth()->user()->id;
+    } else {
+       return redirect()->back();
+    }
+    
+    $ticketData = DB::table('quote')->select('quote.*', 'customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"1")->orderBy('quote.id','ASC')->get();
+
+    if(isset($_REQUEST['date'])) {
+        $todaydate = Carbon::createFromFormat('Y-m-d', $_REQUEST['date'])->format('l - F d, Y');
+    } else {
+        $todaydate = date('l - F d, Y');
+    }
+    
+    $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
+
+    $customer = Customer::where('userid',$auth_id)->orderBy('id','DESC')->get();
+    $services = Service::where('userid', $auth_id)->get();
+    $worker = Personnel::where('userid', $auth_id)->offset(0)->limit(6)->get();
+    $workercount = Personnel::where('userid', $auth_id)->get();
+    $wcount = count($workercount);
+    $productData = Inventory::where('user_id',$auth_id)->orderBy('id','ASC')->get();
+    $userData = User::select('openingtime','closingtime')->where('id',$auth_id)->first();
+    $tenture = Tenture::where('status','Active')->get();
+    
+    $allworker = Personnel::where('userid', $auth_id)->get();
+    $id = "15";
+    return view('scheduler.monthviewall',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker'));
+  }
 
 }

@@ -5,6 +5,9 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
+     body{
+        overflow-x: hidden;
+    }
     .fc-time-grid-event .fc-content {
         overflow:visible;
     }
