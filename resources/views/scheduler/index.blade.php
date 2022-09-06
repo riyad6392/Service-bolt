@@ -5,6 +5,9 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
+     body{
+        overflow-x: hidden;
+    }
     .fc-time-grid-event .fc-content {
         overflow:visible;
     }
@@ -495,16 +498,17 @@ th.fc-resource-cell img {
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-lg-5" id="srcoll-here">
+                            <div class="col-lg-8" id="srcoll-here">
                                 <div class="show-fillter" style="display: flex;justify-content:space-between;">
                                     <button class="menubar" id="hide-top" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Day View</button>
                                     <a href='{{url("/")}}/company/scheduler/detailweek' class="add-btn-yellow" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Week View</a>
+                                    <a href='{{url("/")}}/company/scheduler/detailmonth' class="add-btn-yellow" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Month View</a>
                                     <span id="close"></span>
                                 </div>
 
                             </div>
 
-                            <div class="col-lg-3 text-end mb-2 offset-lg-4">
+                            <div class="col-lg-3 mb-2 ms-auto text-end">
                                 
                                 <span id="close"></span>
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#add-tickets" class="add-btn-yellow">New Ticket Assign + </a>
@@ -974,11 +978,12 @@ th.fc-resource-cell img {
                 title: $.trim($(this).text()), // use the element's text as the event title
                 stick: true, // maintain when user navigates (see docs on the renderEvent method)
                 color: $(this).data('color'),
-                //duration: '03:00'
+                //duration: '04:00'
             });
             // make the event draggable using jQuery UI
             $(this).draggable({
                 zIndex: 9999999,
+                //duration: '04:00',
                 revert: true,      // will cause the event to go back to its
                 revertDuration: 0  //  original position after the drag
             });
@@ -1001,9 +1006,10 @@ th.fc-resource-cell img {
             groupByResource: true,
             eventOverlap: true,
             //defaultEventMinutes: 30, 
-            //defaultTimedEventDuration: '4:15',
-            //forceEventDuration: true,
+            //defaultTimedEventDuration: 04:00,
+            forceEventDuration: true,
             resources: function (callback) {
+
                 @if(request()->start)
                     var start ="{{request()->start}}";
 
@@ -1160,8 +1166,8 @@ th.fc-resource-cell img {
             },
 
             drop: function (date, jsEvent, ui, resourceId) {
-
-                var hours = date._i[3];
+                   
+               var hours = date._i[3];
                 var minutes = date._i[4];
                 //alert(date._i[3] + date._i[4]);
                 const ampm = hours >= 12 ? 'pm' : 'am';
@@ -1200,6 +1206,8 @@ th.fc-resource-cell img {
                            type: "success"
                         },
                         function() { 
+                            //$('#calendar').fullCalendar('refetchEvents');
+                            //defaultTimedEventDuration: '04:00',
                             location.reload();
                         }
                         );

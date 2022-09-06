@@ -5,9 +5,19 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
-     body{
+    body{
         overflow-x: hidden;
     }
+    .fc-toolbar.fc-header-toolbar .fc-left {
+    position: absolute;
+    top: 17px;
+    left: 15px;
+    font-size: 16px;
+}
+
+.fc-toolbar.fc-header-toolbar .fc-left h2 {
+    font-size: 22px;
+}
 .add-btn-day{
     display: inline-block;
     background: #F7F9FA;
@@ -527,7 +537,7 @@ background: transparent!important;
 <div class="row">
     <div class="position-relative">
     <a href="{{url('company/scheduler')}}"> <i class="fa fa-times" aria-hidden="true" style="font-size: 20px;position: fixed;right: 10px;z-index: 9999;color: black;"></i></a></div>
-    <div class="col-md-12">
+    <div class="col-md-12 pe-3 ps-4">
         <div class="col-lg-12 mb-4">
             <div class="col-md-12 dropdownvisible">
                 <div class="card position-sticky">
@@ -535,7 +545,7 @@ background: transparent!important;
                         <div class="row mb-0">
                             <div class="col-md-6">
                                 <div class="side-h3">
-                                    <h3 style="font-weight: 500;color: #000;margin: auto;" onclick="return false">Scheduler & Dispatch (Week View)
+                                    <h3 style="font-weight: 500;color: #000;margin: auto;" onclick="return false">Scheduler & Dispatch (Month View)
                                     </h3>
                                 </div>
                             </div>
@@ -1101,7 +1111,7 @@ background: transparent!important;
     });
     $('#calendar').fullCalendar({
             header: {
-              left: '',
+              left: 'title',
               center: '',
                right:  'prev,next'
             },
@@ -1110,7 +1120,7 @@ background: transparent!important;
             maxTime: $("#closingtime").val(),  
             allDaySlot: false,
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-            defaultView: 'agendaWeek',
+            defaultView: 'month',
             groupByResource: true,
             eventOverlap: true,
             firstDay:1,

@@ -274,6 +274,8 @@ Route::group([
 
     Route::any('/scheduler/detailweek', [SchedulerController::class, 'weekviewall'])->name('schedulerweekviewall');
 
+    Route::any('/scheduler/detailmonth', [SchedulerController::class, 'monthviewall'])->name('schedulermonthviewall');
+
     Route::any('/scheduler/personnelschedulerdata', [SchedulerController::class, 'personnelschedulerdata'])->name('personnelschedulerdata');
 
     Route::any('/scheduler/viewaddedticketmodal', [SchedulerController::class, 'viewaddedticketmodal'])->name('viewaddedticketmodal');
