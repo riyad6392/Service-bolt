@@ -593,7 +593,7 @@ th.fc-resource-cell img {
                             <div class="col-lg-8" id="srcoll-here">
                                 <div class="show-fillter" style="display: flex;justify-content:space-between;">
                                     <button class="menubar" id="hide-top" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Day View</button>
-                                    <a href='{{url("/")}}/company/scheduler/detailweek' class="add-btn-yellow" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Week View</a>
+                                    <a href='{{url("/")}}/company/scheduler/detailweek' id="weekAll" class="add-btn-yellow" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Week View</a>
                                     <a href='{{url("/")}}/company/scheduler/detailmonth' class="add-btn-yellow" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Month View</a>
                                     <span id="close"></span>
                                 </div>
@@ -699,11 +699,9 @@ th.fc-resource-cell img {
     <div class="modal-content customer-modal-box">
      
       <div class="modal-body">
-     <div class="add-customer-modal d-flex justify-content-between align-items-center">
-     <h5>Add A New Ticket</h5>
-     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       <div class="add-customer-modal">
+      <h5>Add A New Ticket</h5>
      </div>
-   
       
 
      @if(count($services)>0)
