@@ -1183,12 +1183,15 @@ class UserController extends Controller
                 if($value->date1==null) {
                     $value->date1 = "";
                 }
+                if($value->selectdates!="") {
+                  $sdates = explode(',',$value->selectdates);  
+                }
                 $data[] = array(
                     'created_at' => $value->created_at,
                 'date' => $value->date,
                 'date1' => $value->date1,
                 'id' => $value->id,
-                'selectedDates' => array($value->selectdates),
+                'selectedDates' => $sdates,
                 'notes' => $value->notes,
                 'reason' => $value->reason,
                 'status' => $value->status,
