@@ -1164,13 +1164,42 @@ class UserController extends Controller
       
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('workerid','userid')->where('id',$auth_id)->first();
-        $timeoff = DB::table('timeoff')->where('workerid',$worker->workerid)->orderBy('id','desc')->get();
+        //$timeoff = DB::table('timeoff')->where('workerid',$worker->workerid)->orderBy('id','desc')->get();
+
+        $timeoff = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('GROUP_CONCAT(timeoff.date1 ORDER BY timeoff.date1) AS selectdates'),DB::raw('COUNT(timeoff.id) as counttotal'))->where('timeoff.workerid',$worker->workerid)->groupBy('timeoff.created_at')->orderBy('id','desc')->get();
 
         if(count($timeoff)>0) {
-            return response()->json(['status'=>1,'message'=>'Success','data'=>$timeoff],$this->successStatus);    
+            foreach($timeoff as $key=>$value) {
+                if($value->reason==null) {
+                    $value->reason = "";
+                }
+                if($value->status==null) {
+                    $value->status = "";
+                }
+                if($value->submitted_by==null) {
+                    $value->submitted_by = "";
+                }
+                
+                if($value->date1==null) {
+                    $value->date1 = "";
+                }
+                $data[] = array(
+                    'created_at' => $value->created_at,
+                'date' => $value->date,
+                'date1' => $value->date1,
+                'id' => $value->id,
+                'selectedDates' => array($value->selectdates),
+                'notes' => $value->notes,
+                'reason' => $value->reason,
+                'status' => $value->status,
+                'submitted_by' => $value->submitted_by,
+                'updated_at' => $value->updated_at,
+                );
+            }
+            return response()->json(['status'=>1,'message'=>'Success','data'=>$data],$this->successStatus);    
         } else {
-            $timeoff = [];
-            return response()->json(['status'=>1,'message'=>'Success','data'=>$timeoff],$this->successStatus);
+            $data = [];
+            return response()->json(['status'=>1,'message'=>'Success','data'=>$data],$this->successStatus);
         }
         
     }
