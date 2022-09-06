@@ -24,7 +24,7 @@
   }
 </style>
 <div class="content">
-   <form method="post" action="{{ url('company/billing/update') }}" enctype="multipart/form-data">
+   <form method="post" action="{{ url('company/billing/paynow') }}" enctype="multipart/form-data">
       @csrf
       <input type="hidden" name="date" id="date" value="{{$date}}">
      <div class="row">
@@ -322,6 +322,8 @@
       }
   })
  });
+
+
 </script>
 @endsection
 

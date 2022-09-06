@@ -1,12 +1,26 @@
 @extends('layouts.header')
 @section('content')
 <div class="content">
+
 <div class="row">
 	<div class="col-md-12 mt-4">
+	@if($paymentpaid==1)
+	<a href="{{ url('/'). '/company/billing/billingview/'. $quoteData->etc }}" class="back-btn">
+	  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
+	   Back</a>
+	@else
 		<a href="{{ url()->previous() }}" class="back-btn">
 	  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
 	   Back</a>
+	@endif
+	   @if(Session::has('success'))
+<div class="alert alert-success" id="selector">
+	{{Session::get('success')}}
+</div>
+@endif
 	<div class="tabs">
+	@if($paymentpaid==1)
+  @else
   <ul id="tabs-nav" class="tabs-paynow-card">
     <li><a href="#tab1">
 	<div class="tabs-paynow">
@@ -30,13 +44,33 @@
 	</a></li>
    
   </ul> <!-- END tabs-nav -->
+  @endif
+  @if($paymentpaid==1)
+  	<p>TicketId: #{{$quoteData->id}} </p>
+  	<p>Customer Name: {{$quoteData->customername}}</p>
+  	<p>Payment Mode: {{$quoteData->payment_mode}}</p>
+  	@if($quoteData->checknumber!="")
+  		<p>Check Number: {{$quoteData->checknumber}}</p>
+  	@endif
+    <div id="tab1" class="tab-content">
+    	<div class="card card-pay mb-3">
+	  <div class="card-body">
+	  <h4>Paid succesfully.</h4>
+	  <h4>Total: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span></h4>
+	  
+	  
+	
+	  </div>
+	  @else
   <div id="tabs-content" class="p-3">
-  	<p>Customer Name: {{$customer->customername}}</p>
+  <p>TicketId: #{{$ticketID}} </p>
+  	<p>Customer Name: {{$customername}}</p>
     <div id="tab1" class="tab-content">
     	<div class="card card-pay mb-3">
 	  <div class="card-body">
 	  <p>@if($servicename!="") Service Name - {{$servicename}}@endif</p>
 	  <p>@if($productname!="") Product Name - {{$productname}} @endif</p>
+	  <h4>You have to pay</h4>
 	  <h4>Total: <span>${{number_format((float)$price, 2, '.', '')}}</span></h4>
 	  
 	  
@@ -76,17 +110,25 @@
 	  
 	  
 	     <div class="col-lg-12 text-center mt-3">
-<button class="btn btn-add w-100 fw-bold">Pay</button>
+<button type="submit" class="btn btn-add w-100 fw-bold">Pay</button>
 </div>
 	  
 	  
 	  
     </div>
     <div id="tab2" class="tab-content">
+	<form method="put" action="{{ url('company/billing/update') }}" enctype="multipart/form-data">
+
+		@csrf 
+		<input type="hidden" name="ticketid" id="ticketid" value="{{$ticketID}}">
+                  <input type="hidden" name="amount" id="amount" value="{{$price}}">
+                  <input type="hidden" name="customername" id="customername" value="{{$customername}}">
+                  <input type="hidden" name="customerid" id="customerid" value="{{$customerid}}">
       <div class="card card-pay mb-3">
 	  <div class="card-body">
 	  <p>@if($servicename!="") Service Name - {{$servicename}}@endif</p>
 	  <p>@if($productname!="") Product Name - {{$productname}} @endif</p>
+	  <h4>You have to pay</h4>
 	  <h4>Total: <span>${{number_format((float)$price, 2, '.', '')}}</span></h4>
 	  
 	  
@@ -109,11 +151,12 @@
 									<div class="accordion-body">
 									<div class="mb-3">
 									<label class="form-label">Enter Cash Amount</label>
-									<input type="text" class="form-control form-control-2" placeholder="">
+									<input type="text" class="form-control form-control-2" value="{{$price}}" placeholder="">
 
 									</div>
 																		<div class="mt-4 text-center">
 <button class="btn btn-add w-100 fw-bold">Pay</button>
+</form>
 </div>
 									
 									</div>
@@ -139,7 +182,7 @@
 
 									</div>
 																											<div class="mt-4 text-center">
-								<button class="btn btn-add w-100 fw-bold">Pay</button>
+								<button type="submit" class="btn btn-add w-100 fw-bold">Pay</button>
 								</div>
 									</div>
 								</div>
@@ -173,7 +216,7 @@
 	  </div>
 	  </div>
 	  <div class="text-center">
-<button class="btn btn-add w-100 fw-bold">Pay</button>
+<button type="submit" class="btn btn-add w-100 fw-bold">Pay</button>
 </div>
 	  
 	  
@@ -181,6 +224,7 @@
     </div>
   
   </div> <!-- END tabs-content -->
+  @endif
 </div>
 
 	</div>

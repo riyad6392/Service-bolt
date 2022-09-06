@@ -5,6 +5,18 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
+  .fc-view-container {
+    height: 345px;
+    overflow-y: scroll;
+}
+.fc-event-container {
+    display: flex;
+    justify-content: flex-start;
+    /* align-items: center; */
+}
+.fc-time-grid-event .fc-content .fc-title {
+    font-size: 12px;
+}
      body{
         overflow-x: hidden;
     }
@@ -176,6 +188,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 .heierts {
   height: 300px!important;
+  overflow:hidden!important;
 }
 a.next.control {
     transform: rotate(180deg);
@@ -1244,8 +1257,8 @@ th.fc-resource-cell img {
                  
                     var hours = event.start._i[3];
                     var minutes = event.start._i[4];
-                    alert(minutes);
-                    alert(hours);
+                    //alert(minutes);
+                    //alert(hours);
                     const ampm = hours >= 12 ? 'pm' : 'am';
 
                     hours %= 12;

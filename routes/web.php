@@ -316,7 +316,7 @@ Route::group([
     Route::any('/billing/billingview/{date}', [BillingController::class, 'billingview'])->name('billingview');
     Route::any('/billing/leftbarbillingdata', [BillingController::class, 'leftbarbillingdata'])->name('leftbarbillingdata');
 
-    Route::any('/billing/paynow', [BillingController::class, 'paynow'])->name('paynow');
+    Route::any('/billing/paynow/', [BillingController::class, 'paynow'])->name('paynow');
 
     Route::any('/billing/update', [BillingController::class, 'update'])->name('mybillingupdate');
 
@@ -325,6 +325,7 @@ Route::group([
      Route::any('/billing/leftbarinvoice', [BillingController::class, 'leftbarinvoice'])->name('leftbarinvoice');
 
      Route::any('/billing/sendbillinginvoice', [BillingController::class, 'sendbillinginvoice'])->name('sendbillinginvoice');
+     Route::get('/billing/downloadinvoice/{id}', [BillingController::class, 'downloadinvoice'])->name('downloadinvoice');
 
     Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
 
