@@ -11,6 +11,9 @@
 .fc-time-grid-event:nth-child(1){
   margin-left:0px;
 }
+.fc-time-grid-event.fc-allow-mouse-resize.intro{
+  z-index: 9999!important;
+}
 .fc-time-grid-event.fc-allow-mouse-resize.intro:hover{
   /* height:auto!important; */
   width: 100px!important;
