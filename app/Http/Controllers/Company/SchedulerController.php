@@ -186,9 +186,10 @@ class SchedulerController extends Controller
             $checked1 = "checked";
         }
 
-       $html ='<div class="add-customer-modal">
-                  <h5>Edit Service</h5>
-                </div>';
+       $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
+                <h5>Edit Service</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>';
        $html .='<div class="row customer-form" id="product-box-tabs">
        <input type="hidden" value="'.$request->id.'" name="serviceid">
           <div class="col-md-12 mb-2">
@@ -1102,9 +1103,10 @@ class SchedulerController extends Controller
 
         $address = Address::select('id','address')->where("customerid",$quotedetails[0]->customerid)->get();
 
-       $html ='<div class="add-customer-modal">
-                  <h5>Edit</h5>
-                </div>';
+       $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
+       <h5>Edit</h5>
+       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>';
        $html .='<div class="row customer-form" id="product-box-tabs">
        <input type="hidden" value="'.$request->id.'" name="quoteid">
           <div class="col-md-12 mb-2">
