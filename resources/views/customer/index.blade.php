@@ -459,8 +459,9 @@
       <form class="form-material m-t-40 form-valide" id="serviceform" method="post" enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
-        <div class="add-customer-modal">
+        <div class="add-customer-modal d-flex justify-content-between align-items-center">
           <h5>Add a new Service</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         @php
         if(count($productData)>0) {

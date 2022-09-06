@@ -199,7 +199,11 @@
      <div class="modal-body">
      
     <div class="request-title">
-       <h5>Request time off</h5>
+    <div class="add-customer-modal d-flex justify-content-between align-items-center">
+    <h5>Request time off</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+       
         <div class="col-md-12 mb-3">
       <select class="form-control selectpicker" data-placeholder="Select Personnel" data-live-search="true" name="personnelid" id="personnelid" required="">
         @foreach($personnelUser as $key => $value)

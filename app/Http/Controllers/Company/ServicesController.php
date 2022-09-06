@@ -217,9 +217,10 @@ class ServicesController extends Controller
         // if(in_array('point2', $cheklist)) {
         //     $checkeds1 = "checked";
         // }
-       $html ='<div class="add-customer-modal">
+       $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
                   <h5>Edit Service</h5>
-                </div>';
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>';
        $html .='<div class="row customer-form" id="product-box-tabs">
        <input type="hidden" value="'.$request->id.'" name="serviceid">
           <div class="col-md-12 mb-2">
@@ -460,8 +461,9 @@ class ServicesController extends Controller
         if($services[0]->type =='flatrate') {
             $checked2 = "checked";
         }
-        $html ='<div class="add-customer-modal">
+        $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
                 <h5>Create New Quote </h5>
+             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                </div>';
                if(count($customer)>0) {
                    $cname = "";

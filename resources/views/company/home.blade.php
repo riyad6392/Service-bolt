@@ -105,19 +105,19 @@
       <div class="row align-items-center mb-4">
         <div class="col-2 text-center">
          @if(!empty($goodproduct[0]))
-          <span class="icon-arrow">
+          <span class="icon-arrow mb-2">
              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
              <path fill-rule="evenodd" d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z" fill="currentColor"></path></svg>
           </span>
         @endif
         @if(!empty($lowproduct[0]))
-          <span class="icon-arrow red-light">
+          <span class="icon-arrow mb-2 red-light">
              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
              <path fill-rule="evenodd" d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z" fill="currentColor"></path></svg>
           </span>
         @endif
          @if(!empty($restockproduct[0]))
-          <span class="icon-arrow red-light">
+          <span class="icon-arrow mb-2 red-light">
              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
              <path fill-rule="evenodd" d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z" fill="currentColor"></path></svg>
           </span>
@@ -127,29 +127,29 @@
           <div class="clsoo text-truncate">
             @if(!empty($goodproduct[0]))
               <h5>{{$goodproduct[0]}}</h5>
-              <p>{{ date('l d, H:i a', time()) }}</p>
+              <p class="mb-2">{{ date('l d, H:i a', time()) }}</p>
             @endif
             @if(!empty($lowproduct[0]))
               <h5>{{$lowproduct[0]}}</h5>
-              <p>{{ date('l d, H:i a', time()) }}</p>
+              <p class="mb-2">{{ date('l d, H:i a', time()) }}</p>
             @endif
             @if(!empty($restockproduct[0]))
               <h5>{{$restockproduct[0]}}</h5>
-              <p>{{ date('l d, H:i a', time()) }}</p>
+              <p class="mb-2"> {{ date('l d, H:i a', time()) }}</p>
             @endif
           </div>
         </div>
         <div class="col-4">
           @if(!empty($goodproduct[0]))
-           <a href="#" class="btn btn-green truncate w-85">All good</a>
+           <a href="#" class="btn btn-green truncate mb-3 w-85">All good</a>
           @endif
           
           @if(!empty($lowproduct[0]))
-           <a href="#" class="btn red-light-bg w-85 truncate">Low</a>
+           <a href="#" class="btn red-light-bg w-85 mb-3  truncate">Low</a>
           @endif
           
           @if(!empty($restockproduct[0]))
-           <a href="#" class="btn red-light-bg" style="width: 125px;">Needs to be restocked</a>
+           <a href="#" class="btn red-light-bg mb-3 " style="width: 125px;">Needs to be restocked</a>
           @endif
         </div>
       </div>

@@ -195,7 +195,11 @@
         @csrf
       <div class="modal-body">
        <div class="add-customer-modal">
-	   <h5>Add a new Product/Part</h5>
+       <div class="add-customer-modal d-flex justify-content-between align-items-center">
+       <h5>Add a new Product/Part</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+	   
 	   
 	   </div>
 	   

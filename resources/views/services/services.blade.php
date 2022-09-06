@@ -206,8 +206,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       <form class="form-material m-t-40 form-valide" method="post" action="{{route('company.servicecreate')}}" enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
-        <div class="add-customer-modal">
-          <h5>Add a new Service</h5>
+        
+        <div class="add-customer-modal d-flex justify-content-between align-items-center">
+        <h5>Add a new Service</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          
         </div>
         @php
         if(count($productData)>0) {
@@ -395,9 +398,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      <form class="form-material m-t-40  form-valide" id="createserviceticket" method="post"  enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
-       <div class="add-customer-modal">
+     
+     <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add a new customer</h5>
-     </div>
+             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+     
      
     <div class="row customer-form">
      

@@ -506,9 +506,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <div class="modal-content customer-modal-box">
      
       <div class="modal-body">
-       <div class="add-customer-modal">
-	   	<h5>Add A New Quote</h5>
-	   </div>
+       <div class="add-customer-modal d-flex justify-content-between align-items-center">
+		   <h5>Add A New Quote</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
 	 @if(count($services)>0)
       @else
       	@if(count($productData)==0)
@@ -680,9 +681,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <div class="modal-content customer-modal-box">
      
       <div class="modal-body">
-       <div class="add-customer-modal">
-	   	<h5>Add A New Ticket</h5>
-	   </div>
+      
+	   <div class="add-customer-modal d-flex justify-content-between align-items-center">
+	   <h5>Add A New Ticket</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
 	 
 
      @if(count($services)>0)
@@ -993,9 +996,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box  overflow-hidden">
       <div class="modal-body">
-       <div class="add-customer-modal">
-     <h5>Add Address</h5>
+      
+  
+	 <div class="add-customer-modal d-flex justify-content-between align-items-center">
+	 <h5>Add Address</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
      </div>
+     
      
     <div class="row customer-form">
      
@@ -1020,8 +1027,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box  overflow-hidden">
       <div class="modal-body">
-       <div class="add-customer-modal">
+   
+	 <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add Address</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
      </div>
      
     <div class="row customer-form">
@@ -1049,8 +1058,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      <form class="form-material m-t-40  form-valide" method="post" id="createserviceticket"  enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
-       <div class="add-customer-modal">
+	  <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add a new customer</h5>
+	 
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
      </div>
      
     <div class="row customer-form">
@@ -1125,8 +1136,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.createcticket')}}" enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
-       <div class="add-customer-modal">
+	  <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add a new customer</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
      </div>
      
     <div class="row customer-form">
@@ -1201,9 +1213,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       <form class="form-material m-t-40 form-valide" id="serviceform" method="post" enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
-        <div class="add-customer-modal">
-          <h5>Add a new Service</h5>
-        </div>
+	  <div class="add-customer-modal d-flex justify-content-between align-items-center">
+     <h5>Add a new Service</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
         @php
 		$productData = App\Models\Inventory::where('user_id',auth()->user()->id)->orderBy('id','ASC')->get();
         if(count($productData)>0) {
@@ -1312,9 +1325,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       <form class="form-material m-t-40 form-valide" id="serviceform1" method="post" enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
-        <div class="add-customer-modal">
-          <h5>Add a new Service</h5>
-        </div>
+	  <div class="add-customer-modal d-flex justify-content-between align-items-center">
+     <h5>Add a new Service</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
         @php
 		$productData = App\Models\Inventory::where('user_id',auth()->user()->id)->orderBy('id','ASC')->get();
         if(count($productData)>0) {

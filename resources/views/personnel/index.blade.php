@@ -166,7 +166,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
      <div class="modal-body p-4">
-       <h5 class="mb-4">Time Sheets</h5>
+     <div class="add-customer-modal d-flex justify-content-between align-items-center">
+     <h5 class="mb-4">Time Sheets</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+       
 		<!-- <form method="post" action="{{ route('company.timesheetupdate') }}" enctype="multipart/form-data">
         @csrf -->
         	<div id="viewmodaldatatimesheet"></div>
@@ -181,7 +185,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
      <div class="modal-body p-4">
-       <h5 class="mb-4">PTO</h5>
+     <div class="add-customer-modal d-flex justify-content-between align-items-center">
+     <h5 class="mb-4">PTO</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+       
     <!-- <form method="post" action="{{ route('company.timesheetupdate') }}" enctype="multipart/form-data">
         @csrf -->
           <div id="viewmodaldatatimeoff"></div>
@@ -199,8 +207,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.personnelcreate')}}" enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
-       <div class="add-customer-modal">
+       <div class="add-customer-modal d-flex justify-content-between align-items-center">
 	   	<h5>Add A New Personnel</h5>
+       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	   </div>
 	   
 	   <div class="row customer-form">

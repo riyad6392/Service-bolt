@@ -5,6 +5,49 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
+.fc-time-grid-event{
+  margin-left:-40px;
+}
+.fc-time-grid-event:nth-child(1){
+  margin-left:0px;
+}
+.fc-time-grid-event.fc-allow-mouse-resize.intro:hover{
+  /* height:auto!important; */
+  width: 100px!important;
+}
+.fc-time-grid-event{
+  /* height: 15px!important; */
+  width: 32px!important;
+}
+
+
+.fc-time-grid-event.fc-allow-mouse-resize.intro:hover .fc-title{
+    display:block;
+  }
+  .fc-time-grid-event  .fc-title{
+    display:none;
+  }
+  .fc-time-grid-event .fc-content{
+    position: relative;
+  }
+  .fc-time-grid-event .text-start {
+    position: absolute;
+    bottom: -26px;
+    display:none;
+    /* left: 2px; */
+}
+.fc-time-grid-event.fc-allow-mouse-resize.intro:hover .text-start{
+  display:block;
+}
+.fc-time-grid-event.fc-allow-mouse-resize.intro:hover .text-end .closeon{
+  position: absolute;
+    bottom: -26px;
+    left:38px;
+    display:block;
+}
+.fc-time-grid-event .text-end .closeon{
+    display:none;
+}
   .fc-view-container {
     height: 345px;
     overflow-y: scroll;
@@ -330,7 +373,7 @@ span.closeon i {
     font-size: 15px;
     box-shadow: 0px 0px #ccc;
         margin-top: 25px;
-            position: absolute;
+          
     left: 0;
 
 }
@@ -453,7 +496,7 @@ th.fc-resource-cell img {
     background-color: #fff;
     border-radius: 100%;
     padding: 2px 3px;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .add-btn-day {
@@ -1179,6 +1222,7 @@ th.fc-resource-cell img {
             },
 
             drop: function (date, jsEvent, ui, resourceId) {
+             
                    
                var hours = date._i[3];
                 var minutes = date._i[4];

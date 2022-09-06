@@ -619,9 +619,10 @@ class TicketController extends Controller
 
       $address = Address::select('id','address')->where("customerid",$quotedetails[0]->customerid)->get(); 
        
-       $html ='<div class="add-customer-modal">
-                  <h5>Edit</h5>
-                </div>';
+       $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
+       <h5>Edit</h5>
+       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>';
        $html .='<div class="row customer-form" id="product-box-tabs">
        <input type="hidden" value="'.$request->id.'" name="quoteid">
           <div class="col-md-12 mb-2">
@@ -966,8 +967,9 @@ class TicketController extends Controller
       $json = array();
       $auth_id = auth()->user()->id;
 
-      $html ='<div class="add-customer-modal">
+      $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
                   <h5>Share Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                  </div><input type="hidden" name="ticketid" id="ticketid" value="'.$request->id.'">
             <div class="col-md-12 mb-2">
              <div class="input_fields_wrap">
