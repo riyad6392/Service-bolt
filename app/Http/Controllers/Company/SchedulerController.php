@@ -582,9 +582,18 @@ class SchedulerController extends Controller
     {
         $defaultitme = DB::table('quote')->select('time','minute')->where('id',$request->quoteid)->first();
         
-        $hours = preg_replace("/[^0-9]/", '', $defaultitme->time);
+        if($defaultitme->time == null || $defaultitme->time == "" || $defaultitme->time == 00 || $defaultitme->time == 0) {
+            $hours = 0;
+        } else {
+            $hours = preg_replace("/[^0-9]/", '', $defaultitme->time);    
+        }
         
-        $minutes = preg_replace("/[^0-9]/", '', $defaultitme->minute);
+        if($defaultitme->minute == null || $defaultitme->minute == "" || $defaultitme->minute == 00 || $defaultitme->minute == 0) {
+            $minutes = 0;
+        } else {
+            $minutes = preg_replace("/[^0-9]/", '', $defaultitme->minute);    
+        }
+         
         
         //display the converted time
         $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->time)));

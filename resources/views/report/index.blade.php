@@ -323,7 +323,7 @@ Service Report</div>
 
 <div class="col-lg-12">
 <div class="table-responsive">
- <table id="example" class="table no-wrap table-new table-list dataTable no-footer" style="position: relative;">
+ <table id="example" class="table no-wrap table-new table-list no-footer" style="position: relative;">
      <thead>
            <tr>
                <th style="font-weight:400;font-size:15px;">Personnel Name</th>
