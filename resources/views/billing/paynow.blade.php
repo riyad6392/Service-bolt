@@ -4,20 +4,23 @@
 
 <div class="row">
 	<div class="col-md-12 mt-4">
+	@if($paymentpaid==1)
+	<a href="{{ url('/'). '/company/billing/billingview/'. $quoteData->etc }}" class="back-btn">
+	  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
+	   Back</a>
+	@else
 		<a href="{{ url()->previous() }}" class="back-btn">
 	  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
 	   Back</a>
-
+	@endif
 	   @if(Session::has('success'))
-
 <div class="alert alert-success" id="selector">
-
 	{{Session::get('success')}}
-
 </div>
-
 @endif
 	<div class="tabs">
+	@if($paymentpaid==1)
+  @else
   <ul id="tabs-nav" class="tabs-paynow-card">
     <li><a href="#tab1">
 	<div class="tabs-paynow">
@@ -41,6 +44,24 @@
 	</a></li>
    
   </ul> <!-- END tabs-nav -->
+  @endif
+  @if($paymentpaid==1)
+  	<p>TicketId: #{{$quoteData->id}} </p>
+  	<p>Customer Name: {{$quoteData->customername}}</p>
+  	<p>Payment Mode: {{$quoteData->payment_mode}}</p>
+  	@if($quoteData->checknumber!="")
+  		<p>Check Number: {{$quoteData->checknumber}}</p>
+  	@endif
+    <div id="tab1" class="tab-content">
+    	<div class="card card-pay mb-3">
+	  <div class="card-body">
+	  <h4>Paid succesfully.</h4>
+	  <h4>Total: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span></h4>
+	  
+	  
+	
+	  </div>
+	  @else
   <div id="tabs-content" class="p-3">
   <p>TicketId: #{{$ticketID}} </p>
   	<p>Customer Name: {{$customername}}</p>
@@ -203,6 +224,7 @@
     </div>
   
   </div> <!-- END tabs-content -->
+  @endif
 </div>
 
 	</div>

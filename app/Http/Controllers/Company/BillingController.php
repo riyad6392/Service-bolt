@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use PDF;
 use DB;
 use Image;
+use Session;
 use App\Models\Balancesheet;
 use App\Models\Quote;
 use App\Models\Managefield;
@@ -74,12 +75,23 @@ class BillingController extends Controller
     }
 
     public function paynow(Request $request) {
-      
+      if( $request->ticketid) {
+      Session::put('ticketid', $request->ticketid);
+      }
+
+      if( $request->amount) {
+      Session::put('amount', $request->amount);
+      } 
+
+      if( $request->customername) {
+      Session::put('customername',$request->customername);
+      }
+      $ticketID = Session::get('ticketid');
       $customer = Customer::select('id','customername')->where('id',$request->customerid)->first();
-      dd($request->all());
-      $ticketID = $request->ticketid;
-      $price = $request->amount;
-      $customername = $request->customername;
+      //dd($request->all());
+      //$ticketID = $request->ticketid;
+      $price = Session::get('amount');
+      $customername = Session::get('customername');
       $customerid = $request->customerid;
       if(isset($request->servicename)){
       $serviceidarray = $request->servicename;
@@ -106,7 +118,7 @@ class BillingController extends Controller
 
     $quoteData = DB::table('quote')->select('*')->where('id',$ticketID)->first();
     //dd($quoteData);
-    if($quoteData->payment_mode !=""){
+    if($quoteData->payment_status !=""){
       $paymentpaid = "1";
     } else {
       $paymentpaid = "0";
@@ -137,15 +149,17 @@ class BillingController extends Controller
       $serviceid = $request->serviceid;
       
       $json = array();
+
       if($targetid == 0) {
         $auth_id = auth()->user()->id;
         $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->where('quote.etc',$request->date)->orderBy('quote.id','asc')->get();
-        $url = url('/').'/company/billing/downloadinvoice/'.$billingData[0]->id;
-        $url_pay = url('/').'/company/billing/paynow/'.$billingData[0]->customerid;
-
+        
         $countdata = count($billingData);
        // dd($billingData);
          $datacount = $countdata-1;
+         $url = url('/').'/company/billing/downloadinvoice/'.$billingData[$datacount]->id;
+        $url_pay = url('/').'/company/billing/paynow/'.$billingData[$datacount]->customerid;
+
       if($billingData[$datacount]->image!=null) {
         $imagepath = url('/').'/uploads/services/'.$billingData[$datacount]->image;
       } else {
@@ -219,6 +233,7 @@ class BillingController extends Controller
         </div>';
       } else {
         $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_status','quote.payment_mode','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
+        $url = url('/').'/company/billing/downloadinvoice/'.$billingData[0]->id;
         if($billingData[0]->image!=null) {
         $imagepath = url('/').'/uploads/services/'.$billingData[0]->image;
       } else {
