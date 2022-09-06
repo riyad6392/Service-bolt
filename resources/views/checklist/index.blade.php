@@ -128,10 +128,12 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
      <div class="modal-body">
-       <div class="add-customer-modal">
+      
+	   <div class="add-customer-modal d-flex justify-content-between align-items-center">
 	   <h5>Add a new Checklist</h5>
-	   <!-- <p class="lead">Lorem ipsum dolar si amen</p> -->
-	   </div>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+   
 	  
 
      @if(count($serviceData)>0)
