@@ -580,32 +580,27 @@ class SchedulerController extends Controller
 
     public function sortdata(Request $request)
     {
-        //dd($request->all());
-        // $defaultitme = DB::table('quote')->select('time','minute')->where('id',$request->quoteid)->first();
-        // $hours = preg_replace("/[^0-9]/", '', $defaultitme->time);
-        // $minutes = preg_replace("/[^0-9]/", '', $defaultitme->minute);
+        $defaultitme = DB::table('quote')->select('time','minute')->where('id',$request->quoteid)->first();
         
-        // //$time = "09:00 am";
-
-        // $time1 = strtotime($request->time);
+        $hours = preg_replace("/[^0-9]/", '', $defaultitme->time);
         
-        // $newtime = date('Y-m-d h:i A',strtotime("+ {$hours} hours + {$minutes} hours"));
-        // $newtime1=date('H:i A',strtotime($newtime));
-        // dd($newtime1);
-
-         $auth_id = auth()->user()->id;
+        $minutes = preg_replace("/[^0-9]/", '', $defaultitme->minute);
+        
+        //display the converted time
+        $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->time)));
+        //echo $endtime; die;
+        $auth_id = auth()->user()->id;
         $quoteid = $request->quoteid;
         $time = $request->time;
+        
         $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
 
-
-        //$date = $request->date;
         $workerid = $request->workerid;
         $tstatus = 2;
         $created_at = Carbon::now();
         DB::table('quote')->where('id','=',$quoteid)
           ->update([ 
-              "ticket_status"=>"$tstatus","giventime"=>"$time","givendate"=>"$date","personnelid"=>"$workerid","created_at"=>"$created_at"
+              "ticket_status"=>"$tstatus","giventime"=>"$time","givenendtime"=>"$endtime","givendate"=>"$date","personnelid"=>"$workerid","created_at"=>"$created_at"
           ]);
 
         $appnotifiction = AppNotification::where('pid',$workerid)->where('ticketid',$quoteid)->get(); 
