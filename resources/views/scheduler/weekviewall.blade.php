@@ -5,6 +5,20 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
+        #calendar.fulldayShow {
+    overflow-y: scroll!important;
+    height: 100%;
+}
+.fulldayShow .fc-scroller.fc-time-grid-container{
+    height: 100%!important;
+}
+.fulldayShow .adses {
+    height: 100%!important;
+}
+.fulldayShow .fc-view-container {
+    height: 100%;
+    overflow-y: scroll;
+}
 .fc-time-grid-event{
   margin-left:-40px;
 }
@@ -17,6 +31,7 @@
 .fc-time-grid-event.intro:hover{
   /* height:auto!important; */
   width: 100px!important;
+  min-height: 100px;
 
 }
 .fc-time-grid-event{
@@ -1017,6 +1032,7 @@ background: transparent!important;
 
 <script type="">
     $(document).ready(function () {
+          $("#calendar").addClass("fulldayShow");
        $("#hide-top").hide();
        // $("#close").html('<a href="" style="position: relative;left: 0;top:0px;color: black;"> <i class="fa fa-times" aria-hidden="true" style="font-size: 32px;"></i></a>');
       // (".top-bar").css('display','none');
@@ -1070,6 +1086,7 @@ background: transparent!important;
         $(".top-bar").toggle();
         $(".content-page").toggleClass("blues");
         (".sidebar pt-2").css('display','none');
+
     });
 </script>
 <script type="">

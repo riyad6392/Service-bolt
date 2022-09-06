@@ -5,6 +5,17 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
+    #calendar.fulldayShow {
+    overflow-y: scroll!important;
+    height: 100%;
+}
+.fulldayShow .adses {
+    height: 100%!important;
+}
+.fulldayShow .fc-view-container {
+    height: 100%;
+    overflow-y: scroll;
+}
 .fc-time-grid-event{
   margin-left:-40px;
 }
@@ -17,10 +28,12 @@
 .fc-time-grid-event.fc-allow-mouse-resize.intro:hover{
   /* height:auto!important; */
   width: 100px!important;
+  min-height: 95px;
 }
 .fc-time-grid-event{
   /* height: 15px!important; */
   width: 32px!important;
+
 }
 
 
@@ -234,8 +247,28 @@ body::-webkit-scrollbar-thumb:hover {
 }
 .heierts {
   height: 300px!important;
-  overflow:hidden!important;
+  overflow:auto!important;
 }
+.heierts::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.heierts::-webkit-scrollbar-track {
+  background: transparent; 
+}
+ 
+/* Handle */
+.heierts::-webkit-scrollbar-thumb {
+  background: transparent; 
+}
+
+/* Handle on hover */
+.heierts::-webkit-scrollbar-thumb:hover {
+  background: transparent; 
+}
+
+
 a.next.control {
     transform: rotate(180deg);
 }
@@ -970,6 +1003,8 @@ th.fc-resource-cell img {
         $("#close").html('<a href="" style="position: relative;left: 0;top:0px;color: black;"> <i class="fa fa-times" aria-hidden="true" style="font-size: 32px;"></i></a>');
         $(".top-bar").toggle();
         $(".content-page").toggleClass("blues");
+        $("#calendar").addClass("fulldayShow");
+
     });
 </script>
 <script type="">

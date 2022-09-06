@@ -853,7 +853,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 
 
-@endsection
+
 <!----------------------Update form------------>
 <div class="modal fade" id="edit-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -1430,6 +1430,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     </div>
   </div>
 </div>
+@endsection
 @section('script')
 <script type="text/javascript">
 $('.dropify').dropify();
