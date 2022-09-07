@@ -117,13 +117,7 @@
 	  
     </div>
     <div id="tab2" class="tab-content">
-	<form method="put" action="{{ url('company/billing/update') }}" enctype="multipart/form-data">
-
-		@csrf 
-		<input type="hidden" name="ticketid" id="ticketid" value="{{$ticketID}}">
-                  <input type="hidden" name="amount" id="amount" value="{{$price}}">
-                  <input type="hidden" name="customername" id="customername" value="{{$customername}}">
-                  <input type="hidden" name="customerid" id="customerid" value="{{$customerid}}">
+	
       <div class="card card-pay mb-3">
 	  <div class="card-body">
 	  <p>@if($servicename!="") Service Name - {{$servicename}}@endif</p>
@@ -147,17 +141,23 @@
 							Cash
 						  </button>
 						</h2>
+						<form method="put" action="{{ url('company/billing/update') }}" enctype="multipart/form-data">
+						<input type="hidden" name="ticketid" id="ticketid" value="{{$ticketID}}">
+                  <input type="hidden" name="customername" id="customername" value="{{$customername}}">
+                  <input type="hidden" name="customerid" id="customerid" value="{{$customerid}}">
+							@csrf 
 								<div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
 									<div class="accordion-body">
 									<div class="mb-3">
 									<label class="form-label">Enter Cash Amount</label>
-									<input type="text" class="form-control form-control-2" value="{{$price}}" placeholder="">
-
+									<input type="hidden" class="form-control form-control-2" name="method" id="method"  value="Cash" placeholder="">
+									<input type="text" class="form-control form-control-2" name="amount" required id="amount"  value="{{$price}}" placeholder="">
+									
 									</div>
-																		<div class="mt-4 text-center">
-<button class="btn btn-add w-100 fw-bold">Pay</button>
-</form>
-</div>
+									<div class="mt-4 text-center">
+						<button class="btn btn-add w-100 fw-bold">Pay</button>
+									</div>
+									</form>
 									
 									</div>
 								</div>
@@ -168,22 +168,29 @@
 							Checks
 						  </button>
 						</h2>
+						<form method="put" action="{{ url('company/billing/update') }}" enctype="multipart/form-data">
+						<input type="hidden" name="ticketid" id="ticketid" value="{{$ticketID}}">
+                  <input type="hidden" name="customername" id="customername" value="{{$customername}}">
+                  <input type="hidden" name="customerid" id="customerid" value="{{$customerid}}">
+							@csrf 
 								<div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
 									<div class="accordion-body">
 									<div class="mb-3">
 									<label class="form-label">Check Number</label>
-									<input type="text" class="form-control form-control-2" placeholder="">
+									<input type="hidden" class="form-control form-control-2" name="method" id="method"  value="Check" placeholder="" >
+									<input type="number" class="form-control form-control-2" name="check_no" id="check_no"  placeholder="" required>
 
 									</div>
 									
 										<div class="mb-3">
 									<label class="form-label">Amount</label>
-									<input type="text" class="form-control form-control-2" placeholder="">
+									<input type="text" class="form-control form-control-2" name="amount" id="amount" required  value="{{$price}}" placeholder="" required>
 
 									</div>
 																											<div class="mt-4 text-center">
 								<button type="submit" class="btn btn-add w-100 fw-bold">Pay</button>
 								</div>
+</form>
 									</div>
 								</div>
 							</div>

@@ -314,18 +314,6 @@ class BillingController extends Controller
     {
       //dd($request->all());
         $auth_id = auth()->user()->id;
-        
-        //   date_default_timezone_set('Asia/Kolkata');
-        //   $currentDateTime=date('m/d/Y H:i:s');
-        //   $date1=date('Y-m-d');
-        //   $starttime = date('h:i A', strtotime($currentDateTime));
-          $data['userid'] = $auth_id;
-          $data['ticketid'] = $request->ticketid;
-          $data['amount'] = $request->amount;
-          $data['customername'] = $request->customername;
-          $data['workerid'] = $request->personnelid;
-          $data['paymentmethod'] = "Check";
-          $data['status'] = "Completed";
 
           $id = DB::table('balancesheet')->insertGetId([
             'userid' => $auth_id,
@@ -333,7 +321,7 @@ class BillingController extends Controller
             'ticketid' => $request->ticketid,
             'amount' => $request->amount,
             'customername' => $request->customername,
-            'paymentmethod' => "Check",
+            'paymentmethod' => $request->method,
             'status' => "Completed"
         ]);
 
@@ -341,6 +329,9 @@ class BillingController extends Controller
        
         $tdata = Quote::where('id', $request->ticketid)->get()->first();
         $tdata->payment_status = "Completed";
+        $tdata->price =  $request->amount;
+        $tdata->payment_mode = $request->method;
+        $tdata->checknumber = $request->check_no;
         $tdata->invoiceid = $id;
         $tdata->save();
         $request->session()->flash('success', 'Payment Completed Successfully');
