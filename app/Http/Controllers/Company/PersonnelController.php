@@ -61,6 +61,7 @@ class PersonnelController extends Controller
 
     public function create(Request $request)
     {
+      
       $auth_id = auth()->user()->id;
 
     	    $validate = Validator($request->all(), [
@@ -98,6 +99,7 @@ class PersonnelController extends Controller
               $data['personnelname'] = $request->personnelname;
               $data['phone'] = $request->phone;
               $data['email'] = $request->email;
+              $data['color'] = $request->colorcode;
               if(isset($request->ticketid)) {
                   $data['ticketid'] = implode(',', $request->ticketid);
               }
@@ -353,7 +355,14 @@ class PersonnelController extends Controller
                 </div>
             </div>
           </div>
-
+          <div class="col-md-12">
+          <label>Choose Color</label><br>
+          <span class="color-picker">
+            <label for="colorPicker">
+              <input type="color" value="'.$personnel[0]->color.'" id="colorPicker" name="colorcode" style="width:235px;">
+            </label>
+          </span>
+        </div>
           <div class="col-md-12">
           <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
           <input type="file" class="dropify" name="image" id="image" data-max-file-size="2M" data-allowed-file-extensions="jpg jpeg png gif svg bmp" accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg" data-default-file="'.$userimage.'" data-show-remove="false">
@@ -426,6 +435,7 @@ class PersonnelController extends Controller
       $personnel->phone = $request->phone;
       $personnel->address = $request->address;
       $personnel->email = $request->email;
+      $personnel->color = $request->colorcode;
 
       // if(count($countp1)>0) {
 
