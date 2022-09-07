@@ -267,7 +267,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             </select>
   		</div>
 	   </div>
-	   
+	   <div class="col-md-12">
+            <label>Choose Color</label><br>
+            <span class="color-picker">
+              <label for="colorPicker">
+                <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
+              </label>
+            </span>
+          </div>
 	   <div class="col-md-12">
 	   	<div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
 	    <!-- <div class="drop-zone">

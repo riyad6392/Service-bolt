@@ -542,6 +542,27 @@ background: transparent!important;
 .hstack {
     min-height: 50px;
 }
+.fc-content .text-start {
+    position: absolute;
+    top: 29px;
+    right: 5px;
+    cursor: pointer;
+}
+.fc-content .text-start.assigndiv {
+    position: absolute;
+    top: 3px;
+}
+.text-end {
+    cursor: pointer;
+}
+span.closeon i {
+    right: 6px;
+    left: auto;
+    top: 32px;
+}
+.fc-event .fc-content {
+    min-height: 82px;
+}
 
 </style>
 <div class="row">
