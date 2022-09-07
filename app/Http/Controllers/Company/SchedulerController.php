@@ -883,7 +883,7 @@ class SchedulerController extends Controller
 
     $customer = Customer::where('userid',$auth_id)->orderBy('id','DESC')->get();
     $services = Service::where('userid', $auth_id)->get();
-    $worker = Personnel::where('userid', $auth_id)->offset(0)->limit(6)->get();
+    $worker = Personnel::where('userid', $auth_id)->get();
     $workercount = Personnel::where('userid', $auth_id)->get();
     $wcount = count($workercount);
     $productData = Inventory::where('user_id',$auth_id)->orderBy('id','ASC')->get();
@@ -891,7 +891,7 @@ class SchedulerController extends Controller
     $tenture = Tenture::where('status','Active')->get();
     
     $allworker = Personnel::where('userid', $auth_id)->get();
-    $id = "15";
+    $id = $worker[0]->id;
     return view('scheduler.weekviewall',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker'));
   }
   //end
@@ -1328,6 +1328,7 @@ class SchedulerController extends Controller
 
     public function getworkerweekview(Request $request)
     {
+      //$wids = explode(",",$request->workerid);
       $auth_id = auth()->user()->id;
 
       $offset = $request->start; // start row index.
@@ -1335,6 +1336,7 @@ class SchedulerController extends Controller
       $newoffsetvalue = $offset+6;
 
       $worker = Personnel::where('userid', $auth_id)->where('id',$request->workerid)->get();
+      //$worker = Personnel::where('userid', $auth_id)->whereIn('id',$wids)->get();
       $optiontitle1 = array();
       foreach($worker as $key => $value) {
        $assav =  $value->personnelname.'#'.$value->image;
@@ -1524,7 +1526,7 @@ class SchedulerController extends Controller
 
     $customer = Customer::where('userid',$auth_id)->orderBy('id','DESC')->get();
     $services = Service::where('userid', $auth_id)->get();
-    $worker = Personnel::where('userid', $auth_id)->offset(0)->limit(6)->get();
+    $worker = Personnel::where('userid', $auth_id)->get();
     $workercount = Personnel::where('userid', $auth_id)->get();
     $wcount = count($workercount);
     $productData = Inventory::where('user_id',$auth_id)->orderBy('id','ASC')->get();
@@ -1532,7 +1534,7 @@ class SchedulerController extends Controller
     $tenture = Tenture::where('status','Active')->get();
     
     $allworker = Personnel::where('userid', $auth_id)->get();
-    $id = "15";
+    $id = $worker[0]->id;
     return view('scheduler.monthviewall',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker'));
   }
 

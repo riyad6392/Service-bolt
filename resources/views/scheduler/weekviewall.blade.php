@@ -585,7 +585,16 @@ background: transparent!important;
 }
 .userbox{width:50px;}
 
-
+.usertext {
+    white-space: nowrap;
+}
+.red-slide label {
+    max-height: 100px;
+    min-height: 65px;
+}
+.hstack {
+    min-height: 50px;
+}
 </style>
 <div class="row">
     <div class="position-relative">
@@ -633,85 +642,30 @@ background: transparent!important;
                         <div class="card-personal" id="external-events">
 
                             <div class="gallery portfolio_slider  slider">
-                               
                                 <ul class="switch-field">
-                                    
-                                        <li class="inner red-slide">
-                                        <input type="checkbox" id="radio-three" name="switch1" value="yes"/>
-        <label for="radio-three">
-                                                 <div class="hstack gap-2">
-  <div class="userbox"><img src="http://servicebolt.digitalmonkindia.com/uploads/personnel/thumbnail/1655289915.png" alt=""></div>
-  <div class="usertext">User Name</div>
- 
-</div>
-        </label>
+                                    @if(count($worker)>0)
+                                    @foreach($worker as $key=>$value)
 
-                                        </li>
-                                        
-                                        <li class="inner red-slide">
-                                        <input type="checkbox" id="radio-four" name="switch2" value="maybe" />
-        <label for="radio-four">
-        <div class="hstack gap-2">
-  <div class="userbox"><img src="http://servicebolt.digitalmonkindia.com/uploads/personnel/thumbnail/1655289915.png" alt=""></div>
-  <div class="usertext">User Name</div>
- 
-</div>
-        </label>
-        
-                                                 
-        
-
-                                        </li>
-                                        
-                                        <li class="inner red-slide">
-                                        <input type="checkbox" id="radio-five" name="switch3" value="maybe" />
-        <label for="radio-five">
-        <div class="hstack gap-2">
-  <div class="userbox"><img src="http://servicebolt.digitalmonkindia.com/uploads/personnel/thumbnail/1655289915.png" alt=""></div>
-  <div class="usertext">User Name</div>
- 
-</div>
-        </label>
-        
-                                                 
-        
-
-                                        </li>
-                                        
-                                        
-                                        <li class="inner red-slide">
-                                        <input type="checkbox" id="radio-six" name="switch4" value="maybe" />
-        <label for="radio-six">
-        <div class="hstack gap-2">
-  <div class="userbox"><img src="http://servicebolt.digitalmonkindia.com/uploads/personnel/thumbnail/1655289915.png" alt=""></div>
-  <div class="usertext">User Name</div>
- 
-</div>
-        </label>
-        
-                                                 
-        
-
-                                        </li>
-                                        
-                                        <li class="inner red-slide">
-                                        <input type="checkbox" id="radio-siven" name="switch5" value="maybe" />
-        <label for="radio-siven">
-        <div class="hstack gap-2">
-  <div class="userbox"><img src="http://servicebolt.digitalmonkindia.com/uploads/personnel/thumbnail/1655289915.png" alt=""></div>
-  <div class="usertext">User Name</div>
- 
-</div>
-        </label>
-        
-                                                 
-        
-
-                                        </li>
-                                        
-                                 
+                                    <li class="inner red-slide">
+                                        <input type="checkbox" id="radio-{{$value->id}}" name="switch1" value="yes"/>
+                                        <label for="radio-{{$value->id}}">
+                                            <div class="hstack gap-2">
+                                                <div class="userbox">
+                                                    @if($value->image!=null)
+                                                        <img src="{{url('uploads/personnel/thumbnail')}}/{{$value->image}}" alt="">
+                                                    @else
+                                                        <img src="{{url('uploads/servicebolt-noimage.png')}}" alt="">
+                                                    @endif
+                                                </div>
+                                                <div class="usertext">{{$value->personnelname}}</div>
+                                            </div>
+                                        </label>
+                                    </li>
+                                    @endforeach
+                                     @else
+                                        No personnel found
+                                     @endif   
                                 </ul>
-                               
                             </div>
                         </div>
                          <div class="col-md-4  offset-md-8 mb-2 d-flex align-items-center justify-content-end mt-3">
@@ -1172,13 +1126,14 @@ background: transparent!important;
             },
             snapDuration: '00:05:00',
             minTime: $("#openingtime").val(),
-            maxTime: $("#closingtime").val(),  
+            maxTime: $("#closingtime").val()+1,  
             allDaySlot: false,
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
             defaultView: 'agendaWeek',
             groupByResource: true,
             eventOverlap: true,
             firstDay:1,
+            groupByResource: true,
            // defaultEventMinutes: 30, 
             //defaultTimedEventDuration: '01:00',
             //forceEventDuration: true,
@@ -1192,6 +1147,7 @@ background: transparent!important;
                     var start =0;
                 @endif
                 var workerid = $("#workerid").val();
+                //var workerid = "15,19";
                 $.ajax({
                 url:"{{url('company/scheduler/getworkerweekview')}}",
                 method:"POST",
