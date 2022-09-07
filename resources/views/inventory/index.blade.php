@@ -186,6 +186,20 @@
 </div>
 </div>
 </div>
+<!--------------------edit --modal----------------------->
+<div class="modal fade" id="edit-product" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+     
+      <div class="modal-body">
+       	<form method="post" action="{{ route('company.inventoryupdate') }}" enctype="multipart/form-data">
+        @csrf
+        <div id="viewmodaldata"></div>
+      </form>
+     </div>
+  </div>
+</div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="add-product" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -297,20 +311,7 @@
 </div>
 </div>
 
-<!--------------------edit --modal----------------------->
-<div class="modal fade" id="edit-product" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content customer-modal-box">
-     
-      <div class="modal-body">
-       	<form method="post" action="{{ route('company.inventoryupdate') }}" enctype="multipart/form-data">
-        @csrf
-        <div id="viewmodaldata"></div>
-      </form>
-     </div>
-  </div>
-</div>
-</div>
+
 
 <div class="modal fade" id="duplicate-Product" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
