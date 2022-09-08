@@ -891,7 +891,9 @@ class SchedulerController extends Controller
     $tenture = Tenture::where('status','Active')->get();
     
     $allworker = Personnel::where('userid', $auth_id)->get();
-    $id = $worker[0]->id;
+    //dd($request->all());
+    //$id = $worker[0]->id;
+    $id = $request->id;
     return view('scheduler.weekviewall',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker'));
   }
   //end
@@ -1328,14 +1330,14 @@ class SchedulerController extends Controller
 
     public function getworkerweekview(Request $request)
     {
-      //$wids = explode(",",$request->workerid);
+      $wids = explode(",",$request->workerid);
       $auth_id = auth()->user()->id;
 
       $offset = $request->start; // start row index.
       $limit="6"; // no of records to fetch/ get .
       $newoffsetvalue = $offset+6;
 
-      $worker = Personnel::where('userid', $auth_id)->where('id',$request->workerid)->get();
+      $worker = Personnel::where('userid', $auth_id)->where('id',$wids)->get();
       //$worker = Personnel::where('userid', $auth_id)->whereIn('id',$wids)->get();
       $optiontitle1 = array();
       foreach($worker as $key => $value) {
@@ -1348,23 +1350,28 @@ class SchedulerController extends Controller
         );
         array_push($optiontitle1,$optiontitle2);
       }
-
+     // dd($optiontitle1);
       return json_encode(['resources' =>$optiontitle1]);
     }
 
-    public function getschedulerdata(Request $request,$date)
+    public function getschedulerdataweekview(Request $request,$ids)
     {
+        // dd($ids);
+        // $wids = array(
+        //     "0"=>15,
+        //     '1'=>19
+        // );
+        $wids = explode("?",$ids);
+        $wids = explode(",",$wids[0]);
+        //dd($wids);
         $auth_id = auth()->user()->id;
-        $todaydate = date('l - F d, Y');
-        $newdate = Carbon::createFromFormat('l - F d, Y', $todaydate)->format('Y-m-d');
-
-        $fulldate = Carbon::createFromFormat('Y-m-d', $date)->format('l - F d, Y');
-
-        
-        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
+        //->where('personnel.id','15')
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.personnelid',$wids)->whereIn('quote.ticket_status',[2,3,4])->orderBy('quote.id','ASC')->get();
         
         $data=[];
         foreach ($scheduleData as $key => $row) {
+            
+            $newdate = Carbon::createFromFormat('l - F d, Y', $row->givendate)->format('Y-m-d');
             $newTime = date('H:i', strtotime($row->giventime));
             $startdatetime = $newdate.' '.$newTime;
             if($row->givenendtime!=null) {  
@@ -1383,19 +1390,23 @@ class SchedulerController extends Controller
                 'backgroundColor'   => $row->color,
             );
         }
+        //dd($data);
       echo json_encode($data);
     }
 
-    public function getschedulerdataweekview(Request $request)
+    public function getschedulerdata(Request $request,$date)
     {
         $auth_id = auth()->user()->id;
-        //->where('personnel.id','15')
-        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->orderBy('quote.id','ASC')->get();
+        $todaydate = date('l - F d, Y');
+        $newdate = Carbon::createFromFormat('l - F d, Y', $todaydate)->format('Y-m-d');
+
+        $fulldate = Carbon::createFromFormat('Y-m-d', $date)->format('l - F d, Y');
+
+        
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
         
         $data=[];
         foreach ($scheduleData as $key => $row) {
-            
-            $newdate = Carbon::createFromFormat('l - F d, Y', $row->givendate)->format('Y-m-d');
             $newTime = date('H:i', strtotime($row->giventime));
             $startdatetime = $newdate.' '.$newTime;
             if($row->givenendtime!=null) {  
@@ -1534,7 +1545,7 @@ class SchedulerController extends Controller
     $tenture = Tenture::where('status','Active')->get();
     
     $allworker = Personnel::where('userid', $auth_id)->get();
-    $id = $worker[0]->id;
+    $id = $request->id;
     return view('scheduler.monthviewall',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker'));
   }
 

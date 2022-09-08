@@ -406,7 +406,7 @@ span.closeon i {
 
 .use {
     position: absolute;
-    top: 63%;
+    top: 55%;
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -595,6 +595,14 @@ background: transparent!important;
 .hstack {
     min-height: 50px;
 }
+.fc-button-group {
+    position: absolute;
+    top: 1px;
+}
+
+#calendar.fulldayShow {
+    padding-top: 35px}
+
 </style>
 <div class="row">
     <div class="position-relative">
@@ -638,16 +646,22 @@ background: transparent!important;
                                 </div>
                             </div>
                         </div>
-                         <span style="margin: 21px; font-weight: 500;color: #000;">Personnel</span>
+                        
                         <div class="card-personal" id="external-events">
-
                             <div class="gallery portfolio_slider  slider">
                                 <ul class="switch-field">
                                     @if(count($worker)>0)
                                     @foreach($worker as $key=>$value)
-
+                                    @php
+                                     $ids = explode(',',$id);
+                                     if(in_array($value->id,$ids)){
+                                        $checked="checked";
+                                     } else {
+                                        $checked="";
+                                     }   
+                                    @endphp
                                     <li class="inner red-slide">
-                                        <input type="checkbox" id="radio-{{$value->id}}" name="switch1" value="yes"/>
+                                        <input type="checkbox" id="radio-{{$value->id}}" data-id="{{$value->id}}" name="switch1" value="yes" {{$checked}}>
                                         <label for="radio-{{$value->id}}">
                                             <div class="hstack gap-2">
                                                 <div class="userbox">
@@ -668,22 +682,7 @@ background: transparent!important;
                                 </ul>
                             </div>
                         </div>
-                         <div class="col-md-4  offset-md-8 mb-2 d-flex align-items-center justify-content-end mt-3">
-                        
-                               <!--<label style="white-space:nowrap;"> Select Team member - </label> <select class="selectpicker3 form-control" data-live-search="true" name="personnelid" id="personnelid">';
-
-                                  @foreach($allworker as $key => $value)
-                                  @php
-                                    if(in_array($value->id, array($id))) {
-                                      $selectedp = "selected";
-                                     } else {
-                                      $selectedp = "";
-                                     }
-                                     @endphp
-                                    <option value="{{$value->id}}" data-id="{{$value->id}}" {{$selectedp}}>{{$value->personnelname}}</option>
-                                  @endforeach
-                                </select>-->
-                            </div>
+                       
                     </div>
                     @if(count($ticketData)>0)
                         <div class="use">
@@ -1118,6 +1117,20 @@ background: transparent!important;
         
         
     });
+   $("input:checkbox").change(function() {
+        var allObj = {};
+        allObj.checkbox = [];
+        $("input:checkbox").each(function() {
+            if ($(this).is(":checked")) {
+                allObj.checkbox.push($(this).attr("data-id"));
+            }
+        });
+        var ckids = allObj.checkbox;
+       
+        //$('#workerid').val(ckids);
+        window.location.href = "?id="+ckids;
+    });
+
     $('#calendar').fullCalendar({
             header: {
               left: '',
@@ -1137,29 +1150,43 @@ background: transparent!important;
            // defaultEventMinutes: 30, 
             //defaultTimedEventDuration: '01:00',
             //forceEventDuration: true,
-            resources: function (callback) {
-                @if(request()->start)
-                    var start ="{{request()->start}}";
+            // resources: function (callback) {
+            //     @if(request()->start)
+            //         var start ="{{request()->start}}";
 
-                @elseif(request()->prev)
-                    var start ="{{request()->prev}}";
-                @else
-                    var start =0;
-                @endif
-                var workerid = $("#workerid").val();
-                //var workerid = "15,19";
-                $.ajax({
-                url:"{{url('company/scheduler/getworkerweekview')}}",
-                method:"POST",
-                data:{"workerid":workerid},
-                dataType: 'json',
-                refresh: true,
-                    }).done(function(response) {
-                  callback(response.resources); //return resource data to the calendar via the provided callback function
-                });
-            },
+            //     @elseif(request()->prev)
+            //         var start ="{{request()->prev}}";
+            //     @else
+            //         var start =0;
+            //     @endif
+            //     //var workerid = $("#workerid").val();
+            //     var workerid = "15,19";
+            //     $.ajax({
+            //     url:"{{url('company/scheduler/getworkerweekview')}}",
+            //     method:"POST",
+            //     data:{"workerid":workerid},
+            //     dataType: 'json',
+            //     refresh: true,
+            //         }).done(function(response) {
+            //       callback(response.resources); //return resource data to the calendar via the provided callback function
+            //     });
+            // },
+           // var workerid = "{{15,19}}";
 
-            events: '{{route("company.getschedulerdataweekview")}}',
+            events: '{{url("company/scheduler/getschedulerdataweekview")}}'+'/'+$("#workerid").val(),
+            // events: function (callback) {
+            //     //var workerid = $("#workerid").val();
+            //     var workerid = "15,19";
+            //     $.ajax({
+            //     url:"{{url('company/scheduler/getschedulerdataweekview')}}",
+            //     method:"POST",
+            //     data:{"workerid":workerid},
+            //     dataType: 'json',
+            //     refresh: true,
+            //         }).done(function(response) {
+            //       callback(response.events); //return event data to the calendar via the provided callback function
+            //     });
+            // },
 
             eventRender: function(event, element, view) {
                 if (view.name == 'listDay') {

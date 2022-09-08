@@ -2045,7 +2045,8 @@ border-radius: 8px;
 }
 
 .red-slide  img {
-    
+    width: 35px;
+    height: 35px;
     border: 1px solid #FB6794;
 }
 .yellow-slide svg{color:#FEE200;}
