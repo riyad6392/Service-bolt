@@ -36,8 +36,8 @@ span.icon-btn .fa-trash {
     }
   .popover{
     
-    width:330px;
-    max-width:330px!important;
+    width: 400px;
+    max-width: 400px!important;
     /*min-height:200px;*/
   }
     #calendar.fulldayShow {
@@ -1198,9 +1198,14 @@ th.fc-resource-cell img {
             title: "",
             placement: 'right',
             html:true,
-            content: '<div class="popover-design" style="background-color:red"><div class="row"><div class="col-md-7"><p style="color:red">'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class="closeon icon-btn"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+            content: '<div class="popover-design" style="background-color:red"><div class="row"><div class="col-md-7"><p style="color:red">'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket1" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class="closeon icon-btn"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
             container:'body',
+            trigger:'click',
         });
+        $('body').on('click', function(e) {
+                    if (!element.is(e.target) && element.has(e.target).length === 0 && $('.popover').has(e.target).length === 0)
+                        element.popover('hide');
+                });
                 if (view.name == 'listDay') {
                     element.find(".fc-list-item-time").append("<div class='text-end'><span class='closeon'><i class='fa fa-trash' > </i></span></div>");
                 } else {
@@ -1396,7 +1401,7 @@ console.log(data);
                         function() { 
                             //$('#calendar').fullCalendar('refetchEvents');
                             //defaultTimedEventDuration: '04:00',
-                            $('#external-events').load()
+                            
                             location.reload();
                         }
                         );

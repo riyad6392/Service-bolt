@@ -5,6 +5,41 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
+   span.icon-btn .fa-edit {
+    color: deepskyblue;
+}
+span.icon-btn .fa-user-plus{
+  color: green;
+}
+span.icon-btn .fa-trash {
+    color: red;
+}
+  span.icon-btn {
+    margin: 0 auto;
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    /*background-color: red;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    border:1px solid #ccc;
+}
+.popover-design p {
+    font-weight: 600;
+}
+.popover .popover-body {
+    padding: 0;}
+    .popover .popover-body .popover-design{
+      padding: 1rem 1rem;
+    }
+  .popover{
+    
+    width: 400px;
+    max-width: 400px!important;
+    /*min-height:200px;*/
+  }
         #calendar.fulldayShow {
     overflow-y: scroll!important;
     height: 100%;
@@ -991,8 +1026,8 @@ background: transparent!important;
       // (".top-bar").css('display','none');
         $(".top-bar").toggle();
         $(".content-page").toggleClass("blues");
-        (".sidebar").css('display','none');
-        (".sidebar pt-2").css('display','none');
+        $(".sidebar").css('display','none');
+        $(".sidebar pt-2").css('display','none');
 
         $('.selectpicker3').selectpicker();
         $('.selectpicker1').selectpicker();
@@ -1020,9 +1055,9 @@ background: transparent!important;
             var id=$(this).find('option:selected').data('id');
             window.location.href = "{{url('company/scheduler/detailweek/')}}/"+id;
         });
-        $('html, body').animate({
-            scrollTop: $('#srcoll-here').offset().top
-        }, 'slow');
+        // $('html, body').animate({
+        //     scrollTop: $('#srcoll-here').offset().top()
+        // }, 'slow');
        
         setTimeout(function() {
             $(".fc-scroller").addClass("heierts");
@@ -1189,6 +1224,18 @@ background: transparent!important;
             // },
 
             eventRender: function(event, element, view) {
+              element.popover({
+            title: "",
+            placement: 'right',
+            html:true,
+            content: '<div class="popover-design" style="background-color:red"><div class="row"><div class="col-md-7"><p style="color:red">'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class="closeon icon-btn"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+            container:'body',
+            trigger:'click',
+        });
+        $('body').on('click', function(e) {
+                    if (!element.is(e.target) && element.has(e.target).length === 0 && $('.popover').has(e.target).length === 0)
+                        element.popover('hide');
+                });
                 if (view.name == 'listDay') {
                     element.find(".fc-list-item-time").append("<div class='text-end'><span class='closeon'><i class='fa fa-trash' > </i></span></div>");
                 } else {
