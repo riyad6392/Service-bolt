@@ -5,6 +5,41 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
+  span.icon-btn .fa-edit {
+    color: deepskyblue;
+}
+span.icon-btn .fa-user-plus{
+  color: green;
+}
+span.icon-btn .fa-trash {
+    color: red;
+}
+  span.icon-btn {
+    margin: 0 auto;
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    /*background-color: red;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    border:1px solid #ccc;
+}
+.popover-design p {
+    font-weight: 600;
+}
+.popover .popover-body {
+    padding: 0;}
+    .popover .popover-body .popover-design{
+      padding: 1rem 1rem;
+    }
+  .popover{
+    
+    width:330px;
+    max-width:330px!important;
+    /*min-height:200px;*/
+  }
     #calendar.fulldayShow {
     overflow-y: scroll!important;
     height: 100%;
@@ -401,7 +436,7 @@ div#bs-select-1 {
     font-size: 15px;
     margin: 0;
 }
-span.closeon i {
+/*span.closeon i {
     color: red;
     background: #fff;
     padding: 4px 5px;
@@ -412,7 +447,7 @@ span.closeon i {
           
     left: 0;
 
-}
+}*/
 .fc-content .fa.fa-edit {
     background: #fff;
     color: blue;
@@ -860,6 +895,9 @@ th.fc-resource-cell img {
 </div>
 </div>
 <!-- end ticket assign modal  -->
+<!-------event hover---modal---->
+
+
 @endsection
 
 @section('script')
@@ -1085,6 +1123,9 @@ th.fc-resource-cell img {
         
         
     });
+
+
+
     $('#calendar').fullCalendar({
             header: {
                 left: '',
@@ -1127,6 +1168,14 @@ th.fc-resource-cell img {
             events: '{{route("company.getschedulerdata",["date"=>$requestdate])}}',
 
             eventRender: function(event, element, view) {
+              //console.log(event);
+              element.popover({
+            title: "",
+            placement: 'right',
+            html:true,
+            content: '<div class="popover-design" style="background-color:red"><div class="row"><div class="col-md-7"><p style="color:red">'+event.title+'</p></div><div class="col-md-5 text-center"><p>12:07 -03:07</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class="closeon icon-btn"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+            container:'body',
+        });
                 if (view.name == 'listDay') {
                     element.find(".fc-list-item-time").append("<div class='text-end'><span class='closeon'><i class='fa fa-trash' > </i></span></div>");
                 } else {
@@ -1179,6 +1228,10 @@ th.fc-resource-cell img {
                     $('#calendar').fullCalendar('editEvents',event._id);
                     console.log('edit');
                 });
+
+
+
+            
             },
             resourceRender: function (dataTds, eventTd) {
                 var datatitle = dataTds.title;
@@ -1199,6 +1252,8 @@ th.fc-resource-cell img {
             droppable: true,
             dayClick: function (date) {
                 //alert('clicked ' + date.format());
+        //$('.popover').remove(); //<--- Remove the popover 
+ //        $(this).children().popover('show');
             },
             select: function (startDate, endDate) {
                 //alert('selected ' + startDate.format() + ' to ' + endDate.format());
@@ -1206,7 +1261,19 @@ th.fc-resource-cell img {
 
             eventClick: function (info) {
                 //console.log(info);
+
             },
+            eventMouseover : function(data, event, view) {
+console.log(data);
+        //     var content = '<h3>'+data.title+'</h3>' + 
+        //         '<p><b>Start:</b> '+data.start+'<br />' + 
+        //         (data.end && '<p><b>End:</b> '+data.end+'</p>' || '');
+
+        //     tooltip.set({
+        //         'content.text': content
+        //     })
+        //     .reposition(event).show(event);
+         },
 
             eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) { 
                 var hours = event.start._i[3];
@@ -1446,5 +1513,9 @@ th.fc-resource-cell img {
             }
         })
   });
+
+
+
+ 
  </script>
 @endsection

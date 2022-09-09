@@ -34,24 +34,46 @@
       </div>
       <div class="col-md-4">
         <div class="mb-3">
-          <label class="form-label">SMTP HOST</label>
+          <label class="form-label">Mail HOST</label>
           <input type="text" class="form-control" placeholder="SMTP HOST" value="{{$userData->host}}" name="host" id="host" required="">
         </div>
       </div>
       <div class="col-md-4">
         <div class="mb-3">
-          <label class="form-label">SMTP Username</label>
+          <label class="form-label">Mail Username</label>
           <input type="text" class="form-control" placeholder="SMTP User Name" value="{{$userData->smtpusername}}" name="smtpusername" id="smtpusername" required="">
         </div>
       </div>
       
       <div class="col-md-4">
         <div class="mb-3">
-          <label class="form-label">SMTP Password</label>
+          <label class="form-label">Mail Password</label>
+  
           <input type="text" class="form-control" placeholder="SMTP Password" value="{{$userData->smtppassword}}" name="smtppassword" id="smtppassword" required="">
         </div>
       </div>
-    </div>
+ 
+    <div class="col-md-4">
+        <div class="mb-3">
+          <label class="form-label">Mail Encryption</label>
+          <input type="text" class="form-control" placeholder="SMTP Encryption" value="{{$userData->mail_encryption}}" name="mail_encryption" id="mail_encryption" required="">
+        </div>
+      </div>
+ 
+    <div class="col-md-4">
+        <div class="mb-3">
+          <label class="form-label">Mail Port</label>
+          <input type="text" class="form-control" placeholder="SMTP Port" value="{{$userData->mail_port}}" name="mail_port" id="mail_port" required="">
+        </div>
+      </div>
+   
+    <div class="col-md-4">
+        <div class="mb-3">
+          <label class="form-label">Mail Driver</label>
+          <input type="text" class="form-control" placeholder="SMTP Driver" value="{{$userData->mail_driver}}" name="mail_driver" id="mail_driver" required="">
+        </div>
+      </div>
+</div>
    
   <div class="row">
     <div class="manage-home">

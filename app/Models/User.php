@@ -36,6 +36,12 @@ class User extends Authenticatable
         'latitude',
         'longitude',
         'amount',
+        'host',
+        'smtpusername',
+        'smtppassword',
+        'mail_encryption',
+        'mail_port',
+        'mail_driver',
         'openingtime',
         'closingtime',
     ];

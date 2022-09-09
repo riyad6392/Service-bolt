@@ -45,13 +45,22 @@ class AdminsettingController extends Controller
     public function update(Request $request)
     {
       $setting = User::where('role', 'superadmin')->get()->first();
-      $setting->host = $request->host;
-      $setting->smtpusername = $request->smtpusername;
-      $setting->smtppassword = $request->smtppassword;
       $setting->currency = $request->currency;
       $setting->timezone = $request->timezone;
       $setting->featureprice = $request->featureprice;
       $setting->firebase = $request->firebase;
+
+        if(!empty($request->smtppassword)) {
+            $setting->host = $request->host;
+            $setting->smtpusername = $request->smtpusername;
+            $setting->smtppassword = $request->smtppassword;
+            $setting->mail_encryption = $request->mail_encryption;
+            $setting->mail_port = $request->mail_port;
+            $setting->mail_driver = $request->mail_driver;
+
+        }
+
+
       $setting->save();
 
       // $name = "MAIL_HOST";
