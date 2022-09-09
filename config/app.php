@@ -176,7 +176,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\EmailConfigProvider::class,
         //Yajra\DataTables\DataTablesServiceProvider::class,
 
     ],

@@ -1169,11 +1169,36 @@ th.fc-resource-cell img {
 
             eventRender: function(event, element, view) {
               //console.log(event);
+              var hourwithtime = event.start._i.slice(11,16);
+              //alert( event.start._i.slice(11,16));
+              hourwithtime=hourwithtime.toString();
+              var hours = hourwithtime.slice(0, -3);
+                var minutes = hourwithtime.substring(3);
+                const ampm = hours >= 12 ? 'pm' : 'am';
+               
+                hours %= 12;
+                hours = hours || 12;    
+                hours = hours < 10 ? `0${hours}` : hours;
+                minutes = minutes < 10 ? `0${minutes}` : minutes;
+                var giventime = `${hours}:${minutes} ${ampm}`;
+
+                var Endhourwithtime = event.end._i.slice(11,16);
+                Endhourwithtime = Endhourwithtime.toString();
+                var hours1 = Endhourwithtime.slice(0, -3);
+                var minutes1 = hourwithtime.substring(3);
+                const ampm1 = hours1 >= 12 ? 'pm' : 'am';
+
+                hours1 %= 12;
+                hours1 = hours1 || 12;    
+                hours1 = hours1 < 10 ? `0${hours1}` : hours1;
+                minutes1 = minutes1 < 10 ? `0${minutes1}` : minutes1;
+                var givenendtime = `${hours1}:${minutes1} ${ampm1}`;
+              
               element.popover({
             title: "",
             placement: 'right',
             html:true,
-            content: '<div class="popover-design" style="background-color:red"><div class="row"><div class="col-md-7"><p style="color:red">'+event.title+'</p></div><div class="col-md-5 text-center"><p>12:07 -03:07</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class="closeon icon-btn"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+            content: '<div class="popover-design" style="background-color:red"><div class="row"><div class="col-md-7"><p style="color:red">'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class="closeon icon-btn"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
             container:'body',
         });
                 if (view.name == 'listDay') {
@@ -1328,7 +1353,7 @@ console.log(data);
             },
 
             drop: function (date, jsEvent, ui, resourceId) {
-             
+             //alert('drop');
                    
                var hours = date._i[3];
                 var minutes = date._i[4];
@@ -1371,6 +1396,7 @@ console.log(data);
                         function() { 
                             //$('#calendar').fullCalendar('refetchEvents');
                             //defaultTimedEventDuration: '04:00',
+                            $('#external-events').load()
                             location.reload();
                         }
                         );
@@ -1378,7 +1404,7 @@ console.log(data);
                 });
             },  
             eventDrop: function(event,delta, revertFunc, jsEvent, ui, view ) {
-              
+             // alert('eventdrop');
                 var ticketid = event.id;
                 var resourceId = event.resourceId;
                 

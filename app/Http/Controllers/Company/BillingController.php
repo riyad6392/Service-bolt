@@ -395,6 +395,7 @@ class BillingController extends Controller
 
     public function sendbillinginvoiceold(Request $request)
     {
+      
       $tdata = Quote::where('id', $request->ticketid)->get()->first();
 
       $serviceidarray = explode(',', $tdata->serviceid);
@@ -434,6 +435,7 @@ class BillingController extends Controller
 
     public function sendbillinginvoice(Request $request)
     {
+      
       $tdata = Quote::where('id', $request->ticketid)->get()->first();
 
       $serviceid = explode(',', $tdata->serviceid);
@@ -482,7 +484,7 @@ class BillingController extends Controller
       foreach($contactbccemail as $key => $contactbcc) {
         $contactbccList[] = $contactbcc;
       }
-      
+    
        Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$company->companyname,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids], function($message) use ($contactList,$app_name,$app_email,$contactbccList,$cc) {
           $message->to($contactList);
           if($cc!=null) {
