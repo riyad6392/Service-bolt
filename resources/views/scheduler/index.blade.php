@@ -1170,12 +1170,12 @@ th.fc-resource-cell img {
             eventRender: function(event, element, view) {
               //console.log(event);
               var hourwithtime = event.start._i.slice(11,16);
-              //alert( event.start._i.slice(11,16));
+              alert( hourwithtime);
               hourwithtime=hourwithtime.toString();
               var hours = hourwithtime.slice(0, -3);
                 var minutes = hourwithtime.substring(3);
                 const ampm = hours >= 12 ? 'pm' : 'am';
-               
+               alert(hours);
                 hours %= 12;
                 hours = hours || 12;    
                 hours = hours < 10 ? `0${hours}` : hours;
@@ -1183,11 +1183,12 @@ th.fc-resource-cell img {
                 var giventime = `${hours}:${minutes} ${ampm}`;
 
                 var Endhourwithtime = event.end._i.slice(11,16);
+                alert(Endhourwithtime);
                 Endhourwithtime = Endhourwithtime.toString();
                 var hours1 = Endhourwithtime.slice(0, -3);
-                var minutes1 = hourwithtime.substring(3);
+                var minutes1 = Endhourwithtime.substring(3);
                 const ampm1 = hours1 >= 12 ? 'pm' : 'am';
-
+                //alert(minutes1);
                 hours1 %= 12;
                 hours1 = hours1 || 12;    
                 hours1 = hours1 < 10 ? `0${hours1}` : hours1;
@@ -1198,7 +1199,7 @@ th.fc-resource-cell img {
             title: "",
             placement: 'right',
             html:true,
-            content: '<div class="popover-design" style="background-color:red"><div class="row"><div class="col-md-7"><p style="color:red">'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket1" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class="closeon icon-btn"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+            content: '<div class="popover-design" style="background-color:red"><div class="row"><div class="col-md-7"><p style="color:red">'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class="closeon icon-btn"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
             container:'body',
             trigger:'click',
         });
@@ -1228,17 +1229,13 @@ th.fc-resource-cell img {
                            data:{id:id},
                            success:function()
                            {
+                            location.reload();
                             $('#calendar').fullCalendar('removeEvents',event._id);
                             swal({
                                title: "Done!", 
                                text: "Ticket Removed Successfully!", 
                                type: "success"
-                            },
-                            function(){ 
-                                //$('#calendar').fullCalendar('refetchEvents');
-                                   location.reload();
-                                }
-                            );
+                            });
                            }
                           })
             });
@@ -1393,18 +1390,12 @@ console.log(data);
                     contentType:false,
                     processData:false,
                     success:function() {
+                      location.reload(),
                         swal({
                            title: "Done!", 
                            text: "Ticket Assigned Successfully!", 
                            type: "success"
-                        },
-                        function() { 
-                            //$('#calendar').fullCalendar('refetchEvents');
-                            //defaultTimedEventDuration: '04:00',
-                            
-                            location.reload();
-                        }
-                        );
+                        });
                     }
                 });
             },  

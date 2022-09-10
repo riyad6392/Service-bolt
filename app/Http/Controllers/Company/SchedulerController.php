@@ -749,7 +749,7 @@ class SchedulerController extends Controller
         $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
-        //print_r($output->results[0]->geometry->location->lat); die;
+       // dd($output->results); 
         $latitude  = $output->results[0]->geometry->location->lat; 
         $longitude = $output->results[0]->geometry->location->lng;
 
@@ -1551,4 +1551,17 @@ class SchedulerController extends Controller
     return view('scheduler.monthviewall',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker'));
   }
 
+  public function sortaftersubmit(Request $request) {
+    $auth_id = auth()->user()->id;
+        if(auth()->user()->role == 'company') {
+            $auth_id = auth()->user()->id;
+        } else {
+           return redirect()->back();
+        }
+
+        $ticketData = DB::table('quote')->select('quote.*', 'customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"1")->orderBy('quote.id','ASC')->get();
+        return view('scheduler.index',compact('ticketData'));
+          
+        
+  }
 }
