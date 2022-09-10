@@ -1176,8 +1176,8 @@ th.fc-resource-cell img {
                 const ampm = hours >= 12 ? 'pm' : 'am';
                 hours %= 12;
                 hours = hours || 12;    
-                hours = hours < 10 ? `0${hours}` : hours;
-                minutes = minutes < 10 ? `0${minutes}` : minutes;
+                hours = hours < 10 ? `${hours}` : hours;
+                minutes = minutes < 10 ? `${minutes}` : minutes;
                 var giventime = `${hours}:${minutes} ${ampm}`;
 
                 var Endhourwithtime = event.end._i.slice(11,16);
@@ -1188,8 +1188,8 @@ th.fc-resource-cell img {
                 //alert(minutes1);
                 hours1 %= 12;
                 hours1 = hours1 || 12;    
-                hours1 = hours1 < 10 ? `0${hours1}` : hours1;
-                minutes1 = minutes1 < 10 ? `0${minutes1}` : minutes1;
+                hours1 = hours1 < 10 ? `${hours1}` : hours1;
+                minutes1 = minutes1 < 10 ? `${minutes1}` : minutes1;
                 var givenendtime = `${hours1}:${minutes1} ${ampm1}`;
               
               element.popover({
