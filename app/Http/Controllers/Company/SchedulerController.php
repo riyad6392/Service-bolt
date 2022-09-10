@@ -1367,7 +1367,7 @@ class SchedulerController extends Controller
         //dd($wids);
         $auth_id = auth()->user()->id;
         //->where('personnel.id','15')
-        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.personnelid',$wids)->whereIn('quote.ticket_status',[2,3,4])->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','personnel.color as bgcolor','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.personnelid',$wids)->whereIn('quote.ticket_status',[2,3,4])->orderBy('quote.id','ASC')->get();
         
         $data=[];
         foreach ($scheduleData as $key => $row) {
@@ -1381,14 +1381,16 @@ class SchedulerController extends Controller
             } else {
                 $enddatetime = "";
             }
-
+            if($row->bgcolor == null){
+                $row->bgcolor = "#000";
+            }
             $data[] = array (
                 'id'=>$row->id,
                 'title'   =>'#'.$row->id."\n".$row->customername."\n".$row->servicename,
                 'start'   => $startdatetime,
                 'end' => $enddatetime,
                 'resourceId'=>$row->personnelid,
-                'backgroundColor'   => $row->color,
+                'backgroundColor'   => $row->bgcolor,
             );
         }
         //dd($data);
