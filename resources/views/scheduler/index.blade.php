@@ -1170,12 +1170,10 @@ th.fc-resource-cell img {
             eventRender: function(event, element, view) {
               //console.log(event);
               var hourwithtime = event.start._i.slice(11,16);
-              //alert( event.start._i.slice(11,16));
               hourwithtime=hourwithtime.toString();
               var hours = hourwithtime.slice(0, -3);
                 var minutes = hourwithtime.substring(3);
                 const ampm = hours >= 12 ? 'pm' : 'am';
-               
                 hours %= 12;
                 hours = hours || 12;    
                 hours = hours < 10 ? `0${hours}` : hours;
@@ -1185,9 +1183,9 @@ th.fc-resource-cell img {
                 var Endhourwithtime = event.end._i.slice(11,16);
                 Endhourwithtime = Endhourwithtime.toString();
                 var hours1 = Endhourwithtime.slice(0, -3);
-                var minutes1 = hourwithtime.substring(3);
+                var minutes1 = Endhourwithtime.substring(3);
                 const ampm1 = hours1 >= 12 ? 'pm' : 'am';
-
+                //alert(minutes1);
                 hours1 %= 12;
                 hours1 = hours1 || 12;    
                 hours1 = hours1 < 10 ? `0${hours1}` : hours1;
@@ -1389,7 +1387,7 @@ console.log(data);
                     contentType:false,
                     processData:false,
                     success:function() {
-                        location.reload(),
+                      location.reload(),
                         swal({
                            title: "Done!", 
                            text: "Ticket Assigned Successfully!", 
