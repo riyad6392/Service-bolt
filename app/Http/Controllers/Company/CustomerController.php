@@ -351,6 +351,10 @@ class CustomerController extends Controller
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
         //print_r($output->results[0]->geometry->location->lat); die;
+        if(empty($output->results)) {
+          $request->session()->flash('error', 'This address not found.');
+          return redirect()->back();
+        }
         $latitude  = $output->results[0]->geometry->location->lat; 
         $longitude = $output->results[0]->geometry->location->lng;
 

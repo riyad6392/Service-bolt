@@ -476,20 +476,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box  overflow-hidden">
       <div class="modal-body">
-       <div class="add-customer-modal">
-     <h5>Add Address</h5>
+      <div class="add-customer-modal d-flex justify-content-between align-items-center">
+	 <h5>Add Address</h5>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" id="quotecancel1" aria-label="Close"></button>
      </div>
      
     <div class="row customer-form">
      
     <div class="col-md-12 mb-3">
      	<input type="text" class="form-control" placeholder="Addresses" name="address" id="address5" required="">
+		 <div class="find_msg" style="display:none;"></div>
+  	</div>
   	</div>
 
-		<div class="col-lg-6 mb-3">
+		<div class="col-md-12 mb-3">
      <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel1">Cancel</button>
     </div>
-    <div class="col-lg-6 mb-3">
+    <div class="col-md-12 mb-3">
      	<button id="saveaddress" class="btn btn-add btn-block">Add Address</button>
     </div>
     </div>
@@ -513,6 +516,42 @@ input[type="date"]::-webkit-calendar-picker-indicator {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
+
+   $(document).on('keyup','#address5',function(e) {
+	var address = $('#address5').val();
+
+	if(address=="") {
+		   	//alert('address field is required');
+			return false;
+		   }
+	   $.ajax({
+            url:"{{url('company/quote/checklatitude')}}",
+            data: {
+              address: address,
+     		},
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+				console.log(data);
+				if(data.status=='success') {
+				$("#saveaddress").attr("disabled", true);
+				$(".find_msg").html(data.msg);
+				$('.find_msg').css('color','red');
+				$('.find_msg').css('display','block');
+				
+             // $("#add-address").modal('hide');
+              //$("#address1").append("<option value="+data.address+">"+data.address+"</option>");
+             // $("#add-tickets").show();
+				}
+				else {
+					//alert('fdgnk');
+					$("#saveaddress").attr("disabled", false);
+					$('.find_msg').css('display','none');
+				}
+            }
+        })
+    });
 
   jQuery(function() {
    $(document).on('click','.showSingle',function(e) {
@@ -772,6 +811,17 @@ $(document).on('click','#editService',function(e) {
             }
         })
 	})
+
+
+  $('html').on('click','#hidequote1',function() {
+  	$("#create-tickets").hide();
+	});
+
+  $('html').on('click','#quotecancel1',function() {
+    
+    $("#add-address").hide();
+  	$("#create-tickets").show();
+	});
 
 
 </script>

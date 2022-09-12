@@ -547,9 +547,14 @@ class TicketController extends Controller
         $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
-        //print_r($output->results[0]->geometry->location->lat); die;
+        if($output->results!=NULL) {
         $latitude  = $output->results[0]->geometry->location->lat; 
         $longitude = $output->results[0]->geometry->location->lng;
+        }
+        else {
+          $latitude  = 0; 
+          $longitude = 0;
+        }
 
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
@@ -809,9 +814,15 @@ class TicketController extends Controller
         //Send request and receive json data by address
       $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
       $output = json_decode($geocodeFromAddr);
-      $latitude  = $output->results[0]->geometry->location->lat; 
-      $longitude = $output->results[0]->geometry->location->lng;
 
+      if($output->results!=NULL) {
+        $latitude  = $output->results[0]->geometry->location->lat; 
+        $longitude = $output->results[0]->geometry->location->lng;
+        }
+        else {
+          $latitude  = 0; 
+          $longitude = 0;
+        }
       $quote->latitude = $latitude;
       $quote->longitude = $longitude;
 
@@ -1039,6 +1050,17 @@ class TicketController extends Controller
        return redirect()->back();
     }
 
-   
+   public function checklati_long(Request $request) {
+    //dd($request->all());
+    $formattedAddr = str_replace(' ','+',$request->address);
+    //Send request and receive json data by address
+    $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+    $output = json_decode($geocodeFromAddr);
+    //Get latitude and longitute from json data
+    if($output->results == NULL) {
+    return  json_encode(array('status'=>'success','msg'=>'Address Not Found'));
+    }
+    return  json_encode(array('status'=>'failed'));
+   }
 
 }
