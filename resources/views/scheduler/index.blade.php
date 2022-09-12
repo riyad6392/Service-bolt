@@ -5,6 +5,19 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        background: transparent;
+        bottom: 0;
+        color: transparent;
+        cursor: pointer;
+        height: auto;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: auto;
+    }
   span.icon-btn .fa-edit {
     color: deepskyblue;
 }
@@ -580,6 +593,11 @@ th.fc-resource-cell img {
     font-size: 16px;
     font-weight: 300;
 }
+span.date-icon {
+    position: absolute;
+    right: 10px;
+    width: auto;
+}
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -609,19 +627,25 @@ th.fc-resource-cell img {
                             @endif
 
                             <div class="col-md-3 ms-auto">
-                                <div class="datess">
+                                <div class="datess position-relative">
                                     @if(request()->date)
                                       @php
                                         $todaydate = request()->date;
                                         $newdate = Carbon\Carbon::createFromFormat('Y-m-d', $todaydate)->format('m/d/Y');
                                         $requestdate = request()->date;
                                       @endphp
-                                        <input type="text" placeholder="{{ date('Y/m/d') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('d-m-Y', strtotime(request()->date ))}}">
+                                        <input type="text" placeholder="{{ date('d/m/Y') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('d-m-Y', strtotime(request()->date ))}}">
+                                        <span class="date-icon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
                                     @else
                                     @php
                                         $requestdate = date('Y-m-d');
                                     @endphp
-                                        <input type="text" placeholder="{{ date('m/d/Y') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('m/d/y') }}">
+                                        <input type="text" placeholder="{{ date('d/m/Y') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('m/d/y') }}">
+                                         <span class="date-icon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
                                     @endif
                                 </div>
                             </div>
@@ -1169,40 +1193,41 @@ th.fc-resource-cell img {
 
             eventRender: function(event, element, view) {
               //console.log(event);
-              var hourwithtime = event.start._i.slice(11,16);
-              hourwithtime=hourwithtime.toString();
-              var hours = hourwithtime.slice(0, -3);
-                var minutes = hourwithtime.substring(3);
-                const ampm = hours >= 12 ? 'pm' : 'am';
-                hours %= 12;
-                hours = hours || 12;    
-                hours = hours < 10 ? `${hours}` : hours;
-                minutes = minutes < 10 ? `${minutes}` : minutes;
-                var giventime = `${hours}:${minutes} ${ampm}`;
+                var hourwithtime = event.start._i.slice(11,16);
+                hourwithtime=hourwithtime.toString();
+                var hours = hourwithtime.slice(0, -3);
+                  var minutes = hourwithtime.substring(3);
+                  const ampm = hours >= 12 ? 'pm' : 'am';
+                  hours %= 12;
+                  hours = hours || 12;    
+                  hours = hours < 10 ? `${hours}` : hours;
+                  minutes = minutes < 10 ? `${minutes}` : minutes;
+                  var giventime = `${hours}:${minutes} ${ampm}`;
 
-                var Endhourwithtime = event.end._i.slice(11,16);
-                Endhourwithtime = Endhourwithtime.toString();
-                var hours1 = Endhourwithtime.slice(0, -3);
-                var minutes1 = Endhourwithtime.substring(3);
-                const ampm1 = hours1 >= 12 ? 'pm' : 'am';
-                //alert(minutes1);
-                hours1 %= 12;
-                hours1 = hours1 || 12;    
-                hours1 = hours1 < 10 ? `${hours1}` : hours1;
-                minutes1 = minutes1 < 10 ? `${minutes1}` : minutes1;
-                var givenendtime = `${hours1}:${minutes1} ${ampm1}`;
-              
-              element.popover({
-                title: "",
-                placement: 'right',
-                html:true,
-                content: '<div class="popover-design" style="background-color:red"><div class="row"><div class="col-md-7"><p style="color:red">'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket1" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class="closeon icon-btn"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
-                container:'body',
-                trigger:'click',
-            });
-        $('body').on('click', function(e) {
+                  var Endhourwithtime = event.end._i.slice(11,16);
+                  Endhourwithtime = Endhourwithtime.toString();
+                  var hours1 = Endhourwithtime.slice(0, -3);
+                  var minutes1 = Endhourwithtime.substring(3);
+                  const ampm1 = hours1 >= 12 ? 'pm' : 'am';
+                  //alert(minutes1);
+                  hours1 %= 12;
+                  hours1 = hours1 || 12;    
+                  hours1 = hours1 < 10 ? `${hours1}` : hours1;
+                  minutes1 = minutes1 < 10 ? `${minutes1}` : minutes1;
+                  var givenendtime = `${hours1}:${minutes1} ${ampm1}`;
+
+                element.popover({
+                  title: '',
+                  placement: 'right',
+                  html:true,
+                  content: '<div class="popover-design" style="background-color:red"><div class="row"><div class="col-md-7"><p style="color:red">'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket1" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class="closeon icon-btn"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+                  container:'body',
+                  trigger:'click',
+                });
+
+                $('body').on('click', function(e) {
                     if (!element.is(e.target) && element.has(e.target).length === 0 && $('.popover').has(e.target).length === 0)
-                        element.popover('hide');
+                      element.popover('hide');
                 });
                 if (view.name == 'listDay') {
                     element.find(".fc-list-item-time").append("<div class='text-end'><span class='closeon'><i class='fa fa-trash' > </i></span></div>");
@@ -1266,9 +1291,10 @@ th.fc-resource-cell img {
                 } else {
                     var url = "{{url('uploads/servicebolt-noimage.png')}}";
                 }
-                var linkurl= "{{url('company/scheduler/detailweek/')}}/"+dataTds.id;
+                //var linkurl= "{{url('company/scheduler/detailweek/')}}/"+dataTds.id;
+                var linkurl= "#";
                 var textElement = eventTd.empty();
-                textElement.append('<b><a href="'+ linkurl +'" style="color:inherit;text-decoration:none;"><img src="'+ url +'" alt=""/>' + title[0] + '</a></b>');
+                textElement.append('<b><a href="'+ linkurl +'" style="color:inherit;text-decoration:none;pointer-events:none;"><img src="'+ url +'" alt=""/>' + title[0] + '</a></b>');
             },
             unselectAuto: false,
             selectable: true,
@@ -1276,9 +1302,6 @@ th.fc-resource-cell img {
             editable: true,
             droppable: true,
             dayClick: function (date) {
-                //alert('clicked ' + date.format());
-        //$('.popover').remove(); //<--- Remove the popover 
- //        $(this).children().popover('show');
             },
             select: function (startDate, endDate) {
                 //alert('selected ' + startDate.format() + ' to ' + endDate.format());
@@ -1289,16 +1312,8 @@ th.fc-resource-cell img {
 
             },
             eventMouseover : function(data, event, view) {
-console.log(data);
-        //     var content = '<h3>'+data.title+'</h3>' + 
-        //         '<p><b>Start:</b> '+data.start+'<br />' + 
-        //         (data.end && '<p><b>End:</b> '+data.end+'</p>' || '');
-
-        //     tooltip.set({
-        //         'content.text': content
-        //     })
-        //     .reposition(event).show(event);
-         },
+            //console.log(data);
+            },
 
             eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) { 
                 var hours = event.start._i[3];

@@ -1401,11 +1401,12 @@ class SchedulerController extends Controller
     {
         $auth_id = auth()->user()->id;
         $todaydate = date('l - F d, Y');
+        
         $newdate = Carbon::createFromFormat('l - F d, Y', $todaydate)->format('Y-m-d');
 
         $fulldate = Carbon::createFromFormat('Y-m-d', $date)->format('l - F d, Y');
-
         
+        //echo $fulldate; die; Sunday - September 11, 2022
         $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
         
         $data=[];
@@ -1428,7 +1429,7 @@ class SchedulerController extends Controller
                 'backgroundColor'   => $row->color,
             );
         }
-      
+      //dd($data);
       echo json_encode($data);
     }
 
