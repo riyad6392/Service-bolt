@@ -249,7 +249,7 @@ Route::group([
      Route::any('/quote/leftbarinvoice', [TicketController::class, 'leftbarinvoice'])->name('leftbarinvoice');
      Route::any('/quote/sharequote', [TicketController::class, 'sharequote'])->name('sharequote');
      Route::any('/quote/customercreate', [TicketController::class, 'customercreate'])->name('customer.create');
-
+     Route::any('/quote/checklatitude', [TicketController::class, 'checklati_long'])->name('checklati_long');
     //Scheduler Listing
     Route::get('/scheduler', [SchedulerController::class, 'index'])->name('scheduler');
     Route::get('/schedulernew', [SchedulerController::class, 'indexnew'])->name('schedulernew');
@@ -377,7 +377,7 @@ Route::group([
     Route::any('/myticket/ticketcreate', [WorkerTicketController::class, 'ticketcreate'])->name('ticketcreate1');
 
     Route::any('/myticket/addaddress', [WorkerTicketController::class, 'addaddress'])->name('addaddress');
-
+    
 
     //setting
     Route::get('/setting', [WorkerSettingController::class, 'index'])->name('setting');

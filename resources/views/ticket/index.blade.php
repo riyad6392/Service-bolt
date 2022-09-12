@@ -1008,10 +1008,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      
     <div class="col-md-12 mb-3">
      	<input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address5" required="">
+		 <div class="find_msg" style="display:none;"></div>
   	</div>
 
 		<div class="col-lg-6 mb-3">
-     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel1">Cancel</button>
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" aria-label="Close" id="quotecancel12">Cancel</button>
     </div>
     <div class="col-lg-6 mb-3">
      	<button id="saveaddress" class="btn btn-add btn-block">Add Address</button>
@@ -1036,11 +1037,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <div class="row customer-form">
      
     <div class="col-md-12 mb-3">
-     	<input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address6" required="">
-  	</div>
+     	<input type="text" class="form-control"  placeholder="Search Addresses" name="address" id="address6" required="">
+  	<div class="find_msg" style="display:none;"></div>
+	</div>
 
 		<div class="col-lg-6 mb-3">
-     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="ticketcancel1">Cancel</button>
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="ticketcancel12">Cancel</button>
     </div>
     <div class="col-lg-6 mb-3">
      	<button id="saveaddress2" class="btn btn-add btn-block">Add Address</button>
@@ -1573,8 +1575,16 @@ $('#serviceform').on('submit', function(event) {
 		$("#add-tickets").show();
   	$("#add-address").hide();
 	});
+	$("#quotecancel12").click(function() {
+		$("#add-tickets").show();
+  	$("#add-address").hide();
+	});
 
 	$("#ticketcancel1").click(function() {
+		$("#add-tickets1").show();
+  	$("#add-address2").hide();
+	});
+	$("#ticketcancel12").click(function() {
 		$("#add-tickets1").show();
   	$("#add-address2").hide();
 	});
@@ -1602,6 +1612,79 @@ $('#serviceform').on('submit', function(event) {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
+
+   $(document).on('keyup','#address6',function(e) {
+	var address = $('#address6').val();
+
+	if(address=="") {
+		   	//alert('address field is required');
+			return false;
+		   }
+	   $.ajax({
+            url:"{{url('company/quote/checklatitude')}}",
+            data: {
+              address: address,
+     		},
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+				console.log(data);
+				if(data.status=='success') {
+				$("#saveaddress2").attr("disabled", true);
+				$(".find_msg").html(data.msg);
+				$('.find_msg').css('color','red');
+				$('.find_msg').css('display','block');
+				
+             // $("#add-address").modal('hide');
+              //$("#address1").append("<option value="+data.address+">"+data.address+"</option>");
+             // $("#add-tickets").show();
+				}
+				else {
+					//alert('fdgnk');
+					$("#saveaddress2").attr("disabled", false);
+					$('.find_msg').css('display','none');
+				}
+            }
+        })
+    });
+
+	$(document).on('keyup','#address5',function(e) {
+	var address = $('#address5').val();
+
+	if(address=="") {
+		   	//alert('address field is required');
+			return false;
+		   }
+	   $.ajax({
+            url:"{{url('company/quote/checklatitude')}}",
+            data: {
+              address: address,
+     		},
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+				console.log(data);
+				if(data.status=='success') {
+				$("#saveaddress").attr("disabled", true);
+				$(".find_msg").html(data.msg);
+				$('.find_msg').css('color','red');
+				$('.find_msg').css('display','block');
+				
+             // $("#add-address").modal('hide');
+              //$("#address1").append("<option value="+data.address+">"+data.address+"</option>");
+             // $("#add-tickets").show();
+				}
+				else {
+					//alert('fdgnk');
+					$("#saveaddress").attr("disabled", false);
+					$('.find_msg').css('display','none');
+				}
+            }
+        })
+    });
+
    $(document).on('click','#saveaddress',function(e) {
       var customerid = $('#customerid').val();
 	    var address = $('#address5').val();
@@ -1631,6 +1714,7 @@ $('#serviceform').on('submit', function(event) {
 	    var address = $('#address6').val();
 		  if(address=="") {
 		   	alert('address field is required');
+			return false;
 		   }
 	   $.ajax({
             url:"{{url('personnel/myticket/addaddress')}}",

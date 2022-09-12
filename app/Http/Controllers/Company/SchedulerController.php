@@ -750,6 +750,10 @@ class SchedulerController extends Controller
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
        // dd($output->results); 
+       if(empty($output->results)) {
+        $request->session()->flash('error', 'This address not found.');
+        return redirect()->back();
+      }
         $latitude  = $output->results[0]->geometry->location->lat; 
         $longitude = $output->results[0]->geometry->location->lng;
 
@@ -1268,6 +1272,10 @@ class SchedulerController extends Controller
         //Send request and receive json data by address
       $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
       $output = json_decode($geocodeFromAddr);
+      if(empty($output->results)) {
+        $request->session()->flash('error', 'This address not found.');
+        return redirect()->back();
+      }
       $latitude  = $output->results[0]->geometry->location->lat; 
       $longitude = $output->results[0]->geometry->location->lng;
 
