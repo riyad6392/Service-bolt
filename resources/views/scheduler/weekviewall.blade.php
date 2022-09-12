@@ -604,7 +604,7 @@ background: transparent!important;
 }
 
 .switch-field input:checked + label {
-    background-color: #FEE200;
+    /*background-color: #FEE200;*/
     box-shadow: none;
     color: #000;
     width: 100%;
@@ -637,6 +637,7 @@ background: transparent!important;
 
 #calendar.fulldayShow {
     padding-top: 35px}
+
 
 </style>
 <div class="row">
@@ -691,13 +692,20 @@ background: transparent!important;
                                      $ids = explode(',',$id);
                                      if(in_array($value->id,$ids)){
                                         $checked="checked";
+                                        if($value->color == null) {
+                                            $color= "#000";
+                                        } else {
+                                            $color= $value->color;    
+                                        }
+                                        
                                      } else {
                                         $checked="";
+                                        $color = "";
                                      }   
                                     @endphp
                                     <li class="inner red-slide">
                                         <input type="checkbox" id="radio-{{$value->id}}" data-id="{{$value->id}}" name="switch1" value="yes" {{$checked}}>
-                                        <label for="radio-{{$value->id}}">
+                                        <label for="radio-{{$value->id}}" style="background-color: {{$color}}">
                                             <div class="hstack gap-2">
                                                 <div class="userbox">
                                                     @if($value->image!=null)
@@ -1019,7 +1027,9 @@ background: transparent!important;
   </script>
 
 <script type="">
+    
     $(document).ready(function () {
+        
           $("#calendar").addClass("fulldayShow");
        $("#hide-top").hide();
        // $("#close").html('<a href="" style="position: relative;left: 0;top:0px;color: black;"> <i class="fa fa-times" aria-hidden="true" style="font-size: 32px;"></i></a>');
@@ -1159,12 +1169,13 @@ background: transparent!important;
             if ($(this).is(":checked")) {
                 allObj.checkbox.push($(this).attr("data-id"));
             }
-        });
+        }) ;
         var ckids = allObj.checkbox;
        
         //$('#workerid').val(ckids);
         window.location.href = "?id="+ckids;
-    });
+     });
+   
 
     $('#calendar').fullCalendar({
             header: {
@@ -1209,6 +1220,7 @@ background: transparent!important;
            // var workerid = "{{15,19}}";
 
             events: '{{url("company/scheduler/getschedulerdataweekview")}}'+'/'+$("#workerid").val(),
+
             // events: function (callback) {
             //     //var workerid = $("#workerid").val();
             //     var workerid = "15,19";
@@ -1224,7 +1236,6 @@ background: transparent!important;
             // },
 
             eventRender: function(event, element, view) {
-              
                 if (view.name == 'listDay') {
                     element.find(".fc-list-item-time").append("<div class='text-end'><span class='closeon'><i class='fa fa-trash' > </i></span></div>");
                 } else {
@@ -1247,16 +1258,13 @@ background: transparent!important;
                            data:{id:id},
                            success:function()
                            {
+                            location.reload(),
                             $('#calendar').fullCalendar('removeEvents',event._id);
                             swal({
                                title: "Done!", 
                                text: "Ticket Removed Successfully!", 
                                type: "success"
                             },
-                            function(){ 
-                                //$('#calendar').fullCalendar('refetchEvents');
-                                location.reload();
-                                }
                             );
                            }
                           })
@@ -1496,6 +1504,7 @@ background: transparent!important;
     });
 
     $(document).ready(function() {
+
     $('#customerid1').on('change', function() {
       var customerid = this.value;
       $("#address_scheduler").html('');

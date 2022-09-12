@@ -516,7 +516,7 @@ background: transparent!important;
 }
 
 .switch-field input:checked + label {
-    background-color: #FEE200;
+    /*background-color: #FEE200;*/
     box-shadow: none;
     color: #000;
     width: 100%;
@@ -601,7 +601,7 @@ span.closeon i {
                             @else
                             <input type="hidden" name="openingtime" id="openingtime" value="00:00">
                             <input type="hidden" name="closingtime" id="closingtime" value="24:00">
-                            @endif
+                            @endif</div>
                             <div class="col-md-3 ms-auto">
                                 <div class="datess">
                                     @if(request()->date)
@@ -629,16 +629,24 @@ span.closeon i {
                                     @if(count($worker)>0)
                                     @foreach($worker as $key=>$value)
                                         @php
-                                             $ids = explode(',',$id);
-                                             if(in_array($value->id,$ids)){
+                                            $ids = explode(',',$id);
+                                            
+                                            if(in_array($value->id,$ids)) {
                                                 $checked="checked";
-                                             } else {
+
+                                                if($value->color == null) {
+                                                    $color= "#000";
+                                                } else {
+                                                    $color= $value->color;    
+                                                }
+                                            } else {
                                                 $checked="";
-                                             }   
+                                                $color = "";
+                                            }   
                                         @endphp
                                     <li class="inner red-slide">
                                         <input type="checkbox" id="radio-{{$value->id}}" data-id="{{$value->id}}" name="switch1" value="yes" {{$checked}}>
-                                        <label for="radio-{{$value->id}}">
+                                        <label for="radio-{{$value->id}}" style="background-color: {{$color}}">
                                             <div class="hstack gap-2">
                                                 <div class="userbox">
                                                     @if($value->image!=null)
