@@ -1175,7 +1175,7 @@ th.fc-resource-cell img {
               var hours = hourwithtime.slice(0, -3);
                 var minutes = hourwithtime.substring(3);
                 const ampm = hours >= 12 ? 'pm' : 'am';
-               alert(hours);
+               //alert(hours);
                 hours %= 12;
                 hours = hours || 12;    
                 hours = hours < 10 ? `0${hours}` : hours;
@@ -1183,7 +1183,7 @@ th.fc-resource-cell img {
                 var giventime = `${hours}:${minutes} ${ampm}`;
 
                 var Endhourwithtime = event.end._i.slice(11,16);
-                alert(Endhourwithtime);
+                //alert(Endhourwithtime);
                 Endhourwithtime = Endhourwithtime.toString();
                 var hours1 = Endhourwithtime.slice(0, -3);
                 var minutes1 = Endhourwithtime.substring(3);
