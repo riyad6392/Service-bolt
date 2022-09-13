@@ -750,10 +750,6 @@ class SchedulerController extends Controller
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
        // dd($output->results); 
-       if(empty($output->results)) {
-        $request->session()->flash('error', 'This address not found.');
-        return redirect()->back();
-      }
         $latitude  = $output->results[0]->geometry->location->lat; 
         $longitude = $output->results[0]->geometry->location->lng;
 
@@ -1025,31 +1021,36 @@ class SchedulerController extends Controller
     public function ticketadded(Request $request)
     {
       $quote = Quote::where('id', $request->quoteid)->first();
-      foreach ($request->personnelid as $pid) {
-        $data['userid'] =  $quote->userid;
-        $data['customerid'] =  $quote->customerid;
-        $data['customername'] =  $quote->customername;
-        $data['address'] = $quote->address;
-        $data['latitude'] = $quote->latitude;
-        $data['longitude'] = $quote->longitude;
-        $data['serviceid'] = $quote->serviceid;
-        $data['servicename'] = $quote->servicename;
-        $data['product_id'] = $quote->product_id;
-        $data['product_name'] = $quote->product_name;
-        $data['personnelid'] = $pid;
-        $data['radiogroup'] = $quote->radiogroup;
-        $data['frequency'] = $quote->frequency;
-        $data['time'] = $quote->time;
-        $data['minute'] = $quote->minute;
-        $data['price'] = $quote->price;
-        $data['etc'] = $quote->etc;
-        $data['description'] = $quote->description;
-        $data['giventime'] = $quote->giventime;
-        $data['givenendtime'] = $quote->givenendtime;
-        $data['givendate'] = $quote->givendate;
-        $data['ticket_status'] = 2;
-        Quote::create($data);
-      } 
+      $qpid = $quote->personnelid;
+      $pids = $request->personnelid;
+      array_push($pids,$qpid);
+      $quote->personnelid = implode(',', $pids);
+      $quote->save();
+      //foreach ($request->personnelid as $pid) {
+        // $data['userid'] =  $quote->userid;
+        // $data['customerid'] =  $quote->customerid;
+        // $data['customername'] =  $quote->customername;
+        // $data['address'] = $quote->address;
+        // $data['latitude'] = $quote->latitude;
+        // $data['longitude'] = $quote->longitude;
+        // $data['serviceid'] = $quote->serviceid;
+        // $data['servicename'] = $quote->servicename;
+        // $data['product_id'] = $quote->product_id;
+        // $data['product_name'] = $quote->product_name;
+        // $data['personnelid'] = $pid;
+        // $data['radiogroup'] = $quote->radiogroup;
+        // $data['frequency'] = $quote->frequency;
+        // $data['time'] = $quote->time;
+        // $data['minute'] = $quote->minute;
+        // $data['price'] = $quote->price;
+        // $data['etc'] = $quote->etc;
+        // $data['description'] = $quote->description;
+        // $data['giventime'] = $quote->giventime;
+        // $data['givenendtime'] = $quote->givenendtime;
+        // $data['givendate'] = $quote->givendate;
+        // $data['ticket_status'] = 2;
+        // Quote::create($data);
+      //} 
       
 
       $request->session()->flash('success', 'Added successfully');
@@ -1272,10 +1273,6 @@ class SchedulerController extends Controller
         //Send request and receive json data by address
       $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
       $output = json_decode($geocodeFromAddr);
-      if(empty($output->results)) {
-        $request->session()->flash('error', 'This address not found.');
-        return redirect()->back();
-      }
       $latitude  = $output->results[0]->geometry->location->lat; 
       $longitude = $output->results[0]->geometry->location->lng;
 
@@ -1379,7 +1376,7 @@ class SchedulerController extends Controller
         
         $data=[];
         foreach ($scheduleData as $key => $row) {
-            
+            //$pids = explode(',',$row->personnelid);
             $newdate = Carbon::createFromFormat('l - F d, Y', $row->givendate)->format('Y-m-d');
             $newTime = date('H:i', strtotime($row->giventime));
             $startdatetime = $newdate.' '.$newTime;
@@ -1392,14 +1389,16 @@ class SchedulerController extends Controller
             if($row->bgcolor == null){
                 $row->bgcolor = "#000";
             }
-            $data[] = array (
-                'id'=>$row->id,
-                'title'   =>'#'.$row->id."\n".$row->customername."\n".$row->servicename,
-                'start'   => $startdatetime,
-                'end' => $enddatetime,
-                'resourceId'=>$row->personnelid,
-                'backgroundColor'   => $row->bgcolor,
-            );
+            //foreach($pids as $key => $value) {
+                $data[] = array (
+                    'id'=>$row->id,
+                    'title'   =>'#'.$row->id."\n".$row->customername."\n".$row->servicename,
+                    'start'   => $startdatetime,
+                    'end' => $enddatetime,
+                    'resourceId'=>$row->personnelid,
+                    'backgroundColor'   => $row->bgcolor,
+                );
+            //}
         }
         //dd($data);
       echo json_encode($data);
@@ -1409,7 +1408,6 @@ class SchedulerController extends Controller
     {
         $auth_id = auth()->user()->id;
         $todaydate = date('l - F d, Y');
-        
         $newdate = Carbon::createFromFormat('l - F d, Y', $todaydate)->format('Y-m-d');
 
         $fulldate = Carbon::createFromFormat('Y-m-d', $date)->format('l - F d, Y');
@@ -1419,6 +1417,8 @@ class SchedulerController extends Controller
         
         $data=[];
         foreach ($scheduleData as $key => $row) {
+            $pids = explode(',',$row->personnelid);
+
             $newTime = date('H:i', strtotime($row->giventime));
             $startdatetime = $newdate.' '.$newTime;
             if($row->givenendtime!=null) {  
@@ -1427,15 +1427,16 @@ class SchedulerController extends Controller
             } else {
                 $enddatetime = "";
             }
-
-            $data[] = array (
-                'id'=>$row->id,
-                'title'   =>'#'.$row->id."\n".$row->customername."\n".$row->servicename,
-                'start'   => $startdatetime,
-                'end' => $enddatetime,
-                'resourceId'=>$row->personnelid,
-                'backgroundColor'   => $row->color,
-            );
+            foreach($pids as $key =>$value) {
+                $data[] = array (
+                    'id'=>$row->id,
+                    'title'   =>'#'.$row->id."\n".$row->customername."\n".$row->servicename,
+                    'start'   => $startdatetime,
+                    'end' => $enddatetime,
+                    'resourceId'=>$value,
+                    'backgroundColor'   => $row->color,
+                );
+            }
         }
       //dd($data);
       echo json_encode($data);
