@@ -1259,11 +1259,12 @@ background: transparent!important;
                   minutes1 = minutes1 < 10 ? `${minutes1}` : minutes1;
                   var givenendtime = `${hours1}:${minutes1} ${ampm1}`;
 
-                element.popover({
+                  element.popover({
                   title: '',
                   placement: 'right',
                   html:true,
-                  content: '<div class="popover-design" style="background-color:red"><div class="row"><div class="col-md-7"><p style="color:red">'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket1" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class="closeon icon-btn"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+                  sanitize:false,
+                  content: '<div class="popover-design"><div class="row"><div class="col-md-7"><p>'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class=" icon-btn" id="closeonDelete" data-id="'+event.id+'"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
                   container:'body',
                   trigger:'click',
                 });
@@ -1583,5 +1584,37 @@ background: transparent!important;
             }
         })
    });
+
+   $(document).on('click','#closeonDelete',function() {
+        var id = $(this).data('id');      
+                   swal({
+                        title: "Are you sure!",
+                        text: "Are you sure? you want to delete it!",
+                        type: "error",
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Yes!",
+                        showCancelButton: true,
+                    },
+                function() {
+                    $.ajax({
+                           url:"{{url('company/scheduler/deleteTicket')}}",
+                           type:"POST",
+                           data:{id:id},
+                           success:function()
+                           {
+                            location.reload(),
+                            $('#calendar').fullCalendar('removeEvents',event._id);
+                            swal({
+                               title: "Done!", 
+                               text: "Ticket Removed Successfully!", 
+                               type: "success"
+                            },
+                            );
+                           }
+                          })
+            });
+
+          });
+ 
 </script>
 @endsection
