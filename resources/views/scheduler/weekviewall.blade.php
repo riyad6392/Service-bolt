@@ -1277,7 +1277,7 @@ background: transparent!important;
                 if (view.name == 'listDay') {
                     element.find(".fc-list-item-time").append("<div class='text-end'><span class='closeon'><i class='fa fa-trash' > </i></span></div>");
                 } else {
-                    element.find(".fc-content").prepend("<div class='text-end'><span class='closeon'><i class='fa fa-trash' > </i></span></div>");
+                   // element.find(".fc-content").prepend("<div class='text-end'><span class='closeon'><i class='fa fa-trash' > </i></span></div>");
                 } 
                 element.find(".closeon").on('click', function() {
                   var id = event.id;
@@ -1313,9 +1313,9 @@ background: transparent!important;
                 if (view.name == 'listDay') {
                     element.find(".fc-list-item-time").append("<div class='text-start'><span class='fa fa-edit' data-bs-toggle='modal' data-bs-target='#exampleModal'></span></div>");
                 } else {
-                    element.find(".fc-content").prepend("<div class='text-start'><span class='fa fa-edit' data-bs-toggle='modal' data-bs-target='#exampleModal' id='editsticket' data-id='"+event.id+"'></span></div>");
+                   // element.find(".fc-content").prepend("<div class='text-start'><span class='fa fa-edit' data-bs-toggle='modal' data-bs-target='#exampleModal' id='editsticket' data-id='"+event.id+"'></span></div>");
 
-                    element.find(".fc-content").prepend("<div class='text-start assigndiv'><span class='fa fa-user-plus' data-bs-toggle='modal' data-bs-target='#edit-tickets' id='editTickets' data-id='"+event.id+"'></span></div>");
+                    //element.find(".fc-content").prepend("<div class='text-start assigndiv'><span class='fa fa-user-plus' data-bs-toggle='modal' data-bs-target='#edit-tickets' id='editTickets' data-id='"+event.id+"'></span></div>");
                 } 
 
                 element.find(".fa-edit").on('click', function() {
