@@ -628,7 +628,7 @@ class SchedulerController extends Controller
 
             $msgarray = array (
                 'title' => 'Ticket Assign',
-                'msg' => "A new ticket #" .$quoteid. " has been assigned",
+                'msg' => "Ticket #" .$quoteid. " scheduled time has changed",
                 'type' => 'ticketassign',
             );
 
@@ -785,8 +785,7 @@ class SchedulerController extends Controller
         //$ticketid = $request->targetid;
         $ticketid = $request->id;
         $tstatus = 1;
-
-        DB::table('quote')->where('id','=',$ticketid)->orWhere('parentid','=',$ticketid)
+        DB::table('quote')->where('id','=',$ticketid)
           ->update([ 
               "ticket_status"=>"$tstatus"
           ]);
@@ -1288,14 +1287,14 @@ class SchedulerController extends Controller
         $notification->uid = $auth_id;
         $notification->pid = $quote->personnelid;
         $notification->ticketid = $quote->id;
-        $notification->message =  "Ticket #" .$quote->id. " details has been changed";
+        $notification->message = "Details Changed Ticket #" .$quote->id;
         $notification->save();
 
         $puser = Personnel::select('device_token')->where("id", $quote->personnelid)->first();
 
         $msgarray = array (
             'title' => 'Ticket Detail changed',
-            'msg' => "Ticket #" .$quote->id. " details has been changed",
+            'msg' => "Details Changed Ticket #" .$quote->id,
             'type' => 'ticketdetailchanges',
         );
 
