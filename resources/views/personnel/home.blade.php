@@ -41,8 +41,15 @@
           </thead>
           <tbody>
             @foreach($todayservicecall as $key =>$value)
+            @php
+              $ticketid = $value->id;
+              if(!empty($value->parentid))
+              {
+                $ticketid=$value->parentid;
+              }
+            @endphp
             <tr>
-              <td><a href="{{url('personnel/myticket/view/')}}/{{$value->id}}" style="text-decoration: none;">#{{$value->id}}</a></td>
+              <td><a href="{{url('personnel/myticket/view/')}}/{{$ticketid}}" style="text-decoration: none;">#{{$ticketid}}</a></td>
              <td><div class="ex-date"><h6>{{$value->servicename}}</h6> <span>{{$value->giventime}}</span></div></td>
               <td>{{$value->customername}}</td>
               <!-- <td>Example</td> -->
@@ -186,7 +193,12 @@
           <li><div class="ev-calender-hours">{{strtoupper(date("h:i a", strtotime($times)))}}</div></li>
           @foreach($scheduleData as $key => $value) 
             @php
-
+              $ticketid = $value->id;
+              if(!empty($value->parentid))
+              {
+                $ticketid=$value->parentid;
+              }
+                            
               $f= $i+1;
               $m =   ":00";
               $settimes = date("h:i a", strtotime($times));
@@ -198,7 +210,7 @@
             
               if($giventime == $settimes) {
                 @endphp
-                <li class="inner yellow-slide" id="drop_{{$value->id}}">
+                <li class="inner yellow-slide" id="drop_{{$ticketid}}">
         <div class="card">
           <div class="card-body" style="background-color: {{$value->color}};border-radius: 12px;">
             <div class="imgslider" style="display: none;">
@@ -206,7 +218,7 @@
             </div>
             <input type="hidden" name="customerid" id="customerid" value="{{$value->customerid}}">
             <input type="hidden" name="quoteid" id="quoteid_{{$value->id}}" value="{{$value->id}}">
-            <span style="color: #fff;">#{{$value->id}}</span>
+            <span style="color: #fff;">#{{$ticketid}}</span>
             <h5 style="color: #fff;">{{$value->customername}}</h5>
             <p>{{$value->servicename}}</p>
             <p>Time : {{$value->giventime}} @if($value->givenendtime!="") to {{$value->givenendtime}}@endif</p>

@@ -90,6 +90,11 @@ if(count($serviceids)>0) {
           $times = $i.":00";
           $html .='<li><div class="ev-calender-hours">'.strtoupper(date("h:i a", strtotime($times))).'</span></div></li>';
           foreach($scheduleData as $key => $value) {
+              $ticketid = $value->id;
+              if(!empty($value->parentid))
+              {
+                $ticketid=$value->parentid;
+              }
               $f= $i+1;
               $m =   ":00";
               // echo $value->giventime;
@@ -109,14 +114,14 @@ if(count($serviceids)>0) {
               }
               if($giventime == $settimes) {
                 $imagepath = url('/').'/uploads/customer/'.$value->image;
-              $html .='<li class="inner yellow-slide" id="drop_'.$value->id.'">
+              $html .='<li class="inner yellow-slide" id="drop_'.$ticketid.'">
                         <div class="card">
                           <div class="card-body" style="background-color:'.$value->color.'; border-radius: 12px;">
                             <div class="imgslider" style="display:none;">
                               <img src="'.$imagepath.'" alt=""/>
                             </div>
                             <input type="hidden" name="customerid" id="customerid" value="'.$value->customerid.'">
-                            <input type="hidden" name="quoteid" id="quoteid_'.$value->id.'" value="'.$value->id.'"><span style="color: #fff;">#'.$value->id.'</span>
+                            <input type="hidden" name="quoteid" id="quoteid_'.$ticketid.'" value="'.$ticketid.'"><span style="color: #fff;">#'.$ticketid.'</span>
                             <h5 style="color: #fff;">'.$value->customername.'</h5>
                             <p>'.$value->servicename.'</p>
                             <p>Time : '.$value->giventime.' '.$givntime.'</p>

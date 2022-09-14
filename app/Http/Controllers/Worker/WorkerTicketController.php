@@ -132,13 +132,20 @@ class WorkerTicketController extends Controller
           $ticket->ticket_status = 4;
           $ticket->save();
 
+          $ticket = Quote::where('parentid', $request->ticketid)->first();
+          $ticket->ticket_status = 4;
+          $ticket->save();
+
           $pidarray = explode(',', $ticket->product_id);
 
           if(!empty($ticket->product_id)) {
             foreach($pidarray as $key => $pid) {
               $productd = Inventory::where('id', $pid)->first();
-              $productd->quantity = @$productd->quantity - 1;
-              $productd->save();
+              if(!empty($productd)) {
+                $productd->quantity = (@$productd->quantity) - 1;
+                $productd->save();
+              }
+
             }
           }
           date_default_timezone_set('Asia/Kolkata');
@@ -180,6 +187,10 @@ class WorkerTicketController extends Controller
         }
         if($request->closeout == "closeout") {
             $ticket = Quote::where('id', $request->ticketid)->first();
+            $ticket->ticket_status = 3;
+            $ticket->save();
+
+            $ticket = Quote::where('parentid', $request->ticketid)->first();
             $ticket->ticket_status = 3;
             $ticket->save();
 
@@ -232,6 +243,10 @@ class WorkerTicketController extends Controller
           $ticket->ticket_status = 4;
           $ticket->save();
 
+          $ticket = Quote::where('parentid', $request->ticketid)->get()->first();
+          $ticket->ticket_status = 4;
+          $ticket->save();
+
           $request->session()->flash('success', 'Ticket Unclose successfully');
           return redirect()->back();
         }
@@ -253,6 +268,13 @@ class WorkerTicketController extends Controller
 
           $ticket->ticket_status = 4;
           $ticket->save();
+
+          $ticket = Quote::where('parentid', $request->ticketid)->get()->first();
+          //new logic
+
+          $ticket->ticket_status = 4;
+          $ticket->save();
+
         if(!empty($ticket->product_id)) {
           $pidarray = explode(',', $ticket->product_id);
 
@@ -315,6 +337,19 @@ class WorkerTicketController extends Controller
           
             $ticket->save();
 
+            $ticket = Quote::where('parentid', $request->ticketid)->get()->first();
+            
+            $ticket->ticket_status = 3;
+            $ticket->ticketdate = date('Y-m-d');
+            if($request->pointckbox) {
+              $cheklist =implode(",", $request->pointckbox);
+              $ticket->checklist =  $cheklist;
+            } else {
+              $ticket->checklist = null;
+            }
+          
+            $ticket->save();
+
 
             date_default_timezone_set('Asia/Kolkata');
             $currentDateTime=date('m/d/Y H:i:s');
@@ -363,6 +398,10 @@ class WorkerTicketController extends Controller
 
         if($request->unclose == "unclose") {
           $ticket = Quote::where('id', $request->ticketid)->get()->first();
+          $ticket->ticket_status = 4;
+          $ticket->save();
+
+          $ticket = Quote::where('parentid', $request->ticketid)->get()->first();
           $ticket->ticket_status = 4;
           $ticket->save();
 

@@ -66,19 +66,23 @@ class WorkerHomeController extends Controller
              //dd(DB::getQuerylog()); die;
              //dd($tickettimeg[0]);
             if(count($tickettimeg)>0) {
-
+              $ticketid = $tickettimeg[0]->id;
+              if(!empty($tickettimeg[0]->parentid))
+              {
+                $ticketid=$tickettimeg[0]->parentid;
+              }
               $notification = new AppNotification;
               $notification->uid = $auth_id;
               $notification->pid = $worker->workerid;
-              $notification->ticketid = $tickettimeg[0]->id;
-              $notification->message =  "Your ticket #" .$tickettimeg[0]->id. " have not picked it up yet";
+              $notification->ticketid = $ticketid;
+              $notification->message =  "Your ticket #" .$ticketid. " have not picked it up yet";
               $notification->save();
 
               $puser = Personnel::select('device_token')->where("id", $worker->workerid)->first();
 
               $msgarray = array (
                   'title' => 'Ticket have not picked it up yet',
-                  'msg' => "Your ticket #" .$tickettimeg[0]->id. " have not picked it up yet",
+                  'msg' => "Your ticket #" .$ticketid. " have not picked it up yet",
                   'type' => 'ticketnotpickedyet',
               );
 

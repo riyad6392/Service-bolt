@@ -48,7 +48,7 @@ class SchedulerController extends Controller
 
         //$ticketData = Quote::where('userid',$auth_id)->where('ticket_status',"1")->orderBy('id','ASC')->get();
 
-        $ticketData = DB::table('quote')->select('quote.*', 'customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"1")->orderBy('quote.id','ASC')->get();
+        $ticketData = DB::table('quote')->select('quote.*', 'customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"1")->where('quote.parentid', '=',"")->orderBy('quote.id','ASC')->get();
 
         if(isset($_REQUEST['date'])) {
             $todaydate = Carbon::createFromFormat('Y-m-d', $_REQUEST['date'])->format('l - F d, Y');
@@ -786,10 +786,13 @@ class SchedulerController extends Controller
         $ticketid = $request->id;
         $tstatus = 1;
 
-        DB::table('quote')->where('id','=',$ticketid)
+        DB::table('quote')->where('id','=',$ticketid)->orWhere('parentid','=',$ticketid)
           ->update([ 
               "ticket_status"=>"$tstatus"
           ]);
+        
+        DB::table('quote')->where('parentid',$ticketid)->delete();
+
       echo "1";
     }
 
@@ -1021,36 +1024,37 @@ class SchedulerController extends Controller
     public function ticketadded(Request $request)
     {
       $quote = Quote::where('id', $request->quoteid)->first();
-      $qpid = $quote->personnelid;
-      $pids = $request->personnelid;
-      array_push($pids,$qpid);
-      $quote->personnelid = implode(',', $pids);
-      $quote->save();
-      //foreach ($request->personnelid as $pid) {
-        // $data['userid'] =  $quote->userid;
-        // $data['customerid'] =  $quote->customerid;
-        // $data['customername'] =  $quote->customername;
-        // $data['address'] = $quote->address;
-        // $data['latitude'] = $quote->latitude;
-        // $data['longitude'] = $quote->longitude;
-        // $data['serviceid'] = $quote->serviceid;
-        // $data['servicename'] = $quote->servicename;
-        // $data['product_id'] = $quote->product_id;
-        // $data['product_name'] = $quote->product_name;
-        // $data['personnelid'] = $pid;
-        // $data['radiogroup'] = $quote->radiogroup;
-        // $data['frequency'] = $quote->frequency;
-        // $data['time'] = $quote->time;
-        // $data['minute'] = $quote->minute;
-        // $data['price'] = $quote->price;
-        // $data['etc'] = $quote->etc;
-        // $data['description'] = $quote->description;
-        // $data['giventime'] = $quote->giventime;
-        // $data['givenendtime'] = $quote->givenendtime;
-        // $data['givendate'] = $quote->givendate;
-        // $data['ticket_status'] = 2;
-        // Quote::create($data);
-      //} 
+      // $qpid = $quote->personnelid;
+      // $pids = $request->personnelid;
+      // array_push($pids,$qpid);
+      // $quote->personnelid = implode(',', $pids);
+      // $quote->save();
+      foreach ($request->personnelid as $pid) {
+        $data['userid'] =  $quote->userid;
+        $data['parentid'] = $request->quoteid;
+        $data['customerid'] =  $quote->customerid;
+        $data['customername'] =  $quote->customername;
+        $data['address'] = $quote->address;
+        $data['latitude'] = $quote->latitude;
+        $data['longitude'] = $quote->longitude;
+        $data['serviceid'] = $quote->serviceid;
+        $data['servicename'] = $quote->servicename;
+        $data['product_id'] = $quote->product_id;
+        $data['product_name'] = $quote->product_name;
+        $data['personnelid'] = $pid;
+        $data['radiogroup'] = $quote->radiogroup;
+        $data['frequency'] = $quote->frequency;
+        $data['time'] = $quote->time;
+        $data['minute'] = $quote->minute;
+        $data['price'] = $quote->price;
+        $data['etc'] = $quote->etc;
+        $data['description'] = $quote->description;
+        $data['giventime'] = $quote->giventime;
+        $data['givenendtime'] = $quote->givenendtime;
+        $data['givendate'] = $quote->givendate;
+        $data['ticket_status'] = 2;
+        Quote::create($data);
+      } 
       
 
       $request->session()->flash('success', 'Added successfully');
@@ -1237,19 +1241,16 @@ class SchedulerController extends Controller
       //   } else {
       //     $pname = "";
       //   }
-      $quote = Quote::where('id', $request->quoteid)->get()->first();
-      //$quote->customerid =  $request->customerid;
-
-
-
+      $quote = Quote::where('id', $request->quoteid)->orWhere('parentid',$request->quoteid)->get();
+      foreach($quote as $key =>$quote) {
       if(isset($request->serviceid)) {
         $quote->serviceid = implode(',', $request->serviceid);
       } else {
         $quote->serviceid = null;
       }
+
       $quote->servicename = $servicedetails[0]->servicename;
       $quote->product_id = $productid;
-      //$quote->product_name = $pname;
       $quote->radiogroup = $request->radiogroup;
       $quote->frequency = $request->frequency;
       if($request->time!=null || $request->time!=0) {
@@ -1266,7 +1267,6 @@ class SchedulerController extends Controller
       $quote->price = $request->price;
       $quote->etc = $request->etc;
       $quote->description = $request->description;
-      //$quote->customername =  $customer->customername;
       $quote->address = $request->address;
 
       $formattedAddr = str_replace(' ','+',$request->address);
@@ -1280,6 +1280,7 @@ class SchedulerController extends Controller
       $quote->longitude = $longitude;
 
       $quote->save();
+    }
 
       $auth_id = auth()->user()->id;
       if($quote->personnelid!="") {
@@ -1367,16 +1368,25 @@ class SchedulerController extends Controller
         //     "0"=>15,
         //     '1'=>19
         // );
-        $wids = explode("?",$ids);
-        $wids = explode(",",$wids[0]);
+        //dd($request->id);
+        //$wids = explode("?",$ids);
+        $wids = explode(",",$request->id);
         //dd($wids);
         $auth_id = auth()->user()->id;
         //->where('personnel.id','15')
-        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','personnel.color as bgcolor','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.personnelid',$wids)->whereIn('quote.ticket_status',[2,3,4])->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','personnel.color as bgcolor','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where(function($q) use($wids) {
+            foreach($wids as $k => $v) {
+                $q->orwhereRaw("FIND_IN_SET({$v}, quote.personnelid)");
+            }
+            
+        })->orderBy('quote.id','desc')->get();
         
+       // ->whereIn('quote.personnelid',$wids)
+        //->whereIn('quote.personnelid',$wids)->whereIn('quote.personnelid',$pids)
         $data=[];
         foreach ($scheduleData as $key => $row) {
-            //$pids = explode(',',$row->personnelid);
+            $pids = explode(',',$row->personnelid);
+
             $newdate = Carbon::createFromFormat('l - F d, Y', $row->givendate)->format('Y-m-d');
             $newTime = date('H:i', strtotime($row->giventime));
             $startdatetime = $newdate.' '.$newTime;
@@ -1389,10 +1399,18 @@ class SchedulerController extends Controller
             if($row->bgcolor == null){
                 $row->bgcolor = "#000";
             }
-            //foreach($pids as $key => $value) {
+            $result = array_diff($pids, $wids);
+            
+            //foreach($wids as $key => $value) {
+$ids=$row->id;
+if(!empty($row->parentid))
+{
+    $ids=$row->parentid;
+
+}
                 $data[] = array (
-                    'id'=>$row->id,
-                    'title'   =>'#'.$row->id."\n".$row->customername."\n".$row->servicename,
+                    'id'=>$ids,
+                    'title'   =>'#'.$ids."\n".$row->customername."\n".$row->servicename,
                     'start'   => $startdatetime,
                     'end' => $enddatetime,
                     'resourceId'=>$row->personnelid,
@@ -1427,10 +1445,16 @@ class SchedulerController extends Controller
             } else {
                 $enddatetime = "";
             }
+            $ids=$row->id;
+            if(!empty($row->parentid))
+            {
+                $ids=$row->parentid;
+
+            }
             foreach($pids as $key =>$value) {
                 $data[] = array (
-                    'id'=>$row->id,
-                    'title'   =>'#'.$row->id."\n".$row->customername."\n".$row->servicename,
+                    'id'=>$ids,
+                    'title'   =>'#'.$ids."\n".$row->customername."\n".$row->servicename,
                     'start'   => $startdatetime,
                     'end' => $enddatetime,
                     'resourceId'=>$value,

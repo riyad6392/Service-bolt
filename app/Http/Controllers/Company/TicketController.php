@@ -45,12 +45,12 @@ class TicketController extends Controller
 
         $quoteData = Quote::select('quote.*','customer.email')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status','0')->orderBy('quote.id','DESC')->get();
         
-        $ticketData = Quote::select('quote.*','customer.email')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status','1')->orderBy('quote.id','DESC')->get();
+        $ticketData = Quote::select('quote.*','customer.email')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status','1')->where('quote.parentid', '=',"")->orderBy('quote.id','DESC')->get();
         $customer = Customer::where('userid',$auth_id)->orderBy('id','DESC')->get();
         $services = Service::where('userid', $auth_id)->get();
        	$worker = Personnel::where('userid', $auth_id)->get();
         $productData = Inventory::where('user_id',$auth_id)->get();
-        $completedticketData = Quote::where('userid',$auth_id)->where('ticket_status','3')->orderBy('id','DESC')->get();
+        $completedticketData = Quote::where('userid',$auth_id)->where('ticket_status','3')->where('quote.parentid', '=',"")->orderBy('id','DESC')->get();
         $table="quote";
         $fields = DB::getSchemaBuilder()->getColumnListing($table);
         $fields1 = DB::getSchemaBuilder()->getColumnListing($table);

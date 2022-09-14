@@ -288,7 +288,11 @@
           <li><div class="ev-calender-hours">{{strtoupper(date("h:i a", strtotime($times)))}}</div></li>
           @foreach($scheduleData as $key => $value) 
             @php
-
+              $ticketid = $value->id;
+              if(!empty($value->parentid))
+              {
+                $ticketid=$value->parentid;
+              }
               $f= $i+1;
               $m =   ":00";
               $settimes = date("h:i a", strtotime($times));
@@ -300,15 +304,15 @@
             
               if($giventime == $settimes) {
                 @endphp
-                <li class="inner yellow-slide" id="drop_{{$value->id}}">
+                <li class="inner yellow-slide" id="drop_{{$ticketid}}">
         <div class="card">
           <div class="card-body" style="background-color: {{$value->color}};border-radius: 12px;">
             <div class="imgslider" style="display: none;">
               <img src="{{url('uploads/customer/')}}/{{$value->image}}" alt=""/>
             </div>
             <input type="hidden" name="customerid" id="customerid" value="{{$value->customerid}}">
-            <input type="hidden" name="quoteid" id="quoteid_{{$value->id}}" value="{{$value->id}}">
-            <span style="color: #fff;">#{{$value->id}}</span>
+            <input type="hidden" name="quoteid" id="quoteid_{{$ticketid}}" value="{{$ticketid}}">
+            <span style="color: #fff;">#{{$ticketid}}</span>
             <h5 style="color: #fff;">{{$value->customername}}</h5>
             <p>{{$value->servicename}}</p>
             <p>Time : {{$value->giventime}} @if($value->givenendtime!="") to {{$value->givenendtime}}@endif</p>

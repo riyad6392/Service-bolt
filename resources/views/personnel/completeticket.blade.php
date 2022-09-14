@@ -82,12 +82,18 @@
           <tbody>
             @foreach($ticketdata as $value)
             @php
+              $ticketid = $value->id;
+              if(!empty($value->parentid))
+              {
+                $ticketid=$value->parentid;
+              }
+              
               $explode_id = explode(',', $value->serviceid);
               $servicedata = App\Models\Service::select('servicename')
                 ->whereIn('services.id',$explode_id)->get();
             @endphp
               <tr>
-                <td>#{{$value->id}}</td>
+                <td>#{{$ticketid}}</td>
                 <td>{{$value->customername}}</td>
                 <td class="address-warp">{{$value->address}}</td>
                 <td>@php
@@ -114,24 +120,24 @@
     @endforeach</td>
                 <td>
                   @php
-                   $sdata = App\Models\Schedulerhours::where('ticketid', $value->id)->get()->first();
+                   $sdata = App\Models\Schedulerhours::where('ticketid', $ticketid)->get()->first();
 
-                    $quoteData = App\Models\Quote::where('id', $value->id)->get()->first();
+                    $quoteData = App\Models\Quote::where('id', $ticketid)->get()->first();
 
                   @endphp
                   
                   @if($quoteData->ticket_status=="2")
-                    <a href="{{url('personnel/myticket/view/')}}/{{$value->id}}" class="btn btn-personnal ps-4 pe-4 me-2">View/Edit</a>  
-                    <a href="#" class="btn add-btn-yellow ps-4 pe-4" data-bs-toggle="modal" data-bs-target="#ticket-modal" data-id="{{$value->id}}" id="myticketid">Pickup</a>
+                    <a href="{{url('personnel/myticket/view/')}}/{{$ticketid}}" class="btn btn-personnal ps-4 pe-4 me-2">View/Edit</a>  
+                    <a href="#" class="btn add-btn-yellow ps-4 pe-4" data-bs-toggle="modal" data-bs-target="#ticket-modal" data-id="{{$ticketid}}" id="myticketid">Pickup</a>
                   @endif
 
                   @if($quoteData->ticket_status=="4")
-                  <a href="{{url('personnel/myticket/view/')}}/{{$value->id}}" class="btn btn-personnal ps-4 pe-4 me-2">View/Edit</a>  
-                     <a href="#" class="btn add-btn-yellow ps-4 pe-4" data-bs-toggle="modal" data-bs-target="#ticket-modal" data-id="{{$value->id}}" id="myticketid">Picked</a>
+                  <a href="{{url('personnel/myticket/view/')}}/{{$ticketid}}" class="btn btn-personnal ps-4 pe-4 me-2">View/Edit</a>  
+                     <a href="#" class="btn add-btn-yellow ps-4 pe-4" data-bs-toggle="modal" data-bs-target="#ticket-modal" data-id="{{$ticketid}}" id="myticketid">Picked</a>
                   @endif
                   @if($quoteData->ticket_status=="3")
-                    <a href="{{url('personnel/myticket/view/')}}/{{$value->id}}" class="btn btn-personnal ps-4 pe-4 me-2">View/Edit</a>
-                    <a href="#" class="btn add-btn-yellow ps-4 pe-4" data-bs-toggle="modal" data-bs-target="#ticket-modal" data-id="{{$value->id}}" id="myticketid">Completed</a>
+                    <a href="{{url('personnel/myticket/view/')}}/{{$ticketid}}" class="btn btn-personnal ps-4 pe-4 me-2">View/Edit</a>
+                    <a href="#" class="btn add-btn-yellow ps-4 pe-4" data-bs-toggle="modal" data-bs-target="#ticket-modal" data-id="{{$ticketid}}" id="myticketid">Completed</a>
                   @endif
                 </td>
               </tr>
