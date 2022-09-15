@@ -1180,7 +1180,7 @@ class SchedulerController extends Controller
             <select class="form-select" name="frequency" id="frequency" required="">
               <option value="">Service Frequency</option>';
             foreach ($tenture as $key => $value) {
-                if(in_array($value->tenturename, $quotedetailsnew[0])) {
+                if($value->tenturename== $quotedetailsnew[0]['frequency']) {
                   $selectedsf = "selected";
                 } else {
                   $selectedsf = "";
@@ -1401,12 +1401,16 @@ class SchedulerController extends Controller
             $result = array_diff($pids, $wids);
             
             //foreach($wids as $key => $value) {
-$ids=$row->id;
-if(!empty($row->parentid))
-{
-    $ids=$row->parentid;
+                $ids=$row->id;
+                if(!empty($row->parentid))
+                {
+                    $ids=$row->parentid;
 
-}
+                }
+
+                //echo $startdatetime; 2022-09-15 08:00
+
+            //dd($enddatetime);2022-09-15 20:00
                 $data[] = array (
                     'id'=>$ids,
                     'title'   =>'#'.$ids."\n".$row->customername."\n".$row->servicename,
@@ -1438,18 +1442,51 @@ if(!empty($row->parentid))
 
             $newTime = date('H:i', strtotime($row->giventime));
             $startdatetime = $newdate.' '.$newTime;
-            if($row->givenendtime!=null) {  
-                $newTime = date('H:i', strtotime($row->givenendtime));
-                $enddatetime = $newdate.' '.$newTime;
+            if($row->givenendtime!=null) {
+
+                //for calculation logic 
+                    //Get ticket time
+                    // $hours = $row->time;
+                    // $minutes = $row->minute;
+                    // $startTime = date('H:i', strtotime($row->giventime));
+                    
+                    // if($hours == null || $hours == "" || $hours == 00 || $hours == 0) {
+                    //     $hours = 0;
+                    // } else {
+                    //     $hours = preg_replace("/[^0-9]/", '', $hours);    
+                    // }
+                    
+                    // if($minutes == null || $minutes == "" || $minutes == 00 || $minutes == 0) {
+                    //     $minutes = 0;
+                    // } else {
+                    //     $minutes = preg_replace("/[^0-9]/", '', $minutes);    
+                    // }
+                    //start time in added ticket time to get endtime
+                    // $endtimeget = date('H:i',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($startTime)));
+                    // //echo $endtimeget; die;
+                    // //day closingtime to endtimeget compare and differnece calculate
+                    // $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+                    // if($endtimeget > $closingtime->closingtime) {
+                    //    $enddatetime = $this->getendtimecalculation($startTime,$endtimeget,$newdate);
+                    // }
+                //end
+                 //else {   
+                    $newTime = date('H:i', strtotime($row->givenendtime));
+                    $enddatetime = $newdate.' '.$newTime;
+                //}
             } else {
                 $enddatetime = "";
             }
+            //echo $enddatetime; die;
             $ids=$row->id;
             if(!empty($row->parentid))
             {
                 $ids=$row->parentid;
 
             }
+            //echo $startdatetime; 2022-09-15 08:00
+
+            //dd($enddatetime);2022-09-15 20:00
             foreach($pids as $key =>$value) {
                 $data[] = array (
                     'id'=>$ids,
@@ -1457,12 +1494,31 @@ if(!empty($row->parentid))
                     'start'   => $startdatetime,
                     'end' => $enddatetime,
                     'resourceId'=>$value,
-                    'backgroundColor'   => $row->color,
+                    'backgroundColor'   => $row->color
+
                 );
             }
         }
       //dd($data);
       echo json_encode($data);
+    }
+
+    public function getendtimecalculation($startTime,$endtimeget,$newdate) 
+    {
+        $auth_id = auth()->user()->id;
+        $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+
+        $difftime = intval($endtimeget) - intval($closingtime->closingtime);
+        
+       //starttime and different time added to get new final time for another day
+        $newendtime = intval($startTime)+intval($difftime);
+        $endtime1 = date('H:i',strtotime("+{$difftime} hour",strtotime($startTime)));
+
+       //day added as per calcuation wise
+        $dayaddeddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
+
+        $enddatetime = $dayaddeddate.' '.$endtime1;
+        return $enddatetime;
     }
 
     public function updatesortdata(Request $request)

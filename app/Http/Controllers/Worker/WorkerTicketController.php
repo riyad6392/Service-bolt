@@ -501,7 +501,7 @@ class WorkerTicketController extends Controller
 
         $sdata = Schedulerhours::where('ticketid', $quoteData->id)->get()->first();
         
-        $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->whereIn('quote.ticket_status',array('3','4'))->get();
+        $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->where('quote.parentid','=','')->whereIn('quote.ticket_status',array('3','4'))->get();
         $sum = 0;
         if($quoteData->serviceid!="") {
           $serviceidarray = explode(',', $quoteData->serviceid);

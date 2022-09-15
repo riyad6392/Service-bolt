@@ -111,7 +111,7 @@ class WorkerCustomerController extends Controller
       $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
       $customerData = Customer::where('id',$id)->get(); 
       $customerAddress = Address::where('customerid',$id)->get();
-      $recentTicket = Quote::where('customerid',$id)->where('personnelid','!=',null)->orderBy('id','DESC')->get();
+      $recentTicket = Quote::where('customerid',$id)->where('personnelid','!=',null)->where('parentid','=',"")->orderBy('id','DESC')->get();
       return view('personnel.customerview',compact('customerData','customerAddress','recentTicket'));
     }
 

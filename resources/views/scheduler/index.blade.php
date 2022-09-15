@@ -1168,6 +1168,7 @@ span.date-icon {
             //defaultEventMinutes: 30, 
             //defaultTimedEventDuration: 04:00,
             forceEventDuration: true,
+            //nextDayThreshold: '00:00',
             resources: function (callback) {
 
                 @if(request()->start)

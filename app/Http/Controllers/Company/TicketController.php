@@ -711,12 +711,13 @@ class TicketController extends Controller
               </p>
             </div>
           </div>
+         
           <div class="col-md-6 mb-2">
             <label>Service Frequency</label>
             <select class="form-select" name="frequency" id="frequency" required="">
               <option value="">Service Frequency</option>';
           foreach ($tenture as $key => $value) {
-            if(in_array($value->tenturename, $quotedetailsnew[0])) {
+            if($value->tenturename== $quotedetailsnew[0]['frequency']) {
                   $selectedsf = "selected";
                 } else {
                   $selectedsf = "";
