@@ -736,11 +736,11 @@ span.date-icon {
                     <input type="hidden" id="suggest_trip_start" value="6">
                     <input type="hidden" name="wcount" id="wcount" value="{{$wcount}}">
                     @if(request()->start)
-                        <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 57px;left: 6px; z-index: 9;"></i>
+                        <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 30px;left: 6px; z-index: 9;"></i>
                     @else
                     
                     @endif
-                    <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 57px; left: 30px; z-index: 9;"></i>
+                    <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 30px; left: 30px; z-index: 9;"></i>
                 </div>
             </div>
         </div>
@@ -1173,9 +1173,9 @@ span.date-icon {
 
     $('#calendar').fullCalendar({
             header: {
-                left: 'prev',
-                center: 'title', 
-                right: 'next'
+                left: '',
+                center: '', 
+                right: ''
             },
             snapDuration: '00:05:00',
             minTime: $("#openingtime").val(),
