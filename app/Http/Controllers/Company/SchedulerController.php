@@ -792,6 +792,33 @@ class SchedulerController extends Controller
         
         DB::table('quote')->where('parentid',$ticketid)->delete();
 
+        $pid =Quote::select('personnelid')->where('id',$ticketid)->first(); 
+          
+        //$appnotifiction = AppNotification::where('pid',$pid)->where('ticketid',$ticketid)->get(); 
+        //if(count($appnotifiction)==0) {
+
+            $notification = new AppNotification;
+            $notification->uid = auth()->user()->id;
+            $notification->pid = $pid->personnelid;
+            $notification->ticketid = $ticketid;
+            $notification->message =  "Ticket #" .$ticketid. " has been deleted.";
+            $notification->save();
+
+            $puser = Personnel::select('device_token')->where("id", $pid->personnelid)->first();
+            
+            $msgarray = array (
+                'title' => 'Ticket Delete',
+                'msg' => "Ticket #" .$ticketid. " has been deleted.",
+                'type' => 'ticketdelete',
+            );
+
+            $fcmData = array(
+                'message' => $msgarray['msg'],
+                'body' => $msgarray['title'],
+            );
+
+            $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+
       echo "1";
     }
 
