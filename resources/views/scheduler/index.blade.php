@@ -5,7 +5,15 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
-
+#calendar{display: block;}
+.fc-center {
+    position: absolute;
+    left: 5px;
+    top: 12px;
+}
+.fc-center h2{
+    font-size: 16px;
+}
     input[type="date"]::-webkit-calendar-picker-indicator {
         background: transparent;
         bottom: 0;
@@ -531,7 +539,7 @@ button.fc-agendaDay-button.fc-button.fc-state-default.fc-corner-right.fc-state-a
 width: 188px;
 }
 .fc .fc-toolbar.fc-header-toolbar {
-    margin-bottom: 1.5em;
+    margin-bottom: 0.5em;
     justify-content: end!important;
 }
 
@@ -597,6 +605,19 @@ span.date-icon {
     position: absolute;
     right: 10px;
     width: auto;
+}
+@media screen and (min-width: 1600px) {
+    .fc-view-container {
+    height: 660px;
+    overflow-y: scroll;
+}
+.heierts {
+    height: 660px!important;
+    overflow: auto!important;
+}
+#calendar{
+    height: 680px;
+}
 }
 </style>
 <div class="row">
@@ -715,11 +736,11 @@ span.date-icon {
                     <input type="hidden" id="suggest_trip_start" value="6">
                     <input type="hidden" name="wcount" id="wcount" value="{{$wcount}}">
                     @if(request()->start)
-                        <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 18px;left: 6px; z-index: 9;"></i>
+                        <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 57px;left: 6px; z-index: 9;"></i>
                     @else
                     
                     @endif
-                    <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 18px; left: 30px; z-index: 9;"></i>
+                    <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 57px; left: 30px; z-index: 9;"></i>
                 </div>
             </div>
         </div>
@@ -1152,9 +1173,9 @@ span.date-icon {
 
     $('#calendar').fullCalendar({
             header: {
-                left: '',
-                center: '', 
-                right: ''
+                left: 'prev',
+                center: 'title', 
+                right: 'next'
             },
             snapDuration: '00:05:00',
             minTime: $("#openingtime").val(),

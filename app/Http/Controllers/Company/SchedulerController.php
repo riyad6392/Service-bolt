@@ -1389,9 +1389,47 @@ class SchedulerController extends Controller
             $newdate = Carbon::createFromFormat('l - F d, Y', $row->givendate)->format('Y-m-d');
             $newTime = date('H:i', strtotime($row->giventime));
             $startdatetime = $newdate.' '.$newTime;
-            if($row->givenendtime!=null) {  
+            if($row->givenendtime!=null) {
+
+                $hours = $row->time;
+                $minutes = $row->minute;
+                $startTime = date('H:i', strtotime($row->giventime));
+
+                if($hours == null || $hours == "" || $hours == 00 || $hours == 0) {
+                    $hours = 0;
+                } else {
+                    $hours = preg_replace("/[^0-9]/", '', $hours);    
+                }
+
+                if($minutes == null || $minutes == "" || $minutes == 00 || $minutes == 0) {
+                    $minutes = 0;
+                } else {
+                    $minutes = preg_replace("/[^0-9]/", '', $minutes);    
+                }
+
+                /*Get Dayclose time*/
+                $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+                $dayclosetime =$closingtime->closingtime;
+
+                $tstarttime = explode(':',$startTime);
+                $ticketstarttime = $tstarttime[0];
+                $ticketdifferncetime = $dayclosetime - $ticketstarttime;
+
+                if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
+                    if($hours > $ticketdifferncetime) {
+                        $nextdaytime = $hours - $ticketdifferncetime; 
+                        //echo $nextdaytime; die;
+                        $enddatetime = $this->getendtimecalculation($newdate,$nextdaytime,$minutes);
+                    } else {
+                        $newTime = date('H:i', strtotime($row->givenendtime));
+                        $enddatetime = $newdate.' '.$newTime; 
+                    }
+                }
+                //end
+                else {   
                 $newTime = date('H:i', strtotime($row->givenendtime));
                 $enddatetime = $newdate.' '.$newTime;
+                }
             } else {
                 $enddatetime = "";
             }
@@ -1442,42 +1480,52 @@ class SchedulerController extends Controller
 
             $newTime = date('H:i', strtotime($row->giventime));
             $startdatetime = $newdate.' '.$newTime;
-            if($row->givenendtime!=null) {
 
-                //for calculation logic 
-                    //Get ticket time
-                    // $hours = $row->time;
-                    // $minutes = $row->minute;
-                    // $startTime = date('H:i', strtotime($row->giventime));
+            if($row->givenendtime!=null) {
+                    /*for calculation logic*/ 
+                    /*Get ticket time get*/
+                    $hours = $row->time;
+                    $minutes = $row->minute;
+                    $startTime = date('H:i', strtotime($row->giventime));
                     
-                    // if($hours == null || $hours == "" || $hours == 00 || $hours == 0) {
-                    //     $hours = 0;
-                    // } else {
-                    //     $hours = preg_replace("/[^0-9]/", '', $hours);    
-                    // }
+                    if($hours == null || $hours == "" || $hours == 00 || $hours == 0) {
+                        $hours = 0;
+                    } else {
+                        $hours = preg_replace("/[^0-9]/", '', $hours);    
+                    }
                     
-                    // if($minutes == null || $minutes == "" || $minutes == 00 || $minutes == 0) {
-                    //     $minutes = 0;
-                    // } else {
-                    //     $minutes = preg_replace("/[^0-9]/", '', $minutes);    
-                    // }
-                    //start time in added ticket time to get endtime
-                    // $endtimeget = date('H:i',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($startTime)));
-                    // //echo $endtimeget; die;
-                    // //day closingtime to endtimeget compare and differnece calculate
-                    // $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
-                    // if($endtimeget > $closingtime->closingtime) {
-                    //    $enddatetime = $this->getendtimecalculation($startTime,$endtimeget,$newdate);
-                    // }
+                    if($minutes == null || $minutes == "" || $minutes == 00 || $minutes == 0) {
+                        $minutes = 0;
+                    } else {
+                        $minutes = preg_replace("/[^0-9]/", '', $minutes);    
+                    }
+
+                    /*Get Dayclose time*/
+                    $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+                    $dayclosetime =$closingtime->closingtime;
+
+                    $tstarttime = explode(':',$startTime);
+                    $ticketstarttime = $tstarttime[0];
+                    $ticketdifferncetime = $dayclosetime - $ticketstarttime;
+
+                    if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
+                        if($hours > $ticketdifferncetime) {
+                            $nextdaytime = $hours - $ticketdifferncetime; 
+                            //echo $nextdaytime; die;
+                            $enddatetime = $this->getendtimecalculation($newdate,$nextdaytime,$minutes);
+                        } else {
+                            $newTime = date('H:i', strtotime($row->givenendtime));
+                            $enddatetime = $newdate.' '.$newTime; 
+                        }
+                    }
                 //end
-                 //else {   
+                 else {   
                     $newTime = date('H:i', strtotime($row->givenendtime));
                     $enddatetime = $newdate.' '.$newTime;
-                //}
+                }
             } else {
                 $enddatetime = "";
             }
-            //echo $enddatetime; die;
             $ids=$row->id;
             if(!empty($row->parentid))
             {
@@ -1503,21 +1551,51 @@ class SchedulerController extends Controller
       echo json_encode($data);
     }
 
-    public function getendtimecalculation($startTime,$endtimeget,$newdate) 
+    public function getendtimecalculation($newdate,$nextdaytime,$minutes) 
     {
         $auth_id = auth()->user()->id;
-        $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+        $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$auth_id)->first();
 
-        $difftime = intval($endtimeget) - intval($closingtime->closingtime);
-        
-       //starttime and different time added to get new final time for another day
-        $newendtime = intval($startTime)+intval($difftime);
-        $endtime1 = date('H:i',strtotime("+{$difftime} hour",strtotime($startTime)));
+        $fulldaytime = $closingtime->closingtime - $closingtime->openingtime;
+        // echo $nextdaytime;
+        // echo "break";
+        // echo $fulldaytime; die;
+        if($nextdaytime > $fulldaytime) {
+           $divisionvalue = $nextdaytime / $fulldaytime;
 
-       //day added as per calcuation wise
-        $dayaddeddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
+           $dividev = explode('.',$divisionvalue);
+           $daycount = $dividev[0];
+           $dayhours = $dividev[1];
 
-        $enddatetime = $dayaddeddate.' '.$endtime1;
+            if($dayhours!="") {
+                $daycount = $daycount +1;
+                $addhours = $dayhours; 
+            } else {
+                $addhours = $closingtime->closingtime;
+                $daycount = $dividev[0];
+            }
+
+            $nextdaytime = $nextdaytime - $fulldaytime;
+            //echo $nextdaytime; die;
+            $openingtime = $closingtime->openingtime;
+            $openingtime = $openingtime.':00';
+            
+            $endtime1 = date('H:i',strtotime("+{$addhours} hour +{$minutes} minutes",strtotime($openingtime)));
+
+            //$endtime1 = date('H:i',strtotime("+{$nextdaytime} hour +{$minutes} minutes",strtotime($openingtime)));
+            $ddd = $daycount. 'day';
+            //day added as per calcuation wise
+            $dayaddeddate = date('Y-m-d', strtotime($newdate . ' +'.$ddd));
+            $enddatetime = $dayaddeddate.' '.$endtime1; 
+        }
+        else {
+            $openingtime = $closingtime->openingtime;
+            $openingtime = $openingtime.':00';
+            $endtime1 = date('H:i',strtotime("+{$nextdaytime} hour +{$minutes} minutes",strtotime($openingtime)));
+            //day added as per calcuation wise
+            $dayaddeddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
+            $enddatetime = $dayaddeddate.' '.$endtime1; 
+        }
         return $enddatetime;
     }
 

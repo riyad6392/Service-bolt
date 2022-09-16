@@ -132,10 +132,11 @@ class WorkerTicketController extends Controller
           $ticket->ticket_status = 4;
           $ticket->save();
 
-          $ticket = Quote::where('parentid', $request->ticketid)->first();
-          $ticket->ticket_status = 4;
-          $ticket->save();
-
+          $ticket1 = Quote::where('parentid', $request->ticketid)->first();
+          if($ticket1!=null || $ticket1!="") {
+            $ticket1->ticket_status = 4;
+            $ticket1->save();
+         }
           $pidarray = explode(',', $ticket->product_id);
 
           if(!empty($ticket->product_id)) {
@@ -189,10 +190,12 @@ class WorkerTicketController extends Controller
             $ticket = Quote::where('id', $request->ticketid)->first();
             $ticket->ticket_status = 3;
             $ticket->save();
-
-            $ticket = Quote::where('parentid', $request->ticketid)->first();
-            $ticket->ticket_status = 3;
-            $ticket->save();
+            
+            $ticket1 = Quote::where('parentid', $request->ticketid)->first();
+            if($ticket1!=null || $ticket1!="") {
+              $ticket1->ticket_status = 3;
+              $ticket1->save();
+            }
 
             date_default_timezone_set('Asia/Kolkata');
             $currentDateTime=date('m/d/Y H:i:s');
@@ -243,9 +246,11 @@ class WorkerTicketController extends Controller
           $ticket->ticket_status = 4;
           $ticket->save();
 
-          $ticket = Quote::where('parentid', $request->ticketid)->get()->first();
-          $ticket->ticket_status = 4;
-          $ticket->save();
+          $ticket1 = Quote::where('parentid', $request->ticketid)->get()->first();
+          if($ticket1!=null || $ticket1!="") {
+            $ticket1->ticket_status = 4;
+            $ticket1->save();
+          }
 
           $request->session()->flash('success', 'Ticket Unclose successfully');
           return redirect()->back();
@@ -269,11 +274,12 @@ class WorkerTicketController extends Controller
           $ticket->ticket_status = 4;
           $ticket->save();
 
-          $ticket = Quote::where('parentid', $request->ticketid)->get()->first();
+          $ticket1 = Quote::where('parentid', $request->ticketid)->get()->first();
           //new logic
-
-          $ticket->ticket_status = 4;
-          $ticket->save();
+          if($ticket1!=null || $ticket1!="") {
+            $ticket1->ticket_status = 4;
+            $ticket1->save();
+          }
 
         if(!empty($ticket->product_id)) {
           $pidarray = explode(',', $ticket->product_id);
@@ -337,18 +343,19 @@ class WorkerTicketController extends Controller
           
             $ticket->save();
 
-            $ticket = Quote::where('parentid', $request->ticketid)->get()->first();
-            
-            $ticket->ticket_status = 3;
-            $ticket->ticketdate = date('Y-m-d');
+            $ticket1 = Quote::where('parentid', $request->ticketid)->get()->first();
+            if($ticket1!=null || $ticket1!="") {
+            $ticket1->ticket_status = 3;
+            $ticket1->ticketdate = date('Y-m-d');
             if($request->pointckbox) {
               $cheklist =implode(",", $request->pointckbox);
-              $ticket->checklist =  $cheklist;
+              $ticket1->checklist =  $cheklist;
             } else {
-              $ticket->checklist = null;
+              $ticket1->checklist = null;
             }
           
-            $ticket->save();
+            $ticket1->save();
+          }
 
 
             date_default_timezone_set('Asia/Kolkata');
@@ -401,10 +408,11 @@ class WorkerTicketController extends Controller
           $ticket->ticket_status = 4;
           $ticket->save();
 
-          $ticket = Quote::where('parentid', $request->ticketid)->get()->first();
-          $ticket->ticket_status = 4;
-          $ticket->save();
-
+          $ticket1 = Quote::where('parentid', $request->ticketid)->get()->first();
+          if($ticket1!=null || $ticket1!="") {
+            $ticket1->ticket_status = 4;
+            $ticket1->save();
+          }
           $request->session()->flash('success', 'Ticket Unclose successfully');
           return redirect()->back();
         }
