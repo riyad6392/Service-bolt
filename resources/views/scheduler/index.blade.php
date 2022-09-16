@@ -302,7 +302,7 @@ body::-webkit-scrollbar-thumb:hover {
     color: #fff!important;
 }
 .heierts {
-  height: 300px!important;
+  min-height: 300px!important;
   overflow:auto!important;
 }
 .heierts::-webkit-scrollbar {
@@ -1177,6 +1177,7 @@ span.date-icon {
                 center: '', 
                 right: ''
             },
+             height: "auto",
             snapDuration: '00:05:00',
             minTime: $("#openingtime").val(),
             maxTime: $("#closingtime").val()+1, 

@@ -1430,10 +1430,10 @@ class SchedulerController extends Controller
                 $newTime = date('H:i', strtotime($row->givenendtime));
                 $enddatetime = $newdate.' '.$newTime;
                 }
-            } else {
+               } else {
                 $enddatetime = "";
             }
-            if($row->bgcolor == null){
+             if($row->bgcolor == null){
                 $row->bgcolor = "#000";
             }
             $result = array_diff($pids, $wids);
@@ -1446,7 +1446,7 @@ class SchedulerController extends Controller
 
                 }
 
-                //echo $startdatetime; 2022-09-15 08:00
+            //echo $startdatetime; 2022-09-15 08:00
 
             //dd($enddatetime);2022-09-15 20:00
                 $data[] = array (
