@@ -5,6 +5,10 @@
    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
+  body{
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
 #calendar{display: block;}
 .fc-center {
     position: absolute;
@@ -72,87 +76,12 @@ span.icon-btn .fa-trash {
     height: 100%;
     overflow-y: scroll;
 }
-.fc-time-grid-event{
-  margin-left:-40px;
-}
-.fc-time-grid-event:nth-child(1){
-  margin-left:0px;
-}
-.fc-time-grid-event.fc-allow-mouse-resize.intro{
-  z-index: 9999!important;
-}
-.fc-time-grid-event.fc-allow-mouse-resize.intro:hover{
-  /* height:auto!important; */
-  width: 100px!important;
-  min-height: 95px;
-}
-.fc-time-grid-event{
-  /* height: 15px!important; */
-  width: 32px!important;
 
-}
-
-
-.fc-time-grid-event.fc-allow-mouse-resize.intro:hover .fc-title{
-    display:block;
-  }
-  .fc-time-grid-event  .fc-title{
-    display:none;
-  }
-  .fc-time-grid-event .fc-content{
-    position: relative;
-  }
-  .fc-time-grid-event .text-start {
-    position: absolute;
-    bottom: -26px;
-    display:none;
-    /* left: 2px; */
-}
-.fc-time-grid-event.fc-allow-mouse-resize.intro:hover .text-start{
-  display:block;
-}
-.fc-time-grid-event.fc-allow-mouse-resize.intro:hover .text-end .closeon{
-  position: absolute;
-    bottom: -26px;
-    left:38px;
-    display:block;
-}
-.fc-time-grid-event .text-end .closeon{
-    display:none;
-}
-  .fc-view-container {
+.fc-view-container {
     height: 345px;
     overflow-y: scroll;
 }
-.fc-event-container {
-    display: flex;
-    justify-content: flex-start;
-    /* align-items: center; */
-}
-.fc-time-grid-event .fc-content .fc-title {
-    font-size: 12px;
-}
-     body{
-        overflow-x: hidden;
-    }
-    .fc-time-grid-event .fc-content {
-        overflow:visible;
-    }
-    #calendar{
-      overflow-y:scroll!important;
-      height:375px;
-    }
-@media screen and (min-width: 1600px) {
-  .fixed {
-    width: 80%!important;
-  }
-}
 
-@media screen and (min-width: 1200px) {
-  .fixed {
-    width: 80%!important;
-  }
-}
 
      #header {
   background: #fff;
@@ -160,9 +89,7 @@ span.icon-btn .fa-trash {
   padding: 10px 20px;
   color: #fff;
 }
-.fc-content .text-start {
-    position: absolute;
-}
+
 .datess {
     display: flex;
     align-items: center;
@@ -172,82 +99,6 @@ span.icon-btn .fa-trash {
     color: #000;
     font-size: 20px;
 }
-.fc-time-grid .fc-slats td {
-  text-transform: uppercase;
-}
-/*.fc-scroller.fc-time-grid-container {
-    height: 500px!important;
-}*/
-
-.fc-highlight {
-    background: #87CEEB!important;
-    opacity: 1!important;
-    filter: alpha(opacity=100)!important;
-}
-
-.fixed {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 9;
-}   
-
-.new-filters {
-    position: absolute;
-    right: 0;
-}
-.new-filters i.fa.fa-times {
-    font-size: 20px!important;
-    position: relative;
-    bottom: 0px;
-    right: 12px;
-}
-a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable.intro {
-    z-index: 9999999!important;
-}
-
-/* width */
-#calendar::-webkit-scrollbar {
-  width: 1px;
-}
-.padeings {
-    padding: 0 25px!important;
-}
-/* Track */
-#calendar::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-}
- 
-/* Handle */
-#calendar::-webkit-scrollbar-thumb {
-  background: #888; 
-}
-
-/* Handle on hover */
-#calendar::-webkit-scrollbar-thumb:hover {
-  background: #555; 
-} 
-
-
-/* width */
-body::-webkit-scrollbar {
-  width: 1px;
-}
-
-/* Track */
-body::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-}
- 
-/* Handle */
-body::-webkit-scrollbar-thumb {
-  background: #888; 
-}
-
-/* Handle on hover */
-body::-webkit-scrollbar-thumb:hover {
-  background: #555; 
-} 
 
 .slider ul {
     position: relative;
@@ -340,13 +191,6 @@ a.prev.control {
     font-size: 32px;
     font-weight: 500;
 }
-.fc.fc-unthemed.fc-ltr.new {
-    margin: 6px 0 0!important;
-    background: #fff;
-}
-.fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead {
-    font-size: 15px!important;
-    }
 .use.new {
     top: 43%!important;
 }
@@ -424,12 +268,6 @@ div#bs-select-1 {
 .blues {
     padding: 0!important;
 }
-.fc-time-grid-event .fc-time {
-  text-align: center;
-}
-.fc-time-grid-event .fc-time, .fc-time-grid-event .fc-title {
-  text-align: center;
-}
 .counter {
     font-size: 16px;
     background: red;
@@ -442,6 +280,11 @@ div#bs-select-1 {
     height: 25px;
     display: inline-block;
     line-height: 15px;
+}
+.fc-highlight {
+    background: #87CEEB!important;
+    opacity: 1!important;
+    filter: alpha(opacity=100)!important;
 }
 .side-h3 {
     padding: 0px 24px 8px!important;
@@ -469,13 +312,7 @@ div#bs-select-1 {
     left: 0;
 
 }*/
-.fc-content .fa.fa-edit {
-    background: #fff;
-    color: blue;
-    padding: 4px;
-    border-radius: 17px;
-    font-size: 14px;
-}
+
 .tickets_div {
     text-align: center;
     padding: 4px 0;
@@ -502,16 +339,16 @@ div#bs-select-1 {
     border-radius: 12px;
     z-index: 99;
 }
-.fc-time-grid .fc-bgevent, .fc-time-grid .fc-event {
-    border-radius: 12px!important;
- 
-    padding: 4px!important;
-}
 th.fc-resource-cell {
    
     padding: 0px;
     text-transform: capitalize;
     text-align: left;
+}
+
+a.fc-time-grid-event {
+    box-shadow: 0px 0px 5px #ccc;
+    border-radius: 5px !important;
 }
 
 
@@ -1086,7 +923,7 @@ span.date-icon {
     });
     $("#hide-top").click(function() {
         $("#hide-top").hide();
-        $("#close").html('<a href="" style="position: relative;left: 0;top:0px;color: black;"> <i class="fa fa-times" aria-hidden="true" style="font-size: 32px;"></i></a>');
+        $("#close").html('<a href="" style="position: relative;left: 0;top:0px;color: black;"> <i class="fa fa-times" aria-hidden="true" style="font-size: 20px;position: fixed;right: 10px;z-index: 9999;color: black;"></i></a>');
         $(".top-bar").toggle();
         $(".content-page").toggleClass("blues");
         $("#calendar").addClass("fulldayShow");
@@ -1263,6 +1100,7 @@ span.date-icon {
                 var title = event.title.split("#");
                 var tid = title[1].split("\n");
                 var eventid = tid[0];
+
 
                 element.popover({
                   title: '',
