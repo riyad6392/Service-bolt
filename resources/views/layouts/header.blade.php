@@ -131,7 +131,8 @@ i.fa.fa-angle-down {
     left: 0;
     width: 100%;
     z-index: 1000;
-    background: rgb(35 35 34 / 43%);
+    /*background: rgb(35 35 34 / 43%);*/
+    background: rgb(35 35 34 / 90%);
     padding-top: 0;
     display: flex;
     justify-content: center;
@@ -482,7 +483,9 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
 <!-- topbarstart -->
 <div class="loadershow">
 	
-	<div id="loader" style="display: block;"></div>
+	<!-- <div id="loader" style="display: block;"></div> -->
+  <h2 style="color: #fff;">Processing...</h2>
+
 </div>
 <div class="top-bar">
 <div class="left-sidemenu">

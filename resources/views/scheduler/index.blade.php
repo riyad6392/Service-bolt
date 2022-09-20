@@ -647,7 +647,7 @@ span.date-icon {
                             <input type="hidden" name="closingtime" id="closingtime" value="24:00">
                             @endif
 
-                            <div class="col-md-3 ms-auto">
+                            <div class="col-md-3 ms-auto" style="display:none;">
                                 <div class="datess position-relative">
                                     @if(request()->date)
                                       @php
@@ -712,6 +712,9 @@ span.date-icon {
                                         No Tickets To Schedule
                                     </div>
                                 @endif
+                                <div style="display:none;">
+                                <input type='checkbox' id='drop-remove' checked>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -736,11 +739,11 @@ span.date-icon {
                     <input type="hidden" id="suggest_trip_start" value="6">
                     <input type="hidden" name="wcount" id="wcount" value="{{$wcount}}">
                     @if(request()->start)
-                        <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 30px;left: 6px; z-index: 9;"></i>
+                        <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 57px;left: 6px; z-index: 9;"></i>
                     @else
                     
                     @endif
-                    <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 30px; left: 30px; z-index: 9;"></i>
+                    <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 57px; left: 30px; z-index: 9;"></i>
                 </div>
             </div>
         </div>
@@ -1171,13 +1174,51 @@ span.date-icon {
 
 
 
+  // $('#calendar').fullCalendar({
+
+  //   displayEventTime: false,
+  //   timeFormat: 'H(:mm)',
+
+  //   header: {
+  //     left: 'prev,next today',
+  //     center: 'title',
+  //     right: 'month,agendaWeek,agendaDay'
+  //   },
+
+  //   allDayDefault: false,
+  //   editable: true,
+  //   droppable: true,
+
+  //   eventRender: function(event, el) {
+
+  //     el.find('.fc-content').html("<i class='fa fa-camera-retro fa-3x'></i>");
+
+  //   },
+  //   events: [{
+  //     title: 'event1',
+  //     start: '2022-09-19 08:00:00'
+  //   }, {
+  //     title: 'event2',
+  //     start: '2022-09-18 08:00:00',
+  //   }, {
+  //     title: 'event3',
+  //     start: '2022-09-20 08:00:00',
+  //   }, {
+  //     title: 'event3',
+  //     start: '2022-09-19 12:50:00',
+  //   }, {
+  //     title: 'event3',
+  //     start: '2017-02-01 13:50:00',
+  //   }, ]
+  // });
+
     $('#calendar').fullCalendar({
             header: {
-                left: '',
-                center: '', 
-                right: ''
+                left: 'prev',
+                center: 'title', 
+                right: 'next'
             },
-             height: "auto",
+            height: "auto",
             snapDuration: '00:05:00',
             minTime: $("#openingtime").val(),
             maxTime: $("#closingtime").val()+1, 
@@ -1192,7 +1233,6 @@ span.date-icon {
             forceEventDuration: true,
             //nextDayThreshold: '00:00',
             resources: function (callback) {
-
                 @if(request()->start)
                     var start ="{{request()->start}}";
 
@@ -1212,39 +1252,24 @@ span.date-icon {
                 });
             },
 
-            events: '{{route("company.getschedulerdata",["date"=>$requestdate])}}',
-
+            events: '{{route("company.getschedulerdata")}}',
+            
             eventRender: function(event, element, view) {
-              //console.log(event);
-                var hourwithtime = event.start._i.slice(11,16);
-                hourwithtime=hourwithtime.toString();
-                var hours = hourwithtime.slice(0, -3);
-                  var minutes = hourwithtime.substring(3);
-                  const ampm = hours >= 12 ? 'pm' : 'am';
-                  hours %= 12;
-                  hours = hours || 12;    
-                  hours = hours < 10 ? `${hours}` : hours;
-                  minutes = minutes < 10 ? `${minutes}` : minutes;
-                  var giventime = `${hours}:${minutes} ${ampm}`;
-
-                  var Endhourwithtime = event.end._i.slice(11,16);
-                  Endhourwithtime = Endhourwithtime.toString();
-                  var hours1 = Endhourwithtime.slice(0, -3);
-                  var minutes1 = Endhourwithtime.substring(3);
-                  const ampm1 = hours1 >= 12 ? 'pm' : 'am';
-                  //alert(minutes1);
-                  hours1 %= 12;
-                  hours1 = hours1 || 12;    
-                  hours1 = hours1 < 10 ? `${hours1}` : hours1;
-                  minutes1 = minutes1 < 10 ? `${minutes1}` : minutes1;
-                  var givenendtime = `${hours1}:${minutes1} ${ampm1}`;
+              
+                var start = moment(event.start).format('h:mm a'); 
+              
+                var end = moment(event.end).format('h:mm a'); 
+              
+                var title = event.title.split("#");
+                var tid = title[1].split("\n");
+                var eventid = tid[0];
 
                 element.popover({
                   title: '',
                   placement: 'right',
                   html:true,
                   sanitize:false,
-                  content: '<div class="popover-design"><div class="row"><div class="col-md-7"><p>'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class=" icon-btn" id="closeonDelete" data-id="'+event.id+'"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+                  content: '<div class="popover-design"><div class="row"><div class="col-md-7"><p>'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+start+' -'+end+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+eventid+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class=" icon-btn" id="closeonDelete" data-id="'+eventid+'"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+eventid+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
                   container:'body',
                   trigger:'click',
                 });
@@ -1259,7 +1284,9 @@ span.date-icon {
                    // element.find(".fc-content").prepend("<div class='text-end'><span class='closeon'><i class='fa fa-trash' > </i></span></div>");
                 } 
                 element.find(".closeon").on('click', function() {
-                  var id = event.id;
+                  //var id = event.id;
+                  var id = eventid;
+
                    swal({
                         title: "Are you sure!",
                         text: "Are you sure? you want to delete it!",
@@ -1307,7 +1334,7 @@ span.date-icon {
 
             
             },
-            resourceRender: function (dataTds, eventTd) {
+            resourceRender: function (dataTds, eventTd) {                 
                 var datatitle = dataTds.title;
                 var title = datatitle.split("#");
                 if(title[1]!="") {
@@ -1340,6 +1367,9 @@ span.date-icon {
             },
 
             eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) { 
+                var title = event.title.split("#");
+                var tid = title[1].split("\n");
+                var eventid = tid[0];
                 var hours = event.start._i[3];
                 var minutes = event.start._i[4];
                 const ampm = hours >= 12 ? 'pm' : 'am';
@@ -1360,7 +1390,9 @@ span.date-icon {
                 minutes1 = minutes1 < 10 ? `0${minutes1}` : minutes1;
                 var givenendtime = `${hours1}:${minutes1} ${ampm1}`;
 
-                var ticketid = event.id;
+                //var ticketid = event.id;
+                var ticketid = eventid;
+
                 var workerid = event.resourceId;
 
                 form_data = new FormData();
@@ -1382,7 +1414,7 @@ span.date-icon {
                            type: "success"
                         },
                         function(){
-                                $('#calendar').fullCalendar('refetchEvents'); 
+                                //$('#calendar').fullCalendar('refetchEvents'); 
                             }
                         );
                     }
@@ -1391,8 +1423,10 @@ span.date-icon {
             },
 
             drop: function (date, jsEvent, ui, resourceId) {
-             //alert('drop');
-                   
+                if ($('#drop-remove').is(':checked')) {
+                  // if so, remove the element from the "Draggable Events" list
+                  $(this).remove();
+                }
                var hours = date._i[3];
                 var minutes = date._i[4];
                 //alert(date._i[3] + date._i[4]);
@@ -1406,13 +1440,15 @@ span.date-icon {
                 var ticketid = $(this).data('id');
                 var workerid = resourceId;
                 var giventime = `${hours}:${minutes} ${ampm}`;
-                
+
                 var dd = date._d;
                 var date = moment(new Date(dd.toString().substr(0, 16)));
                 //var fulldate = date.format("dddd - MMMM DD, YYYY");
+                // console.log(date._i);
+                // return false;
+                //var fulldate = "{{$requestdate}}";
+                var fulldate = moment(date._i).format('Y-MM-DD');
                 
-                var fulldate = "{{$requestdate}}";
-
                 form_data = new FormData();
                 form_data.append('quoteid',ticketid);
                 form_data.append('time',giventime);
@@ -1426,19 +1462,31 @@ span.date-icon {
                     contentType:false,
                     processData:false,
                     success:function() {
-                      location.reload(),
+                        //$('#calendar').fullCalendar('refetchEvents');
+                        //location.reload();
+                        // $("#calendar").fullCalendar('removeEvents', '231');
+                      //location.reload(),
                         swal({
                            title: "Done!", 
-                           text: "Ticket Assigned Successfully!", 
+                           text: "Time slot allocated successfully, Click below to complete process!", 
                            type: "success"
                         },
+                        function() { 
+                            //$('#calendar').fullCalendar('refetchEvents');
+                               location.reload();
+                            }
                         );
                     }
                 });
             },  
             eventDrop: function(event,delta, revertFunc, jsEvent, ui, view ) {
-             // alert('eventdrop');
-                var ticketid = event.id;
+                //console.log(event.start._d);
+                var title = event.title.split("#");
+                var tid = title[1].split("\n");
+                var eventid = tid[0];
+                var ticketid = eventid;
+
+                //var ticketid = event.id;
                 var resourceId = event.resourceId;
                 
                 if(event.start._i[0].length==1) {
@@ -1461,7 +1509,8 @@ span.date-icon {
                     var workerid = resourceId;
                     var giventime = `${hours}:${minutes} ${ampm}`
 
-                    var fulldate = "{{$requestdate}}";
+                    //var fulldate = "{{$requestdate}}";
+                    var fulldate = moment(event.start._d).format('Y-MM-DD');
                 } else {
                  
                     var hours = event.start._i[3];
@@ -1479,7 +1528,8 @@ span.date-icon {
                     var workerid = resourceId;
                     var giventime = `${hours}:${minutes} ${ampm}`;
 
-                    var fulldate = "{{$requestdate}}";
+                    //var fulldate = "{{$requestdate}}";
+                    var fulldate = moment(event.start._d).format('Y-MM-DD');
                 }
 
                 form_data = new FormData();
@@ -1495,14 +1545,16 @@ span.date-icon {
                     contentType:false,
                     processData:false,
                     success:function() {
+                        //$('#calendar').fullCalendar('refetchEvents');
+
                         swal({
                            title: "Done!", 
-                           text: "Ticket Assigned Successfully!", 
+                           text: "Time slot allocated successfully, Click below to complete process!", 
                            type: "success"
                         },
-                        function(){ 
-                            $('#calendar').fullCalendar('refetchEvents');
-                               //location.reload();
+                        function() { 
+                            //$('#calendar').fullCalendar('refetchEvents');
+                               location.reload();
                             }
                         );
                     }
@@ -1591,7 +1643,7 @@ span.date-icon {
                            success:function()
                            {
                             location.reload(),
-                            $('#calendar').fullCalendar('removeEvents',event._id);
+                            //$('#calendar').fullCalendar('removeEvents',event._id);
                             swal({
                                title: "Done!", 
                                text: "Ticket Removed Successfully!", 

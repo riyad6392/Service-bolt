@@ -97,8 +97,8 @@ class SchedulerController extends Controller
 
     public function create(Request $request)
     {
-    	$auth_id = auth()->user()->id;
-    	    $validate = Validator($request->all(), [
+        $auth_id = auth()->user()->id;
+            $validate = Validator($request->all(), [
                 'image' => 'required',
             ]);
             if ($validate->fails()) {
@@ -595,6 +595,8 @@ class SchedulerController extends Controller
         } else {
             $minutes = preg_replace("/[^0-9]/", '', $defaultitme->minute);    
         }
+
+
          
         
         //display the converted time
@@ -609,9 +611,30 @@ class SchedulerController extends Controller
         $workerid = $request->workerid;
         $tstatus = 2;
         $created_at = Carbon::now();
+
+        $newdate = $request->date;
+
+        /*Get Dayclose time*/
+            $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+            $dayclosetime =$closingtime->closingtime;
+
+            $tstarttime = explode(':',$time);
+            $ticketstarttime = $tstarttime[0];
+            $ticketdifferncetime = $dayclosetime - $ticketstarttime;
+            // echo $ticketdifferncetime; die;
+            if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
+                if($hours > $ticketdifferncetime) {
+                    $nextdaytime = $hours - $ticketdifferncetime; 
+                    //echo $nextdaytime; die;
+                    $givenenddate = $this->getenddatecalculation($newdate,$nextdaytime);
+                } else {
+                    $givenenddate = $newdate; 
+                }
+            }
+
         DB::table('quote')->where('id','=',$quoteid)
           ->update([ 
-              "ticket_status"=>"$tstatus","giventime"=>"$time","givenendtime"=>"$endtime","givendate"=>"$date","personnelid"=>"$workerid","created_at"=>"$created_at"
+              "ticket_status"=>"$tstatus","giventime"=>"$time","givenendtime"=>"$endtime","givendate"=>"$date","givenstartdate"=>"$request->date","givenenddate"=>"$givenenddate","personnelid"=>"$workerid","created_at"=>"$created_at"
           ]);
 
         $appnotifiction = AppNotification::where('pid',$workerid)->where('ticketid',$quoteid)->get(); 
@@ -640,6 +663,38 @@ class SchedulerController extends Controller
             $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
         //}
 
+    }
+
+    public function getenddatecalculation($newdate,$nextdaytime) 
+    {
+        $auth_id = auth()->user()->id;
+        $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$auth_id)->first();
+
+        $fulldaytime = $closingtime->closingtime - $closingtime->openingtime;
+        
+        if($nextdaytime > $fulldaytime) {
+           $divisionvalue = $nextdaytime / $fulldaytime;
+
+           $dividev = explode('.',$divisionvalue);
+           $daycount = $dividev[0];
+           $dayhours = $dividev[1];
+
+            if($dayhours!="") {
+                $daycount = $daycount +1;
+            } else {
+                $daycount = $dividev[0];
+            }
+            $ddd = $daycount. 'day';
+
+            //day added as per calcuation wise
+            $givenenddate = date('Y-m-d', strtotime($newdate . ' +'.$ddd));
+            
+        }
+        else {
+            //day added as per calcuation wise
+            $givenenddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
+        }
+        return $givenenddate;
     }
 
     public function sortdataweekview(Request $request)
@@ -1446,7 +1501,7 @@ class SchedulerController extends Controller
                     if($hours > $ticketdifferncetime) {
                         $nextdaytime = $hours - $ticketdifferncetime; 
                         //echo $nextdaytime; die;
-                        $enddatetime = $this->getendtimecalculation($newdate,$nextdaytime,$minutes);
+                        $enddatetime = $this->getendtimecalculationweek($newdate,$nextdaytime,$minutes);
                     } else {
                         $newTime = date('H:i', strtotime($row->givenendtime));
                         $enddatetime = $newdate.' '.$newTime; 
@@ -1483,6 +1538,7 @@ class SchedulerController extends Controller
                     'end' => $enddatetime,
                     'resourceId'=>$row->personnelid,
                     'backgroundColor'   => $row->bgcolor,
+
                 );
             //}
         }
@@ -1490,19 +1546,28 @@ class SchedulerController extends Controller
       echo json_encode($data);
     }
 
-    public function getschedulerdata(Request $request,$date)
+    public function getschedulerdata(Request $request)
     {
+
+        $date = $request->start;
+        $date=  date("Y-m-d", strtotime($date));
         $auth_id = auth()->user()->id;
         $todaydate = date('l - F d, Y');
-        $newdate = Carbon::createFromFormat('l - F d, Y', $todaydate)->format('Y-m-d');
-
+        //$newdate = Carbon::createFromFormat('l - F d, Y', $todaydate)->format('Y-m-d');
+        $startdate = Carbon::createFromFormat('l - F d, Y', $todaydate)->format('Y-m-d');
+        
         $fulldate = Carbon::createFromFormat('Y-m-d', $date)->format('l - F d, Y');
         
-        //echo $fulldate; die; Sunday - September 11, 2022
-        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
+        $newdate = Carbon::createFromFormat('l - F d, Y', $fulldate)->format('Y-m-d');
         
+        \DB::enableQueryLog(); 
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givenenddate','>=',$newdate)->where('quote.givenstartdate','<=',$newdate)->orderBy('quote.id','ASC')->get();
+        //dd(\DB::getQueryLog());
+
+        //($scheduleData);
         $data=[];
         foreach ($scheduleData as $key => $row) {
+            $givenenddate = $row->givenenddate;
             $pids = explode(',',$row->personnelid);
 
             $newTime = date('H:i', strtotime($row->giventime));
@@ -1534,12 +1599,12 @@ class SchedulerController extends Controller
                     $tstarttime = explode(':',$startTime);
                     $ticketstarttime = $tstarttime[0];
                     $ticketdifferncetime = $dayclosetime - $ticketstarttime;
-
+                   // echo $ticketdifferncetime; die;
                     if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
                         if($hours > $ticketdifferncetime) {
                             $nextdaytime = $hours - $ticketdifferncetime; 
                             //echo $nextdaytime; die;
-                            $enddatetime = $this->getendtimecalculation($newdate,$nextdaytime,$minutes);
+                            $enddatetime = $this->getendtimecalculation($newdate,$nextdaytime,$minutes,$givenenddate);
                         } else {
                             $newTime = date('H:i', strtotime($row->givenendtime));
                             $enddatetime = $newdate.' '.$newTime; 
@@ -1559,9 +1624,13 @@ class SchedulerController extends Controller
                 $ids=$row->parentid;
 
             }
+            //echo $enddatetime; die;
             //echo $startdatetime; 2022-09-15 08:00
 
             //dd($enddatetime);2022-09-15 20:00
+            // echo $startdatetime;
+            // echo "break";
+            // echo $enddatetime; die;
             foreach($pids as $key =>$value) {
                 $data[] = array (
                     'id'=>$ids,
@@ -1578,15 +1647,62 @@ class SchedulerController extends Controller
       echo json_encode($data);
     }
 
-    public function getendtimecalculation($newdate,$nextdaytime,$minutes) 
+    public function getendtimecalculation($newdate,$nextdaytime,$minutes,$givenenddate) 
     {
         $auth_id = auth()->user()->id;
         $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$auth_id)->first();
 
         $fulldaytime = $closingtime->closingtime - $closingtime->openingtime;
-        // echo $nextdaytime;
-        // echo "break";
-        // echo $fulldaytime; die;
+        
+        if($nextdaytime > $fulldaytime) {
+           $divisionvalue = $nextdaytime / $fulldaytime;
+
+           $dividev = explode('.',$divisionvalue);
+           $daycount = $dividev[0];
+           $dayhours = $dividev[1];
+
+            if($dayhours!="") {
+                $daycount = $daycount +1;
+                $addhours = $dayhours; 
+            } else {
+                $addhours = $closingtime->closingtime;
+                $daycount = $dividev[0];
+            }
+
+            $nextdaytime = $nextdaytime - $fulldaytime;
+            $openingtime = $closingtime->openingtime;
+            $openingtime = $openingtime.':00';
+            
+            $endtime1 = date('H:i',strtotime("+{$addhours} hour +{$minutes} minutes",strtotime($openingtime)));
+
+            //$endtime1 = date('H:i',strtotime("+{$nextdaytime} hour +{$minutes} minutes",strtotime($openingtime)));
+            $ddd = $daycount. 'day';
+
+            //day added as per calcuation wise
+            // echo $newdate; die;
+            //$dayaddeddate = date('Y-m-d', strtotime($newdate . ' +'.$ddd));
+            //echo $dayaddeddate; die;
+            $enddatetime = $givenenddate.' '.$endtime1;
+            //echo $enddatetime; die; 
+        }
+        else {
+            $openingtime = $closingtime->openingtime;
+            $openingtime = $openingtime.':00';
+            $endtime1 = date('H:i',strtotime("+{$nextdaytime} hour +{$minutes} minutes",strtotime($openingtime)));
+            //day added as per calcuation wise
+            $dayaddeddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
+            $enddatetime = $dayaddeddate.' '.$endtime1; 
+        }
+        //echo $enddatetime; die;
+        return $enddatetime;
+    }
+
+    public function getendtimecalculationweek($newdate,$nextdaytime,$minutes) 
+    {
+        $auth_id = auth()->user()->id;
+        $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$auth_id)->first();
+
+        $fulldaytime = $closingtime->closingtime - $closingtime->openingtime;
         if($nextdaytime > $fulldaytime) {
            $divisionvalue = $nextdaytime / $fulldaytime;
 
@@ -1611,9 +1727,13 @@ class SchedulerController extends Controller
 
             //$endtime1 = date('H:i',strtotime("+{$nextdaytime} hour +{$minutes} minutes",strtotime($openingtime)));
             $ddd = $daycount. 'day';
+
             //day added as per calcuation wise
+           // echo $newdate; die;
             $dayaddeddate = date('Y-m-d', strtotime($newdate . ' +'.$ddd));
-            $enddatetime = $dayaddeddate.' '.$endtime1; 
+            //echo $dayaddeddate; die;
+            $enddatetime = $dayaddeddate.' '.$endtime1;
+            //echo $enddatetime; die; 
         }
         else {
             $openingtime = $closingtime->openingtime;
@@ -1623,6 +1743,7 @@ class SchedulerController extends Controller
             $dayaddeddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
             $enddatetime = $dayaddeddate.' '.$endtime1; 
         }
+        //echo $enddatetime; die;
         return $enddatetime;
     }
 
