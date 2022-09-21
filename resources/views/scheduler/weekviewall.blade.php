@@ -54,54 +54,6 @@ span.icon-btn .fa-trash {
     height: 100%;
     overflow-y: scroll;
 }
-.fc-time-grid-event{
-  margin-left:-40px;
-}
-.fc-time-grid-event.intro{
-  z-index: 9999!important;
-}
-.fc-time-grid-event:nth-child(1){
-  margin-left:0px;
-}
-.fc-time-grid-event.intro:hover{
-  /* height:auto!important; */
-  width: 100px!important;
-  min-height: 100px;
-
-}
-.fc-time-grid-event{
-  /* height: 15px!important; */
-  width: 32px!important;
-}
-
-
-.fc-time-grid-event.intro:hover .fc-title{
-    display:block;
-  }
-  .fc-time-grid-event  .fc-title{
-    display:none;
-  }
-  .fc-time-grid-event .fc-content{
-    position: relative;
-  }
-  .fc-time-grid-event .text-start {
-    position: absolute;
-    bottom: -26px;
-    display:none;
-    /* left: 2px; */
-}
-.fc-time-grid-event.intro:hover .text-start{
-  display:block;
-}
-.fc-time-grid-event.intro:hover .text-end .closeon{
-  position: absolute;
-    bottom: -26px;
-    left:38px;
-    display:block;
-}
-.fc-time-grid-event .text-end .closeon{
-    display:none;
-}
 
      body{
         overflow-x: hidden;

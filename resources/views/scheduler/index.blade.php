@@ -1065,6 +1065,7 @@ span.date-icon {
             defaultView: 'agendaDay',
             groupByResource: true,
             eventOverlap: true,
+            slotEventOverlap:false,
             //defaultEventMinutes: 30, 
             //defaultTimedEventDuration: 04:00,
             forceEventDuration: true,

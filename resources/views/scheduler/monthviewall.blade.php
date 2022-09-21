@@ -300,6 +300,9 @@ div#bs-select-1 {
 .fc-time-grid-event .fc-time, .fc-time-grid-event .fc-title {
   text-align: center;
 }
+.fc-time {
+    display: none;
+}
 .counter {
     font-size: 16px;
     background: red;

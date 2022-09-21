@@ -1133,6 +1133,8 @@ class SchedulerController extends Controller
         $data['giventime'] = $quote->giventime;
         $data['givenendtime'] = $quote->givenendtime;
         $data['givendate'] = $quote->givendate;
+        $data['givenstartdate'] = $quote->givenstartdate;
+        $data['givenenddate'] = $quote->givenenddate;
         $data['ticket_status'] = 2;
         Quote::create($data);
       } 
@@ -1593,8 +1595,10 @@ class SchedulerController extends Controller
                     }
 
                     /*Get Dayclose time*/
-                    $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+                    $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$auth_id)->first();
                     $dayclosetime =$closingtime->closingtime;
+                    $openingtime = $closingtime->openingtime;
+                    $openingtime = $openingtime.':00';
 
                     $tstarttime = explode(':',$startTime);
                     $ticketstarttime = $tstarttime[0];
@@ -1602,18 +1606,25 @@ class SchedulerController extends Controller
                    // echo $ticketdifferncetime; die;
                     if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
                         if($hours > $ticketdifferncetime) {
+                            
+                            if($newdate>$row->givenstartdate && $row->givenenddate>=$newdate) {
+                                
+                                $startdatetime = $newdate.' '.$openingtime;  
+                            }
                             $nextdaytime = $hours - $ticketdifferncetime; 
                             //echo $nextdaytime; die;
                             $enddatetime = $this->getendtimecalculation($newdate,$nextdaytime,$minutes,$givenenddate);
                         } else {
                             $newTime = date('H:i', strtotime($row->givenendtime));
-                            $enddatetime = $newdate.' '.$newTime; 
+                            $enddatetime = $newdate.' '.$newTime;
+                            $startdatetime = $newdate.' '.$newTime; 
                         }
                     }
                 //end
                  else {   
                     $newTime = date('H:i', strtotime($row->givenendtime));
                     $enddatetime = $newdate.' '.$newTime;
+                    $startdatetime = $newdate.' '.$newTime;
                 }
             } else {
                 $enddatetime = "";
@@ -1630,7 +1641,7 @@ class SchedulerController extends Controller
             //dd($enddatetime);2022-09-15 20:00
             // echo $startdatetime;
             // echo "break";
-            // echo $enddatetime; die;
+            //echo $startdatetime; die;
             foreach($pids as $key =>$value) {
                 $data[] = array (
                     'id'=>$ids,
