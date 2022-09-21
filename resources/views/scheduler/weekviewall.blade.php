@@ -1248,14 +1248,14 @@ background: transparent!important;
                            data:{id:id},
                            success:function()
                            {
-                            location.reload(),
-                            $('#calendar').fullCalendar('removeEvents',event._id);
-                            swal({
-                               title: "Done!", 
-                               text: "Ticket Removed Successfully!", 
-                               type: "success"
-                            },
-                            );
+                            location.reload();
+                            // $('#calendar').fullCalendar('removeEvents',event._id);
+                            // swal({
+                            //    title: "Done!", 
+                            //    text: "Ticket Removed Successfully!", 
+                            //    type: "success"
+                            // },
+                            // );
                            }
                           })
             });
@@ -1340,16 +1340,17 @@ background: transparent!important;
                     contentType:false,
                     processData:false,
                     success:function() {
-                        swal({
-                           title: "Done!", 
-                           text: "Ticket Updated Successfully!", 
-                           type: "success"
-                        },
-                        function(){
-                                $('#calendar').fullCalendar('refetchEvents'); 
-                               //location.reload();
-                            }
-                        );
+                        location.reload();
+                        // swal({
+                        //    title: "Done!", 
+                        //    text: "Ticket Updated Successfully!", 
+                        //    type: "success"
+                        // },
+                        // function(){
+                        //         $('#calendar').fullCalendar('refetchEvents'); 
+                        //        //location.reload();
+                        //     }
+                        // );
                     }
                 });
                 
@@ -1389,15 +1390,16 @@ background: transparent!important;
                     contentType:false,
                     processData:false,
                     success:function() {
-                        swal({
-                           title: "Done!", 
-                           text: "Ticket Assigned Successfully!", 
-                           type: "success"
-                        },
-                        function() { 
-                            location.reload();
-                        }
-                        );
+                        location.reload();
+                        // swal({
+                        //    title: "Done!", 
+                        //    text: "Ticket Assigned Successfully!", 
+                        //    type: "success"
+                        // },
+                        // function() { 
+                        //     location.reload();
+                        // }
+                        // );
                     }
                 });
             },  
@@ -1458,16 +1460,17 @@ background: transparent!important;
                     contentType:false,
                     processData:false,
                     success:function() {
-                        swal({
-                           title: "Done!", 
-                           text: "Ticket Assigned Successfully!", 
-                           type: "success"
-                        },
-                        function(){ 
-                            $('#calendar').fullCalendar('refetchEvents');
-                               //location.reload();
-                            }
-                        );
+                        location.reload();
+                        // swal({
+                        //    title: "Done!", 
+                        //    text: "Ticket Assigned Successfully!", 
+                        //    type: "success"
+                        // },
+                        // function(){ 
+                        //     $('#calendar').fullCalendar('refetchEvents');
+                        //        //location.reload();
+                        //     }
+                        // );
                     }
                 });
             },
@@ -1554,14 +1557,14 @@ background: transparent!important;
                            data:{id:id},
                            success:function()
                            {
-                            location.reload(),
-                            $('#calendar').fullCalendar('removeEvents',event._id);
-                            swal({
-                               title: "Done!", 
-                               text: "Ticket Removed Successfully!", 
-                               type: "success"
-                            },
-                            );
+                            location.reload();
+                            // $('#calendar').fullCalendar('removeEvents',event._id);
+                            // swal({
+                            //    title: "Done!", 
+                            //    text: "Ticket Removed Successfully!", 
+                            //    type: "success"
+                            // },
+                            // );
                            }
                           })
             });

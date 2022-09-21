@@ -132,7 +132,8 @@ i.fa.fa-angle-down {
     width: 100%;
     z-index: 1000;
     /*background: rgb(35 35 34 / 43%);*/
-    background: rgb(35 35 34 / 90%);
+    background: rgba(255, 255, 255, 0.7);
+
     padding-top: 0;
     display: flex;
     justify-content: center;
@@ -484,7 +485,8 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
 <div class="loadershow">
 	
 	<!-- <div id="loader" style="display: block;"></div> -->
-  <h2 style="color: #fff;">Processing...</h2>
+  <!-- <h2 style="color: #fff;">Processing...</h2> -->
+  <img src="{{url('')}}/images/gifloader.gif"/>
 
 </div>
 <div class="top-bar">

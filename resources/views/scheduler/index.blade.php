@@ -1247,15 +1247,16 @@ span.date-icon {
                     contentType:false,
                     processData:false,
                     success:function() {
-                        swal({
-                           title: "Done!", 
-                           text: "Ticket Updated Successfully!", 
-                           type: "success"
-                        },
-                        function(){
-                                //$('#calendar').fullCalendar('refetchEvents'); 
-                            }
-                        );
+                        location.reload();
+                        // swal({
+                        //    title: "Done!", 
+                        //    text: "Ticket Updated Successfully!", 
+                        //    type: "success"
+                        // },
+                        // function(){
+                        //         //$('#calendar').fullCalendar('refetchEvents'); 
+                        //     }
+                        // );
                     }
                 });
                 
@@ -1304,18 +1305,18 @@ span.date-icon {
                         //$('#calendar').fullCalendar('refetchEvents');
                         //location.reload();
                         // $("#calendar").fullCalendar('removeEvents', '231');
-                      //location.reload(),
-                        swal({
-                           title: "Done!", 
-                           text: "Time slot allocated successfully, Click below to complete process!", 
-                           type: "success"
-                        },
-                        function() { 
-                            //$('#calendar').fullCalendar('refetchEvents');
-                               location.reload();
-                            }
-                        );
-                    }
+                      location.reload();
+                        // swal({
+                        //    title: "Done!", 
+                        //    text: "Time slot allocated successfully, Click below to complete process!", 
+                        //    type: "success"
+                        // },
+                        // function() { 
+                        //     //$('#calendar').fullCalendar('refetchEvents');
+                        //        location.reload();
+                        //     }
+                        // );
+                     }
                 });
             },  
             eventDrop: function(event,delta, revertFunc, jsEvent, ui, view ) {
@@ -1385,17 +1386,17 @@ span.date-icon {
                     processData:false,
                     success:function() {
                         //$('#calendar').fullCalendar('refetchEvents');
-
-                        swal({
-                           title: "Done!", 
-                           text: "Time slot allocated successfully, Click below to complete process!", 
-                           type: "success"
-                        },
-                        function() { 
-                            //$('#calendar').fullCalendar('refetchEvents');
-                               location.reload();
-                            }
-                        );
+                        location.reload();
+                        // swal({
+                        //    title: "Done!", 
+                        //    text: "Time slot allocated successfully, Click below to complete process!", 
+                        //    type: "success"
+                        // },
+                        // function() { 
+                        //     //$('#calendar').fullCalendar('refetchEvents');
+                        //        location.reload();
+                        //     }
+                        // );
                     }
                 });
             },
@@ -1481,14 +1482,14 @@ span.date-icon {
                            data:{id:id},
                            success:function()
                            {
-                            location.reload(),
+                            location.reload();
                             //$('#calendar').fullCalendar('removeEvents',event._id);
-                            swal({
-                               title: "Done!", 
-                               text: "Ticket Removed Successfully!", 
-                               type: "success"
-                            },
-                            );
+                            // swal({
+                            //    title: "Done!", 
+                            //    text: "Ticket Removed Successfully!", 
+                            //    type: "success"
+                            // },
+                            // );
                            }
                           })
             });
