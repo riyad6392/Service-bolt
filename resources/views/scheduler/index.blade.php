@@ -467,7 +467,7 @@ span.date-icon {
                             <div class="col-md-6">
                                 <div class="side-h3">
                                     <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch 
-                                        <span class="counter">{{count($scheduleData)}}</span>
+                                        <span class="counter" style="display:none;">{{count($scheduleData)}}</span>
                                     </h3>
 
                                 
