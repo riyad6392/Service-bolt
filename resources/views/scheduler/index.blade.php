@@ -1502,6 +1502,20 @@ span.date-icon {
             });
 
           });
+
+    $(document).on('change', '#personnelid',function() {
+        var pid = "";
+        var pname = "";
+        $("#radiolist").empty();
+        $("#cname").empty();  
+        $('select.selectpicker').find('option:selected').each(function() {
+            pid = $(this).data('value');
+            pname = $(this).data('name');
+            $("#radiolist").append('<input type="radio" name="primaryname" id="'+pid+'" value="'+pid+'"><label for="'+pid+'"> '+pname+'</label><br>');
+        });
+      $("#cname").append('Choose Any one primary personnel');
+           
+    });
  
  </script>
 @endsection

@@ -1074,6 +1074,7 @@ class SchedulerController extends Controller
        $auth_id = auth()->user()->id;
        $pid = Quote::select('personnelid')->where('id', $request->id)->first();
        $allworker = Personnel::where('userid', $auth_id)->where('id','!=',$pid->personnelid)->get();
+       $workerdata = Personnel::select('personnelname')->where('userid', $auth_id)->where('id',$pid->personnelid)->first();
        $html ='<div class="add-customer-modal d-flex justify-content-between">
                   <h6>Assign Ticket to Personnel</h6><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>';
@@ -1085,10 +1086,11 @@ class SchedulerController extends Controller
             <select class="selectpicker form-control" data-live-search="true" multiple="" data-placeholder="Select Personnel" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="personnelid[]" id="personnelid" required="">';
 
               foreach($allworker as $key => $value) {
-                $html .='<option value="'.$value->id.'">'.$value->personnelname.'</option>';
+                $html .='<option value="'.$value->id.'" data-value="'.$value->id.'" data-name="'.$value->personnelname.'">'.$value->personnelname.'</option>';
               }
         $html .='</select>
-          </div>';
+          </div><div id="cname">Choose Any one primary personnel</div><input type="radio" name="primaryname" id="'.$pid->personnelid.'" value="'.$pid->personnelid.'" checked style="position: absolute;right: 44%;top: 37%;width: 100%;"><label for="'.$pid->personnelid.'" style="position: relative;left: 19px;"> '.$workerdata->personnelname.'</label><div class="col-lg-12 mt-4" id="radiolist"></div>';
+
           
           $html .= '<div class="col-lg-6 mb-2 mt-4">
             <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
@@ -1104,6 +1106,7 @@ class SchedulerController extends Controller
 
     public function ticketadded(Request $request)
     {
+
       $quote = Quote::where('id', $request->quoteid)->first();
       // $qpid = $quote->personnelid;
       // $pids = $request->personnelid;
@@ -1135,6 +1138,7 @@ class SchedulerController extends Controller
         $data['givendate'] = $quote->givendate;
         $data['givenstartdate'] = $quote->givenstartdate;
         $data['givenenddate'] = $quote->givenenddate;
+        $data['primaryname'] = $request->primaryname;
         $data['ticket_status'] = 2;
         Quote::create($data);
       } 
