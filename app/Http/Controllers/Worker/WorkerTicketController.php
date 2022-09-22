@@ -124,6 +124,8 @@ class WorkerTicketController extends Controller
 
     public function update(Request $request)
     {
+        $personeldata =Quote::select('quote.personnelid','personnel.personnelname')->leftjoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id', $request->ticketid)->get()->first();
+
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
         $currentDate = date('l - F d, Y');
@@ -167,7 +169,7 @@ class WorkerTicketController extends Controller
           
           $user_exist = DB::table('users')->select('email','firstname')->where('id',$ticket->userid)->first();
           $ticketid ='#'.$request->ticketid;
-          $ticketsub = "Ticket($ticketid) has been picked";
+          $ticketsub = "Ticket $ticketid picked up by $personeldata->personnelname";
           $ticketheading = "The ticket below has been picked successfully.";
 
           Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {
@@ -221,7 +223,7 @@ class WorkerTicketController extends Controller
             
             $user_exist = DB::table('users')->select('email','firstname')->where('id',$ticket->userid)->first();
             $ticketid ='#'.$request->ticketid;
-            $ticketsub = "Ticket($ticketid) has been completed";
+            $ticketsub = "Ticket $ticketid has been closed";
             $ticketheading = "The ticket below has been completed successfully.";
             
             Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {
@@ -262,8 +264,8 @@ class WorkerTicketController extends Controller
     public function update1(Request $request)
     {
 
+       $personeldata =Quote::select('quote.personnelid','personnel.personnelname')->leftjoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id', $request->ticketid)->get()->first();
 
-      //dd($request->all());
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
         $currentDate = date('l - F d, Y');
@@ -309,8 +311,10 @@ class WorkerTicketController extends Controller
           $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
 
           $user_exist = DB::table('users')->select('email','firstname')->where('id',$ticket->userid)->first();
+
+
           $ticketid ='#'.$request->ticketid;
-          $ticketsub = "Ticket($ticketid) has been picked";
+          $ticketsub = "Ticket $ticketid picked up by $personeldata->personnelname";
           $ticketheading = "The ticket below has been picked successfully.";
 
           Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {
@@ -382,7 +386,7 @@ class WorkerTicketController extends Controller
 
             $user_exist = DB::table('users')->select('email','firstname')->where('id',$ticket->userid)->first();
             $ticketid ='#'.$request->ticketid;
-            $ticketsub = "Ticket($ticketid) has been completed";
+            $ticketsub = "Ticket $ticketid has been closed";
             $ticketheading = "The ticket below has been completed successfully.";
 
             Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {

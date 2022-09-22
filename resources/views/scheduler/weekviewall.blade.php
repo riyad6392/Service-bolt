@@ -413,9 +413,11 @@ span.closeon i {
     z-index: 99;
 }
 .fc-time-grid .fc-bgevent, .fc-time-grid .fc-event {
-    border-radius: 12px!important;
+    border-radius: 5px!important;
  
     padding: 4px!important;
+     margin-right: 1px;
+    margin-left: 1px;
 }
 th.fc-resource-cell {
    
@@ -1145,6 +1147,8 @@ background: transparent!important;
             eventOverlap: true,
             firstDay:1,
             groupByResource: true,
+             slotEventOverlap:false,
+                
            // defaultEventMinutes: 30, 
             //defaultTimedEventDuration: '01:00',
             //forceEventDuration: true,
@@ -1216,7 +1220,7 @@ background: transparent!important;
                   placement: 'right',
                   html:true,
                   sanitize:false,
-                  content: '<div class="popover-design"><div class="row"><div class="col-md-7"><p>'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class=" icon-btn" id="closeonDelete" data-id="'+event.id+'"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+                  content: '<div class="popover-design"><div class="row"><div class="col-md-7"><p>'+event.status+'</p><p>'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class=" icon-btn" id="closeonDelete" data-id="'+event.id+'"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
                   container:'body',
                   trigger:'click',
                 });

@@ -1529,7 +1529,19 @@ class SchedulerController extends Controller
                     $ids=$row->parentid;
 
                 }
+             $ticket_status = "";
 
+            if($row->ticket_status == 4) {
+                $ticket_status = "Picked";
+            }
+
+            if($row->ticket_status == 3) {
+                $ticket_status = "Completed";
+            }
+
+            if($row->ticket_status == 2) {
+                $ticket_status = "Assigned";
+            }   
             //echo $startdatetime; 2022-09-15 08:00
 
             //dd($enddatetime);2022-09-15 20:00
@@ -1540,6 +1552,7 @@ class SchedulerController extends Controller
                     'end' => $enddatetime,
                     'resourceId'=>$row->personnelid,
                     'backgroundColor'   => $row->bgcolor,
+                    'status'   => $ticket_status,
 
                 );
             //}
@@ -1628,6 +1641,20 @@ class SchedulerController extends Controller
                 $ids=$row->parentid;
 
             }
+            $ticket_status = "";
+
+            if($row->ticket_status == 4) {
+                $ticket_status = "Picked";
+            }
+
+            if($row->ticket_status == 3) {
+                $ticket_status = "Completed";
+            }
+
+            if($row->ticket_status == 2) {
+                $ticket_status = "Assigned";
+            }
+
             //echo $enddatetime; die;
             //echo $startdatetime; 2022-09-15 08:00
 
@@ -1642,7 +1669,8 @@ class SchedulerController extends Controller
                     'start'   => $startdatetime,
                     'end' => $enddatetime,
                     'resourceId'=>$value,
-                    'backgroundColor'   => $row->color
+                    'backgroundColor'   => $row->color,
+                    'status' => $ticket_status,
 
                 );
             }
