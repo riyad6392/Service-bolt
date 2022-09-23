@@ -302,12 +302,12 @@ Service Report</div>
  <input type="hidden" name="phiddenid" id="phiddenid" value="">
 <div class="col-md-3">
    <div class="side-h3">
-     <select class="form-select puser" name="pid" id="pid" required="">
+    <select class="form-select puser" name="pid" id="pid" required="">
        <option value="All"> All </option>
        @foreach($pdata as $key => $value)
             <option value="{{$value->id}}" @if(@$personnelid ==  $value->id) selected @endif> {{$value->personnelname}}</option>
             @endforeach
-                 </select>
+    </select>
    </div>
 </div>
   </form>
@@ -473,7 +473,12 @@ Service Report</div>
                                 @endphp
                                 @foreach($tickedatadetailsdata as $key=>$value)
                                     @php
+                                      $ids=$value->id;
+                                        if(!empty($value->parentid))
+                                        {
+                                            $ids=$value->parentid;
 
+                                        }
                                       $explode_id = explode(',', $value->serviceid);
                                       $servicedata = App\Models\Service::select('servicename','price')
                                         ->whereIn('services.id',$explode_id)->get();
@@ -581,7 +586,7 @@ Service Report</div>
                                     @endphp
                                     <tr style="font-size: 17px; border:none; background:white;">
                                         <td>{{$value->ticketdate}}</td>
-                                        <td>{{$value->id}}</td>
+                                        <td>{{$ids}}</td>
                                         <td >{{Str::limit(@$servname, 20)}}</td>
                                         <td>{{Str::limit(@$productname, 20)}}</td>
                                         <td>${{@$ttlflat}}</td>

@@ -632,10 +632,20 @@ class SchedulerController extends Controller
                 }
             }
 
+        $quoteprimarydata= Quote::select('primaryname')->where('id',$quoteid)->first();
+        
+        if($quoteprimarydata->primaryname==null) {
+            DB::table('quote')->where('id','=',$quoteid)
+          ->update([ 
+              "ticket_status"=>"$tstatus","giventime"=>"$time","givenendtime"=>"$endtime","givendate"=>"$date","givenstartdate"=>"$request->date","givenenddate"=>"$givenenddate","personnelid"=>"$workerid","primaryname"=>"$workerid","created_at"=>"$created_at"
+          ]);
+        } else {
+
         DB::table('quote')->where('id','=',$quoteid)
           ->update([ 
               "ticket_status"=>"$tstatus","giventime"=>"$time","givenendtime"=>"$endtime","givendate"=>"$date","givenstartdate"=>"$request->date","givenenddate"=>"$givenenddate","personnelid"=>"$workerid","created_at"=>"$created_at"
           ]);
+      }
 
         $appnotifiction = AppNotification::where('pid',$workerid)->where('ticketid',$quoteid)->get(); 
         //if(count($appnotifiction)==0) {
@@ -842,7 +852,8 @@ class SchedulerController extends Controller
         $tstatus = 1;
         DB::table('quote')->where('id','=',$ticketid)
           ->update([ 
-              "ticket_status"=>"$tstatus"
+              "ticket_status"=>"$tstatus",
+              "primaryname"=>null              
           ]);
         
         DB::table('quote')->where('parentid',$ticketid)->delete();
@@ -1089,7 +1100,7 @@ class SchedulerController extends Controller
                 $html .='<option value="'.$value->id.'" data-value="'.$value->id.'" data-name="'.$value->personnelname.'">'.$value->personnelname.'</option>';
               }
         $html .='</select>
-          </div><div id="cname">Choose Any one primary personnel</div><input type="radio" name="primaryname" id="'.$pid->personnelid.'" value="'.$pid->personnelid.'" checked style="position: absolute;right: 44%;top: 37%;width: 100%;"><label for="'.$pid->personnelid.'" style="position: relative;left: 19px;"> '.$workerdata->personnelname.'</label><div class="col-lg-12 mt-4" id="radiolist"></div>';
+          </div><div id="cname">Choose Any one primary personnel</div><div style="display:flex;align-items: center;"><input type="radio" name="primaryname" id="'.$pid->personnelid.'" value="'.$pid->personnelid.'" checked><label for="'.$pid->personnelid.'" style="position: relative;"> '.$workerdata->personnelname.'</label></div><div class="col-lg-12" id="radiolist"></div>';
 
           
           $html .= '<div class="col-lg-6 mb-2 mt-4">
@@ -1108,6 +1119,8 @@ class SchedulerController extends Controller
     {
 
       $quote = Quote::where('id', $request->quoteid)->first();
+      $quote->primaryname =$request->primaryname;
+      $quote->save();
       // $qpid = $quote->personnelid;
       // $pids = $request->personnelid;
       // array_push($pids,$qpid);
@@ -1139,7 +1152,7 @@ class SchedulerController extends Controller
         $data['givenstartdate'] = $quote->givenstartdate;
         $data['givenenddate'] = $quote->givenenddate;
         $data['primaryname'] = $request->primaryname;
-        $data['ticket_status'] = 2;
+        $data['ticket_status'] = $quote->ticket_status;
         Quote::create($data);
       } 
       
