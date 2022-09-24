@@ -220,12 +220,21 @@ class UserController extends Controller
 
         $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
 
-        $todayservicecall = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',['2','3','4'])->whereDate('created_at', Carbon::today())->limit('2')->orderBy('id','DESC')->get();
+        $todayservicecall = DB::table('quote')
+                            ->select("*",
+                                \DB::raw('(CASE 
+                                    WHEN quote.parentid = "0" THEN quote.id 
+                                    ELSE quote.parentid 
+                                    END) AS id'))->where('personnelid',$worker->workerid)->whereIn('ticket_status',['2','3','4'])->whereDate('created_at', Carbon::today())->limit('2')->orderBy('id','DESC')->get();
 
         $customerData = DB::table('quote')->select('quote.*', 'customer.id','customer.phonenumber','customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status','2')->limit('2')->orderBy('quote.id','DESC')->get();
 
         $todaydate = date('l - F d, Y');
-        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.servicename', '=', 'quote.servicename')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color',
+                                \DB::raw('(CASE 
+                                    WHEN quote.parentid = "0" THEN quote.id 
+                                    ELSE quote.parentid 
+                                    END) AS id'))->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.servicename', '=', 'quote.servicename')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
                 
         return response()->json(['status'=>1,'message'=>'success','todayticket'=>$todayservicecall,'customerData'=>$customerData,'scheduleData'=>$scheduleData],$this->successStatus);
     }
@@ -235,7 +244,14 @@ class UserController extends Controller
         $auth_id = $user->id;
 
         $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first(); 
-        $ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('2','4'))->get();
+        //$ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('2','4'))->get();
+        
+        $ticketdata = DB::table('quote')
+            ->select("*",
+            \DB::raw('(CASE 
+                WHEN quote.parentid = "0" THEN quote.id 
+                ELSE quote.parentid 
+                END) AS id'))->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',array('2','4'))->get();
 
         if ($ticketdata) {
                 return response()->json(['status'=>1,'message'=>'success','data'=>$ticketdata],$this->successStatus);
@@ -249,7 +265,12 @@ class UserController extends Controller
         $auth_id = $user->id;
 
         $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first(); 
-        $ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('3'))->get();
+        $ticketdata = DB::table('quote')
+            ->select("*",
+            \DB::raw('(CASE 
+                WHEN quote.parentid = "0" THEN quote.id 
+                ELSE quote.parentid 
+                END) AS id'))->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('3'))->get();
 
         if ($ticketdata) {
                 return response()->json(['status'=>1,'message'=>'success','data'=>$ticketdata],$this->successStatus);
@@ -537,7 +558,11 @@ class UserController extends Controller
         
         $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
 
-        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.servicename', '=', 'quote.servicename')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$date)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color',
+            \DB::raw('(CASE 
+                WHEN quote.parentid = "0" THEN quote.id 
+                ELSE quote.parentid 
+                END) AS id'))->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.servicename', '=', 'quote.servicename')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$date)->orderBy('quote.id','ASC')->get();
                 
         return response()->json(['status'=>1,'message'=>'success','scheduleData'=>$scheduleData],$this->successStatus);
     }
