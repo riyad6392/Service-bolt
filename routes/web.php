@@ -318,7 +318,11 @@ Route::group([
 
     Route::any('/billing/paynow/', [BillingController::class, 'paynow'])->name('paynow');
 
+    Route::any('/billing/directpaynow/', [BillingController::class, 'directpaynow'])->name('directpaynow');
+
     Route::any('/billing/update', [BillingController::class, 'update'])->name('mybillingupdate');
+
+    Route::any('/billing/directicketsave', [BillingController::class, 'directicketsave'])->name('mybillingdirecticketsave');
 
      Route::any('/billing/savefieldbilling', [BillingController::class, 'savefieldbilling'])->name('savefieldbilling');
 

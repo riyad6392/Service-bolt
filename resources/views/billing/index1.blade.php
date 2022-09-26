@@ -90,7 +90,13 @@
       <tr class="" target="{{$i}}" data-id="{{$value->id}}">
       <td>{{$value->date}}</td>
       <td>{{$value->customername}}</td>
-      <td>{{$value->personnelname}}</td>
+      <td>
+        @if($value->personnelname!="")
+        {{$value->personnelname}}
+        @else
+        --
+        @endif
+      </td>
         <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
         <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
         <td><a href="{{url('company/billing/billingview/')}}/{{$value->date}}" class="user-hover" style="color:#29DBBA;">View</a></td>
@@ -224,7 +230,7 @@
       @endif
      @endif
     
-     <form class="form-material m-t-40 row form-valide" method="post" action="{{route('company.paynow')}}" enctype="multipart/form-data">
+     <form class="form-material m-t-40 row form-valide" method="post" action="{{route('company.directpaynow')}}" enctype="multipart/form-data">
         @csrf
         @php
       if(count($customer)>0) {

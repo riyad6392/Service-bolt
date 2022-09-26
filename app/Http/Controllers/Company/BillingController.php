@@ -50,8 +50,8 @@ class BillingController extends Controller
       $totalbillingData = DB::table('quote')
         ->select(DB::raw('etc as date'),'customer.customername','personnel.personnelname', DB::raw('sum(price) as totalprice'),'quote.id')
         ->join('customer', 'customer.id', '=', 'quote.customerid')
-        ->join('personnel', 'personnel.id', '=', 'quote.personnelid')
-        ->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")
+        ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
+        ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])
         ->groupBy(DB::raw('date') )
         ->get();
        //dd($totalbillingData);
@@ -129,6 +129,7 @@ class BillingController extends Controller
       return view('billing.paynow',compact('ticketID','quoteData','paymentpaid','customerid','customername','customer','price','servicename','productname')); 
     }
 
+    
     public function billingview(Request $request ,$date) {
         $auth_id = auth()->user()->id;
         if(auth()->user()->role == 'company') {
@@ -139,7 +140,7 @@ class BillingController extends Controller
          $sdate = strtotime($date);
          $datef = date('l - F d, Y',$sdate);
          
-        $billingData = DB::table('quote')->select('quote.id','quote.serviceid','quote.price','quote.givendate','quote.etc','quote.payment_status','quote.personnelid', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->where('quote.etc',$date)->orderBy('quote.id','desc')->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.serviceid','quote.price','quote.givendate','quote.etc','quote.payment_status','quote.personnelid', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])->where('quote.etc',$date)->orderBy('quote.id','desc')->get();
 
         $table="quote";
         $fields = DB::getSchemaBuilder()->getColumnListing($table);
@@ -154,7 +155,7 @@ class BillingController extends Controller
 
       if($targetid == 0) {
         $auth_id = auth()->user()->id;
-        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->where('quote.etc',$request->date)->orderBy('quote.id','asc')->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])->where('quote.etc',$request->date)->orderBy('quote.id','asc')->get();
         
         $countdata = count($billingData);
        // dd($billingData);
@@ -234,7 +235,7 @@ class BillingController extends Controller
           </div>
         </div>';
       } else {
-        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_status','quote.payment_mode','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_status','quote.payment_mode','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
         $url = url('/').'/company/billing/downloadinvoice/'.$billingData[0]->id;
         if($billingData[0]->image!=null) {
         $imagepath = url('/').'/uploads/services/'.$billingData[0]->image;
@@ -554,9 +555,76 @@ class BillingController extends Controller
         // dd($pdf);
  
          return $pdf->download($id .'_invoice.pdf');
+    }
 
+    public function directpaynow(Request $request)
+    {
+      $customer = Customer::select('id','customername')->where('id',$request->customerid)->first();
+      
+      $amount =$request->price;
+      $customerid = $request->customerid;
+      if(isset($request->servicename)){
+      $serviceidarray = $request->servicename;
+      $servicedetails = Service::select('servicename')->whereIn('id', $serviceidarray)->get();
+      foreach ($servicedetails as $key => $value) {
+        $sname[] = $value['servicename'];
+      } 
+      
+      $servicename = implode(',', $sname);
+      $serviceid = implode(',', $serviceidarray);
+      } else {
+        $servicename = "";
+        $serviceid = "";
+      }
+
+      if(isset($request->productname)){
+        $pidarray = $request->productname;
+        $pdetails = Inventory::select('productname','id')->whereIn('id', $pidarray)->get();
+        foreach ($pdetails as $key => $value) {
+          $pname[] = $value['productname'];
+        }
+
+        $productname = implode(',', $pname);
+        $pid = implode(',', $pidarray);
+      } else {
+        $productname = "";
+        $pid = "";
+      }
+      return view('billing.directpaynow',compact('customerid','customer','amount','servicename','productname','serviceid','pid')); 
+    }
+
+
+    public function directicketsave(Request $request)
+    {
+      
+          $auth_id = auth()->user()->id;
+          $etc = date('Y-m-d');
+
+           $id = DB::table('quote')->insertGetId([
+            'userid' => $auth_id,
+            'customerid' => $request->customerid,
+            'customername' => $request->customername,
+            'price' => $request->amount,
+            'radiogroup' => 'flatrate',
+            'frequency' => 'One Time',
+            'payment_mode' => $request->method,
+            'ticket_status' => "5",
+            'etc' => $etc,
+            'serviceid' => $request->sid,
+            'product_id' => $request->pid
+          ]);
+
+          DB::table('balancesheet')->insertGetId([
+            'userid' => $auth_id,
+            'ticketid' => $id,
+            'amount' => $request->amount,
+            'customername' => $request->customername,
+            'paymentmethod' => $request->method,
+            'status' => "Completed"
+        ]);
+        $request->session()->flash('success', 'Payment Completed Successfully');
         
-     
+        return redirect('/company/billing');
     }
 
 }

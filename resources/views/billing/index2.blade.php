@@ -89,7 +89,13 @@
         <input type="hidden" name="personnelid" id="personnelid" value="{{$value->personnelid}}">
         <td>{{$value->customername}}</td>
         <td>{{number_format((float)$value->price, 2, '.', '')}}</td>
-        <td>{{$value->personnelname}}</td>
+        <td>
+          @if($value->personnelname!="")
+            {{@$value->personnelname}}
+           @else
+            --
+          @endif
+        </td>
         <td>
           View
         </td>

@@ -480,7 +480,11 @@
                         </label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]" value="{{@$commissiondata[$key][$value->servicename]}}">
+                            @if($commissiondata!="")
+                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]" value="{{@$commissiondata[$key][$value->servicename]}}">
+                            @else
+                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="amountvalue[]" value="">
+                            @endif
                         </div>
                     </li>
                 @endforeach
@@ -529,7 +533,12 @@
                 <span class="checkmark"></span>
                 </label>
                <div class="input-group mb-3">
-                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="percentvalue[]" value="{{@$commissionpdata[$key][$value->servicename]}}"><span class="input-group-text">%</span>
+                @if($commissionpdata!="")
+                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="percentvalue[]" value="{{@$commissionpdata[$key][$value->servicename]}}">
+                @else
+                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="percentvalue[]" value="">
+                @endif
+                    <span class="input-group-text">%</span>
                 </div>
             </li>
             @endforeach
@@ -657,7 +666,7 @@
                 <span class="checkmark"></span>
                 </label>
                <div class="input-group mb-3">
-                @if(@$commissiondata!="")
+                @if(@$commissionpdata!="")
                 <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="percentvalue[]" value="{{@$commissionpdata[$key][$value->servicename]}}">
                     @else
                     <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="percentvalue[]" value="">
