@@ -81,12 +81,14 @@ class CommissionController extends Controller
         foreach($services as $key=>$value) {
             $servrname[] = $value->servicename;
         }
+        if(count($products)  > 0) {
         foreach($products as $key1=>$value1) {
             $productname[] = $value1->productname;
         }
-
         $mainarray = array_merge($servrname,$productname);    
-      
+      } else {
+        $mainarray = $servrname;
+      }
       $iscomisiondata = PaymentSetting::where('uid',$auth_id)->whereNull('pid')->get();
        if(count($iscomisiondata) >= 1) {
         PaymentSetting::where('uid',$auth_id)->whereNull('pid')->delete();

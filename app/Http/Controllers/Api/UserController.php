@@ -527,7 +527,7 @@ class UserController extends Controller
         }
 
         $customerAddress = Address::where('customerid',$customerid)->get();
-        $recentTicket = Quote::where('customerid',$customerid)->where('givendate','!=',null)->orderBy('id','DESC')->get();
+        $recentTicket = Quote::where('customerid',$customerid)->where('personnelid','!=',null)->where('parentid','=',"")->where('givendate','!=',null)->orderBy('id','DESC')->get();
 
         if ($customerData) {
                 return response()->json(['status'=>1,'message'=>'success','customerData'=>$data1,'connectedAddress'=>$customerAddress,'recentTickets'=>$recentTicket],$this->successStatus);
@@ -589,6 +589,11 @@ class UserController extends Controller
         if($quoteData){
            $quoteData->ticket_status = "3";
            $quoteData->save();
+           $ticket1 = Quote::where('parentid', $ticketId)->get()->first();
+           if($ticket1!=null || $ticket1!="") {
+                $ticket1->ticket_status = 3;
+                $ticket1->save();
+           }
            return response()->json(['status'=>1,'message'=>'Ticket Completed successfully'],$this->successStatus);
         } else {
             return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
@@ -617,6 +622,14 @@ class UserController extends Controller
         if($quoteData) {
                 $quoteData->ticket_status = "4";
                 $quoteData->save();  
+                $ticket1 = Quote::where('parentid', $ticketId)->get()->first();
+                  //new logic
+                  if($ticket1!=null || $ticket1!="") {
+                    $ticket1->ticket_status = 4;
+                    $ticket1->save();
+                  }
+
+
                 return response()->json(['status'=>1,'message'=>'Ticket Pickup successfully'],$this->successStatus);
         } else {
             return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);

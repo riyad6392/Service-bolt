@@ -1057,15 +1057,19 @@ class PersonnelController extends Controller
             $servrname[] = $value->servicename;
             $sid[] = $value->id;
         }
-
-        foreach($products as $key1=>$value1) {
+        if(count($products) > 0) {
+          foreach($products as $key1=>$value1) {
             $productname[] = $value1->productname;
             $pid[] = $value1->id;
+          }
+          $mainarray = array_merge($servrname,$productname);
+          $mainarray1 = array_merge($sid,$pid); 
+        } else {
+          $mainarray = array_merge($servrname);
+          $mainarray1 = array_merge($sid); 
         }
-
-
-        $mainarray = array_merge($servrname,$productname);
-        $mainarray1 = array_merge($sid,$pid);  
+        
+         
 
         $paymentSetting = new PaymentSetting;
         $paymentSetting->uid = $auth_id;
@@ -1106,6 +1110,7 @@ class PersonnelController extends Controller
               array_push($datajsonp,$jsonaary);
             }
             $datajsonpp = array();
+            if(count($products) > 0) {
             foreach($pid as $key=>$value) {
               $jsonaary =array(
                   "id"=>"{$value}",
@@ -1113,6 +1118,7 @@ class PersonnelController extends Controller
                 );
               array_push($datajsonpp,$jsonaary);
             }
+          }
 
             $paymentSetting->contentcommission=json_encode(array('service'=>$datajsonp,'product'=>$datajsonpp));
             $paymentSetting->content=json_encode($datajson);
@@ -1170,6 +1176,7 @@ class PersonnelController extends Controller
             array_push($datajsonp1,$jsonaary);
           }
           $datajsonpp2 = array();
+          if(count($products) > 0) {
           foreach($pid as $key=>$value1) {
             $jsonaary =array(
                 "id"=>"{$value1}",
@@ -1177,6 +1184,7 @@ class PersonnelController extends Controller
               );
             array_push($datajsonpp2,$jsonaary);
           }
+        }
 
             $paymentSetting4->contentcommission=json_encode(array('service'=>$datajsonp1,'product'=>$datajsonpp2));
 

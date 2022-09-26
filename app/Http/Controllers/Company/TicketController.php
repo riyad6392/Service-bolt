@@ -569,7 +569,7 @@ class TicketController extends Controller
         
       Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
-          ->subject('Service Quote from '. auth()->user()->companyname);
+          ->subject('Service Ticket from '. auth()->user()->companyname);
           $message->from($app_email,$app_name);
         });
         

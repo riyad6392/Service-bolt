@@ -287,9 +287,7 @@ Service Report</div>
       @csrf
 
   <div class="row">
-      
-
-      <div class="col-md-3" style="padding:7px;">
+    <div class="col-md-3" style="padding:7px;">
      <label style="visibility:hidden;">Select Date Range</label>
      <input type="date" id="since" name="since" value="" class="form-control date1">
    </div>
