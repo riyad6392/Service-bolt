@@ -916,7 +916,7 @@ class TicketController extends Controller
             <label>Frequency:&nbsp;</label>'.$quotedetails[0]->frequency.'
           </div>
           <div class="col-md-12 mb-2">
-            <label>Default Time: &nbsp;</label>'.$quotedetails[0]->time.'
+            <label>Default Time: &nbsp;</label>'.$quotedetails[0]->time.' '.$quotedetails[0]->minute.'
             
           </div>
           <div class="col-md-12 mb-3">
@@ -1062,6 +1062,28 @@ class TicketController extends Controller
     return  json_encode(array('status'=>'success','msg'=>'Address Not Found'));
     }
     return  json_encode(array('status'=>'failed'));
+   }
+
+   public function ticketdetail(Request $request)
+   {
+    $auth_id = auth()->user()->id;
+    $allservices = Service::where('userid', $auth_id)->get();
+    $allworker = Personnel::where('userid', $auth_id)->get();
+
+    $quotedetails = Quote::where('id', $request->id)->get();
+
+    $serviceid = explode(',', $quotedetails[0]->serviceid);
+
+    $servicedetails = Service::select('servicename')->whereIn('id', $serviceid)->get();
+
+    foreach ($servicedetails as $key => $value) {
+    $sname[] = $value['servicename'];
+    } 
+    $servicename = implode(',', $sname);
+
+    $allcustomer = Customer::where('userid', $auth_id)->get();
+    
+    return view('ticket.ticketview',compact('quotedetails','servicename','allcustomer'));
    }
 
 }

@@ -730,6 +730,11 @@ Map / Directions</a>
     @endif
     <div class="col-md-6">
       <div>
+        <p>Time: {{$quoteData->time}} {{$quoteData->minute}}</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div>
         <p>Price: ${{$quoteData->price}}</p>
       </div>
     </div>

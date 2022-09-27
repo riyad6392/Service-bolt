@@ -152,8 +152,12 @@
               } else {
                 $submittedby = "-";
               }
+              $rejectedcolor = "";
+              if($value->status == "Rejected") {
+                $rejectedcolor = "red";
+              }
             @endphp
-            <tr>
+            <tr style="color:{{$rejectedcolor}}">
               <td style="display: none;">{{$value->id}}</td>
               <td>{{$value->personnelname}}</td>
               <td>{{--$value->date1--}}{{$value->counttotal}} Day

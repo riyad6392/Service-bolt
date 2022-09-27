@@ -1100,7 +1100,7 @@ class SchedulerController extends Controller
                 $html .='<option value="'.$value->id.'" data-value="'.$value->id.'" data-name="'.$value->personnelname.'">'.$value->personnelname.'</option>';
               }
         $html .='</select>
-          </div><div id="cname">Choose Any one primary personnel</div><div style="display:flex;align-items: center;"><input type="radio" name="primaryname" id="'.$pid->personnelid.'" value="'.$pid->personnelid.'" checked><label for="'.$pid->personnelid.'" style="position: relative;"> '.$workerdata->personnelname.'</label></div><div class="col-lg-12" id="radiolist"></div>';
+          </div><div id="cname">Choose any one primary member</div><div style="display:flex;align-items: center;"><input type="radio" name="primaryname" id="'.$pid->personnelid.'" value="'.$pid->personnelid.'" checked><label for="'.$pid->personnelid.'" style="position: relative;"> '.$workerdata->personnelname.'</label></div><div class="col-lg-12" id="radiolist"></div>';
 
           
           $html .= '<div class="col-lg-6 mb-2 mt-4">
@@ -1591,8 +1591,8 @@ class SchedulerController extends Controller
         $fulldate = Carbon::createFromFormat('Y-m-d', $date)->format('l - F d, Y');
         
         $newdate = Carbon::createFromFormat('l - F d, Y', $fulldate)->format('Y-m-d');
-        
-        \DB::enableQueryLog(); 
+        //echo $newdate; die;
+        //\DB::enableQueryLog(); 
         $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givenenddate','>=',$newdate)->where('quote.givenstartdate','<=',$newdate)->orderBy('quote.id','ASC')->get();
         //dd(\DB::getQueryLog());
 
@@ -1636,6 +1636,14 @@ class SchedulerController extends Controller
                     if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
                         if($hours > $ticketdifferncetime) {
                             
+                            if($newdate > $row->givenstartdate) {
+                                $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$auth_id)->first();
+                                $openingtime = $closingtime->openingtime;
+                                $openingtime = $openingtime.':00';
+
+                                $startdatetime = $newdate.' '.$openingtime;  
+                            }
+
                             $nextdaytime = $hours - $ticketdifferncetime; 
                             //echo $nextdaytime; die;
                             $enddatetime = $this->getendtimecalculation($newdate,$nextdaytime,$minutes,$givenenddate);

@@ -68,11 +68,10 @@ class HomeController extends Controller
         $customerData = DB::table('quote')->select('quote.*', 'customer.id','customer.phonenumber','customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status', '!=' ,'0')->where('quote.ticket_status', '!=' ,'1')->limit('2')->orderBy('quote.id','DESC')->get();
 
         //$ticket = DB::table('quote')->select('product_id')->where('userid',$auth_id)->get();
+
         $inventoryinfo = DB::table('quote')
                  ->select('quote.product_id','quote.product_name', DB::raw('count(*) as total'),'products.pquantity','products.quantity')->join('products', 'products.id', '=', 'quote.product_id')->where('quote.userid',$auth_id)->where('quote.product_name', '!=',"")->limit(3)->orderBy('quote.product_id','DESC')
                  ->groupBy('quote.product_name')->get();
-                 //'quote.product_id'
-                // dd($inventoryinfo);   
         $serviceinfo = DB::table('quote')
                  ->select('quote.serviceid','services.servicename','services.color', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
                  ->orderBy('total','DESC')
@@ -90,7 +89,7 @@ class HomeController extends Controller
         } else {
           $dailyprogress = 0;
         }
-        return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct'));
+        return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData'));
     }
 
     public function index1(Request $request)
@@ -107,6 +106,25 @@ class HomeController extends Controller
         $dateE = Carbon::now();
         $ticket = DB::table('quote')->where('userid',$auth_id)->where('ticket_status', '!=' ,'0')->limit('3')->orderBy('id','DESC')->get();
         
+        $inventoryData = Inventory::where('user_id',$auth_id)->get();
+        $goodproduct =  array();
+        $lowproduct =  array();
+        $restockproduct =  array();
+        foreach($inventoryData as $key =>$value) {
+            $fifypercent = $value->pquantity*50/100;
+            $twentyfivepercent = $value->pquantity*25/100;
+            
+            if($value->quantity>=$fifypercent) {
+                $goodproduct[] = $value->productname;
+            }
+            elseif($value->quantity>=$twentyfivepercent) {
+                $lowproduct[] = $value->productname;
+            }
+            elseif($value->quantity<=$twentyfivepercent) {
+                $restockproduct[] = $value->productname;
+            }
+        }
+
         $customerData = DB::table('quote')->select('quote.*', 'customer.id','customer.phonenumber','customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status', '!=' ,'0')->where('quote.ticket_status', '!=' ,'1')->limit('2')->orderBy('quote.id','DESC')->get();
 
         //$ticket = DB::table('quote')->select('product_id')->where('userid',$auth_id)->get();
@@ -115,7 +133,7 @@ class HomeController extends Controller
                  ->groupBy('quote.product_name')
                  ->get();     
         $serviceinfo = DB::table('quote')
-                 ->select('quote.serviceid','services.servicename', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
+                 ->select('quote.serviceid','services.servicename','services.color', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
                  ->orderBy('total','DESC')
                  ->groupBy('quote.serviceid')
                  ->get();
@@ -131,7 +149,7 @@ class HomeController extends Controller
           $dailyprogress = 0;
         }
        
-        return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress'));
+         return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData'));
     }
 
     public function index2(Request $request) {

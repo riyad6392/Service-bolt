@@ -468,7 +468,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		    $i=1; break;
 		  @endphp
 		@endforeach</td>
-	  <td><a class="btn btn-edit p-3 w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$ticket->id}}">View</a>
+	  <td><a class="btn btn-edit p-3 w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$ticket->id}}" style="display: none;">View</a>
+	  	<a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" class="btn btn-edit p-3 w-auto">View</a>
 	 </td>
 	 </tr>
 	  	@php

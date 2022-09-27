@@ -60,7 +60,14 @@
           </thead>
           <tbody>
             @foreach($timeoff as $key => $value)
-              <tr>
+              @php
+                $rejectedcolor = "";
+                if($value->status == "Rejected")
+                {
+                  $rejectedcolor = "red";
+                }
+              @endphp
+              <tr style="color:{{$rejectedcolor}}">
                 <td style="display: none;">{{$value->id}}</td>
                 <td>{{-- $value->date --}}{{$value->counttotal}} Day
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none" class="sup-dot service_list_dot" xmlns="http://www.w3.org/2000/svg" data-bs-toggle="modal" data-bs-target="#date-list-dot" id="date_list_dot" data-id="{{$value->ids}}">

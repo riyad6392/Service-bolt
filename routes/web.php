@@ -250,6 +250,8 @@ Route::group([
      Route::any('/quote/sharequote', [TicketController::class, 'sharequote'])->name('sharequote');
      Route::any('/quote/customercreate', [TicketController::class, 'customercreate'])->name('customer.create');
      Route::any('/quote/checklatitude', [TicketController::class, 'checklati_long'])->name('checklati_long');
+     Route::any('/quote/ticketdetail/{id}', [TicketController::class, 'ticketdetail'])->name('ticketdetail');
+
     //Scheduler Listing
     Route::get('/scheduler', [SchedulerController::class, 'index'])->name('scheduler');
     Route::get('/schedulernew', [SchedulerController::class, 'indexnew'])->name('schedulernew');
