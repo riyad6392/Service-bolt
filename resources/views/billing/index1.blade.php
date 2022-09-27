@@ -255,7 +255,7 @@
     </div>
 
     <div class="col-md-12 mb-3">
-      <select class="selectpicker form-control" name="servicename[]" id="servicename" multiple aria-label="Default select example" data-live-search="true">
+      <select class="selectpicker form-control" name="servicename[]" id="servicename" multiple aria-label="Default select example" data-live-search="true" required>
         @foreach($services as $key =>$value)
         <option value="{{$value->id}}">{{$value->servicename}}</option>
         @endforeach

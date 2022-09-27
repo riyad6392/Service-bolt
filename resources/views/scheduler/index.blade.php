@@ -538,7 +538,7 @@ span.date-icon {
                                     @foreach($ticketData as $key => $value)
                                        @php
                                           $servicecolor = App\Models\Service::select('color')
-                                            ->where('services.servicename',$value->servicename)->get()->first();
+                                            ->where('services.id',$value->serviceid)->get()->first();
                                         @endphp
                                         <li class="inner red-slide">
                                             <div class='fc-event' style="background-color: {{$servicecolor->color}};" data-color='{{$servicecolor->color}}' data-id='{{$value->id}}' data-bs-toggle='modal' data-bs-target='#exampleModal' id="editsticket">

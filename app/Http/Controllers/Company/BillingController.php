@@ -155,7 +155,7 @@ class BillingController extends Controller
 
       if($targetid == 0) {
         $auth_id = auth()->user()->id;
-        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])->where('quote.etc',$request->date)->orderBy('quote.id','asc')->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid','quote.ticket_status', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])->where('quote.etc',$request->date)->orderBy('quote.id','asc')->get();
         
         $countdata = count($billingData);
        // dd($billingData);
@@ -173,6 +173,10 @@ class BillingController extends Controller
         $invoiceid = '#'.$billingData[$datacount]->invoiceid;
       } else {
         $invoiceid = "-";
+      }
+      $ticketstatus = "";
+      if($billingData[$datacount]->ticket_status==5) {
+        $ticketstatus = "(Direct Ticket)";
       }
 
      
@@ -196,7 +200,7 @@ class BillingController extends Controller
                 <div class="product-info-list">
                   <div class="mb-4">
                     <p class="number-1">Ticket Id</p>
-                    <h6 class="heading-h6">#'.$billingData[$datacount]->id.'</h6>
+                    <h6 class="heading-h6">#'.$billingData[$datacount]->id.' '.$ticketstatus.'</h6>
                     <input type="hidden" name="personnelid" id="personnelid" value="'.$billingData[$datacount]->personnelid.'">
                   </div>
                   <div class="mb-4">
@@ -248,6 +252,11 @@ class BillingController extends Controller
         $invoiceid = "-";
       }
       
+      $ticketstatus = "";
+      if($billingData[0]->ticket_status==5) {
+        $ticketstatus = "(Direct Tiket)";
+      }
+
       $pstatus = 'Completed';  
       if($billingData[0]->payment_status==null && $billingData[0]->payment_mode==null) {
           $pstatus = 'Pending';           
@@ -267,7 +276,7 @@ class BillingController extends Controller
                 <div class="product-info-list">
                   <div class="mb-4">
                     <p class="number-1">Ticket Id</p>
-                    <h6 class="heading-h6">#'.$billingData[0]->id.'</h6>
+                    <h6 class="heading-h6">#'.$billingData[0]->id.' '.$ticketstatus.'</h6>
                     <input type="hidden" name="personnelid" id="personnelid" value="'.$billingData[0]->personnelid.'">
                   </div>
                   <div class="mb-4">

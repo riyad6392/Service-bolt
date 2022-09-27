@@ -1474,7 +1474,7 @@ class SchedulerController extends Controller
         //dd($wids);
         $auth_id = auth()->user()->id;
         //->where('personnel.id','15')
-        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','personnel.color as bgcolor','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where(function($q) use($wids) {
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','personnel.color as bgcolor','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where(function($q) use($wids) {
             foreach($wids as $k => $v) {
                 $q->orwhereRaw("FIND_IN_SET({$v}, quote.personnelid)");
             }
@@ -1593,7 +1593,7 @@ class SchedulerController extends Controller
         $newdate = Carbon::createFromFormat('l - F d, Y', $fulldate)->format('Y-m-d');
         
         \DB::enableQueryLog(); 
-        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.servicename', '=', 'quote.servicename')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givenenddate','>=',$newdate)->where('quote.givenstartdate','<=',$newdate)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givenenddate','>=',$newdate)->where('quote.givenstartdate','<=',$newdate)->orderBy('quote.id','ASC')->get();
         //dd(\DB::getQueryLog());
 
         //($scheduleData);
