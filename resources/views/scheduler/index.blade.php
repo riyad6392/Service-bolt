@@ -1240,7 +1240,7 @@ span.date-icon {
                 var ticketid = eventid;
 
                 var workerid = event.resourceId;
-
+                
                 form_data = new FormData();
                 form_data.append('quoteid',ticketid);
                 form_data.append('time',giventime);
@@ -1327,7 +1327,7 @@ span.date-icon {
                 });
             },  
             eventDrop: function(event,delta, revertFunc, jsEvent, ui, view ) {
-                //console.log(event.start._d);
+                
                 var title = event.title.split("#");
                 var tid = title[1].split("\n");
                 var eventid = tid[0];
@@ -1349,12 +1349,24 @@ span.date-icon {
 
                     hours %= 12;
                     hours = hours || 12;    
-                    hours = hours < 10 ? `0${hours}` : hours;
-                    minutes = minutes < 10 ? `0${minutes}` : minutes;
+                    hours = hours < 10 ? `${hours}` : hours;
+                    minutes = minutes < 10 ? `${minutes}` : minutes;
 
                     var ticketid = ticketid;
                     var workerid = resourceId;
-                    var giventime = `${hours}:${minutes} ${ampm}`
+                    if(hours.length == 1) {
+                        var hours = `0${hours}`;
+                    } else {
+                        var hours = `${hours}`;
+                    }
+
+                    if(minutes.length == 1) {
+                        var minutes = `0${minutes}`;
+                    } else {
+                        var minutes = `${minutes}`;
+                    }
+
+                    var giventime = `${hours}:${minutes} ${ampm}`;
 
                     //var fulldate = "{{$requestdate}}";
                     var fulldate = moment(event.start._d).format('Y-MM-DD');
@@ -1368,17 +1380,30 @@ span.date-icon {
 
                     hours %= 12;
                     hours = hours || 12;    
-                    hours = hours < 10 ? `0${hours}` : hours;
-                    minutes = minutes < 10 ? `0${minutes}` : minutes;
+                    hours = hours < 10 ? `${hours}` : hours;
+                    minutes = minutes < 10 ? `${minutes}` : minutes;
 
                     var ticketid = ticketid;
                     var workerid = resourceId;
+                    
+                    if(hours.length == 1) {
+                        var hours = `0${hours}`;
+                    } else {
+                        var hours = `${hours}`;
+                    }
+
+                    if(minutes.length == 1) {
+                        var minutes = `0${minutes}`;
+                    } else {
+                        var minutes = `${minutes}`;
+                    }
+
                     var giventime = `${hours}:${minutes} ${ampm}`;
 
                     //var fulldate = "{{$requestdate}}";
                     var fulldate = moment(event.start._d).format('Y-MM-DD');
                 }
-
+                
                 form_data = new FormData();
                 form_data.append('quoteid',ticketid);
                 form_data.append('time',giventime);

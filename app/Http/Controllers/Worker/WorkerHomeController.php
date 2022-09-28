@@ -206,7 +206,7 @@ class WorkerHomeController extends Controller
                             <p>'.$value->servicename.'</p>
                             <p>Time : '.$value->giventime.' '.$givntime.'</p>
                             <div class="grinding" style="display:block;color: #fff;">
-                              <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <a href="#" class="btn btn-edit m-1 w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <circle cx="5" cy="5" r="5" fill="currentColor" style="display:none;">
                               </svg>'.$value->time.' '.$value->minute.'</a>
                               <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
