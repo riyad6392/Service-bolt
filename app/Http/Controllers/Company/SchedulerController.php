@@ -1862,7 +1862,7 @@ class SchedulerController extends Controller
         //end logic
        
 
-        DB::table('quote')->where('id','=',$quoteid)
+        DB::table('quote')->where('id','=',$quoteid)->orWhere('parentid','=',$quoteid)
           ->update([ 
               "giventime"=>"$time","givenendtime"=>"$request->endtime","time"=>"$hours","minute"=>"$minutes"
           ]);
