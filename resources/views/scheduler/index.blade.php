@@ -1240,7 +1240,10 @@ span.date-icon {
                 var ticketid = eventid;
 
                 var workerid = event.resourceId;
-                
+                // console.log(giventime);
+                // console.log('break');
+                // console.log(givenendtime);
+                // return false;
                 form_data = new FormData();
                 form_data.append('quoteid',ticketid);
                 form_data.append('time',giventime);

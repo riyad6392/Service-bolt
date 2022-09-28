@@ -1635,7 +1635,6 @@ class SchedulerController extends Controller
                    // echo $ticketdifferncetime; die;
                     if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
                         if($hours > $ticketdifferncetime) {
-                            
                             if($newdate > $row->givenstartdate) {
                                 $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$auth_id)->first();
                                 $openingtime = $closingtime->openingtime;
@@ -1645,7 +1644,7 @@ class SchedulerController extends Controller
                             }
 
                             $nextdaytime = $hours - $ticketdifferncetime; 
-                            //echo $nextdaytime; die;
+                            
                             $enddatetime = $this->getendtimecalculation($newdate,$nextdaytime,$minutes,$givenenddate);
                         } else {
                             $newTime = date('H:i', strtotime($row->givenendtime));
@@ -1746,11 +1745,13 @@ class SchedulerController extends Controller
             $openingtime = $closingtime->openingtime;
             $openingtime = $openingtime.':00';
             $endtime1 = date('H:i',strtotime("+{$nextdaytime} hour +{$minutes} minutes",strtotime($openingtime)));
+            //echo $newdate; die;
             //day added as per calcuation wise
-            $dayaddeddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
-            $enddatetime = $dayaddeddate.' '.$endtime1; 
+            //$dayaddeddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
+            $enddatetime = $givenenddate.' '.$endtime1; 
+
         }
-        //echo $enddatetime; die;
+        
         return $enddatetime;
     }
 
@@ -1810,12 +1811,56 @@ class SchedulerController extends Controller
         $quoteid = $request->quoteid;
         $time = $request->time;
         $endtime = $request->endtime;
+        //start logic
+        $quotedetail = Quote::select('giventime','givenstartdate','givenenddate')->where('id',$quoteid)->first();
 
-        $datetime1 = new DateTime($time);
-        $datetime2 = new DateTime($endtime);
-        $interval = $datetime1->diff($datetime2);
-        $hours = $interval->format('%h Hours');
-        $minutes = $interval->format('%i Minutes');
+        $to = \Carbon\Carbon::createFromFormat('Y-m-d', $quotedetail->givenstartdate);
+        $from = \Carbon\Carbon::createFromFormat('Y-m-d', $quotedetail->givenenddate);
+
+        $diff_in_days = $to->diffInDays($from);
+
+        $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$auth_id)->first();
+
+        if($diff_in_days>0) {
+            for($i = 0;$i<=$diff_in_days; $i++) {
+                if($i==0) {
+                    $startTime = date('H:i', strtotime($quotedetail->giventime));
+                    $tstarttime = explode(':',$startTime);
+                    $ticketstarttime = $tstarttime[0];
+                    $ticketdifferncetime = $closingtime->closingtime - $ticketstarttime;
+                }
+                if($i>0 || $i<$diff_in_days) {
+                    $ticketdifferncefullday = $closingtime->closingtime - $closingtime->openingtime;
+                    $ticketdifferncefullday = $ticketdifferncefullday*($diff_in_days-1);   
+                }
+                if($i=$diff_in_days) {
+                    $datetime1 = new DateTime($time);
+                    $datetime2 = new DateTime($endtime);
+                    $interval = $datetime1->diff($datetime2);
+                    $hours = $interval->format('%h'); 
+                    $minutes = $interval->format('%i Minutes');
+                }
+                //dd($ticketdifferncefullday);
+
+                $hours = $hours+$ticketdifferncetime+$ticketdifferncefullday;
+                $minutes = $minutes;
+             }
+             $hours = $hours. ' Hours';
+        
+             $minutes =$minutes;
+             $time = $quotedetail->giventime;
+        } else {
+             $datetime1 = new DateTime($time);
+            $datetime2 = new DateTime($endtime);
+            $interval = $datetime1->diff($datetime2);
+            $hours = $interval->format('%h Hours');
+            $minutes = $interval->format('%i Minutes');
+            $time = $request->time;
+        }
+
+        
+        //end logic
+       
 
         DB::table('quote')->where('id','=',$quoteid)
           ->update([ 
