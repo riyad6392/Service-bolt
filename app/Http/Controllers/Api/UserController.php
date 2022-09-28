@@ -234,7 +234,7 @@ class UserController extends Controller
                                 \DB::raw('(CASE 
                                     WHEN quote.parentid = "0" THEN quote.id 
                                     ELSE quote.parentid 
-                                    END) AS id'))->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.servicename', '=', 'quote.servicename')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
+                                    END) AS id'))->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
                 
         return response()->json(['status'=>1,'message'=>'success','todayticket'=>$todayservicecall,'customerData'=>$customerData,'scheduleData'=>$scheduleData],$this->successStatus);
     }
@@ -308,7 +308,7 @@ class UserController extends Controller
 
         $checklistData = DB::table('checklist')->select('id','checklist')->whereIn('serviceid',$serviceidarrays)->get();
 
-        $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.description','quote.product_id','quote.serviceid','quote.imagelist', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist','quote.price')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
+        $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.givenstartdate','quote.givenenddate','quote.time','quote.minute','quote.description','quote.product_id','quote.serviceid','quote.imagelist', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist','quote.price')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
         
         if($quoteData) {
             $serviceidarray = explode(',', $quoteData->serviceid);
@@ -380,6 +380,10 @@ class UserController extends Controller
                    'etc'=>$quoteData->etc,
                    'givendate'=>$quoteData->givendate,
                    'giventime'=>$quoteData->giventime,
+                   'time'=>$quoteData->time,
+                   'minute'=>$quoteData->minute,
+                   'givenstartdate'=>$quoteData->givenstartdate,
+                   'givenenddate'=>$quoteData->givenenddate,
                    'description'=>$quoteData->description,
                    'phonenumber'=>$quoteData->phonenumber,
                    'ticket_status'=>$quoteData->ticket_status,
