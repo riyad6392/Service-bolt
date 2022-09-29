@@ -139,7 +139,7 @@
               <th>NAME</th>
               <th>DATE</th>
               <th style="width:300px!important">Notes</th>
-              <th style="">Submitted By</th>
+              <th style="">Req. By</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -159,13 +159,13 @@
             @endphp
             <tr style="color:{{$rejectedcolor}}">
               <td style="display: none;">{{$value->id}}</td>
-              <td>{{$value->personnelname}}</td>
+              <td>{{Str::limit($value->personnelname, 15)}}</td>
               <td>{{--$value->date1--}}{{$value->counttotal}} Day
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none" class="sup-dot service_list_dot" xmlns="http://www.w3.org/2000/svg" data-bs-toggle="modal" data-bs-target="#date-list-dot" id="date_list_dot" data-id="{{$value->ids}}">
 		      <circle cx="5" cy="5" r="5" fill="#FA8F61"></circle>
 		    </svg>
               </td>
-              <td style="white-space:break-spaces;width:300px!important">{{$value->notes}}</td>
+              <td style="white-space:break-spaces;width:300px!important">{{Str::limit($value->notes, 60)}}</td>
               <td>{{$submittedby}}</td>
               <td>
                 @if($value->status!=null)

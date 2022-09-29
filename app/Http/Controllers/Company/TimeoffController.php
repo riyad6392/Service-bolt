@@ -187,10 +187,10 @@ use Image;
     
     public function viewdatepopup(Request $request)
     {
-      //dd($request->all());
+
        $json = array();
        $explode_id = explode(',', $request->id);
-       $dates = Workertimeoff::select('date')->whereIn('id', $explode_id)->get();
+       $dates = Workertimeoff::select('date','date1')->whereIn('id', $explode_id)->get();
        
        $html ='<div class="modal-header">'.$request->name.'
         <h5 class="modal-title"></h5>
@@ -198,8 +198,8 @@ use Image;
       </div><div class="modal-body"> <div class="add-customer-modal"></div>
             <div class="row service-list-dot"><div class="col-md-12 mb-3"><ul>';
             foreach($dates as $servicevalue){
-                
-                    $html .='<li>'.$servicevalue->date.'</li>';
+                    $old_date_timestamp = strtotime($servicevalue->date1);
+                    $html .='<li>'.date('D - M d, Y',$old_date_timestamp).'</li>';
                 }
                 $html .='</ul>
             </div>

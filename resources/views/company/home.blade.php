@@ -399,6 +399,16 @@
           type="text/javascript"></script>
 <script type="text/javascript">
   $(document).ready(function() {
+    //  if (navigator.geolocation) {
+    //     navigator.geolocation.getCurrentPosition(getPosition);
+    //  } else {
+    //     x.innerHTML = "Geolocation is not supported by this browser.";
+    //  }
+
+    // function getPosition(position) {
+    //   var lat = position.coords.latitude;
+    //   var long = position.coords.longitude;
+    // }
 
     $(document).on('click','#viewTickets',function(e) {
    var id = $(this).data('id');
