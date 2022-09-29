@@ -521,7 +521,8 @@ class PersonnelController extends Controller
       $fulldate =  $request->fulldate;
       $auth_id = auth()->user()->id;
       $personnelid = $request->id;
-      $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->where('quote.ticket_status',"2")->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
+      $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->join('services', 'services.id', '=', 'quote.serviceid')->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
+      //dd($scheduleData);
       $json = array();
       $countsdata = count($scheduleData);
       $datacount = $countsdata;
@@ -545,20 +546,38 @@ class PersonnelController extends Controller
           $html .='<ul class="showdata">
     <li><div class="ev-calender-hours">'.strtoupper(date("h:i a", strtotime($times))).'</div></li>';
           foreach($scheduleData as $key => $value) {
+              $ticketid = $value->id;
+              if(!empty($value->parentid))
+              {
+                $ticketid=$value->parentid;
+              }
+
               $f= $i+1;
               $m =   ":00";
               $settimes = date("h:i a", strtotime($times));
-              if($value->giventime == $settimes) {
+
+              $gtime = explode(":",$value->giventime);
+              $gtimeampm = explode(" ",$gtime[1]);
+
+              $giventime = $gtime[0].':00'.' '.$gtimeampm[1];
+
+              if($value->givenendtime!="") { 
+                $givntime = 'to '.$value->givenendtime;
+              } else {
+                $givntime = "";
+              }
+
+              if($giventime == $settimes) {
                 $imagepath = url('/').'/uploads/customer/'.$value->image;
-              $html .='<li class="inner yellow-slide" id="drop_'.$value->id.'">
+              $html .='<li class="inner yellow-slide" id="drop_'.$ticketid.'">
                         <div class="card">
                           <div class="card-body">
                             <div class="imgslider" style="display:none;">
                               <img src="'.$imagepath.'" alt=""/>
                             </div>
                             <input type="hidden" name="customerid" id="customerid" value="'.$value->customerid.'">
-                            <input type="hidden" name="quoteid" id="quoteid_'.$value->id.'" value="'.$value->id.'"><span>#'.$value->id.'</span>
-                            <h5>'.$value->customername.'</h5><a href="javascript:void(0);" class="info_link1" dataval="'.$value->id.'"><i class="fa fa-trash" style="position: absolute;right: 56px;top: 30px;"></i></a>
+                            <input type="hidden" name="quoteid" id="quoteid_'.$ticketid.'" value="'.$ticketid.'"><span>#'.$ticketid.'</span>
+                            <h5>'.$value->customername.'</h5><a href="javascript:void(0);" class="info_link1" dataval="'.$ticketid.'" style="display:none;"><i class="fa fa-trash" style="position: absolute;right: 56px;top: 30px;"></i></a>
                             <p>'.$value->servicename.'</p>
                             <p>Personnel Name - '.$value->personnelname.'</p>
                             <div class="grinding" style="display:block;">

@@ -191,7 +191,7 @@ class CustomerController extends Controller
         }
         $customerData = Customer::where('id',$id)->get(); 
         $customerAddress = Address::where('customerid',$id)->get();
-        $recentTicket = Quote::where('customerid',$id)->orderBy('id','DESC')->get();
+        $recentTicket = Quote::where('customerid',$id)->where('ticket_status','!=',"5")->orderBy('id','DESC')->get();
         return view('customer.view',compact('customerData','customerAddress','recentTicket'));
     }
 
@@ -444,41 +444,40 @@ class CustomerController extends Controller
       } 
       $servicename = implode(',', $sname);
 
-      $html ='<div class="row"><h5 class="mb-4">Ticket Info #'.$quoteData[$datacount]->id.'</h5>
+      $html ='<div class="row"><h5 class="mb-2">Ticket Info #'.$quoteData[$datacount]->id.'</h5>
       <div class="col-md-12">
          
           <div class="col-md-12 mb-2">
            <div class="input_fields_wrap">
               <div class="mb-3">
-              <label><strong>Customer Address</strong>:&nbsp;</label>
-                '.$quoteData[$datacount]->address.'
+              <label class="number-1">Customer Address:</label>
+                <p>'.$quoteData[$datacount]->address.'</p>
               </div>
           </div>
         </div>
         </div>
         <div class="col-md-12 mb-3">
-        <div><strong>Personnel Info:</strong></div>
-           <div class="">Name: '.$quoteData[$datacount]->personnelname.'</div>
-           <div class="">Phone: '.$quoteData[$datacount]->phone.'</div>
-         </div>
+        <div class="number-1">Personnel Info:</div>
+           <div class="">'.$quoteData[$datacount]->personnelname.', '.$quoteData[$datacount]->phone.'</div>
+           </div>
          
          <div class="col-md-12 mb-3">
-           <div class=""><strong>Service Name:</strong> '.$servicename.'</div>
+           <div class="number-1">Service Name: </div>'.$servicename.'
            
          </div>
-         <div class="col-md-12 mb-2">
-            <strong><label>Frequency:&nbsp;</label></strong>'.$quoteData[$datacount]->frequency.'
+         <div class="col-md-12 mb-3">
+            <div class="number-1">Frequency:</div>'.$quoteData[$datacount]->frequency.'
           </div>
           <div class="col-md-12 mb-2">
-            <strong><label>Default Time: &nbsp;</label></strong>'.$quoteData[$datacount]->time.' '.$quoteData[$datacount]->minute.'
+            <div class="number-1">Default Time: &nbsp;</div>'.$quoteData[$datacount]->time.' '.$quoteData[$datacount]->minute.'
             
           </div>
           <div class="col-md-12 mb-3">
-            <strong><label>Price:&nbsp;</label></strong>'.$quoteData[$datacount]->price.'
+            <div class="number-1">Price:</div>'.$quoteData[$datacount]->price.'
           </div>
          
          <div class="col-md-12 mb-3">
-           <div class=""><strong>Date:</strong> '.$quoteData[$datacount]->etc.'</div>
+           <div class="number-1">Date:</div>'.$quoteData[$datacount]->etc.'
          </div>
          </div></div>';
       } else {
@@ -502,41 +501,40 @@ class CustomerController extends Controller
         
       $html =
 
-      '<div class="row"><h5 class="mb-4">Ticket Info #'.$quoteData->id.'</h5>
+      '<div class="row"><h5 class="mb-2">Ticket Info #'.$quoteData->id.'</h5>
       <div class="col-md-12">
          
           <div class="col-md-12 mb-2">
            <div class="input_fields_wrap">
               <div class="mb-3">
-              <label><strong>Customer Address</strong>:&nbsp;</label>
+              <div class="number-1">Customer Address:</div>
                 '.$quoteData->address.'
               </div>
           </div>
         </div>
         </div>
         <div class="col-md-12 mb-3">
-        <div><strong>Personnel Info:</strong></div>
-           <div class="">Name: '.$quoteData->personnelname.'</div>
-           <div class="">Phone: '.$quoteData->phone.'</div>
+        <div class="number-1">Personnel Info:</div>
+           <div class="">'.$quoteData->personnelname.', '.$quoteData->phone.'</div>
          </div>
          
          <div class="col-md-12 mb-3">
-           <div class=""><strong>Service Name:</strong> '.$servicename.'</div>
+           <div class="number-1">Service Name:</div> '.$servicename.'
            
          </div>
          <div class="col-md-12 mb-2">
-            <strong><label>Frequency:&nbsp;</label></strong>'.$quoteData->frequency.'
+            <div class="number-1">Frequency:</div>'.$quoteData->frequency.'
           </div>
           <div class="col-md-12 mb-2">
-            <strong><label>Default Time: &nbsp;</label></strong>'.$quoteData->time.' '.$quoteData->minute.'
+            <div class="number-1">Default Time:</div>'.$quoteData->time.' '.$quoteData->minute.'
             
           </div>
           <div class="col-md-12 mb-3">
-            <strong><label>Price:&nbsp;</label></strong>'.$quoteData->price.'
+            <div class="number-1">Price:</div>'.$quoteData->price.'
           </div>
          
          <div class="col-md-12 mb-3">
-           <div class=""><strong>Date:</strong> '.$quoteData->etc.'</div>
+           <div class="number-1">Date:</div> '.$quoteData->etc.'
          </div>
          </div></div>';
       }

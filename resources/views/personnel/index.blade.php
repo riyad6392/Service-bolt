@@ -411,7 +411,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
    	$(document).on('click','.ev-left',function(e) {
    	  var id = $(this).data('id');
-   	  var date1 = $("#dateval").val();
+      var date1 = $("#dateval").val();
    	  var date = new Date(date1);
       var newdate = date.setDate(date.getDate() - 1);
 	  var d = new Date(newdate);

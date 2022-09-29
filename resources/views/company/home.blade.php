@@ -225,7 +225,7 @@
      <div class="col-md-7 mb-4">
        <div class="card">
       <div class="card-body">
-        <h5 class="mb-4 d-flex align-items-center justify-content-between ref-icon">Personnel Location <a href=""><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sync-alt" class="svg-inline--fa fa-sync-alt fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M370.72 133.28C339.458 104.008 298.888 87.962 255.848 88c-77.458.068-144.328 53.178-162.791 126.85-1.344 5.363-6.122 9.15-11.651 9.15H24.103c-7.498 0-13.194-6.807-11.807-14.176C33.933 94.924 134.813 8 256 8c66.448 0 126.791 26.136 171.315 68.685L463.03 40.97C478.149 25.851 504 36.559 504 57.941V192c0 13.255-10.745 24-24 24H345.941c-21.382 0-32.09-25.851-16.971-40.971l41.75-41.749zM32 296h134.059c21.382 0 32.09 25.851 16.971 40.971l-41.75 41.75c31.262 29.273 71.835 45.319 114.876 45.28 77.418-.07 144.315-53.144 162.787-126.849 1.344-5.363 6.122-9.15 11.651-9.15h57.304c7.498 0 13.194 6.807 11.807 14.176C478.067 417.076 377.187 504 256 504c-66.448 0-126.791-26.136-171.315-68.685L48.97 471.03C33.851 486.149 8 475.441 8 454.059V320c0-13.255 10.745-24 24-24z"></path></svg></a></h5>
+        <h5 class="mb-4 d-flex align-items-center justify-content-between ref-icon">Personnel Location <a class="livelocationupdate"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sync-alt" class="svg-inline--fa fa-sync-alt fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M370.72 133.28C339.458 104.008 298.888 87.962 255.848 88c-77.458.068-144.328 53.178-162.791 126.85-1.344 5.363-6.122 9.15-11.651 9.15H24.103c-7.498 0-13.194-6.807-11.807-14.176C33.933 94.924 134.813 8 256 8c66.448 0 126.791 26.136 171.315 68.685L463.03 40.97C478.149 25.851 504 36.559 504 57.941V192c0 13.255-10.745 24-24 24H345.941c-21.382 0-32.09-25.851-16.971-40.971l41.75-41.749zM32 296h134.059c21.382 0 32.09 25.851 16.971 40.971l-41.75 41.75c31.262 29.273 71.835 45.319 114.876 45.28 77.418-.07 144.315-53.144 162.787-126.849 1.344-5.363 6.122-9.15 11.651-9.15h57.304c7.498 0 13.194 6.807 11.807 14.176C478.067 417.076 377.187 504 256 504c-66.448 0-126.791-26.136-171.315-68.685L48.97 471.03C33.851 486.149 8 475.441 8 454.059V320c0-13.255 10.745-24 24-24z"></path></svg></a></h5>
         @if(count($scheduleData)>0)
             <div id="map"></div>
         @else
@@ -535,6 +535,116 @@
             }
         })
     });
+
+$('.livelocationupdate').click(function() {
+  var APP_URL = {!! json_encode(url('/')) !!}
+
+      var fulldate = $("#dateval").val();
+
+      $.ajax({
+            url:"{{url('company/home/mapdata')}}",
+            data: {
+              fulldate: fulldate
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              if(data.html.length == "0") {
+              
+                          var locations = [
+                          ['California', 36.778259, -119.417931,4]
+                         
+                        ];
+                          var map = new google.maps.Map(document.getElementById('map'), {
+                              zoom: 6,
+                              center: new google.maps.LatLng(36.778259, -119.417931),
+                              mapTypeId: google.maps.MapTypeId.ROADMAP
+                            });
+
+                            var infowindow = new google.maps.InfoWindow();
+
+                            var marker, i;
+
+                            for (i = 0; i < locations.length; i++) {  
+                              marker = new google.maps.Marker({
+                                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                                map: map
+                              });
+
+                              google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                                return function() {
+                                  infowindow.setContent(locations[i][0]);
+                                  infowindow.open(map, marker);
+                                }
+                              })(marker, i));
+                            }
+                    } else {
+                          console.log("latlong",data);
+                          var map = new google.maps.Map(document.getElementById('map'), {
+                            zoom: 10,
+                            center: new google.maps.LatLng(data.html[0][1], data.html[0][2]),
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                           
+                          });
+
+                          var infowindow = new google.maps.InfoWindow();
+
+                          var marker, i;
+
+                          for (i = 0; i < data.html.length; i++) {  
+                            marker = new google.maps.Marker({
+                              position: new google.maps.LatLng(data.html[i][1], data.html[i][2]),
+                              map: map,
+                              icon: {
+                                 url: APP_URL+'/uploads/personnel/thumbnail/'+data.html[i][4]+ '#custom_marker',
+                                 size: new google.maps.Size(36, 36),
+                                 scaledSize: new google.maps.Size(36, 36),
+                                 anchor: new google.maps.Point(0, 50),
+                                
+                              }
+                            });
+                            
+                            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                              return function() {
+                                 if(data.html[i][4]!=null){
+                                  var imgeurl = APP_URL+'/uploads/personnel/thumbnail/'+data.html[i][4];
+                                } else {
+                                  var imgeurl = APP_URL+'/uploads/servicebolt-noimage.png';
+                                }
+                            if(data.html[i][5]!=null) {
+                              var contentString =
+                              '<div class="user-box">' +
+                              '<div>' +
+                              '<img class="mb-2" src="'+imgeurl+'" alt="" style="width:60px;height:60px;border-radius:100%">' +
+                              '<span style="font-weight:bold"> '+data.html[i][0]+'</span>' +
+                              '<p style="margin:0px;font-size:12px;color:#;font-weight:bold;">Ticket #'+data.html[i][5]+'<span style="font-size:12px;color:black;"> '+data.html[i][6]+' </span></p>' +
+                              "</div>" +
+                              "</div>";
+
+                                infowindow.setContent(contentString);
+                            } else {
+                              var contentString =
+                              '<div class="user-box">' +
+                              '<div>' +
+                              '<img class="mb-2" src="'+imgeurl+'" alt="" style="width:60px;height:60px;border-radius:100%">' +
+                              '<span style="font-weight:bold"> '+data.html[i][0]+'</span>' +
+                              "</div>" +
+                              "</div>";
+
+                                infowindow.setContent(contentString);
+                            }
+                                //infowindow.setContent(data.html[i][0]);
+                                infowindow.open(map, marker);
+                              }
+                            })(marker, i));
+                          }
+            }
+
+            }
+        })
+})
+
 function CustomMarker(latlng, map, imageSrc) {
     this.latlng_ = latlng;
     this.imageSrc = imageSrc;
