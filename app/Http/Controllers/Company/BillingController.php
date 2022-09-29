@@ -239,7 +239,7 @@ class BillingController extends Controller
           </div>
         </div>';
       } else {
-        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_status','quote.payment_mode','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_status','quote.payment_mode','quote.ticket_status','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
         $url = url('/').'/company/billing/downloadinvoice/'.$billingData[0]->id;
         if($billingData[0]->image!=null) {
         $imagepath = url('/').'/uploads/services/'.$billingData[0]->image;
@@ -251,7 +251,6 @@ class BillingController extends Controller
       } else {
         $invoiceid = "-";
       }
-      
       $ticketstatus = "";
       if($billingData[0]->ticket_status==5) {
         $ticketstatus = "(Direct Tiket)";

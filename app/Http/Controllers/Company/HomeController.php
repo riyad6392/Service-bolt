@@ -45,7 +45,7 @@ class HomeController extends Controller
         $days = $request->get('f');
         $dateS = Carbon::now()->subDay($days);
         $dateE = Carbon::now();
-        $ticket = DB::table('quote')->where('userid',$auth_id)->where('parentid', '=',"")->where('ticket_status', '!=' ,'0')->limit('3')->orderBy('id','DESC')->get();
+        $ticket = DB::table('quote')->where('userid',$auth_id)->where('parentid', '=',"")->where('ticket_status', '!=' ,'0')->where('ticket_status', '!=' ,'5')->limit('3')->orderBy('id','DESC')->get();
         
         $inventoryData = Inventory::where('user_id',$auth_id)->get();
         $goodproduct =  array();

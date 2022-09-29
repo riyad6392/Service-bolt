@@ -1850,7 +1850,7 @@ class SchedulerController extends Controller
              $minutes =$minutes;
              $time = $quotedetail->giventime;
         } else {
-             $datetime1 = new DateTime($time);
+            $datetime1 = new DateTime($time);
             $datetime2 = new DateTime($endtime);
             $interval = $datetime1->diff($datetime2);
             $hours = $interval->format('%h Hours');

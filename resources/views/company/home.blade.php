@@ -343,7 +343,7 @@
 
        <div class="card">
         <div class="card-body text-center pt-4">
-        <h5 class="mb-4">Daily Progress</h5>
+        <h5 class="mb-4" style="text-align: left;">Daily Progress</h5>
       <div class="position-relative">
       <div class="circle_percent text-center mx-auto" data-percent="{{$dailyprogress}}">
       <div class="circle_inner">
