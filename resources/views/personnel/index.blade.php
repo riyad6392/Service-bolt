@@ -116,7 +116,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 				   @endif
 				   </div>
 				   <div class="user-content">
-				   	<h5 class="m-0"><span class="" >{{$personnel->personnelname}}</span></h5>
+				   	<h5 class="m-0"><span class="" >{{Str::limit($personnel->personnelname, 15)}}</span></h5>
 				   </div>
 			   </div>
 			  
