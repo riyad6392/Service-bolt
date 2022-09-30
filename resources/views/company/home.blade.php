@@ -456,6 +456,11 @@
               if(data.html.length == "0") {
                       var lat = $("#lat").val();
                       var long = $("#long").val();
+
+                      if(lat == "") {
+                        var lat = "36.778259";
+                        var long = "-119.417931";
+                      }
                           var locations = [
                           ['', lat, long,4]
                          
@@ -580,6 +585,10 @@ $('.livelocationupdate').click(function() {
               if(data.html.length == "0") {
                   var lat = $("#lat").val();
                   var long = $("#long").val();
+                   if(lat == "") {
+                      var lat = "36.778259";
+                      var long = "-119.417931";
+                    }
                           var locations = [
                           ['', lat, long,4]
                          
