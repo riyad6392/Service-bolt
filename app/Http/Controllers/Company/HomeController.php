@@ -9,6 +9,7 @@ use DB;
 use Auth;
 use Cache;
 use App\Models\Inventory;
+use App\Events\SendLocation;
 
 class HomeController extends Controller
 {
@@ -164,21 +165,30 @@ class HomeController extends Controller
         foreach ($users as $user) {
             if (Cache::has('user-is-online-' . $user->id)) {
                 $workerids[] = $user->workerid;
-            }
+                DB::table('personnel')->where('id','=',$user->workerid)
+                  ->update([ 
+                      "checkstatus"=>"online"
+                ]);
+            } else {
+                $workerids[] = $user->workerid;
+                DB::table('personnel')->where('id','=',$user->workerid)
+                  ->update([ 
+                      "checkstatus"=>"offline"
+                ]);
+           }
         } 
-        //dd($workerids);
     DB::enableQuerylog();
-    $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long')->rightJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('personnel.id',$workerids)->orderBy('quote.id','ASC')->get();
-
+    $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->where('ticket_status','4')->groupBy('quote.personnelid')->orderBy('quote.id','desc')->get();
+    
      //$scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->orderBy('quote.id','ASC')->get();
       //dd(DB::getQuerylog());
       //->where('quote.ticket_status',"2")
       $json = array();
       $data = [];
-          foreach($scheduleData as $key => $value) {
-            array_push($data, [$value->personnelname,$value->lat,$value->long,$value->longitude,$value->image,$value->id,$value->giventime]);
-
-          }
+        foreach($scheduleData as $key => $value) {
+            array_push($data, [$value->personnelname,$value->lat,$value->long,$value->longitude,$value->image,$value->id,$value->giventime,$value->checkstatus]);
+        }
+        //dd($data);
       return json_encode(['html' =>$data]);
     }
 }

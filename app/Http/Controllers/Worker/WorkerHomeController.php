@@ -11,6 +11,7 @@ use DateTime;
 use App\Models\User;
 use App\Models\AppNotification;
 use App\Models\Personnel;
+use App\Events\SendLocation;
 
 class WorkerHomeController extends Controller
 {
@@ -31,7 +32,7 @@ class WorkerHomeController extends Controller
      */
     public function index(Request $request)
     {
-
+        //event(new SendLocation(26.922070, 75.778885));
         $auth_id = auth()->user()->id;
         if(auth()->user()->role == 'worker') {
             $auth_id = auth()->user()->id;

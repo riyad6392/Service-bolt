@@ -452,7 +452,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html.length);
               if(data.html.length == "0") {
                       var lat = $("#lat").val();
                       var long = $("#long").val();
@@ -489,7 +488,7 @@
                               })(marker, i));
                             }
                     } else {
-                          console.log("latlong",data);
+                          //console.log("latlong",data);
                           var map = new google.maps.Map(document.getElementById('map'), {
                             zoom: 10,
                             center: new google.maps.LatLng(data.html[0][1], data.html[0][2]),
@@ -501,12 +500,19 @@
 
                           var marker, i;
 
-                          for (i = 0; i < data.html.length; i++) {  
+                          for (i = 0; i < data.html.length; i++) { 
+                            //var imgestatic = "https://cdn-icons-png.flaticon.com/512/1023/1023448.png"; 
+                            if(data.html[i][7] == "online") {
+                              var imgestatic = APP_URL+'/images/greenmapimage.png';
+                            } else {
+                              var imgestatic = APP_URL+'/images/graymapimage.png';
+                            }
                             marker = new google.maps.Marker({
                               position: new google.maps.LatLng(data.html[i][1], data.html[i][2]),
                               map: map,
                               icon: {
-                                 url: APP_URL+'/uploads/personnel/thumbnail/'+data.html[i][4]+ '#custom_marker',
+                                 //url: APP_URL+'/uploads/personnel/thumbnail/'+data.html[i][4]+ '#custom_marker',
+                                 url: imgestatic,
                                  size: new google.maps.Size(36, 36),
                                  scaledSize: new google.maps.Size(36, 36),
                                  anchor: new google.maps.Point(0, 50),
@@ -548,13 +554,35 @@
                               }
                             })(marker, i));
                           }
-              // console.log(data.html[0]);
-              // console.log(data.html[1]);
-              //$('.showdata').html(data.html);
-            }
+                }
+
+          //end setimrout      
             }
         })
     });
+
+
+        // function updatePosition(newlat,newlong) {
+        //   const latlong = {lat:newlat ,long:newlong};
+        //   marker.setPosition(latlong);
+        //   map.setCenter(latlong);
+        // }
+          // Pusher.logToConsole = true;
+          // var pusher = new Pusher('21ccb81c25e86ff20bc3', {
+          //     cluster: 'ap2'
+          //   });
+
+          //   var channel = pusher.subscribe('my-channel');
+            
+          //   channel.bind('send-location', function(data) {
+          //     console.log(data);
+          //     console.log("hello");
+          //     //updatePosition(data.lat,data.long);  
+          //   });
+
+setInterval(function() { 
+  $(".livelocationupdate").trigger('click');
+}, 10000);
 
 $('.livelocationupdate').click(function() {
   var APP_URL = {!! json_encode(url('/')) !!}
@@ -617,7 +645,7 @@ $('.livelocationupdate').click(function() {
                               })(marker, i));
                             }
                     } else {
-                          console.log("latlong",data);
+                          //console.log("latlong",data);
                           var map = new google.maps.Map(document.getElementById('map'), {
                             zoom: 10,
                             center: new google.maps.LatLng(data.html[0][1], data.html[0][2]),
@@ -629,12 +657,18 @@ $('.livelocationupdate').click(function() {
 
                           var marker, i;
 
-                          for (i = 0; i < data.html.length; i++) {  
-                            marker = new google.maps.Marker({
+                          for (i = 0; i < data.html.length; i++) {
+                              if(data.html[i][7] == "online") {
+                                var imgestatic = APP_URL+'/images/greenmapimage.png';
+                              } else {
+                                var imgestatic = APP_URL+'/images/graymapimage.png';
+                              }  
+                              marker = new google.maps.Marker({
                               position: new google.maps.LatLng(data.html[i][1], data.html[i][2]),
                               map: map,
                               icon: {
-                                 url: APP_URL+'/uploads/personnel/thumbnail/'+data.html[i][4]+ '#custom_marker',
+                                 //url: APP_URL+'/uploads/personnel/thumbnail/'+data.html[i][4]+ '#custom_marker',
+                                 url: imgestatic,
                                  size: new google.maps.Size(36, 36),
                                  scaledSize: new google.maps.Size(36, 36),
                                  anchor: new google.maps.Point(0, 50),

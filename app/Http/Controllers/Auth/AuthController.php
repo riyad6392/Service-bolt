@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Mail;
 use App\Models\Managefield;
 use Illuminate\Validation\Rule;
+use DB;
 
 class AuthController extends Controller
 {
@@ -283,6 +284,12 @@ class AuthController extends Controller
     }
 
     public function workerlogout() {
+      //$workerid = auth()->user()->workerid;
+      // DB::enableQuerylog();
+      //   DB::table('personnel')->where('id','=',$workerid)
+      //     ->update([ 
+      //         "checkstatus"=>"offline"
+      //   ]);
       Auth::logout();
 
       return redirect('personnel/login');
