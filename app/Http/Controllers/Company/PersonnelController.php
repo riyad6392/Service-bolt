@@ -545,7 +545,7 @@ class PersonnelController extends Controller
           }
           $times = $i.":00";
           $html .='<ul class="showdata">
-    <li><div class="ev-calender-hours">'.strtoupper(date("h:i a", strtotime($times))).'</div></li>';
+    <li><div class="ev-calender-hours" style="font-size:17px;">'.strtoupper(date("h:i a", strtotime($times))).'</div></li>';
         if($countsdata > 0) {
           foreach($scheduleData as $key => $value) {
               $ticketid = $value->id;
@@ -583,10 +583,10 @@ class PersonnelController extends Controller
                           <h5>'.$value->customername.'</h5><a href="javascript:void(0);" class="info_link1" dataval="'.$ticketid.'" style="display:none;"><i class="fa fa-trash" style="position: absolute;right: 56px;top: 30px;"></i></a>
                           <p>'.$value->servicename.'</p>
                           <p>Personnel Name - '.$value->personnelname.'</p>
-                          <div class="grinding" style="display:block;">
+                          <div class="grinding" style="display:block;text-align: center;">
                             <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="5" cy="5" r="5" fill="currentColor" style="display:none;">
-                            </svg>'.$value->time.'</a>
+                            </svg>'.$value->time.' '.$value->minute.'</a>
                             <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="5" cy="5" r="5" fill="currentColor" style="display:none;">
                             </svg>'; 

@@ -150,6 +150,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       	<div class="custom-calender">
              <div class="ev-calender-title">
              <h3><span id="spanid" style="pointer-events: none;"><input type="hidden" name="dateval" id="dateval" value="{{date('l - F d, Y')}}">{{date('l - F d, Y')}}</span></h3>
+             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size:15px;"></button>
          </div>
         <form method="post" action="{{ route('company.personnelupdate') }}" enctype="multipart/form-data">
         @csrf
