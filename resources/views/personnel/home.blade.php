@@ -379,7 +379,7 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
+              //console.log(data);
                $("#spanid").html('<input type="text" value="'+fulldate+'" name="dateval" id="dateval" style="border:none;color:#B0B7C3;width:400px;">');
               $('.ev-arrow').hide();
               $('.hidedata').hide();

@@ -426,6 +426,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
    	});
 
    function getschedulerdata(fulldate,id) {
+    //alert('aaa');
     $.ajax({
             url:"{{url('company/personnel/leftbarpersonnelschedulerdata')}}",
             data: {
@@ -433,10 +434,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
               id:id
             },
             method: 'post',
-            dataType: 'html',
+            dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
                // $("#spanid1").html('<input type="text" value="'+data.countsdata+'" name="countval" id="countval" style="pointer-events: none;position: absolute;top: 2px;background: #fb6794;color: #fff;border-radius:17px;padding: 0 8px;width: 25px;border: 0px;height: 25px;">');
                $("#spanid").html('<input type="text" value="'+fulldate+'" name="dateval" id="dateval" style="border:none;color:#B0B7C3;width:400px;">');
                $('.ev-arrow').show();

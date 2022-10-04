@@ -525,6 +525,7 @@ class PersonnelController extends Controller
       //dd($scheduleData);
       $json = array();
       $countsdata = count($scheduleData);
+      //dd($countsdata);
       $datacount = $countsdata;
       $userData = User::select('openingtime','closingtime')->where('id',$auth_id)->first();
       $html = "";
@@ -545,6 +546,7 @@ class PersonnelController extends Controller
           $times = $i.":00";
           $html .='<ul class="showdata">
     <li><div class="ev-calender-hours">'.strtoupper(date("h:i a", strtotime($times))).'</div></li>';
+        if($countsdata > 0) {
           foreach($scheduleData as $key => $value) {
               $ticketid = $value->id;
               if(!empty($value->parentid))
@@ -567,40 +569,42 @@ class PersonnelController extends Controller
                 $givntime = "";
               }
 
-              if($giventime == $settimes) {
-                $imagepath = url('/').'/uploads/customer/'.$value->image;
-              $html .='<li class="inner yellow-slide" id="drop_'.$ticketid.'">
-                        <div class="card">
-                          <div class="card-body">
-                            <div class="imgslider" style="display:none;">
-                              <img src="'.$imagepath.'" alt=""/>
-                            </div>
-                            <input type="hidden" name="customerid" id="customerid" value="'.$value->customerid.'">
-                            <input type="hidden" name="quoteid" id="quoteid_'.$ticketid.'" value="'.$ticketid.'"><span>#'.$ticketid.'</span>
-                            <h5>'.$value->customername.'</h5><a href="javascript:void(0);" class="info_link1" dataval="'.$ticketid.'" style="display:none;"><i class="fa fa-trash" style="position: absolute;right: 56px;top: 30px;"></i></a>
-                            <p>'.$value->servicename.'</p>
-                            <p>Personnel Name - '.$value->personnelname.'</p>
-                            <div class="grinding" style="display:block;">
-                              <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <circle cx="5" cy="5" r="5" fill="currentColor" style="display:none;">
-                              </svg>'.$value->time.'</a>
-                              <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <circle cx="5" cy="5" r="5" fill="currentColor" style="display:none;">
-                              </svg>'; 
-                                $date=date_create($value->etc);
-                                $dateetc = date_format($date,"F d, Y");
-                            $html .='ETC : '.$dateetc.'</a>
-                            </div>
+
+            if($giventime == $settimes) {
+              $imagepath = url('/').'/uploads/customer/'.$value->image;
+            $html .='<li class="inner yellow-slide" id="drop_'.$ticketid.'">
+                      <div class="card">
+                        <div class="card-body">
+                          <div class="imgslider" style="display:none;">
+                            <img src="'.$imagepath.'" alt=""/>
+                          </div>
+                          <input type="hidden" name="customerid" id="customerid" value="'.$value->customerid.'">
+                          <input type="hidden" name="quoteid" id="quoteid_'.$ticketid.'" value="'.$ticketid.'"><span>#'.$ticketid.'</span>
+                          <h5>'.$value->customername.'</h5><a href="javascript:void(0);" class="info_link1" dataval="'.$ticketid.'" style="display:none;"><i class="fa fa-trash" style="position: absolute;right: 56px;top: 30px;"></i></a>
+                          <p>'.$value->servicename.'</p>
+                          <p>Personnel Name - '.$value->personnelname.'</p>
+                          <div class="grinding" style="display:block;">
+                            <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="5" cy="5" r="5" fill="currentColor" style="display:none;">
+                            </svg>'.$value->time.'</a>
+                            <a href="#" class="btn btn-edit w-auto"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="5" cy="5" r="5" fill="currentColor" style="display:none;">
+                            </svg>'; 
+                              $date=date_create($value->etc);
+                              $dateetc = date_format($date,"F d, Y");
+                          $html .='ETC : '.$dateetc.'</a>
                           </div>
                         </div>
-                      </li>';
-              }
+                      </div>
+                    </li>';
+            }
           }
-
+        }
       }
         $html .='</ul>
         </div>';
-          return json_encode(['html' =>$html,'countsdata'=>$countsdata]);
+        $test = 1;
+        return json_encode(['html' =>$html,'countsdata'=>$countsdata,'test'=>$test]);
     }
 
     public function leftbarpersonneltimesheetdata(Request $request)
