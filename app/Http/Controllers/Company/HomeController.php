@@ -79,7 +79,7 @@ class HomeController extends Controller
                  ->groupBy('quote.serviceid')
                  ->get();
                  //dd($serviceinfo);
-        $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->where('quote.ticket_status','4')->orderBy('quote.id','ASC')->get();
 
         $completedticketcount = DB::table('quote')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->whereDate('quote.created_at', Carbon::today())->count();
         $pendingticketcount = DB::table('quote')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3'))->whereDate('quote.created_at', Carbon::today())->count();
@@ -138,7 +138,7 @@ class HomeController extends Controller
                  ->orderBy('total','DESC')
                  ->groupBy('quote.serviceid')
                  ->get();
-        $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status',"2")->orderBy('quote.id','ASC')->get();
+         $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->where('quote.ticket_status','4')->orderBy('quote.id','ASC')->get();
 
         $completedticketcount = DB::table('quote')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->whereDate('quote.created_at', Carbon::today())->count();
         $pendingticketcount = DB::table('quote')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3'))->whereDate('quote.created_at', Carbon::today())->count();
@@ -165,6 +165,7 @@ class HomeController extends Controller
         foreach ($users as $user) {
             if (Cache::has('user-is-online-' . $user->id)) {
                 $workerids[] = $user->workerid;
+                
                 DB::table('personnel')->where('id','=',$user->workerid)
                   ->update([ 
                       "checkstatus"=>"online"
@@ -179,7 +180,7 @@ class HomeController extends Controller
         } 
     DB::enableQuerylog();
     $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->where('ticket_status','4')->groupBy('quote.personnelid')->orderBy('quote.id','desc')->get();
-    
+    //dd($scheduleData);
      //$scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->orderBy('quote.id','ASC')->get();
       //dd(DB::getQuerylog());
       //->where('quote.ticket_status',"2")
