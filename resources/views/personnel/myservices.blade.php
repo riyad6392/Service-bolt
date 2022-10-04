@@ -55,7 +55,7 @@
             <tr>
               <th>Service Name</th>
               <th>Price</th>
-              <th></th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>

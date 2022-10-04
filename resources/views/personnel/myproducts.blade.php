@@ -58,7 +58,7 @@
              <!--  <th>Category</th>
               <th>Quantity</th>
               <th>SKU</th> -->
-              <th></th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>

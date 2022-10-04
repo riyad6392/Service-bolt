@@ -45,6 +45,10 @@
     width: 57%;
     color: #232322;
 }
+.selection-div li {
+    padding: 10px 0;
+    width: 470px;
+}
 .radio-div {
     display: block;
     position: relative;
@@ -138,7 +142,7 @@
                 </div>
                 <div class="col-lg-6 mt-3">
                   <div class="card p-3">
-                    <div class="d-flex align-items-center justify-content-between"><div class="icon-show"><i class="fa fa-money fa-2x"></i></div><select name="earning" id="earning" name="earning" style="    border: 1px solid #F3F3F3;">
+                    <div class="d-flex align-items-center justify-content-between"><div class="icon-show"><i class="fa fa-money fa-2x"></i></div><select name="earning" id="earning" name="earning" style="border: 1px solid #F3F3F3;">
                         <option value="" selected>Select Duration</option>
                         <option value="1week" >1 Week</option>
                         <option value="1month">1 Month</option>

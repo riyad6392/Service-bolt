@@ -72,7 +72,7 @@
     position: relative;">
           <thead>
             <tr>
-              <th>Ticket number</th>
+              <th>Ticket Id</th>
               <th>Customer Name</th>
               <th>Address</th>
               <th>Service</th>
@@ -94,7 +94,7 @@
               <tr>
                 <td>#{{$ticketid}}</td>
                 <td>{{$value->customername}}</td>
-                <td class="address-warp">{{$value->address}}</td>
+                <td class="address-warp">{{Str::limit($value->address, 60)}}</td>
                 <td>@php
       $i=0;
     @endphp

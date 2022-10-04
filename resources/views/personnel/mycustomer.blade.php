@@ -69,13 +69,13 @@
           <thead>
             <tr>
               <th style="display: none;">ID</th>
-              <th>CUSTOMER NAME</th>
-              <th>PHONE NUMBER</th>
-              <th>EMAIL</th>
-              <th>COMPANY NAME</th>
-              <th>SERVICE</th>
+              <th style="font-size:15px;">CUSTOMER NAME</th>
+              <th style="font-size:15px;">PHONE NUMBER</th>
+              <th style="font-size:15px;">EMAIL</th>
+              <th style="font-size:15px;">COMPANY NAME</th>
+              <th style="font-size:15px;">SERVICE</th>
             @if(in_array("Edit Customer", $permissonarray)) 
-              <th>Action</th>
+              <th style="font-size:15px;">Action</th>
             @endif
             </tr>
           </thead>

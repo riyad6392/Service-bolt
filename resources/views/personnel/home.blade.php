@@ -136,7 +136,15 @@
       </div>
       </div></td>
               <td><div class="user-date">
-      <h5>{{$value->givendate}}</h5>
+                @php
+                  if($value->givenstartdate!=null) {
+                    $old_date_timestamp = strtotime($value->givenstartdate);
+                    $datefinal = date('D - M d, Y',$old_date_timestamp);  
+                  } else {
+                    $datefinal = $value->givendate;
+                  }
+                @endphp
+      <h5>{{$datefinal}}</h5>
       <p class="ps-md-5">{{$value->giventime}}</p>
       </div></td>
               <td>

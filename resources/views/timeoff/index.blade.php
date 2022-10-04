@@ -137,7 +137,7 @@
             <tr>
               <th style="display: none;">Id</th>
               <th>NAME</th>
-              <th>DATE</th>
+              <th>Day</th>
               <th style="width:300px!important">Notes</th>
               <th style="">Req. By</th>
               <th>Action</th>

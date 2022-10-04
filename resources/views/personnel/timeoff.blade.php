@@ -53,7 +53,7 @@
           <thead>
             <tr>
               <th style="display: none;"></th>
-              <th>Date</th>
+              <th>Day</th>
               <th>Note</th>
               <th>Status</th>
             </tr>
