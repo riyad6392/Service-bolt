@@ -622,6 +622,7 @@ class SchedulerController extends Controller
             $ticketstarttime = $tstarttime[0];
             $ticketdifferncetime = $dayclosetime - $ticketstarttime;
             // echo $ticketdifferncetime; die;
+            $givenenddate = $newdate;
             if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
                 if($hours > $ticketdifferncetime) {
                     $nextdaytime = $hours - $ticketdifferncetime; 
@@ -631,7 +632,7 @@ class SchedulerController extends Controller
                     $givenenddate = $newdate; 
                 }
             }
-
+            
         $quoteprimarydata= Quote::select('primaryname')->where('id',$quoteid)->first();
         
         if($quoteprimarydata->primaryname==null) {
