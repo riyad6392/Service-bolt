@@ -45,7 +45,6 @@ class WorkerCustomerController extends Controller
       }
 
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
-
       $customerids = DB::table('quote')->select('customerid')->where('personnelid',$worker->workerid)->groupBy('customerid')->get();
     //   if(count($customerids)>0) {
     //   foreach($customerids as $key => $value) {
@@ -65,12 +64,16 @@ class WorkerCustomerController extends Controller
     if(in_array("View All Customers", $permissonarray)) {
       $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get(); 
     } else {
-      $pdata = Quote::select('customerid')->where('personnelid',$worker->workerid)->get();
-      foreach($pdata as $key => $value) {
-        $cids[] = $value->customerid;
-      }
-      $customerData = DB::table('customer')->whereIn('id',$cids)->orderBy('id','DESC')->get();
+     //  $pdata = Quote::select('customerid')->where('personnelid',$worker->workerid)->get();
+     //  $cids =  array();
+     // // if(count($pdata)>0){
+     //  foreach($pdata as $key => $value) {
+     //    $cids[] = $value->customerid;
+     //  }
+    //}
+      $customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get();
     }
+    //dd($customerData);
       
       $tenture = Tenture::where('status','Active')->get(); 
       //$customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get(); 

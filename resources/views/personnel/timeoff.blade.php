@@ -81,7 +81,14 @@
                   @if($value->status==null)
                   Pending
                   @else
-                  {{$value->status}} @if($value->reason!="") ({{$value->reason}}) @endif
+                  @php
+                  if($value->reason!=""){
+                      $reason = $value->reason;
+                  } else {
+                      $reason = "";
+                  }
+                  @endphp
+                  <span title="{{$reason}}">{{$value->status}}</span> @if($value->reason!="") ({{$value->reason}}) @endif
                 @endif</td>
               </tr>
             @endforeach

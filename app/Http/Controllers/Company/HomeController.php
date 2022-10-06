@@ -76,7 +76,7 @@ class HomeController extends Controller
         $serviceinfo = DB::table('quote')
                  ->select('quote.serviceid','services.servicename','services.color', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
                  ->orderBy('total','DESC')
-                 ->groupBy('quote.serviceid')
+                 ->groupBy('quote.servicename')
                  ->get();
                  //dd($serviceinfo);
         $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->where('quote.ticket_status','4')->orderBy('quote.id','ASC')->get();
