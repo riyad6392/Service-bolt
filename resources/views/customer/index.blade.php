@@ -338,7 +338,7 @@
      </div>
      <div class="col-md-12 mb-3">
       <div class="d-flex align-items-center">
-        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" required>
           @foreach ($services as $service)
             <option value="{{$service->id}}">{{$service->servicename}}</option>
           @endforeach

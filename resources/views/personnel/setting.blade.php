@@ -344,12 +344,11 @@
                   </div>
                 @php
                   } else {
-                    if($commissiondata1[0]->allspvalue!=null) {
+                    if(count($commissiondata1)>0) {
                       $allspvalueamount = $commissiondata1[0]->allspvalue;
                       $allspvalueamountchecked = "checked";
                     }
-
-                    if($commissionpdata1[0]->allspvalue!=null) {
+                    if(count($commissionpdata1)>0) {
                         $allspvaluepercent = $commissionpdata1[0]->allspvalue;
                         $allspvaluepercentchecked = "checked";
                     }
