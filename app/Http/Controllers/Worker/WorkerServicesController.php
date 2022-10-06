@@ -117,7 +117,7 @@ class WorkerServicesController extends Controller
          
          <div class="col-md-12 mb-2">
             <label>Product</label>
-            <select class="form-control selectpicker" data-live-search="false" multiple="" data-placeholder="Select Produts" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="productid[]" id="productid" style="height:auto;" required="">';
+            <select class="form-control selectpicker" data-live-search="false" multiple="" data-placeholder="Select Produts" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="productid[]" id="productid" style="height:auto;">';
 
               foreach($productData as $key => $value) {
                 $html .='<option value="'.$value->id.'">'.$value->productname.'</option>';
