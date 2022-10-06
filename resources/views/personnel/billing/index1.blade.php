@@ -60,7 +60,7 @@
      
      </div>
      
-     <div class="col-lg-3 offset-lg-1 text-center mb-2">
+     <div class="col-lg-3 offset-lg-1 text-center mb-2" style="display:none;">
      <a href="#" class="add-btn-yellow">
     Add Payment +
      </a>

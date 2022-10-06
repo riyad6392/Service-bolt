@@ -263,12 +263,12 @@
 
                         $commissionpdata1 = App\Models\PaymentSetting::where('uid',$uid)->where('pid',$wid)->where('type','percent')->get();
 
-                        if($commissiondata1[0]->allspvalue!=null) {
+                        if(@$commissiondata1[0]->allspvalue!=null) {
                             $allspvalueamount = $commissiondata1[0]->allspvalue;
                             $allspvalueamountchecked = "checked";
                         }
 
-                        if($commissionpdata1[0]->allspvalue!=null) {
+                        if(@$commissionpdata1[0]->allspvalue!=null) {
                             $allspvaluepercent = $commissionpdata1[0]->allspvalue;
                             $allspvaluepercentchecked = "checked";
                         }

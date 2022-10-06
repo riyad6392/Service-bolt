@@ -272,6 +272,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div></div>
           <div class="col-md-12">
+            <label>Choose Color</label><br>
+            <span class="color-picker">
+              <label for="colorPicker">
+                <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
+              </label>
+            </span>
+          </div>
+          <div class="col-md-12">
             <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
               <input type="file" class="dropify" name="image" id="image"data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
           </div>

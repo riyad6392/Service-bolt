@@ -181,8 +181,15 @@
           </thead>
           <tbody>
             @foreach($ticketdata as $value)
+            @php
+              $ticketid = $value->id;
+              if(!empty($value->parentid))
+              {
+                $ticketid=$value->parentid;
+              }
+            @endphp
             <tr>
-             <td><a href="{{url('personnel/myticket/view/')}}/{{$value->id}}" style="color:#29DBBA;text-decoration:none;">#{{$value->id}}</a></td>
+             <td><a href="{{url('personnel/myticket/view/')}}/{{$ticketid}}" style="color:#29DBBA;text-decoration:none;">#{{$ticketid}}</a></td>
              <td><a href="{{url('personnel/myticket/view/')}}/{{$value->id}}" style="color:#000;text-decoration:none;"><div class="ex-date"><h6>{{$value->servicename}}</h6> <span>{{$value->giventime}}</span></div></a></td>
               <td><a href="{{url('personnel/myticket/view/')}}/{{$value->id}}" style="color:#000;text-decoration:none;">{{$value->customername}}</a></td>
               <!-- <td>Example</td> -->
