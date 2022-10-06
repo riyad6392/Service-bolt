@@ -470,7 +470,14 @@ class UserController extends Controller
 
       //$customerData = DB::table('customer')->whereIn('id',$customeridss)->get();
 
-      $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get(); 
+      @$workersdata = Personnel::where('id',$worker->workerid)->first();
+      @$permissonarray = explode(',',$workersdata->ticketid);
+
+      if(in_array("View All Customers", $permissonarray)) {
+        $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+      } else {
+        $customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+      }
 
      $tenture = Tenture::select('tenturename')->where('status','Active')->get();  
 
