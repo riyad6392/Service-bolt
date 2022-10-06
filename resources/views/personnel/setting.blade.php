@@ -324,7 +324,11 @@
                           <li class="d-flex">
                             <label class="container-checkbox me-4">{{$value->servicename}} :
                                </label>
-                             <p>{{@$commissionpdata[$key][$value->servicename]}}</p>
+                              @if($commissionpdata!="")
+                                <p>{{@$commissionpdata[$key][$value->servicename]}}</p>
+                              @else  
+                             <p>0</p>
+                              @endif
                           </li>
                           @endforeach
                           @foreach($products as $key1 => $product)
