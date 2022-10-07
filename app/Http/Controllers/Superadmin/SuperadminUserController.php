@@ -9,6 +9,7 @@ use DB;
 use App\Models\Workerhour;
 use App\Models\User;
 use DateTime;
+use Auth;
 
 class SuperadminUserController extends Controller
 {
@@ -32,6 +33,10 @@ class SuperadminUserController extends Controller
 
         $auth_id = auth()->user()->id;
 
+        if(auth()->check() && auth()->user()->role=="company"){
+          return redirect(route('company.home'));
+        }
+        
         if(auth()->user()->role == 'superadmin') {
             $auth_id = auth()->user()->id;
         } else {
@@ -127,5 +132,13 @@ class SuperadminUserController extends Controller
       $id = $request->userid;
       DB::table('users')->delete($id);
       echo "1";
+    }
+
+    public function userlogin(Request $request,$id) {
+      $users = User::select('id')->where('id','=',$id)->first();
+
+      if(Auth::loginUsingId($users->id)) {
+        return redirect()->route('company.home');
+      }
     }
 }
