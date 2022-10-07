@@ -587,8 +587,8 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
 
    
 @yield('script')
- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places" async></script>
- <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDta_eySSIJS15vsFrWJiu2cFyAN5ksxSA&callback=initAutocomplete&libraries=places" async></script> -->
+ <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places" async></script> -->
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDta_eySSIJS15vsFrWJiu2cFyAN5ksxSA&callback=initAutocomplete&libraries=places" async></script>
 
 
   <script>
