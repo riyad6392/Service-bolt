@@ -595,6 +595,8 @@ Route::group([
     Route::get('/home', [SuperadminHomeController::class, 'index'])->name('home');
     Route::get('/manageUser', [SuperadminUserController::class, 'index'])->name('manageUser');
 
+    Route::get('/manageUser/userlogin/{id}', [SuperadminUserController::class, 'userlogin'])->name('userlogin');
+
     Route::any('/manageUser/viewusermodal', [SuperadminUserController::class, 'viewusermodal'])->name('viewusermodal');
     Route::any('/manageUser/userstatus', [SuperadminUserController::class, 'userstatus'])->name('userstatus');
     Route::any('/manageUser/userdelete', [SuperadminUserController::class, 'userdelete'])->name('userdelete');

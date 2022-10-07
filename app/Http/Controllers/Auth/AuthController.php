@@ -246,10 +246,10 @@ class AuthController extends Controller
     {
         
      if(auth()->user()!=null) {
-      if(auth()->user()->role=="company"){
+      if(auth()->check() && auth()->user()->role=="company"){
           return redirect(route('company.home'));
       } 
-      if(auth()->user()->role=="worker") {
+      if(auth()->check() && auth()->user()->role=="worker") {
           return redirect(route('worker.home'));
       } 
     }
@@ -258,6 +258,9 @@ class AuthController extends Controller
 
     public function superadminlogin()
     {
+        if(auth()->check() && auth()->user()->role=="company"){
+          return redirect(route('company.home'));
+        }
         return view('auth.superadminlogin');
     }
 
