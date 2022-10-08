@@ -167,7 +167,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
      <div class="modal-body p-4">
-     <div class="add-customer-modal d-flex justify-content-between align-items-center">
+     <div class="add-customer-modal d-flex justify-content-between align-items-baseline">
      <h5 class="mb-4">Time Sheets</h5>
      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
      </div>
@@ -186,7 +186,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
      <div class="modal-body p-4">
-     <div class="add-customer-modal d-flex justify-content-between align-items-center">
+     <div class="add-customer-modal d-flex justify-content-between">
      <h5 class="mb-4">PTO</h5>
      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
      </div>

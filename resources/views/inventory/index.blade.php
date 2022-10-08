@@ -22,7 +22,8 @@
     box-shadow: 0px 0px 10px #ccc;
 }
 </style>
-<div class="">
+
+<div class="bland-service-page">
 <div class="content">
      <div class="row">
       	<div class="col-md-12">
@@ -37,7 +38,7 @@
 	<div id="viewleftservicemodal"></div>
  </div>
  </div>
-</div>
+</div >
 @endif
 @php
 	if(count($inventoryData)>0) {
@@ -271,14 +272,14 @@
 	  	<input type="text" class="form-control" placeholder="Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
 	   </div>
 	   
-	   <div class="col-md-12 mb-5">
+	   <div class="col-md-11 mb-5">
 	  	<select class="form-select" name="category" id="category">
 	  		<option value="">Select Category</option>
 			@foreach($categoryData as $key=>$value)
 				<option value="{{$value->category_name}}">{{$value->category_name}}</option>
 			@endforeach
 		</select>
-    	<a href="#"  data-bs-toggle="modal" data-bs-target="#add-category" class=""><i class="fa fa-plus" style="position: absolute;right: 40px;margin: 16px;"></i></a>
+    	<a href="#" data-bs-toggle="modal" data-bs-target="#add-category" class="in-plus"><i class="fa fa-plus yellow-icon"></i></a>
 	   </div>
 	   <div class="col-lg-6 ">
 	   <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>

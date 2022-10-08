@@ -51,6 +51,7 @@
     box-shadow: 0px 0px 10px #ccc;
 }
 </style>
+
 <div class="content">
      <div class="row">
       <div class="col-md-12">
@@ -273,21 +274,8 @@
      </div>
      </div>
 
-
-
-
-
-
-
-
-
-
-
-
      </div>
    </div>
-
-
 
           </div>
      
@@ -336,7 +324,7 @@
      <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname" required="">
      
      </div>
-     <div class="col-md-12 mb-3">
+     <div class="col-md-11 mb-3">
       <div class="d-flex align-items-center">
         <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" required>
           @foreach ($services as $service)
@@ -344,7 +332,7 @@
           @endforeach
         </select>
         <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequote"><i class="fa fa-plus"></i></a>
+          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="add-coustomar" id="hidequote"><i class="fa fa-plus"></i></a>
         </div>
         <div class="wrapper" style="display: none;">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
@@ -372,8 +360,6 @@
     </div>
   </div>
 </div>
-
-
 
 <!-------------------More Service--------------------->
 <div class="modal fade" id="service-list-dot" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
@@ -562,6 +548,7 @@
     </div>
   </div>
 </div>
+
 @endsection
 
 @section('script')
@@ -598,13 +585,6 @@ $(document).ready(function() {
         });
     });
 });
-
-
-
-   
-
-
-
 
   $('.dropify').dropify();
   $(document).ready(function() {
@@ -829,10 +809,7 @@ $(document).on('click','#editCustomer',function(e) {
         }
       });
     });
-  });
-
-
-  
+  });  
 </script>
 @endsection
 

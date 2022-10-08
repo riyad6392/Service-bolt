@@ -284,7 +284,7 @@ class PersonnelController extends Controller
           $userimage = url('/').'/uploads/servicebolt-noimage.png';
       }
 
-       $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
+       $html ='<div class="add-customer-modal d-flex justify-content-between align-items-baseline">
                   <h5>Edit Personnel</h5>
      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
      </div>';
