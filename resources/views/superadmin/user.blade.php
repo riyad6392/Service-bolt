@@ -43,7 +43,7 @@
   </div>
      </a>
   </td>
-   <td><a href="{{url('superadmin/manageUser/userlogin/')}}/{{$user->id}}">{{$user->email}}</a></td>
+   <td><a href="{{url('superadmin/manageUser/userlogin/')}}/{{$user->id}}" title="login">{{$user->email}}</a></td>
        <td>{{$user->phone}}</td>
        @php
         $time = strtotime($user->created_at);
