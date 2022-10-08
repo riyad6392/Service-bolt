@@ -261,6 +261,10 @@ class AuthController extends Controller
         if(auth()->check() && auth()->user()->role=="company"){
           return redirect(route('company.home'));
         }
+
+        if(auth()->check() && auth()->user()->role=="worker"){
+          return redirect(route('worker.home'));
+        }
         return view('auth.superadminlogin');
     }
 
