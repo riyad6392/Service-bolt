@@ -664,17 +664,18 @@ function readURL(input) {
 	   var id = $(this).data('id');
 	   var dataString =  'id='+ id;
 	   $.ajax({
-            url:'{{route('company.editviewinventorymodal1')}}',
+            url:'{{route('company.duplicateproduct')}}',
             data: dataString,
             method: 'post',
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              $('#viewmodalduplicatedata').html(data.html);
-              $('.dropify').dropify();
-              $('.selectpicker').selectpicker({
-                size: 3
-              });
+            	location.reload();
+              // $('#viewmodalduplicatedata').html(data.html);
+              // $('.dropify').dropify();
+              // $('.selectpicker').selectpicker({
+              //   size: 3
+              // });
             }
 	    })
   	});
