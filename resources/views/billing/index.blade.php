@@ -9,7 +9,7 @@
     margin: 10px;
     height: 340px;
     overflow-y: scroll;
-  }
+  } 
   .modal-ul-box li {
       list-style: none;
       margin: 14px;
