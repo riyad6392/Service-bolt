@@ -54,9 +54,9 @@ class AdminsettingController extends Controller
             $setting->host = $request->host;
             $setting->smtpusername = $request->smtpusername;
             $setting->smtppassword = $request->smtppassword;
-            $setting->mail_encryption = $request->mail_encryption;
-            $setting->mail_port = $request->mail_port;
-            $setting->mail_driver = $request->mail_driver;
+            // $setting->mail_encryption = $request->mail_encryption;
+            // $setting->mail_port = $request->mail_port;
+            // $setting->mail_driver = $request->mail_driver;
 
         }
 
