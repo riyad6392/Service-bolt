@@ -23,7 +23,7 @@ jobs:
 
       with:
 
-        host: 203.190.153.18
+        host: 203.190.153.20
 
         key: ${{ secrets.SSH_PRIVATE_KEY }}
 
@@ -32,6 +32,6 @@ jobs:
         port: 22
 
         script: |
-          cd /var/www/html/servicebolt-dev/ 
+          cd /var/www/html/servicebolt_dev/ 
           git pull origin master
       
