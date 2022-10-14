@@ -70,9 +70,9 @@ class ReportController extends Controller
             }
         } else {
             if($request->pid==null) {
-                $personnelid = $pdata[0]->id;
+                $personnelid = @$pdata[0]->id;
             } else {
-                $personnelid = $request->pid;
+                $personnelid = @$request->pid;
             }
             $tickerdatas = Quote::select('primaryname')->where('personnelid',$personnelid)->where('ticket_status','3')->get();  
             if(count($tickerdatas)>=1) { 
