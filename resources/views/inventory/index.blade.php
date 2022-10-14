@@ -116,7 +116,7 @@
 	                  @endif
                   @endforeach
                 @endif
-			<div class="heading-dot pull-right" data-bs-toggle="modal" data-bs-target="#exampleModal">    
+			<div class="heading-dot pull-right" data-bs-toggle="modal" data-bs-target="#exampleModal" style="display:none;">    
 				<i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
 			</div>
 			</tr>
