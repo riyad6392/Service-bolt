@@ -313,7 +313,7 @@
      
      <div class="col-md-6 mb-3">
     
-     <input type="email" class="form-control email" placeholder="Email" name="email" id="email" >
+     <input type="email" class="form-control email" placeholder="Email" name="email" id="email" data-id="">
      </div>
      <div class="col-md-12 mb-3 email_msg " style="display:none;">
      
@@ -557,8 +557,13 @@
 $(document).ready(function() {
     $(document).on('blur', '.email', function() {
         email = $(this).val();
-        //alert(email);
-        var url = "{{url('/company/customer/checkemail')}}" + '?' + 'email=' + email;
+        cid = $(this).data('id');
+        if(cid=="") {
+          cid = 0;
+        } else {
+          cid = cid;
+        }
+        var url = "{{url('/company/customer/checkemail')}}" + '?' + 'email=' + email+ '&' +'cid=' + cid;
         //alert('f');
 
         $.ajax({

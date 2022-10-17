@@ -592,7 +592,7 @@ class CustomerController extends Controller
           <div class="col-md-12 mb-2">
             <label>Email</label>
 
-            <input type="email" class="form-control email" placeholder="Email" value="'.$customer[0]->email.'" name="email" >
+            <input type="email" class="form-control email" placeholder="Email" value="'.$customer[0]->email.'" name="email" data-id="'.$customer[0]->id.'">
           </div>
           <div class="col-md-12 mb-3 email_msg " style="display:none;">
      
@@ -712,9 +712,13 @@ class CustomerController extends Controller
 
     public function checkemail(Request $request) {
       $givenemail = $_GET['email'];
-  
-      $emailData = Customer::where('email','=',$givenemail)->first();
-
+      $givenid = $_GET['cid'];
+      if($givenid == 0) {
+        $emailData = Customer::where('email','=',$givenemail)->first();  
+      } else {
+        $emailData = Customer::where('email','=',$givenemail)->whereNotIn('id', $givenid)->first();  
+      }
+      
       if($emailData) {
         echo 1;
       }
