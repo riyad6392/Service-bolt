@@ -50,6 +50,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     top: 5px;
     color: black;
 }
+
+i.fa.fa-plus.new-services {
+    position: relative;
+    top: -40px;
+    left: 400px;
+}
+
+i.fa.fa-plus.true-condition {
+    position: absolute;
+    top: 185px;
+    color: black;
+    background: yellow;
+    padding: 7px 9px;
+    border-radius: 100px;
+    right: 25px;
+}
+
 </style>
 <div class="content">
     <div class="row">
@@ -221,7 +238,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         
         @endphp
         <div class="row customer-form" id="product-box-tabs">
-          <div class="col-md-12 mb-2">
+          <div class="col-md-11 mb-2">
             <input type="text" class="form-control" placeholder="Service Name" name="servicename" id="servicename" required="">
           </div>
           <div class="col-md-12 mb-2 position-relative">
@@ -288,7 +305,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
               <input type="file" class="dropify" name="image" id="image"data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
           </div>
-          <div class="col-md-12 mb-2" style="display: none;">
+          <div class="col-md-11 mb-2" style="display: none;">
             <p class="create-gray mb-2">Create default checklist</p>
             <div class="align-items-center  d-flex services-list" style="flex-flow:wrap;">
               <label class="container-checkbox me-3">Point 1
@@ -432,7 +449,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname" required="">
      
      </div>
-     <div class="col-md-12 mb-3">
+     <div class="col-md-11 mb-3">
       <div class="d-flex align-items-center">
         <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
           @php $services = App\Models\Service::select('id','servicename')->where('userid', auth()->user()->id)->get(); @endphp
@@ -695,7 +712,7 @@ $(document).on('click','#editService',function(e) {
             $.each(result.address,function(key,value) {
               $("#address_service").append('<option value="'+value.address+'">'+value.address+'</option>');
             });
-            $('#addressicon').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address" id="hidequote1" class=""><i class="fa fa-plus"></i></a></div>');
+            $('#addressicon').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address" id="hidequote1" class=""><i class="fa fa-plus true-condition"></i></a></div>');
           }
           
       });

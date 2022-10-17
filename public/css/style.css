@@ -3072,6 +3072,8 @@ h5.dew {
   color: black;
 }
 
+
+
 /*=-=-=-=-=-=-=-=- narayan apply css start =-=-=-=-=-=-=-=-=-=-=-=- */
 
 select#category:focus {
@@ -3104,7 +3106,7 @@ a.in-plus i.fa.fa-plus.yellow-icon {
 }
 
  a#hidequote i.fa.fa-plus {
-  right: 25px;
+  right: 32px;
   margin: 0px;
   bottom: 21%;
   background: yellow;
@@ -3122,6 +3124,17 @@ a#createctickets {
   max-width: 700px !important;
 }
 
-/* td.hdfui {
+a.category {
+  position: relative;
+}
+
+a.category i.fa.fa-plus.yellow-icon-category {
+  position: absolute;
+  margin: 0px;
+  bottom: 10px;
   background: yellow;
-} */
+  color: black;
+  padding: 7px 9px;
+  border-radius: 100px;
+  left: 405px;
+}

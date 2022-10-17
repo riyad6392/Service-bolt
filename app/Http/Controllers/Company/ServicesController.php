@@ -477,7 +477,7 @@ class ServicesController extends Controller
                 } else {
             $html .='<div style="color:red;">Final Step: Then add a new quote.</div>';    
                 }
-        $html .='<div class="row customer-form"><div class="col-md-12 mb-2">';
+        $html .='<div class="row customer-form"><div class="col-md-11 mb-2">';
         $html .='
         <input type="hidden" name="serviceid" id="serviceid" value="'.$request->id.'"><div class="input_fields_wrap">
           <div class="mb-3">
@@ -487,13 +487,13 @@ class ServicesController extends Controller
                 $html .='<option value="'.$value->id.'">'.$value->customername.'</option>';
               }
         $html .='</select>
-        <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-			  			<a href="#"  data-bs-toggle="modal" data-bs-target="#add-customer" class="" id="hidequote"><i class="fa fa-plus"></i></a>
-			  		</div>
+        
+			  			<a href="#"  data-bs-toggle="modal" data-bs-target="#add-customer" class="" id="hidequote"><i class="fa fa-plus new-services"></i></a>
+			  		
           </div>
         </div>
       </div>
-      <div class="col-md-12 mb-2">
+      <div class="col-md-11 mb-2">
        <div class="input_fields_wrap">
           <div class="mb-3">
             <select class="form-select" name="address" id="address_service" required>

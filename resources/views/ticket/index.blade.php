@@ -44,9 +44,70 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     box-shadow: 0px 0px 10px #ccc;
 }
 
+a .hidequote{
+position: relative;
+}
+
+i.fa.fa-plus.first {
+    position: absolute !important;
+    top: 80px !important;
+    height: 30px !important;
+}
+
+i.fa.fa-plus.second {
+    position: absolute;
+    top: 253px;
+    right: 35px;
+    color: black;
+    background: yellow;
+    padding: 7px 9px;
+    border-radius: 100px;
+}
+
+i.fa.fa-plus.select-customer {
+    position: absolute;
+    color: black;
+    background: yellow;
+    padding: 7px 9px;
+    border-radius: 100px;
+    right: 33px;
+    top: 169px;
+}
+
+i.fa.fa-plus.next-one {
+    position: absolute;
+    top: 250px;
+    right: 13px;
+    color: black;
+    background: yellow;
+    padding: 7px 9px;
+    border-radius: 100px;
+}
+
+	i.fa.fa-plus.first-one {
+    position: absolute;
+    top: 80px;
+    right: 12px;
+    color: black;
+    background: yellow;
+    padding: 7px 9px;
+    border-radius: 100px;
+}
+
+i.fa.fa-plus.category-one {
+    position: absolute;
+    top: 170px;
+    right: 13px;
+    color: black;
+    background: yellow;
+    padding: 7px 9px;
+    border-radius: 100px;
+}
+
 
 </style>
-<div class="">
+
+<div class="ticket-page">
 <div class="content">
      <div class="row">
       <div class="col-md-12">
@@ -550,7 +611,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	 		}
 	 	@endphp
 	   <div class="row customer-form">
-	   <div class="col-md-12 mb-2">
+	   <div class="col-md-11 mb-2">
 		   <div class="input_fields_wrap">
 	    		<div class="mb-3">
 			    	<select class="form-select {{$custmername}}" name="customerid" id="customerid" required>
@@ -561,13 +622,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 			  		</select>
 
 			  		<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-			  			<a href="#"  data-bs-toggle="modal" data-bs-target="#add-customer" class="" id="hidequote"><i class="fa fa-plus"></i></a>
+			  			<a class="addanew" href="#"  data-bs-toggle="modal" data-bs-target="#add-customer" class="" id="hidequote"><i class="fa fa-plus first"></i></a>
 			  		</div>
 					</div>
 			</div>
 	 	</div>
 
-	 	<div class="col-md-12 mb-2">
+	 	<div class="col-md-11 mb-2">
 		   <div class="input_fields_wrap">
 	    		<div class="mb-3">
 			    	<select class="form-select" name="address" id="address1" required>
@@ -591,14 +652,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	 			$wname = "active-focus";
 	 		}
 	 	@endphp
-	  <div class="col-md-12 mb-3">
+	  <div class="col-md-11 mb-3">
 	  	<select class="selectpicker form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true">
 	  		@foreach($services as $key =>$value)
 				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
 			@endforeach
 			</select>
 			<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus"></i></a>
+          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus second"></i></a>
         </div>
 	  </div>
 	   
@@ -738,7 +799,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 				      @endforeach
 			  		</select>
 			  		<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-			  			<a href="#"  data-bs-toggle="modal" data-bs-target="#add-customer2" class="" id="hideticket"><i class="fa fa-plus"></i></a>
+			  			<a href="#"  data-bs-toggle="modal" data-bs-target="#add-customer2" class="" id="hideticket"><i class="fa fa-plus first-one"></i></a>
 			  		</div>
 					</div>
 			    </div>
@@ -768,14 +829,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	 			$wname = "active-focus";
 	 		}
 	 	@endphp
-		<div class="col-md-12 mb-3">
+		<div class="col-md-11 mb-3">
 	  	<select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" class="service" required="" multiple aria-label="Default select example" data-live-search="true">
 	  		@foreach($services as $key =>$value)
 				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price1="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
 			@endforeach
 		</select>
 		<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services1" class="" id="hidequoteservice2"><i class="fa fa-plus"></i></a>
+          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services1" class="" id="hidequoteservice2"><i class="fa fa-plus next-one"></i></a>
         </div>
 	   </div>
 	   
@@ -1920,7 +1981,7 @@ $('#serviceform').on('submit', function(event) {
 						$.each(result.address,function(key,value) {
 							$("#address1").append('<option value="'+value.address+'">'+value.address+'</option>');
 						});
-						$('#addressicon').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address" id="hidequote1" class=""><i class="fa fa-plus"></i></a></div>');
+						$('#addressicon').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address" id="hidequote1" class=""><i class="fa fa-plus select-customer"></i></a></div>');
 					}
 			});
 		});
@@ -1943,7 +2004,7 @@ $('#serviceform').on('submit', function(event) {
 						$.each(result.address,function(key,value) {
 							$("#address2").append('<option value="'+value.address+'">'+value.address+'</option>');
 						});
-						$('#addressicon1').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address2" class="" id="hideticket1"><i class="fa fa-plus"></i></a></div>');
+						$('#addressicon1').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address2" class="" id="hideticket1"><i class="fa fa-plus category-one"></i></a></div>');
 					}
 			});
 		});    

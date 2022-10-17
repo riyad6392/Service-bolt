@@ -218,6 +218,17 @@ i.fa.fa-angle-down {
 .notification-icon .dropdown-menu{
     top: 23px!important;
 }
+
+li.notification-item {
+    margin-bottom: 5px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+ul#notification {
+  border: 1px solid yellow;
+  border-radius:5px ;
+}
+
 </style>
   <title>
   Services Bolt
@@ -505,9 +516,9 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" id="notification">
       @if(count($notifications)>0)
         @foreach($notifications as $notification)
-            <li><a class="dropdown-item">{{$notification->message}}</a></li>
+            <li class="notification-item"><a class="dropdown-item">{{$notification->message}}</a></li>
         @endforeach
-        <p style="text-align:center;"><a href="{{route('company.notification')}}">View All</a></p>
+        <p style="text-align:center;"><a class="add-btn-yellow w-75 p-1 mt-2" href="{{route('company.notification')}}">View All</a></p>
       @endif
     </ul>   
      

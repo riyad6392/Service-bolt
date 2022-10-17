@@ -165,7 +165,7 @@ class InventoryController extends Controller
       <label>Price</label>
      <input type="text" class="form-control" placeholder="Price" class="form-control" placeholder="SKU #" value="'.$inventory[0]->price.'" name="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" required>
      </div>
-      <div class="col-md-12 mb-5">
+      <div class="col-md-11 mb-5">
     <label>Category</label>
             <select class="form-select" name="category" id="category"><option value="">Select a Category</option>';
             $categorydata = Category::where('userid', $auth_id)->get();
@@ -178,13 +178,13 @@ class InventoryController extends Controller
                 }
                 $html .='<option value="'.$value->category_name.'" '.@$selectecp.'>'.$value->category_name.'</option>';
               }
-        $html .='</select><a href="#"  data-bs-toggle="modal" data-bs-target="#add-category" class=""><i class="fa fa-plus" style="position: absolute;right: 40px;margin: 16px;"></i></a>
+        $html .='</select><a class="category" href="#"  data-bs-toggle="modal" data-bs-target="#add-category" class=""><i class="fa fa-plus yellow-icon-category"></i></a>
           </div>
           <div class="col-lg-6 ">
      <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
      </div>
      <div class="col-lg-6">
-     <span class="btn btn-add btn-block description-product-1">Next</span>
+     <span class="btn btn-add btn-block description-product-1" style="padding: 11px;">Next</span>
      </div>
      </div>
      
@@ -198,7 +198,7 @@ class InventoryController extends Controller
       </div>
      
      <div class="col-lg-6 mb-3">
-     <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
+     <span class="btn btn-cancel btn-block"    data-bs-dismiss="modal">Cancel</span>
      </div>
      <div class="col-lg-6 mb-3">
      <button class="btn btn-add btn-block" type="submit">Complete</button>
