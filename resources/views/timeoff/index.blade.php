@@ -192,7 +192,7 @@ tr.accepted-row:after {
                   <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="{{$value->ids}}">Accept</a>
                   <!-- <a class="btn btn-edit reject-btn p-3 w-auto" id="reject" data-id="{{$value->ids}}">Reject</a> -->
                   <a  class="btn btn-edit reject-btn p-3 w-auto" id="rejectpop" data-id="{{$value->ids}}">Reject</a>
-                  <a class="btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->ids}}">Delete</a>
+                  <a class="btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->ids}}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                 @endif
               </td>
               
