@@ -956,6 +956,11 @@ body::-webkit-scrollbar-thumb:hover {
         $("#calendar").addClass("fulldayShow");
 
     });
+    
+    // $(".menubar").click(function() {
+    //     console.log(window);
+    //    $("#hide-top").hide(); 
+    // });
 </script>
 <script type="">
 

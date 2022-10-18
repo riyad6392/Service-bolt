@@ -580,9 +580,9 @@
           //     //updatePosition(data.lat,data.long);  
           //   });
 
-setInterval(function() { 
-  $(".livelocationupdate").trigger('click');
-}, 10000);
+// setInterval(function() { 
+//   $(".livelocationupdate").trigger('click');
+// }, 10000);
 
 $('.livelocationupdate').click(function() {
   var APP_URL = {!! json_encode(url('/')) !!}
