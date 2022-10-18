@@ -113,7 +113,7 @@ class HomeController extends Controller
         $dateE = Carbon::now();
         $ticket = DB::table('quote')->where('userid',$auth_id)->where('ticket_status', '!=' ,'0')->limit('3')->orderBy('id','DESC')->get();
         
-        $inventoryData = Inventory::where('user_id',$auth_id)->get();
+        $inventoryData = Inventory::where('user_id',$auth_id)->inRandomOrder()->get();
         $goodproduct =  array();
         $lowproduct =  array();
         $restockproduct =  array();
