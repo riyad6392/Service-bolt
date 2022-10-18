@@ -185,8 +185,8 @@ class HomeController extends Controller
            }
         } 
     DB::enableQuerylog();
-    $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->where('ticket_status','4')->groupBy('quote.personnelid')->orderBy('quote.id','desc')->get();
-    //dd($scheduleData);
+    $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->whereIn('ticket_status',array('2','3','4'))->groupBy('quote.personnelid')->orderBy('quote.id','desc')->get();
+    
      //$scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->orderBy('quote.id','ASC')->get();
       //dd(DB::getQuerylog());
       //->where('quote.ticket_status',"2")
