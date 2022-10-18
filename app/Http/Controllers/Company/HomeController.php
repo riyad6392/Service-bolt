@@ -48,7 +48,7 @@ class HomeController extends Controller
         $dateE = Carbon::now();
         $ticket = DB::table('quote')->where('userid',$auth_id)->where('parentid', '=',"")->where('ticket_status', '!=' ,'0')->where('ticket_status', '!=' ,'5')->limit('3')->orderBy('id','DESC')->get();
         
-        $inventoryData = Inventory::where('user_id',$auth_id)->get();
+        $inventoryData = Inventory::where('user_id',$auth_id)->inRandomOrder()->get();
         $goodproduct =  array();
         $lowproduct =  array();
         $restockproduct =  array();
@@ -66,6 +66,12 @@ class HomeController extends Controller
                 $restockproduct[] = $value->productname;
             }
         }
+        // print_r($goodproduct);
+        // echo "first";
+        // print_r($lowproduct);
+        // echo "second";
+        // print_r($restockproduct);
+        // echo "third"; die;
         $customerData = DB::table('quote')->select('quote.*', 'customer.id','customer.phonenumber','customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status', '!=' ,'0')->where('quote.ticket_status', '!=' ,'1')->limit('2')->orderBy('quote.id','DESC')->get();
 
         //$ticket = DB::table('quote')->select('product_id')->where('userid',$auth_id)->get();
