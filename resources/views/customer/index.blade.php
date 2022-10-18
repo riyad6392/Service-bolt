@@ -50,6 +50,11 @@
     padding: 8px 34px;
     box-shadow: 0px 0px 10px #ccc;
 }
+
+i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
+    margin-right: 6px;
+}
+
 </style>
 
 <div class="content">
@@ -140,7 +145,7 @@
                 @endforeach
               @endif
               <th>Action</th><div class="heading-dot pull-right" data-bs-toggle="modal" data-bs-target="#exampleModal">             
-          <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
+          <i class="dots fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
         </div>
             </tr>
           </thead>
@@ -332,7 +337,7 @@
           @endforeach
         </select>
         <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="add-coustomar" id="hidequote"><i class="fa fa-plus"></i></a>
+          <a class="add-person" href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="add-coustomar" id="hidequote"><i class="add-coustomar fa fa-plus"></i></a>
         </div>
         <div class="wrapper" style="display: none;">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>

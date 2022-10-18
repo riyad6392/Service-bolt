@@ -292,12 +292,12 @@ class PersonnelController extends Controller
        <input type="hidden" value="'.$request->id.'" name="personnelid">
           <div class="col-md-12 mb-2">
             <div class="form-group">
-            <label>Personnel Name</label>
+            <label class="mb-2">Personnel Name</label>
             <input type="text" class="form-control" placeholder="Personnel Name" name="personnelname" id="personnelname" value="'.$personnel[0]->personnelname.'" required>
           </div>
           </div>
           <div class="col-md-12 mb-3">
-          <label>Address</label>
+          <label class="mb-2">Address</label>
              <div class="input_fields_wrap">
                 <div class="mb-3">
                   <input type="text" class="form-control" placeholder="Address" name="address" id="address" value="'.$personnel[0]->address.'" required="">
@@ -305,7 +305,7 @@ class PersonnelController extends Controller
             </div>
           </div>
           <div class="col-md-12 mb-3">
-          <label>Phone</label>
+          <label class="mb-2">Phone</label>
              <div class="input_fields_wrap">
                 <div class="mb-3">
                   <input type="text" class="form-control" placeholder="Phone Number" name="phone" id="phone" value="'.$personnel[0]->phone.'" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
@@ -314,7 +314,7 @@ class PersonnelController extends Controller
           </div>
 
           <div class="col-md-12 mb-3">
-          <label>Email</label>
+          <label class="mb-2">Email</label>
              <div class="input_fields_wrap">
                 <div class="mb-3">
                   <input type="email" class="form-control" placeholder="Email" name="email" id="email" value="'.$personnel[0]->email.'" required>
@@ -348,7 +348,7 @@ class PersonnelController extends Controller
         $html .='</select>
           </div>
           <div class="col-md-12 mb-3">
-          <label>Password</label>
+          <label class="mb-2">Password</label>
              <div class="input_fields_wrap">
                 <div class="mb-3 d-flex align-items-center">
                   <input type="password" class="form-control" placeholder="Password" name="password" id="password" value="'.@$user[0]->wpassword.'" required><span toggle="#password-field" class="fa fa-fw fa-eye-slash field_icon toggle-password"></span>

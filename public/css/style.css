@@ -1765,7 +1765,7 @@ textarea.form-control.height-180 {
 /* When the checkbox is checked, add a blue background */
 .container-checkbox input:checked ~ .checkmark {
   background: #fee200;
-  /*background: #000;*/
+  border-radius: 50px;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */

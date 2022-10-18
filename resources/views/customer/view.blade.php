@@ -75,9 +75,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 <div class="col-md-8 mb-4">
 <div class="card">
-<div class="card-body p-4">
+<div class="card-body p-3">
   <div class="card-box">
-  <h5 class="m-0">
+  <h5 class="ms-2">
   Connected Addresses
   </h5>
   @if(Session::has('success'))
@@ -183,7 +183,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <th>Price</th>
     <th>Service Name</th>
     <th>Action</th>
-    
+
     </tr>
     </thead>
     <tbody>
