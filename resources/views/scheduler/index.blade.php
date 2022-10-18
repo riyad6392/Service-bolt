@@ -7,7 +7,7 @@
 <style type="">
   body{
         overflow-x: hidden;
-        overflow-y: hidden;
+        /*overflow-y: hidden;*/
     }
 #calendar{display: block;}
 .fc-center {
@@ -463,6 +463,26 @@ span.date-icon {
     height: 680px;
 }
 }
+
+/* width */
+body::-webkit-scrollbar {
+  width: 1px;
+}
+
+/* Track */
+body::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+body::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+body::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+} 
 </style>
 <div class="row">
     <div class="col-md-12">
