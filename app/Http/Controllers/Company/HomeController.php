@@ -48,7 +48,7 @@ class HomeController extends Controller
         $dateE = Carbon::now();
         $ticket = DB::table('quote')->where('userid',$auth_id)->where('parentid', '=',"")->where('ticket_status', '!=' ,'0')->where('ticket_status', '!=' ,'5')->limit('3')->orderBy('id','DESC')->get();
         
-        $inventoryData = Inventory::where('user_id',$auth_id)->get();
+        $inventoryData = Inventory::where('user_id',$auth_id)->inRandomOrder()->get();
         $goodproduct =  array();
         $lowproduct =  array();
         $restockproduct =  array();
@@ -66,6 +66,12 @@ class HomeController extends Controller
                 $restockproduct[] = $value->productname;
             }
         }
+        // print_r($goodproduct);
+        // echo "first";
+        // print_r($lowproduct);
+        // echo "second";
+        // print_r($restockproduct);
+        // echo "third"; die;
         $customerData = DB::table('quote')->select('quote.*', 'customer.id','customer.phonenumber','customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status', '!=' ,'0')->where('quote.ticket_status', '!=' ,'1')->limit('2')->orderBy('quote.id','DESC')->get();
 
         //$ticket = DB::table('quote')->select('product_id')->where('userid',$auth_id)->get();
@@ -107,7 +113,7 @@ class HomeController extends Controller
         $dateE = Carbon::now();
         $ticket = DB::table('quote')->where('userid',$auth_id)->where('ticket_status', '!=' ,'0')->limit('3')->orderBy('id','DESC')->get();
         
-        $inventoryData = Inventory::where('user_id',$auth_id)->get();
+        $inventoryData = Inventory::where('user_id',$auth_id)->inRandomOrder()->get();
         $goodproduct =  array();
         $lowproduct =  array();
         $restockproduct =  array();
@@ -179,11 +185,11 @@ class HomeController extends Controller
            }
         } 
     DB::enableQuerylog();
-    $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->where('ticket_status','4')->groupBy('quote.personnelid')->orderBy('quote.id','desc')->get();
-    //dd($scheduleData);
-     //$scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->orderBy('quote.id','ASC')->get();
-      //dd(DB::getQuerylog());
-      //->where('quote.ticket_status',"2")
+    //$scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->whereIn('ticket_status',array('2','3','4'))->groupBy('quote.personnelid')->orderBy('quote.id','desc')->get();
+
+    $scheduleData = DB::table('personnel')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->leftJoin('quote', 'quote.personnelid', '=', 'personnel.id')->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->groupBy('quote.personnelid')->orderBy('quote.id','desc')->get();
+
+    
       $json = array();
       $data = [];
         foreach($scheduleData as $key => $value) {

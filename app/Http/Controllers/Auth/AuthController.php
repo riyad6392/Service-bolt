@@ -112,6 +112,7 @@ class AuthController extends Controller
             'amount' => $request->price,
             'openingtime' => 0,
             'closingtime' => 23,
+            'paymenttype'=>"Cash",
         ]);
 
         $userid = $data1->id;

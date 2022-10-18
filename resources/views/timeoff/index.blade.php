@@ -60,6 +60,17 @@
     color: #fff;
     padding: 5px 8px!important;
 }
+
+tr.rejected-row:after {
+    background-color: #FFCCCB !important;
+     width: 72%!important;
+}
+
+
+tr.accepted-row:after {
+    background-color: #90EE90 !important;
+     width: 72%!important;
+}
 </style>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
@@ -152,12 +163,15 @@
               } else {
                 $submittedby = "-";
               }
-              $rejectedcolor = "";
+              $classname = "";
               if($value->status == "Rejected") {
-                $rejectedcolor = "red";
+                $classname = "rejected-row";
+              }
+              if($value->status == "Accepted") {
+                $classname = "accepted-row";
               }
             @endphp
-            <tr style="color:{{$rejectedcolor}}">
+            <tr class="{{$classname}}">
               <td style="display: none;">{{$value->id}}</td>
               <td>{{Str::limit($value->personnelname, 15)}}</td>
               <td>{{--$value->date1--}}{{$value->counttotal}} Day

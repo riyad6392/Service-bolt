@@ -44,6 +44,7 @@ class User extends Authenticatable
         'mail_driver',
         'openingtime',
         'closingtime',
+        'paymenttype',
     ];
 
     /**
