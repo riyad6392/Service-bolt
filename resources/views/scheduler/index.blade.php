@@ -957,10 +957,14 @@ body::-webkit-scrollbar-thumb:hover {
 
     });
     
-    // $(".menubar").click(function() {
-    //     console.log(window);
-    //    $("#hide-top").hide(); 
-    // });
+    $("#menuhideshow").click(function() {
+        if($('#siderbarpt2').css('display') == 'block') 
+        {
+            $("#hide-top").hide();      
+        } else {
+            $("#hide-top").show();      
+        }    
+    });
 </script>
 <script type="">
 
