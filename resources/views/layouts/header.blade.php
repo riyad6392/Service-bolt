@@ -608,21 +608,43 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
   	}) 
     function initAutocomplete() {
 
-  var input = document.getElementById('address');
-           var autocomplete = new google.maps.places.Autocomplete(input);
-            // autocomplete.setComponentRestrictions(
-            // {'country': ['us']});
+      var input = document.getElementById('address');
+       var autocomplete = new google.maps.places.Autocomplete(input);
+        // autocomplete.setComponentRestrictions(
+        // {'country': ['us']});
 
-           autocomplete.addListener('place_changed', function() {
-               var place = autocomplete.getPlace();
-                autocomplete.setComponentRestrictions(
-            {'country': ['us']});
+       autocomplete.addListener('place_changed', function() {
+           var place = autocomplete.getPlace();
+            autocomplete.setComponentRestrictions(
+        {'country': ['us']});
 
-           
-           });
+       
+       });
+
+       var input1 = document.getElementById('address6');
+       var autocomplete1 = new google.maps.places.Autocomplete(input1);
+        // autocomplete.setComponentRestrictions(
+        // {'country': ['us']});
+
+       autocomplete1.addListener('place_changed', function() {
+           var place1 = autocomplete1.getPlace();
+            autocomplete1.setComponentRestrictions(
+        {'country': ['us']});
+      });
+
+       var input2 = document.getElementById('address5');
+       var autocomplete2 = new google.maps.places.Autocomplete(input2);
+        // autocomplete.setComponentRestrictions(
+        // {'country': ['us']});
+
+       autocomplete2.addListener('place_changed', function() {
+           var place2 = autocomplete2.getPlace();
+            autocomplete2.setComponentRestrictions(
+        {'country': ['us']});
+      });
 
   
-}
+    }
 </script>  
    
 <script>

@@ -1062,7 +1062,7 @@ i.fa.fa-plus.category-one {
   
 	 <div class="add-customer-modal d-flex justify-content-between align-items-center">
 	 <h5>Add Address</h5>
-     <button type="button" class="btn-close" data-bs-dismiss="modal" id="quotecancel1" aria-label="Close"></button>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" id="address" aria-label="Close"></button>
      </div>
      
      
@@ -1498,6 +1498,7 @@ i.fa.fa-plus.category-one {
 @section('script')
 <script type="text/javascript">
 $('.dropify').dropify();
+
 $('#createserviceticket').on('submit', function(event) {
       event.preventDefault();
       var url = "{{url('company/customer/createcticket')}}";
@@ -1675,43 +1676,7 @@ $('#serviceform').on('submit', function(event) {
       }
    });
 
-   $(document).on('keyup','#address6',function(e) {
-	var address = $('#address6').val();
-
-	if(address=="") {
-		   	//alert('address field is required');
-			return false;
-		   }
-	   $.ajax({
-            url:"{{url('company/quote/checklatitude')}}",
-            data: {
-              address: address,
-     		},
-            method: 'post',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-				console.log(data);
-				if(data.status=='success') {
-				$("#saveaddress2").attr("disabled", true);
-				$(".find_msg").html(data.msg);
-				$('.find_msg').css('color','red');
-				$('.find_msg').css('display','block');
-				
-             // $("#add-address").modal('hide');
-              //$("#address1").append("<option value="+data.address+">"+data.address+"</option>");
-             // $("#add-tickets").show();
-				}
-				else {
-					//alert('fdgnk');
-					$("#saveaddress2").attr("disabled", false);
-					$('.find_msg').css('display','none');
-				}
-            }
-        })
-    });
-
-	$(document).on('keyup','#address5',function(e) {
+   $(document).on('keyup','#address51',function(e) {
 	var address = $('#address5').val();
 
 	if(address=="") {
