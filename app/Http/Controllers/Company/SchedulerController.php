@@ -661,7 +661,7 @@ class SchedulerController extends Controller
             $puser = Personnel::select('device_token')->where("id", $workerid)->first();
 
             $msgarray = array (
-                'title' => "Ticket #" .$quoteid. " scheduled time has changed",
+                'title' => 'Ticket Assign',
                 'msg' => "Ticket #" .$quoteid. " scheduled time has changed",
                 'type' => 'ticketassign',
             );
@@ -740,7 +740,7 @@ class SchedulerController extends Controller
             $puser = Personnel::select('device_token')->where("id", $workerid)->first();
 
             $msgarray = array (
-                'title' => "A new ticket #" .$quoteid. " has been assigned",
+                'title' => 'Ticket Assign',
                 'msg' => "A new ticket #" .$quoteid. " has been assigned",
                 'type' => 'ticketassign',
             );
@@ -874,7 +874,7 @@ class SchedulerController extends Controller
             $puser = Personnel::select('device_token')->where("id", $pid->personnelid)->first();
             
             $msgarray = array (
-                'title' => "Ticket #" .$ticketid. " has been deleted",
+                'title' => 'Ticket Delete',
                 'msg' => "Ticket #" .$ticketid. " has been deleted.",
                 'type' => 'ticketdelete',
             );
@@ -1395,7 +1395,7 @@ class SchedulerController extends Controller
         $puser = Personnel::select('device_token')->where("id", $quote->personnelid)->first();
 
         $msgarray = array (
-            'title' => "Details Changed Ticket #" .$quote->id,
+            'title' => 'Ticket Detail changed',
             'msg' => "Details Changed Ticket #" .$quote->id,
             'type' => 'ticketdetailchanges',
         );
@@ -1880,7 +1880,7 @@ class SchedulerController extends Controller
             $puser = Personnel::select('device_token')->where("id", $workerid)->first();
 
             $msgarray = array (
-                'title' => "Ticket #" .$quoteid. " has been changed",
+                'title' => 'Ticket Changed',
                 'msg' => "Ticket #" .$quoteid. " has been changed",
                 'type' => 'ticketchanged',
             );
