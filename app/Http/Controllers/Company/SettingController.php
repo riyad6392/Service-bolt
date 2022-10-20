@@ -70,6 +70,24 @@ class SettingController extends Controller
 
         $user->openingtime = $request->openingtime;
         $user->closingtime = $request->closingtime;
+        $user->company_address = $request->address;
+        $formattedAddr = str_replace(' ','+',$request->address);
+        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+        $output = json_decode($geocodeFromAddr);
+        //Get latitude and longitute from json data
+        if($output->results!=NULL) {
+            $user->latitude  = $output->results[0]->geometry->location->lat; 
+            $user->longitude = $output->results[0]->geometry->location->lng;
+        }
+        else {
+          $user->latitude  = 0; 
+          $user->longitude = 0;
+        }
+
+        $user->goodproduct = $request->goodproduct;
+        $user->lowproduct = $request->lowproduct;
+       // $user->restockproduct = $request->restockproduct;
+
 
         $user->save();
         $request->session()->flash("success", "Settings Updated Successfully");

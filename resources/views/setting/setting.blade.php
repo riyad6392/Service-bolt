@@ -61,9 +61,14 @@
   <input type="text" class="form-control form-control-2" placeholder="Last Name" value="{{$userData->lastname}}" name="lastname" required="">
 </div>
 
-<div class="col-lg-12 mb-3">
+<div class="col-lg-6 mb-3">
 <label class="form-label">Company Name</label>
   <input type="text" class="form-control form-control-2" placeholder="Company Name" value="{{$userData->companyname}}" name="companyname" required="">
+</div>
+
+<div class="col-lg-6 mb-3">
+<label class="form-label">Company Address</label>
+  <input type="text" class="form-control form-control-2" placeholder="Company Address" value="{{$userData->company_address}}" name="address" id="address" required="">
 </div>
 
 <div class="col-lg-6 mb-3">
@@ -74,6 +79,19 @@
 <div class="col-lg-6 mb-3">
 <label class="form-label">Email</label>
   <input type="email" class="form-control form-control-2" placeholder="Email Id" value="{{$userData->email}}" name="email" readonly="">
+</div>
+<h5 class="my-4">Set Stock Status(%)</h5>
+<div class="col-lg-6 mb-3">
+<label class="form-label">Good Stock (%)</label>
+  <input type="text" class="form-control form-control-2" placeholder="Good Stock" value="{{$userData->goodproduct}}" name="goodproduct" onkeypress="return checkPhone(event)">
+</div>
+<div class="col-lg-6 mb-3">
+<label class="form-label">Low Stock (%)</label>
+  <input type="text" class="form-control form-control-2" placeholder="Low Stock" value="{{$userData->lowproduct}}" name="lowproduct" onkeypress="return checkPhone(event)">
+</div>
+<div class="col-lg-6 mb-3" style="display:none;">
+<label class="form-label">Less Restock (%)</label>
+  <input type="text" class="form-control form-control-2" placeholder="Less Restock" value="{{$userData->restockproduct}}" name="restockproduct" onkeypress="return checkPhone(event)">
 </div>
 <h5 class="my-4">Select Available Hours</h5>
 <div class="col-lg-6 mb-3">

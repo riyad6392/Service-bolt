@@ -66,16 +66,8 @@ class HomeController extends Controller
                 $restockproduct[] = $value->productname;
             }
         }
-        // print_r($goodproduct);
-        // echo "first";
-        // print_r($lowproduct);
-        // echo "second";
-        // print_r($restockproduct);
-        // echo "third"; die;
+
         $customerData = DB::table('quote')->select('quote.*', 'customer.id','customer.phonenumber','customer.image')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid',$auth_id)->where('quote.ticket_status', '!=' ,'0')->where('quote.ticket_status', '!=' ,'1')->limit('2')->orderBy('quote.id','DESC')->get();
-
-        //$ticket = DB::table('quote')->select('product_id')->where('userid',$auth_id)->get();
-
         $inventoryinfo = DB::table('quote')
                  ->select('quote.product_id','quote.product_name', DB::raw('count(*) as total'),'products.pquantity','products.quantity')->join('products', 'products.id', '=', 'quote.product_id')->where('quote.userid',$auth_id)->where('quote.product_name', '!=',"")->limit(3)->orderBy('quote.product_id','DESC')
                  ->groupBy('quote.product_name')->get();
@@ -96,7 +88,8 @@ class HomeController extends Controller
         } else {
           $dailyprogress = 0;
         }
-        return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData'));
+        $usersaddress = DB::table('users')->select('latitude','longitude','company_address')->where('id',$auth_id)->first();
+        return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData','usersaddress'));
     }
 
     public function index1(Request $request)
@@ -155,8 +148,8 @@ class HomeController extends Controller
         } else {
           $dailyprogress = 0;
         }
-       
-         return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData'));
+        $usersaddress = DB::table('users')->select('latitude','longitude','company_address')->where('id',$auth_id)->first();
+         return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData','usersaddress'));
     }
 
     public function index2(Request $request) {
