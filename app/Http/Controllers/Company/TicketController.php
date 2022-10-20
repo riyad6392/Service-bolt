@@ -623,7 +623,6 @@ class TicketController extends Controller
       $minute =  explode(" ", $quotedetails[0]->minute);
 
       $address = Address::select('id','address')->where("customerid",$quotedetails[0]->customerid)->get(); 
-       
        $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
        <h5>Edit</h5>
        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

@@ -609,7 +609,7 @@ background: transparent!important;
                                     </h3>
                                 </div>
                             </div>
-                           
+                            <input type="hidden" name="pidall" id="pidall" value="{{$pid}}">
                             <input type="hidden" name="workerid" id="workerid" value="{{$id}}">
                             @if($userData->openingtime!="")
                             <input type="hidden" name="openingtime" id="openingtime" value="{{$userData->openingtime}}:00">
@@ -983,6 +983,12 @@ background: transparent!important;
 <script type="">
     
     $(document).ready(function () {
+        var search = $(location).attr('search');
+        if(search == "") {
+            var pidall = $("#pidall").val();
+            window.location.href = "?id="+pidall;   
+        }
+        //window.location.href = "?id="+ckids;
         
           $("#calendar").addClass("fulldayShow");
        $("#hide-top").hide();

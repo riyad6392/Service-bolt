@@ -988,10 +988,14 @@ class SchedulerController extends Controller
     $tenture = Tenture::where('status','Active')->get();
     
     $allworker = Personnel::where('userid', $auth_id)->get();
+    foreach ($allworker as $key => $value) {
+       $pids[] =$value->id;
+    }
+    $pid =implode(',',$pids);
     //dd($request->all());
     //$id = $worker[0]->id;
     $id = $request->id;
-    return view('scheduler.weekviewall',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker'));
+    return view('scheduler.weekviewall',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker','pid'));
   }
   //end
 
@@ -1967,8 +1971,14 @@ class SchedulerController extends Controller
     $tenture = Tenture::where('status','Active')->get();
     
     $allworker = Personnel::where('userid', $auth_id)->get();
+
+    foreach ($allworker as $key => $value) {
+       $pids[] =$value->id;
+    }
+    $pid =implode(',',$pids);
+
     $id = $request->id;
-    return view('scheduler.monthviewall',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker'));
+    return view('scheduler.monthviewall',compact('auth_id','ticketData','scheduleData','customer','services','worker','productData','wcount','userData','tenture','id','allworker','pid'));
   }
 
   public function sortaftersubmit(Request $request) {

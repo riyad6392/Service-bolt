@@ -596,7 +596,7 @@ span.closeon i {
                                     </h3>
                                 </div>
                             </div>
-                           
+                            <input type="hidden" name="pidall" id="pidall" value="{{$pid}}">
                             <input type="hidden" name="workerid" id="workerid" value="{{$id}}">
                             @if($userData->openingtime!="")
                             <input type="hidden" name="openingtime" id="openingtime" value="{{$userData->openingtime}}:00">
@@ -973,6 +973,11 @@ span.closeon i {
 
 <script type="">
     $(document).ready(function () {
+        var search = $(location).attr('search');
+        if(search == "") {
+            var pidall = $("#pidall").val();
+            window.location.href = "?id="+pidall;   
+        } 
        $("#hide-top").hide();
        // $("#close").html('<a href="" style="position: relative;left: 0;top:0px;color: black;"> <i class="fa fa-times" aria-hidden="true" style="font-size: 32px;"></i></a>');
       // (".top-bar").css('display','none');
