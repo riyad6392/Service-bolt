@@ -80,7 +80,7 @@
 <label class="form-label">Email</label>
   <input type="email" class="form-control form-control-2" placeholder="Email Id" value="{{$userData->email}}" name="email" readonly="">
 </div>
-<h5 class="my-4">Set Stock Status(%)</h5>
+<h5 class="my-4">Set Stock Percentage (%)</h5>
 <div class="col-lg-6 mb-3">
 <label class="form-label">Good Stock (%)</label>
   <input type="text" class="form-control form-control-2" placeholder="Good Stock" value="{{$userData->goodproduct}}" name="goodproduct" onkeypress="return checkPhone(event)">
