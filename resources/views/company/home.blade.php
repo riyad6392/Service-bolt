@@ -141,7 +141,7 @@
         </div>
         <div class="col-4">
           @if(!empty($goodproduct[0]))
-           <a href="#" class="btn btn-green truncate mb-3 w-85">All good</a>
+           <a href="#" class="btn btn-green truncate mb-3 w-85">Good</a>
           @endif
           
           @if(!empty($lowproduct[0]))

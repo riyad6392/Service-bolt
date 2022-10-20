@@ -139,7 +139,7 @@
 					@endif
 					  <td>
 					  	@if($inventory->quantity>=$fifypercent)
-					  		All good
+					  		Good
 					  	@elseif($inventory->quantity>=$twentyfivepercent)
 					  	 Low
 					  	@elseif($inventory->quantity<=$twentyfivepercent)

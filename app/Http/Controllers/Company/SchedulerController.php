@@ -1084,7 +1084,7 @@ class SchedulerController extends Controller
           return json_encode(['html' =>$html,'countsdata'=>$countsdata,'hour' =>$sethour,'minute' =>$setminute,'price' =>$setprice]);
     }
 
-    public function viewaddedticketmodal(Request $request)
+    public function viewaddedticketmodal_old(Request $request)
     {
        $json = array();
        $auth_id = auth()->user()->id;
@@ -1105,7 +1105,67 @@ class SchedulerController extends Controller
                 $html .='<option value="'.$value->id.'" data-value="'.$value->id.'" data-name="'.$value->personnelname.'">'.$value->personnelname.'</option>';
               }
         $html .='</select>
-          </div><div id="cname">Choose any one primary member</div><div style="display:flex;align-items: center;"><input type="radio" name="primaryname" id="'.$pid->personnelid.'" value="'.$pid->personnelid.'" checked><label for="'.$pid->personnelid.'" style="position: relative;"> '.$workerdata->personnelname.'</label></div><div class="col-lg-12" id="radiolist"></div>';
+          </div><div id="cname" class="p-1">Choose any one primary member</div><div style="display:flex;align-items: center;"><input type="radio" name="primaryname" id="'.$pid->personnelid.'" value="'.$pid->personnelid.'" checked><label for="'.$pid->personnelid.'" style="position: relative;"> '.$workerdata->personnelname.'</label></div><div class="col-lg-12" id="radiolist"></div>';
+
+          
+          $html .= '<div class="col-lg-6 mb-2 mt-4">
+            <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
+          </div>
+          <div class="col-lg-6 mt-4">
+            <button type="submit" class="btn btn-add btn-block">Assign</button>
+          </div>
+        </div>';
+        return json_encode(['html' =>$html]);
+        die;
+       
+    }
+
+    public function viewaddedticketmodal(Request $request)
+    {
+       $json = array();
+       $auth_id = auth()->user()->id;
+
+       $pid = Quote::select('personnelid','primaryname')->where('id', $request->id)->orWhere('parentid', $request->id)->get();
+       foreach($pid as $key => $value) {
+         $personnelid[] =$value->personnelid; 
+       }
+
+       $allworker = Personnel::where('userid', $auth_id)->whereNotIn('id',$personnelid)->get();
+       
+       $primaryId = $pid[0]->primaryname;
+       
+       $workerdata = Personnel::select('id','personnelname')->where('userid', $auth_id)->whereIn('id',$personnelid)->get();
+
+       $html ='<div class="add-customer-modal d-flex justify-content-between">
+                  <h6>Assign Ticket to Personnel</h6><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>';
+
+       $html .='<div class="row customer-form" id="product-box-tabs">
+       <input type="hidden" value="'.$request->id.'" name="quoteid">
+          <div class="col-md-12 mb-2">
+            <label class="mb-3">Select Personnel</label>
+            <select class="selectpicker form-control" data-live-search="true" multiple="" data-placeholder="Select Personnel" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="personnelid[]" id="personnelid">';
+
+              foreach($allworker as $key => $value) {
+                $html .='<option value="'.$value->id.'" data-value="'.$value->id.'" data-name="'.$value->personnelname.'">'.$value->personnelname.'</option>';
+              }
+        $html .='</select>
+          </div>
+          <div id="cname">Choose any one primary member</div>
+            <div style="align-items: center;">';
+
+                foreach($workerdata as $key =>$value) {
+                    if($value->id == $primaryId) {
+                        $checked = "checked";
+                    } else {
+                        $checked = "";
+                    }
+                 $html .='<input type="radio" name="primaryname" id="'.$value->id.'" value="'.$value->id.'" '.@$checked.'>
+                        <label for="'.$value->id.'" style="position: relative;"> '.$value->personnelname.'</label><br>';
+               }
+
+            $html .='</div>
+          <div class="col-lg-12" id="radiolist"></div>';
 
           
           $html .= '<div class="col-lg-6 mb-2 mt-4">
@@ -1131,6 +1191,7 @@ class SchedulerController extends Controller
       // array_push($pids,$qpid);
       // $quote->personnelid = implode(',', $pids);
       // $quote->save();
+      if(isset($request->personnelid)) {
       foreach ($request->personnelid as $pid) {
         $data['userid'] =  $quote->userid;
         $data['parentid'] = $request->quoteid;
@@ -1160,6 +1221,7 @@ class SchedulerController extends Controller
         $data['ticket_status'] = $quote->ticket_status;
         Quote::create($data);
       } 
+    }
       
 
       $request->session()->flash('success', 'Added successfully');
