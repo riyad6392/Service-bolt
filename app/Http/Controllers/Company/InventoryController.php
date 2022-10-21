@@ -45,8 +45,8 @@ class InventoryController extends Controller
         $categoryData = Category::where('userid',$auth_id)->get();
         $table="products";
         $fields = DB::getSchemaBuilder()->getColumnListing($table);
-
-        return view('inventory.index',compact('auth_id','serviceData','inventoryData','datacount','categoryData','fields'));
+        $usersaddress = DB::table('users')->select('goodproduct','lowproduct')->where('id',$auth_id)->first();
+        return view('inventory.index',compact('auth_id','serviceData','inventoryData','datacount','categoryData','fields','usersaddress'));
     }
 
     public function create(Request $request)

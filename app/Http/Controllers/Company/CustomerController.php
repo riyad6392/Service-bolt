@@ -406,12 +406,46 @@ class CustomerController extends Controller
           die;
     }
 
+    public function vieweditnotemodal(Request $request)
+    {
+      $json = array();
+      $auth_id = auth()->user()->id;
+
+      $html ='<div class="add-customer-modal">
+                  <div style="font-size:25px;">Add/Edit Notes</div>
+                 </div><input type="hidden" name="customerid" id="customerid" value="'.$request->cid.'">
+            <div class="col-md-12 mb-2">
+             <div class="input_fields_wrap">
+                <div class="mb-3">
+                <textarea class="form-control" name="note" id="note" placeholder="Search Notes" cols="45" rows="5" required>'.$request->note.'</textarea>
+                  </div>
+            </div>
+          </div>
+        <div class="col-lg-6 mb-3" style="display:none;">
+          <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
+        </div><div class="col-lg-6 mb-3 mx-auto">
+          <button class="btn btn-add btn-block" type="submit">Update</button>
+        </div>';
+        return json_encode(['html' =>$html]);
+          die;
+    }
+
   public function updateaddress(Request $request)
   {
     $customer = Address::where('id', $request->customerid)->get()->first();
     $customer->address = $request->address;
     $customer->save();
     $request->session()->flash('success', 'Address updated successfully');
+    
+    return redirect()->back();
+  }
+
+  public function updatenotes(Request $request)
+  {
+    $customer = Address::where('id', $request->customerid)->get()->first();
+    $customer->notes = $request->note;
+    $customer->save();
+    $request->session()->flash('success', 'Notes updated successfully');
     
     return redirect()->back();
   }
@@ -444,10 +478,46 @@ class CustomerController extends Controller
       } 
       $servicename = implode(',', $sname);
 
+      if($quoteData[$datacount]->ticket_status == "3") {
+        $ticketstatus = "Completed";
+      }
+      if($quoteData[$datacount]->ticket_status == "2") {
+        $ticketstatus = "Assigned";
+      }
+      if($quoteData[$datacount]->ticket_status == "1") {
+        $ticketstatus = "Not Assign";
+      }
+      if($quoteData[$datacount]->ticket_status == "4") {
+        $ticketstatus = "Picked";
+      }
+      if($quoteData[$datacount]->ticket_status == "0") {
+        $ticketstatus = "--";
+      }
+
       $html ='<div class="row"><h5 class="mb-2">Ticket Info #'.$quoteData[$datacount]->id.'</h5>
       <div class="col-md-12">
-         
+          
           <div class="col-md-12 mb-2">
+            <div class="input_fields_wrap">
+              <div class="mb-3">
+              <label class="number-1">Ticket Status:</label>
+                <p>'.$ticketstatus.'</p>
+              </div>
+            </div>
+          </div>';
+
+        if($quoteData[$datacount]->payment_mode != null) {
+          $html .='<div class="col-md-12 mb-2">
+           <div class="input_fields_wrap">
+              <div class="mb-3">
+                <div class="number-1">Payment Mode:</div>
+                  '.$quoteData[$datacount]->payment_mode.'
+                </div>
+              </div>
+            </div>
+          </div>';
+        }
+          $html .='<div class="col-md-12 mb-2">
            <div class="input_fields_wrap">
               <div class="mb-3">
               <label class="number-1">Customer Address:</label>
@@ -498,13 +568,49 @@ class CustomerController extends Controller
         $sname[] = $value['servicename'];
       } 
       $servicename = implode(',', $sname);
-        
+      
+      if($quoteData->ticket_status == "3") {
+        $ticketstatus = "Completed";
+      }
+      if($quoteData->ticket_status == "2") {
+        $ticketstatus = "Assigned";
+      }
+      if($quoteData->ticket_status == "1") {
+        $ticketstatus = "Not Assign";
+      }
+      if($quoteData->ticket_status == "4") {
+        $ticketstatus = "Picked";
+      }
+      if($quoteData->ticket_status == "0") {
+        $ticketstatus = "--";
+      }
+
       $html =
 
       '<div class="row"><h5 class="mb-2">Ticket Info #'.$quoteData->id.'</h5>
       <div class="col-md-12">
-         
           <div class="col-md-12 mb-2">
+           <div class="input_fields_wrap">
+              <div class="mb-3">
+              <div class="number-1">Ticket Status:</div>
+                '.$ticketstatus.'
+              </div>
+          </div>
+        </div>
+        </div>';
+
+        if($quoteData->payment_mode != null) {
+          $html .='<div class="col-md-12 mb-2">
+           <div class="input_fields_wrap">
+              <div class="mb-3">
+                <div class="number-1">Payment Mode:</div>
+                  '.$quoteData->payment_mode.'
+                </div>
+              </div>
+            </div>
+          </div>';
+        }
+          $html .='<div class="col-md-12 mb-2">
            <div class="input_fields_wrap">
               <div class="mb-3">
               <div class="number-1">Customer Address:</div>

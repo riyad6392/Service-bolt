@@ -93,7 +93,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 <form class="form-material m-t-40 row form-valide" method="post" action="{{route('company.customeraddresscreate')}}">
   @csrf
-  <input type="hidden" name="customerid" id="customerid" value="{{$customerData[0]->id}}">
+  <input type="hidden" name="customerid" id="customerid" value="{{@$customerData[0]->id}}">
   <div class="col-lg-8 mb-2">
    <div class="show-fillter">
 	   <input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address" required="">
@@ -143,6 +143,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   </div>
 </div>
 </div>
+<!-- edit notes modal open -->
+<div class="modal fade" id="edit-note" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+        <form method="post" action="{{ route('company.updatenotes') }}" enctype="multipart/form-data">
+          @csrf
+          <div id="vieweditnotemodaldata"></div>
+        </form>
+      </div>
+  </div>
+</div>
+</div>
 
 	   
 	   <div class="col-lg-12 mb-2" style="display: none;">
@@ -152,6 +165,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   	   <div class="col-lg-12 mb-2">
     	   <div class="d-flex align-items-center justify-content-between ps-4 pt-2 pe-2 pb-2 address-line2 address-line">
     	     <div class="d-flex align-items-center addressdata"><a href="javascript:void(0);" class="info_link1" dataval="{{$value->id}}"><i class="fa fa-trash"></i></a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="me-3"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z" fill="currentColor"></path></svg> <a class="" data-bs-toggle="modal" data-bs-target="#edit-address" id="editaddress" data-id="{{$value->id}}" data-address="{{$value->address}}">{{$value->address}}</a></div>
+           <a class="" data-bs-toggle="modal" data-bs-target="#edit-note" id="editnote" data-id="{{$value->id}}" data-note="{{$value->notes}}"><i class="fa fa-sticky-note-o" aria-hidden="true"></i></a>
     	  <!--  <button class="btn btn-save confirm">Service Ticket</button> -->
         <a class="btn btn-save confirm" data-bs-toggle="modal" data-bs-target="#create-ctickets" id="createctickets" data-id="{{$value->customerid}}" data-address="{{$value->address}}" style="width:152px;">Create Ticket</a>
         <a href="{{url('company/customer/ticketviewall/')}}/{{$value->customerid}}/{{$value->address}}" class="btn btn-save confirm" style="width:152px;">View Tickets</a>
@@ -430,6 +444,25 @@ $(document).on('click','#createctickets',function(e) {
             }
         })
   });
+
+ $(document).on('click','#editnote',function(e) {
+   var cid = $(this).data('id');
+   var note = $(this).data('note');
+   $.ajax({
+            url:'{{route('company.vieweditnotemodal')}}',
+            data: {
+              'cid':cid,
+              'note':note,
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#vieweditnotemodaldata').html(data.html);
+            }
+        })
+  });
+
  $('html').on('click','.etc',function() {
   var dtToday = new Date();
     

@@ -49,12 +49,24 @@ class HomeController extends Controller
         $ticket = DB::table('quote')->where('userid',$auth_id)->where('parentid', '=',"")->where('ticket_status', '!=' ,'0')->where('ticket_status', '!=' ,'5')->limit('3')->orderBy('id','DESC')->get();
         
         $inventoryData = Inventory::where('user_id',$auth_id)->inRandomOrder()->get();
+
+        $usersaddress = DB::table('users')->select('latitude','longitude','company_address','goodproduct','lowproduct')->where('id',$auth_id)->first();
+
         $goodproduct =  array();
         $lowproduct =  array();
         $restockproduct =  array();
         foreach($inventoryData as $key =>$value) {
-            $fifypercent = $value->pquantity*50/100;
-            $twentyfivepercent = $value->pquantity*25/100;
+            if($usersaddress->goodproduct!=null) {
+                $fifypercent = $value->pquantity*$usersaddress->goodproduct/100;
+            } else {
+                $fifypercent = $value->pquantity*50/100;
+            }
+            
+            if($usersaddress->lowproduct!=null) {
+                $twentyfivepercent = $value->pquantity*$usersaddress->lowproduct/100;
+            } else {
+                $twentyfivepercent = $value->pquantity*25/100;
+            }
             
             if($value->quantity>=$fifypercent) {
                 $goodproduct[] = $value->productname;
@@ -88,7 +100,7 @@ class HomeController extends Controller
         } else {
           $dailyprogress = 0;
         }
-        $usersaddress = DB::table('users')->select('latitude','longitude','company_address')->where('id',$auth_id)->first();
+        
         return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData','usersaddress'));
     }
 
@@ -107,12 +119,22 @@ class HomeController extends Controller
         $ticket = DB::table('quote')->where('userid',$auth_id)->where('ticket_status', '!=' ,'0')->limit('3')->orderBy('id','DESC')->get();
         
         $inventoryData = Inventory::where('user_id',$auth_id)->inRandomOrder()->get();
+        $usersaddress = DB::table('users')->select('latitude','longitude','company_address','goodproduct','lowproduct')->where('id',$auth_id)->first();
         $goodproduct =  array();
         $lowproduct =  array();
         $restockproduct =  array();
         foreach($inventoryData as $key =>$value) {
-            $fifypercent = $value->pquantity*50/100;
-            $twentyfivepercent = $value->pquantity*25/100;
+            if($usersaddress->goodproduct!=null) {
+                $fifypercent = $value->pquantity*$usersaddress->goodproduct/100;
+            } else {
+                $fifypercent = $value->pquantity*50/100;
+            }
+            
+            if($usersaddress->lowproduct!=null) {
+                $twentyfivepercent = $value->pquantity*$usersaddress->lowproduct/100;
+            } else {
+                $twentyfivepercent = $value->pquantity*25/100;
+            }
             
             if($value->quantity>=$fifypercent) {
                 $goodproduct[] = $value->productname;
@@ -148,7 +170,7 @@ class HomeController extends Controller
         } else {
           $dailyprogress = 0;
         }
-        $usersaddress = DB::table('users')->select('latitude','longitude','company_address')->where('id',$auth_id)->first();
+        
          return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData','usersaddress'));
     }
 

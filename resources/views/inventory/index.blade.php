@@ -128,8 +128,17 @@
                 @endphp
                 @foreach($inventoryData as $inventory)
                   	@php
-			          $fifypercent = $inventory->pquantity*50/100;
-			          $twentyfivepercent = $inventory->pquantity*25/100;
+                  	if($usersaddress->goodproduct!=null) {
+			          			$fifypercent = $inventory->pquantity*$usersaddress->goodproduct/100;
+			          		} else {
+			          			$fifypercent = $inventory->pquantity*50/100;
+			          		}
+			          		if($usersaddress->lowproduct!=null) {
+			          			$twentyfivepercent = $inventory->pquantity*$usersaddress->lowproduct/100;
+			          		} else {
+			          			$twentyfivepercent = $inventory->pquantity*25/100;
+			          		}
+			          
 			       	@endphp
 				  <tr target="{{$i}}" data-id="{{$inventory->id}}" class="user-hover showSingle" data-bs-toggle="modal" data-bs-target="#edit-product" id="editProduct">
 				  	  <td style="display: none;">{{$inventory->id}}</td>

@@ -162,7 +162,12 @@ Route::group([
 
     Route::any('/customer/vieweditaddressmodal', [CustomerController::class, 'vieweditaddressmodal'])->name('vieweditaddressmodal');
 
+    Route::any('/customer/vieweditnotemodal', [CustomerController::class, 'vieweditnotemodal'])->name('vieweditnotemodal');
+
+
     Route::any('/customer/updateaddress', [CustomerController::class, 'updateaddress'])->name('updateaddress');
+    Route::any('/customer/updatenotes', [CustomerController::class, 'updatenotes'])->name('updatenotes');
+    
 
     Route::any('/customer/leftbarticketdata', [CustomerController::class, 'leftbarticketdata'])->name('leftbarticketdata');
     Route::any('/customer/deleteAddress', [CustomerController::class, 'deleteAddress'])->name('deleteAddress');

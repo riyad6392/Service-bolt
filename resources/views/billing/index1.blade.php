@@ -75,8 +75,7 @@
     <thead>
     <tr>
     <th>Date</th>
-    <th>Customer Name</th>
-    <th>Personnel Name</th>
+    <th>No. of tickets</th>
         <th>Ticket Total</th>
         <th>Billing Total</th>
         <th>Action</th>
@@ -88,19 +87,12 @@
     @endphp
     @foreach($totalbillingData as $key=>$value)
       <tr class="" target="{{$i}}" data-id="{{$value->id}}">
-      <td>{{$value->date}}</td>
-      <td>{{$value->customername}}</td>
-      <td>
-        @if($value->personnelname!="")
-        {{$value->personnelname}}
-        @else
-        --
-        @endif
-      </td>
+        <td>{{date('m-d-Y', strtotime($value->date))}}</td>
+        <td>{{$value->totalticket}}</td>
         <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
         <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
         <td><a href="{{url('company/billing/billingview/')}}/{{$value->date}}" class="user-hover" style="color:#29DBBA;">View</a></td>
-       </tr>
+      </tr>
     @php
       $i++;
     @endphp

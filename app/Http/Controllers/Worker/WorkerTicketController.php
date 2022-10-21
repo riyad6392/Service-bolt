@@ -285,11 +285,13 @@ class WorkerTicketController extends Controller
 
         if(!empty($ticket->product_id)) {
           $pidarray = explode(',', $ticket->product_id);
-
+          //dd($pidarray);
           foreach($pidarray as $key => $pid) {
             $productd = Inventory::where('id', $pid)->first();
-            $productd->quantity = @$productd->quantity - 1;
-            $productd->save();
+            if($productd!=null) {
+              $productd->quantity = @$productd->quantity - 1;
+              $productd->save();  
+            }
           }
         }
 

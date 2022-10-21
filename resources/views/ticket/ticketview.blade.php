@@ -517,6 +517,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <div class="card-body">
 <div class="card-content">
 <h5>
+
 #{{$quotedetails[0]->id}} <span class="ms-2">
 @php
   $datef = date('F d, Y', strtotime($quotedetails[0]->etc));
@@ -561,6 +562,51 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 </div>
 
 <p>@if($quotedetails[0]->description!="")Notes: {{$quotedetails[0]->description}}@endif</p>
+
+@php
+    if($quotedetails[0]->imagelist!="") 
+    {
+      $imagelist = explode(',',$quotedetails[0]->imagelist);
+      @endphp
+      <section class="promo_section">
+    <div class="container ">
+      <div class="row">
+      @php
+      foreach($imagelist as $key =>$image) {
+         $imgtype= explode('.',strtolower($image));
+        @endphp
+          @if($imgtype[1]=="mp4" || $imgtype[1]=="3gp" || $imgtype[1]=="mov" || $imgtype[1]=="avi" || $imgtype[1]=="wmv" || $imgtype[1]=="flv" || $imgtype[1]=="m3u8")
+          <div class="col-lg-4 col-sm-4">
+            <div class="removediv">
+              <div class="images position-relative" style="top:-35px;">
+                  <a href="{{url('/')}}/uploads/ticketnote/{{$image}}" target="_blank"><video width="250" height="200" controls>
+                    <source src="{{url('/')}}/uploads/ticketnote/{{$image}}" type="video/mp4">
+                  </video></a>
+              </div>
+            </div>
+          </div>
+         @else
+          <div class="col-lg-4 col-sm-4">
+            <div class="removediv">
+                <div class="images position-relative">
+                 <a href="{{url('/')}}/uploads/ticketnote/{{$image}}" target="_blank"><img src="{{url('/')}}/uploads/ticketnote/{{$image}}"class="img-fluid"></a>
+                </div>
+            </div>
+          </div>
+            
+          @endif
+         
+     
+        @php
+      }
+      @endphp
+       </div>
+    </div>
+  </section>
+      @php
+    }
+  @endphp
+
 </div>
 </div>
 </div>

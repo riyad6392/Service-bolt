@@ -48,7 +48,7 @@ class BillingController extends Controller
         }
       
       $totalbillingData = DB::table('quote')
-        ->select(DB::raw('etc as date'),'customer.customername','personnel.personnelname', DB::raw('sum(price) as totalprice'),'quote.id')
+        ->select(DB::raw('etc as date'),'customer.customername','personnel.personnelname', DB::raw('sum(price) as totalprice'),'quote.id',DB::raw('COUNT(quote.id) as totalticket'))
         ->join('customer', 'customer.id', '=', 'quote.customerid')
         ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
         ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])
