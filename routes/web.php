@@ -147,6 +147,8 @@ Route::group([
     Route::any('/customer/createcticket', [CustomerController::class, 'createcticket'])->name('createcticket');
     Route::any('/customer/checkemail', [CustomerController::class, 'checkemail'])->name('checkemail');
 
+    Route::get('/customer/viewinvoice/{id}', [CustomerController::class, 'viewinvoice'])->name('viewinvoice');
+
     //commission report
     Route::any('/commisionreport', [ComissionController::class, 'index'])->name('commisionreport');
    

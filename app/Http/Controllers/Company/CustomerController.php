@@ -13,6 +13,7 @@ use App\Models\Personnel;
 use App\Models\Quote;
 use App\Models\Managefield;
 use App\Models\Tenture;
+use App\Models\User;
 use Mail;
 use Illuminate\Support\Str;
 use DB;
@@ -494,6 +495,14 @@ class CustomerController extends Controller
         $ticketstatus = "--";
       }
 
+      if($ticketstatus == 3) {
+        $tstatus = "";
+      } else {
+        $tstatus = "disabled";
+      }
+
+      $viewinvoiceurl = url('/').'/company/customer/viewinvoice/'.$quoteData[$datacount]->id;
+
       $html ='<div class="row"><h5 class="mb-2">Ticket Info #'.$quoteData[$datacount]->id.'</h5>
       <div class="col-md-12">
           
@@ -549,6 +558,8 @@ class CustomerController extends Controller
          <div class="col-md-12 mb-3">
            <div class="number-1">Date:</div>'.$quoteData[$datacount]->etc.'
          </div>
+
+         <div class="col-md-12 mb-3"><button type="submit" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" "'.$tstatus.'"><a href="'.$viewinvoiceurl.'" target="_blank">View Invoice</a></button></div>
          </div></div>';
       } else {
         $quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber','personnel.phone','personnel.personnelname','services.image as serviceimage')->join('customer', 'customer.id', '=', 'quote.customerid')->leftjoin('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.id',$request->ticketid)->first();
@@ -584,6 +595,14 @@ class CustomerController extends Controller
       if($quoteData->ticket_status == "0") {
         $ticketstatus = "--";
       }
+
+      if($ticketstatus == 3) {
+        $tstatus = "";
+      } else {
+        $tstatus = "disabled";
+      }
+      
+      $viewinvoiceurl = url('/').'/company/customer/viewinvoice/'.$quoteData->id;
 
       $html =
 
@@ -642,6 +661,7 @@ class CustomerController extends Controller
          <div class="col-md-12 mb-3">
            <div class="number-1">Date:</div> '.$quoteData->etc.'
          </div>
+         <div class="col-md-12 mb-3"><button type="button" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" "'.$tstatus.'"><a href="'.$viewinvoiceurl.'" target="_blank">View Invoice</a></button></div>
          </div></div>';
       }
       
@@ -831,6 +851,45 @@ class CustomerController extends Controller
       else {
         echo 0;
       }
-      
-        }
+    }
+
+    public function viewinvoice(Request $request,$id)
+    {
+      $tdata = Quote::where('id', $id)->get()->first();
+
+      $serviceid = explode(',', $tdata->serviceid);
+
+      $servicedetails = Service::select('servicename','productid')->whereIn('id', $serviceid)->get();
+             
+      foreach ($servicedetails as $key => $value) {
+        $pid[] = $value['productid'];
+        $sname[] = $value['servicename'];
+      } 
+
+      $servicename = implode(',', $sname);
+      $productids = explode(',', $tdata->productid);
+
+      $pdetails = Inventory::select('productname','id')->whereIn('id', $productids)->get();
+      if(count($pdetails)>0) {
+      foreach ($pdetails as $key => $value) {
+        $pname[] = $value['productname'];
+      } 
+
+
+      $productname = implode(',', $pname);
+      } else {
+      $productname = "--";
+      }
+
+      $company = User::where('id', $tdata->userid)->get()->first();
+      if($company->image!=null) {
+        $companyimage = url('').'/userimage/'.$company->image;
+      } else {
+        $companyimage = url('').'/uploads/servicebolt-noimage.png';
+      }
+
+      $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
+
+      return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$company->companyname,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids]);
+    }
 }
