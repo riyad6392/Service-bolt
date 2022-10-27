@@ -120,7 +120,7 @@
     margin: 22px;">
     <tbody>
      <tr>
-        <td style="vertical-align: top; padding: 17px">
+        <td style="vertical-align: top; padding: 17px;background-color: {{$color}};">
          <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 20px;">Note:
             <br><span style="color: #ccc;  font-size: 16px;">{{ @$description }}</span></p>
         </td>
