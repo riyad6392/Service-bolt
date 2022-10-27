@@ -129,7 +129,10 @@ class TicketController extends Controller
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
 
-	      Quote::create($data);
+	      $quotelastid = Quote::create($data);
+        $quoteee = Quote::where('id', $quotelastid->id)->first();
+        $quoteee->invoiceid = "100".$quotelastid->id;
+        $quoteee->save();
 
       
       $app_name = 'ServiceBolt';
@@ -560,8 +563,10 @@ class TicketController extends Controller
         $data['longitude'] = $longitude;
         $data['ticket_status'] = 1;
 
-        Quote::create($data);
-
+      $quotelastid = Quote::create($data);
+      $quoteee = Quote::where('id', $quotelastid->id)->first();
+      $quoteee->invoiceid = "100".$quotelastid->id;
+      $quoteee->save();
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;

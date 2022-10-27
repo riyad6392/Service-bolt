@@ -155,7 +155,7 @@ class BillingController extends Controller
 
       if($targetid == 0) {
         $auth_id = auth()->user()->id;
-        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid','quote.ticket_status', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])->where('quote.etc',$request->date)->orderBy('quote.id','asc')->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid','quote.ticket_status','quote.duedate', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])->where('quote.etc',$request->date)->orderBy('quote.id','asc')->get();
         
         $countdata = count($billingData);
        // dd($billingData);
@@ -231,7 +231,9 @@ class BillingController extends Controller
                     <h6 class="heading-h6">'.$pstatus1.'</h6>
                   </div>
                   <button type="submit" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" '.$style1.'>Collect Payment</button>
-                  <a href="'.$url.'"  class="btn btn-edit w-100 p-3 mb-3">Invoice</a>
+
+                  <a class="btn btn-edit w-100 p-3 mb-3 viewinvoice" data-id="'.$billingData[$datacount]->id.'" data-duedate="'.$billingData[$datacount]->duedate.'" data-bs-toggle="modal" data-bs-target="#view-invoice">Invoice</a>
+
                   <a class="btn btn-dark w-100 p-3 emailinvoice" data-id="'.$billingData[$datacount]->id.'" data-email="'.$billingData[$datacount]->email.'" data-bs-toggle="modal" data-bs-target="#edit-address"><img class=" m-0 me-2" style="width:auto;" src="images/share-2.png" alt="">Email Invoice</a>
                 </div>
               </div>
@@ -239,7 +241,7 @@ class BillingController extends Controller
           </div>
         </div>';
       } else {
-        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_status','quote.payment_mode','quote.ticket_status','quote.invoiceid','quote.personnelid', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_status','quote.payment_mode','quote.ticket_status','quote.invoiceid','quote.personnelid','quote.duedate', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
         $url = url('/').'/company/billing/downloadinvoice/'.$billingData[0]->id;
         if($billingData[0]->image!=null) {
         $imagepath = url('/').'/uploads/services/'.$billingData[0]->image;
@@ -308,7 +310,9 @@ class BillingController extends Controller
                   </div>';
                   
                   $html .='<button type="submit"  class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" '.$style.'>Collect Payment</button>
-                    <a href="'.$url.'"  class="btn btn-edit w-100 p-3 mb-3">Invoice</a>
+
+                    <a class="btn btn-edit w-100 p-3 mb-3 viewinvoice" data-id="'.$billingData[0]->id.'" data-duedate="'.$billingData[0]->duedate.'" data-bs-toggle="modal" data-bs-target="#view-invoice">Invoice</a>
+
                   <a class="btn btn-dark w-100 p-3 emailinvoice" data-id="'.$billingData[0]->id.'" data-email="'.$billingData[0]->email.'" data-bs-toggle="modal" data-bs-target="#edit-address"><img class=" m-0 me-2" style="width:auto;" src="images/share-2.png" alt=""> Email Invoice</a>
                 </div>
               </div>
@@ -343,7 +347,7 @@ class BillingController extends Controller
         $tdata->price =  $request->amount;
         $tdata->payment_mode = $request->method;
         $tdata->checknumber = $request->check_no;
-        $tdata->invoiceid = $id;
+        //$tdata->invoiceid = $id;
         $tdata->save();
         $request->session()->flash('success', 'Payment Completed Successfully');
         return redirect()->back();
@@ -402,6 +406,36 @@ class BillingController extends Controller
           die;
     }
 
+    public function leftbarviewinvoice(Request $request)
+    {
+      $json = array();
+      $auth_id = auth()->user()->id;
+      
+      if($request->duedate!="") {
+        $duedate =   $request->duedate;
+      }  else {
+        $duedate = "";
+      }
+      $html ='<div class="add-customer-modal">
+                  <h5>Invoice</h5>
+                 </div><input type="hidden" name="ticketid" id="ticketid" value="'.$request->id.'">
+            <div class="col-md-12 mb-2">
+             <div class="input_fields_wrap">
+                <div class="mb-3">
+                  <label>Select Due Date</label>
+                  <input type="date" class="form-control" placeholder="Due Date" name="duedate" id="duedate" value="'.$duedate.'">
+                </div>
+            </div>
+          </div>
+        <div class="col-lg-6 mb-3" style="display:none;">
+          <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
+        </div><div class="col-lg-6 mb-3 mx-auto">
+          <button class="btn btn-add btn-block" type="submit">Download</button>
+        </div>';
+        return json_encode(['html' =>$html]);
+          die;
+    }
+
     public function sendbillinginvoiceold(Request $request)
     {
       
@@ -446,6 +480,8 @@ class BillingController extends Controller
     {
       
       $tdata = Quote::where('id', $request->ticketid)->get()->first();
+
+      $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
 
       $serviceid = explode(',', $tdata->serviceid);
       //dd($serviceid);
@@ -494,7 +530,7 @@ class BillingController extends Controller
         $contactbccList[] = $contactbcc;
       }
     
-       Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$company->companyname,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids], function($message) use ($contactList,$app_name,$app_email,$contactbccList,$cc) {
+       Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate], function($message) use ($contactList,$app_name,$app_email,$contactbccList,$cc) {
           $message->to($contactList);
           if($cc!=null) {
             $message->cc($contactbccList);
@@ -510,7 +546,7 @@ class BillingController extends Controller
     public function downloadinvoice(Request $request,$id)
     {
       
-       $tdata = Quote::where('id', $id)->get()->first();
+      $tdata = Quote::where('id', $id)->get()->first();
 
       $serviceid = explode(',', $tdata->serviceid);
       //dd($serviceid);
@@ -558,8 +594,10 @@ class BillingController extends Controller
       // foreach($contactbccemail as $key => $contactbcc) {
       //   $contactbccList[] = $contactbcc;
       // }
-      
-         $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$company->companyname,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids]);
+        
+        $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
+
+         $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
         // dd($pdf);
  
          return $pdf->download($id .'_invoice.pdf');
@@ -633,6 +671,56 @@ class BillingController extends Controller
         $request->session()->flash('success', 'Payment Completed Successfully');
         
         return redirect('/company/billing');
+    }
+
+    public function downloadinvoiceview(Request $request)
+    {
+        $tdata = Quote::where('id', $request->ticketid)->get()->first();
+        $tdata->duedate = $request->duedate;
+        $tdata->save();
+        
+        if($tdata->duedate != "") {
+          $duedate = $tdata->duedate;
+        } else {
+          $duedate = "";
+        }
+        $serviceid = explode(',', $tdata->serviceid);
+        $servicedetails = Service::select('servicename','productid')->whereIn('id', $serviceid)->get();
+         
+        foreach ($servicedetails as $key => $value) {
+          $pid[] = $value['productid'];
+          $sname[] = $value['servicename'];
+        } 
+
+        $servicename = implode(',', $sname);
+        $productids = explode(',', $tdata->productid);
+
+        $pdetails = Inventory::select('productname','id')->whereIn('id', $productids)->get();
+        if(count($pdetails)>0) {
+        foreach ($pdetails as $key => $value) {
+          $pname[] = $value['productname'];
+        } 
+
+
+        $productname = implode(',', $pname);
+        } else {
+        $productname = "--";
+        }
+
+        $company = User::where('id', $tdata->userid)->get()->first();
+        if($company->image!=null) {
+          $companyimage = url('').'/userimage/'.$company->image;
+        } else {
+          $companyimage = url('').'/uploads/servicebolt-noimage.png';
+        }
+
+        $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
+        
+        $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
+
+        $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
+   
+        return $pdf->download($tdata->id .'_invoice.pdf');
     }
 
 }

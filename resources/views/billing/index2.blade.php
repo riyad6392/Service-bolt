@@ -182,6 +182,21 @@
   </div>
 </div>
 </div>
+
+<!-- Due invoice modal -->
+<div class="modal fade" id="view-invoice" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+        <form method="post" action="{{ route('company.downloadinvoiceview') }}" enctype="multipart/form-data">
+          @csrf
+          <div id="viewdueinvoicemodaldata"></div>
+        </form>
+      </div>
+  </div>
+</div>
+</div>
+
 <div class="modal fade" id="service-list-dot" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
@@ -304,6 +319,27 @@
       success:function(data) {
         console.log(data.html);
         $('#viewinvoicemodaldata').html(data.html);
+        
+      }
+    });
+  })
+
+  $(document).on('click','.viewinvoice',function(e) {
+   var id = $(this).data('id');
+   var duedate = $(this).data('duedate');
+
+   $.ajax({
+      url:"{{url('company/billing/leftbarviewinvoice')}}",
+      data: {
+        id: id,
+        duedate: duedate,
+      },
+      method: 'post',
+      dataType: 'json',
+      refresh: true,
+      success:function(data) {
+        console.log(data.html);
+        $('#viewdueinvoicemodaldata').html(data.html);
         
       }
     });

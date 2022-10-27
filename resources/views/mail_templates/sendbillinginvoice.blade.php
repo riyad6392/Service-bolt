@@ -34,12 +34,16 @@
  <tbody>
  <tr>
     <td style="vertical-align: top; width: 70%; padding: 12px">
-        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Bill to:<br><span style="color: black; font-weight: bold;">Company Name</span> <span style="color: black; font-weight: bold;">{{$companyname}}</span></p>
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Bill to:<br><span style="color: black; font-weight: bold;">Name - </span> <span style="color: black; font-weight: bold;">{{$customername}}</span></p>
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Company Name - </span> <span style="color: black; font-weight: bold;">{{$companyname}}</span></p>
+        
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Phone Number -</span> <span style="color: black; font-weight: bold;">{{$phone}}</span></p>
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Email -</span> <span style="color: black; font-weight: bold;">{{$email}}</span></p>
     </td>
     <td style="vertical-align: top; padding: 17px">
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Invoice:<br><span style="color: black; font-weight: bold;">#{{ $invoiceId }} </span></p>
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Date:<br><span style="color: black; font-weight: bold;">{{ $date }} </span></p>
-        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Invoice due date:<br><span style="color: black; font-weight: bold;">{{ $date }} </span></p>
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Invoice due date:<br><span style="color: black; font-weight: bold;">{{ $duedate }} </span></p>
     </h4>
     </td>
  </tr>

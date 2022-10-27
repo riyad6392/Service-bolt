@@ -362,7 +362,11 @@ class CustomerController extends Controller
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
         $data['ticket_status'] = 1;
-      Quote::create($data);
+
+        $quotelastid = Quote::create($data);
+        $quoteee = Quote::where('id', $quotelastid->id)->first();
+        $quoteee->invoiceid = "100".$quotelastid->id;
+        $quoteee->save();
 
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
@@ -495,10 +499,10 @@ class CustomerController extends Controller
         $ticketstatus = "--";
       }
 
-      if($ticketstatus == 3) {
-        $tstatus = "";
-      } else {
+      if($quoteData[$datacount]->ticket_status == 1) {
         $tstatus = "disabled";
+      } else {
+        $tstatus = "";
       }
 
       $viewinvoiceurl = url('/').'/company/customer/viewinvoice/'.$quoteData[$datacount]->id;
@@ -559,7 +563,7 @@ class CustomerController extends Controller
            <div class="number-1">Date:</div>'.$quoteData[$datacount]->etc.'
          </div>
 
-         <div class="col-md-12 mb-3"><button type="submit" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" "'.$tstatus.'"><a href="'.$viewinvoiceurl.'" target="_blank">View Invoice</a></button></div>
+         <div class="col-md-12 mb-3"><button type="submit" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" '.$tstatus.'><a href="'.$viewinvoiceurl.'" target="_blank">View Invoice</a></button></div>
          </div></div>';
       } else {
         $quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber','personnel.phone','personnel.personnelname','services.image as serviceimage')->join('customer', 'customer.id', '=', 'quote.customerid')->leftjoin('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.id',$request->ticketid)->first();
@@ -596,12 +600,13 @@ class CustomerController extends Controller
         $ticketstatus = "--";
       }
 
-      if($ticketstatus == 3) {
-        $tstatus = "";
-      } else {
+      if($quoteData->ticket_status == 1) {
+        
         $tstatus = "disabled";
+      } else {
+        $tstatus = "";
       }
-      
+
       $viewinvoiceurl = url('/').'/company/customer/viewinvoice/'.$quoteData->id;
 
       $html =
@@ -661,7 +666,7 @@ class CustomerController extends Controller
          <div class="col-md-12 mb-3">
            <div class="number-1">Date:</div> '.$quoteData->etc.'
          </div>
-         <div class="col-md-12 mb-3"><button type="button" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" "'.$tstatus.'"><a href="'.$viewinvoiceurl.'" target="_blank">View Invoice</a></button></div>
+         <div class="col-md-12 mb-3"><button type="button" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" '.$tstatus.'><a href="'.$viewinvoiceurl.'" target="_blank">View Invoice</a></button></div>
          </div></div>';
       }
       
@@ -856,7 +861,7 @@ class CustomerController extends Controller
     public function viewinvoice(Request $request,$id)
     {
       $tdata = Quote::where('id', $id)->get()->first();
-
+      $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
       $serviceid = explode(',', $tdata->serviceid);
 
       $servicedetails = Service::select('servicename','productid')->whereIn('id', $serviceid)->get();
@@ -890,6 +895,6 @@ class CustomerController extends Controller
 
       $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
 
-      return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$company->companyname,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids]);
+      return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
     }
 }

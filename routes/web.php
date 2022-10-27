@@ -337,8 +337,12 @@ Route::group([
 
      Route::any('/billing/leftbarinvoice', [BillingController::class, 'leftbarinvoice'])->name('leftbarinvoice');
 
+     Route::any('/billing/leftbarviewinvoice', [BillingController::class, 'leftbarviewinvoice'])->name('leftbarviewinvoice');
+
      Route::any('/billing/sendbillinginvoice', [BillingController::class, 'sendbillinginvoice'])->name('sendbillinginvoice');
      Route::get('/billing/downloadinvoice/{id}', [BillingController::class, 'downloadinvoice'])->name('downloadinvoice');
+
+     Route::post('/billing/downloadinvoiceview', [BillingController::class, 'downloadinvoiceview'])->name('downloadinvoiceview');
 
     Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
 

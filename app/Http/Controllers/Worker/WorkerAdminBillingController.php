@@ -12,6 +12,7 @@ use App\Models\Balancesheet;
 use App\Models\Quote;
 use App\Models\Managefield;
 use App\Models\Service;
+use App\Models\Customer;
 use Mail;
 
 class WorkerAdminBillingController extends Controller
@@ -344,8 +345,10 @@ class WorkerAdminBillingController extends Controller
       foreach($contactbccemail as $key => $contactbcc) {
         $contactbccList[] = $contactbcc;
       }
-      
-       Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'address'=>$tdata->address,'servicename'=>$servicename,'price'=>$tdata->price,'date'=>$tdata->givendate], function($message) use ($contactList,$app_name,$app_email,$contactbccList,$cc) {
+
+      $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
+
+       Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate], function($message) use ($contactList,$app_name,$app_email,$contactbccList,$cc) {
           $message->to($contactList);
           if($cc!=null) {
             $message->cc($contactbccList);
