@@ -10,7 +10,15 @@
 <div style="max-width: 680px;margin:auto;background: url('') no-repeat center top;background-size: cover;padding: 25px;">
 <div class="banner" style="background: #fff;width: 100%;border-radius: 4px;height: auto;border: 2px solid #ccc;">
 <div>
-<div class="text-center" style="background-color: black;border-radius: 4px;" >
+    @php
+        $usrcolor = App\Models\User::select('color')->where('id',auth()->user()->id)->first();
+        if($usrcolor->color!=""){
+            $color = $usrcolor->color;
+        } else {
+            $color = "#000";
+        }
+    @endphp
+<div class="text-center" style="background-color: {{$color}};border-radius: 4px;">
     <table style="width:100%">
         <tbody>
             <tr>
@@ -116,7 +124,7 @@
          <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 20px;">Note:
             <br><span style="color: #ccc;  font-size: 16px;">{{ @$description }}</span></p>
         </td>
-        <td style="width: 50%; padding: 12px;background-color: black; border-radius: 10px;">
+        <td style="width: 50%; padding: 12px;background-color: {{$color}}; border-radius: 10px;">
             <h5 style="margin: 0px 0 5px 0;color: #ccc;font-size: 22px; margin-left: 74%">Total:<br><h1 style="color: #fff; font-weight: bold; font-size: 36px;">${{ $totalprice }} </h1></h5>
 
         </td>

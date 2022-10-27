@@ -80,6 +80,14 @@
 <label class="form-label">Email</label>
   <input type="email" class="form-control form-control-2" placeholder="Email Id" value="{{$userData->email}}" name="email" readonly="">
 </div>
+<div class="col-lg-6 mb-3">
+  <label>Manage Invoice Header Color</label><br>
+  <span class="color-picker">
+    <label for="colorPicker">
+      <input type="color" value="{{$userData->color}}" id="colorPicker" name="color" style="width:235px;">
+    </label>
+  </span>
+</div>
 <h5 class="my-4">Set Stock Percentage (%)</h5>
 <div class="col-lg-6 mb-3">
 <label class="form-label">Good Stock (%)</label>

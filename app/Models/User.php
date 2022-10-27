@@ -45,6 +45,7 @@ class User extends Authenticatable
         'openingtime',
         'closingtime',
         'paymenttype',
+        'color',
     ];
 
     /**

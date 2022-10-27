@@ -86,6 +86,7 @@ class SettingController extends Controller
 
         $user->goodproduct = $request->goodproduct;
         $user->lowproduct = $request->lowproduct;
+        $user->color = $request->color;
        // $user->restockproduct = $request->restockproduct;
 
 
