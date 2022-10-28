@@ -91,7 +91,7 @@
         <td>{{$value->totalticket}}</td>
         <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
         <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
-        <td><a href="{{url('company/billing/billingview/')}}/{{$value->date}}" class="user-hover" style="color:#29DBBA;">View</a></td>
+        <td><a href="{{url('company/billing/billingview/')}}?from={{$value->date}}" class="user-hover" style="color:#29DBBA;">View</a></td>
       </tr>
     @php
       $i++;

@@ -48,7 +48,7 @@ class BillingController extends Controller
         }
       
       $totalbillingData = DB::table('quote')
-        ->select(DB::raw('etc as date'),'customer.customername','personnel.personnelname', DB::raw('sum(price) as totalprice'),'quote.id',DB::raw('COUNT(quote.id) as totalticket'))
+        ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname', DB::raw('sum(price) as totalprice'),'quote.id',DB::raw('COUNT(quote.id) as totalticket'))
         ->join('customer', 'customer.id', '=', 'quote.customerid')
         ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
         ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])
@@ -130,7 +130,14 @@ class BillingController extends Controller
     }
 
     
-    public function billingview(Request $request ,$date) {
+    public function billingview(Request $request) {
+        $date = $request->from;
+        if(!isset($request->to)) {
+          $todate = $date;
+        } else{
+          $todate = $request->to;
+        }
+        
         $auth_id = auth()->user()->id;
         if(auth()->user()->role == 'company') {
             $auth_id = auth()->user()->id;
@@ -140,28 +147,54 @@ class BillingController extends Controller
          $sdate = strtotime($date);
          $datef = date('l - F d, Y',$sdate);
          
-        $billingData = DB::table('quote')->select('quote.id','quote.serviceid','quote.price','quote.givendate','quote.etc','quote.payment_status','quote.personnelid', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])->where('quote.etc',$date)->orderBy('quote.id','desc')->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.serviceid','quote.price','quote.givendate','quote.etc','quote.payment_status','quote.personnelid', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])->whereBetween('quote.givenstartdate', [$date, $todate]);
 
+        if(isset($request->pid)) {
+            $pid = $request->pid;
+            $billingData->where('quote.personnelid',$pid);
+        }
+        $billingData= $billingData->orderBy('quote.id','desc')->get();
+
+//->where('quote.personnelid',$pid)
         $table="quote";
         $fields = DB::getSchemaBuilder()->getColumnListing($table);
-        return view('billing.index2',compact('auth_id','billingData','fields','datef','date'));
+
+        $personnelUser = Personnel::select('*')->where('userid',$auth_id)->orderBy('id','DESC')->get();
+        if(isset($request->pid)) {
+          $pid = $request->pid;
+        } else {
+          $pid = "";
+        }
+        return view('billing.index2',compact('auth_id','billingData','fields','datef','date','personnelUser','pid'));
     }
 
     public function leftbarbillingdata(Request $request) {
       $targetid =  $request->targetid;
       $serviceid = $request->serviceid;
-      
+      $date = $request->date;
+      if(!isset($request->to)) {
+          $todate = $date;
+        } else{
+          $todate = $request->to;
+        }
       $json = array();
 
       if($targetid == 0) {
         $auth_id = auth()->user()->id;
-        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid','quote.ticket_status','quote.duedate', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])->where('quote.etc',$request->date)->orderBy('quote.id','asc')->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.personnelid','quote.ticket_status','quote.duedate', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5'])->whereBetween('quote.givenstartdate', [$date, $todate]);
+
+        if($request->pid!="") {
+            $pids = $request->pid;
+            $billingData->where('quote.personnelid',$pids);
+        }
+
+        $billingData= $billingData->orderBy('quote.id','asc')->get();
         
         $countdata = count($billingData);
        // dd($billingData);
          $datacount = $countdata-1;
-         $url = url('/').'/company/billing/downloadinvoice/'.$billingData[$datacount]->id;
-        $url_pay = url('/').'/company/billing/paynow/'.$billingData[$datacount]->customerid;
+         $url = url('/').'/company/billing/downloadinvoice/'.@$billingData[$datacount]->id;
+        $url_pay = url('/').'/company/billing/paynow/'.@$billingData[$datacount]->customerid;
 
       if($billingData[$datacount]->image!=null) {
         $imagepath = url('/').'/uploads/services/'.$billingData[$datacount]->image;

@@ -322,7 +322,7 @@ Route::group([
     Route::any('/personnel/managecommissioncreate', [CommissionController::class, 'commissioncreate'])->name('commissioncreate');
 
     Route::get('/billing', [BillingController::class, 'index'])->name('billing');
-    Route::any('/billing/billingview/{date}', [BillingController::class, 'billingview'])->name('billingview');
+    Route::any('/billing/billingview', [BillingController::class, 'billingview'])->name('billingview');
     Route::any('/billing/leftbarbillingdata', [BillingController::class, 'leftbarbillingdata'])->name('leftbarbillingdata');
 
     Route::any('/billing/paynow/', [BillingController::class, 'paynow'])->name('paynow');

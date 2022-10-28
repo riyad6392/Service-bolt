@@ -1105,6 +1105,8 @@ body::-webkit-scrollbar-thumb:hover {
             //defaultEventMinutes: 30, 
             //defaultTimedEventDuration: 04:00,
             forceEventDuration: true,
+            dragScroll:true,
+            //scrollTime:$("#closingtime").val()+1, 
             //nextDayThreshold: '00:00',
             resources: function (callback) {
                 @if(request()->start)

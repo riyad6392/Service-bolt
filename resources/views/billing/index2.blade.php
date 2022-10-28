@@ -24,19 +24,60 @@
   }
 </style>
 <div class="content">
-   <form method="post" action="{{ url('company/billing/paynow') }}" enctype="multipart/form-data">
-      @csrf
-      <input type="hidden" name="date" id="date" value="{{$date}}">
-     <div class="row">
-
-      <div class="col-md-12">
+  <div class="col-md-12">
         <div class="side-h3">
        <h3>Billing & Payments</h3>
        <a href="{{route('company.billing')}}" class="back-btn">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
      Back</a>
      </div>
+     <form method="post" action="{{route('company.billingview') }}" class="row pe-0">
+      @csrf
+      <input type="hidden" name="phiddenid" id="phiddenid" value="">
+      <div class="col-lg-3 mb-3">
+        <select class="form-select puser" name="pid" id="pid">
+          <option value="">Select Personnel</option> 
+          @foreach($personnelUser as $key => $value)
+            <option value="{{$value->id}}" @if(@$pid ==  $value->id) selected @endif>{{$value->personnelname}}</option>
+          @endforeach
+        </select>
+      </div>
+      @if(isset($from))
+        <div class="col-lg-3 mb-3">
+          <input type="date" id="from" value="{{$from}}" name="from" class="form-control">
+        </div>
+        <div class="col-lg-3 mb-3">
+          <input type="date" id="to" value="{{$to}}" name="to" class="form-control">
+        </div>
+      @else
+        <div class="col-lg-3 mb-3">
+          <input type="date" id="from" value="{{@$_REQUEST['from']}}" name="from" class="form-control">
+        </div>
+        @if(!isset($_REQUEST['to']))
+        <div class="col-lg-3 mb-3">
+          <input type="date" id="to" value="{{@$_REQUEST['from']}}" name="to" class="form-control">
+        </div>
+        @else
+          <div class="col-lg-3 mb-3">
+          <input type="date" id="to" value="{{@$_REQUEST['to']}}" name="to" class="form-control">
+        </div>
+        @endif
+      @endif
+      <div class="col-lg-3 mb-3 pe-0" >
+       <button class="btn btn-block button" type="submit" id="search1">Search</button>
+      </div>
+
      </div>
+     </form>
+   </div>
+   <form method="post" action="{{ url('company/billing/paynow') }}" enctype="multipart/form-data">
+      @csrf
+      <input type="hidden" name="date" id="date" value="{{$date}}">
+     <div class="row">
+
+      
+
+
       @if(Session::has('success'))
 
           <div class="alert alert-success" id="selector">
@@ -59,9 +100,13 @@
     $class = "col-md-12 mb-4";
   }
 @endphp
+
 <div class="{{$class}}">
+
 <div class="card">
+
      <div class="card-body">
+      
      <h5 class="mb-4">{{$datef}}</h5>
       @php
         $pagedata = App\Models\Managefield::select('*')
@@ -222,6 +267,8 @@
       }
    });
   jQuery(function() {
+    var pid = $("#pid").val();
+    var to = $("#to").val();
      var date = $("#date").val();
     $(document).on('click','.showSingle',function(e) {
         var targetid = $(this).attr('target');
@@ -232,7 +279,9 @@
             data: {
               targetid: targetid,
               serviceid: serviceid,
-               date: date
+               date: date,
+               pid: pid,
+               to: to,
              },
             method: 'post',
             dataType: 'json',
@@ -249,7 +298,9 @@
             data: {
               targetid: 0,
               serviceid: 0,
-              date: date
+              date: date,
+              pid: pid,
+              to: to,
             },
             method: 'post',
             dataType: 'json',
