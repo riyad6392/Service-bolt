@@ -763,4 +763,43 @@ class BillingController extends Controller
         return $pdf->download($tdata->id .'_invoice.pdf');
     }
 
+    public function viewallticket(Request $request)
+    {
+        //dd($request->to);
+        $auth_id = auth()->user()->id;
+        if(auth()->user()->role == 'company') {
+            $auth_id = auth()->user()->id;
+        } else {
+           return redirect()->back();
+        }
+      
+      $totalbillingData = DB::table('quote')
+        ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname','quote.id','quote.price','quote.payment_status')
+        ->join('customer', 'customer.id', '=', 'quote.customerid')
+        ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
+        ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['2','3','4','5'])->where('quote.givenstartdate','!=',null);
+        if(isset($request->pid)) {
+            $pid = $request->pid;
+            $totalbillingData->where('quote.personnelid',$pid);
+        }
+        if(isset($request->from)) {
+          if(!isset($request->to)) {
+            $todate = $request->from;
+          } else {
+            $todate = $request->to;
+          }
+          $totalbillingData->whereBetween('quote.givenstartdate', [$request->from, $todate]);
+        }
+        $totalbillingData = $totalbillingData->get();
+
+        $personnelUser = Personnel::select('*')->where('userid',$auth_id)->orderBy('id','DESC')->get();
+
+        if(isset($request->pid)) {
+          $pid = $request->pid;
+        } else {
+          $pid = "";
+        }
+        return view('billing.viewallticket',compact('auth_id','totalbillingData','personnelUser','pid'));
+    }
+
 }
