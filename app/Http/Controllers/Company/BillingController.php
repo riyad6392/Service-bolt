@@ -275,6 +275,13 @@ class BillingController extends Controller
         </div>';
       } else {
         $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.givendate','quote.payment_status','quote.payment_mode','quote.ticket_status','quote.invoiceid','quote.personnelid','quote.duedate', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
+        
+        if($billingData[0]->invoiceid=="") {
+          $quote = Quote::where('id',$request->serviceid)->first();
+          $quote->invoiceid = "100".$request->serviceid;
+          $quote->save();
+        }
+
         $url = url('/').'/company/billing/downloadinvoice/'.$billingData[0]->id;
         if($billingData[0]->image!=null) {
         $imagepath = url('/').'/uploads/services/'.$billingData[0]->image;
