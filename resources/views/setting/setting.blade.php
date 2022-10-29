@@ -101,6 +101,62 @@
 <label class="form-label">Less Restock (%)</label>
   <input type="text" class="form-control form-control-2" placeholder="Less Restock" value="{{$userData->restockproduct}}" name="restockproduct" onkeypress="return checkPhone(event)">
 </div>
+@php
+  $schecked = "";
+  $allservicevalue = "";
+
+   $pchecked = "";
+   $allproductvalue = "";
+
+   $bchecked = "";
+   $bothvalue = "";
+
+  if($userData->taxtype!="") {
+    if($userData->taxtype == "allservice") {
+      $allservicevalue = $userData->taxvalue;
+      $schecked = "checked"; 
+    }
+    if($userData->taxtype == "allproduct") {
+      $allproductvalue = $userData->taxvalue;
+      $pchecked = "checked";
+    }
+    if($userData->taxtype == "both") {
+      $bothvalue = $userData->taxvalue;
+      $bchecked = "checked";
+    }
+  }
+@endphp
+<h5 class="my-4">Set Tax Percentage (%)</h5>
+  <ul>
+    <li class="d-flex">
+      <label class="radio-div2 me-2">All Services 
+        <input type="radio" name="taxtype" class="custom-radio secondradio" value="allservice" {{@$schecked}}>
+        <span class="checkmark"></span>
+      </label>
+      <div class="input-group mb-3">
+          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="allservicevalue" value="{{@$allservicevalue}}">
+      </div>
+    </li>
+
+    <li class="d-flex">
+      <label class="radio-div2 me-2">All Products
+        <input type="radio" name="taxtype" class="custom-radio secondradio" value="allproduct" {{@$pchecked}}>
+        <span class="checkmark"></span>
+      </label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="allproductvalue" value="{{@$allproductvalue}}">
+          </div>
+      </li>
+    <li class="d-flex">
+      <label class="radio-div2 me-2">Both
+        <input type="radio" name="taxtype" class="custom-radio secondradio" value="both" {{@$bchecked}}>
+        <span class="checkmark"></span>
+      </label>
+        <div class="input-group mb-3">
+<input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="bothvalue" value="{{@$bothvalue}}">
+</div>
+    </li>
+  </ul>
 <h5 class="my-4">Select Available Hours</h5>
 <div class="col-lg-6 mb-3">
 <label class="form-label">Opening Time</label>

@@ -39,6 +39,7 @@ class SettingController extends Controller
     }
 
     public function update(Request $request, $id = null) {
+
         $user = User::find(Auth::user()->id);
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
@@ -89,6 +90,20 @@ class SettingController extends Controller
         $user->color = $request->color;
        // $user->restockproduct = $request->restockproduct;
 
+        if(isset($request->taxtype)) {
+            if($request->taxtype == "allservice") {
+              $user->taxtype = $request->taxtype;
+               $user->taxvalue = $request->allservicevalue;
+            }
+            if($request->taxtype == "allproduct") {
+              $user->taxtype = $request->taxtype;
+               $user->taxvalue = $request->allproductvalue;
+            }
+            if($request->taxtype == "both") {
+              $user->taxtype = $request->taxtype;
+               $user->taxvalue = $request->bothvalue;
+            }
+        }
 
         $user->save();
         $request->session()->flash("success", "Settings Updated Successfully");
