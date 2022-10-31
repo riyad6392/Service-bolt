@@ -521,6 +521,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #{{$quotedetails[0]->id}} <span class="ms-2">
 @php
   $datef = date('F d, Y', strtotime($quotedetails[0]->etc));
+  $addressnote = App\Models\Address::select('notes')->where('customerid',$quotedetails[0]->customerid)->where('address',$quotedetails[0]->address)->first();
+  
 @endphp
   {{$quotedetails[0]->givendate}} - {{$quotedetails[0]->giventime}}</span>
 </h5>
@@ -557,11 +559,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <p>Service: {{$servicename}}</p></div></div>
 <div class="col-md-6">
   <div>
-<p>{{--@$productname--}}</p></div></div>
+<p>@if($quotedetails[0]->description!="")Company Notes: {{$quotedetails[0]->description}}@endif</p></div></div>
+<div class="col-md-6">
+  <div>
+<p>@if($addressnote->notes!=null) Address Notes: {{$addressnote->notes}} @endif</p></div></div>
+<div class="col-md-6">
+  <div>
+<p>@if($quotedetails[0]->customernotes!="") Personnel Notes:{!!$quotedetails[0]->customernotes!!}@endif</p></div></div>
+
+
 
 </div>
-
-<p>@if($quotedetails[0]->description!="")Notes: {{$quotedetails[0]->description}}@endif</p>
 
 @php
     if($quotedetails[0]->imagelist!="") 
