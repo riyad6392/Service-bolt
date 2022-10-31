@@ -1140,7 +1140,7 @@ i.fa.fa-plus.category-one {
   	</div>
 
   	<div class="col-md-12 mb-3">
-      <input type="text" class="form-control" placeholder="Address" name="address" id="address" required="">
+      <input type="text" class="form-control" placeholder="Address" name="address" id="addressq1" required="">
     </div>
      
      <div class="col-md-6 mb-3">
@@ -1157,7 +1157,7 @@ i.fa.fa-plus.category-one {
      
      <div class="col-md-12 mb-3">
     
-     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname" required="">
+     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname">
      
      </div>
      <div class="col-md-12 mb-3">
@@ -1217,7 +1217,7 @@ i.fa.fa-plus.category-one {
   	</div>
 
   	<div class="col-md-12 mb-3">
-      <input type="text" class="form-control" placeholder="Address" name="address" id="address" required="">
+      <input type="text" class="form-control" placeholder="Address" name="address" id="addresst1" required="">
     </div>
      
      <div class="col-md-6 mb-3">
@@ -1234,7 +1234,7 @@ i.fa.fa-plus.category-one {
      
      <div class="col-md-12 mb-3">
     
-     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname" required="">
+     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname">
      
      </div>
      <div class="col-md-12 mb-3">

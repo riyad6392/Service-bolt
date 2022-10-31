@@ -752,7 +752,7 @@ class CustomerController extends Controller
           <div class="col-md-12 mb-2">
             <label>Company Name</label>
 
-            <input type="text" class="form-control" placeholder="Company Name" value="'.$customer[0]->companyname.'" name="companyname" id="companyname" required>
+            <input type="text" class="form-control" placeholder="Company Name" value="'.$customer[0]->companyname.'" name="companyname" id="companyname">
           </div>
 
           

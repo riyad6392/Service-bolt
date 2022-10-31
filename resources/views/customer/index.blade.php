@@ -231,7 +231,7 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
                   <td>@if($customer->email) {{$customer->email}} @else ---- @endif</td>
                   @endif
                   @if($pagecolumn->columname=="companyname")
-                  <td>{{$customer->companyname}}</td>
+                  <td>@if($customer->companyname) {{$customer->companyname}} @else --- @endif</td>
                   @endif
                   @if($pagecolumn->columname=="serviceid")
                   @php
@@ -326,7 +326,7 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
      
      <div class="col-md-12 mb-3">
     
-     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname" required="">
+     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname">
      
      </div>
      <div class="col-md-11 mb-3">
