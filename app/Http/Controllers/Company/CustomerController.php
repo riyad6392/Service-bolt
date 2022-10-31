@@ -563,7 +563,9 @@ class CustomerController extends Controller
            <div class="number-1">Date:</div>'.$quoteData[$datacount]->etc.'
          </div>
 
-         <div class="col-md-12 mb-3"><button type="submit" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" '.$tstatus.'><a href="'.$viewinvoiceurl.'" target="_blank">View Invoice</a></button></div>
+         <div class="col-md-12 mb-3">
+         <a class="btn add-btn-yellow w-100 viewinvoice" data-id="'.$quoteData[$datacount]->id.'" data-duedate="'.$quoteData[$datacount]->duedate.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>View Invoice</a>
+         </div>
          </div></div>';
       } else {
         $quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber','personnel.phone','personnel.personnelname','services.image as serviceimage')->join('customer', 'customer.id', '=', 'quote.customerid')->leftjoin('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.id',$request->ticketid)->first();
@@ -666,7 +668,9 @@ class CustomerController extends Controller
          <div class="col-md-12 mb-3">
            <div class="number-1">Date:</div> '.$quoteData->etc.'
          </div>
-         <div class="col-md-12 mb-3"><button type="button" class="btn add-btn-yellow w-100 mb-4" name="payment" value="payment" '.$tstatus.'><a href="'.$viewinvoiceurl.'" target="_blank">View Invoice</a></button></div>
+         <div class="col-md-12 mb-3">
+         <a class="btn add-btn-yellow w-100 mb-4 viewinvoice" data-id="'.$quoteData->id.'" data-duedate="'.$quoteData->duedate.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>View Invoice</a>
+         </div>
          </div></div>';
       }
       
@@ -858,9 +862,12 @@ class CustomerController extends Controller
       }
     }
 
-    public function viewinvoice(Request $request,$id)
+    public function viewinvoice(Request $request)
     {
-      $tdata = Quote::where('id', $id)->get()->first();
+      $tdata = Quote::where('id', $request->ticketid)->get()->first();
+      $tdata->duedate = $request->duedate;
+      $tdata->save();
+
       $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
       $serviceid = explode(',', $tdata->serviceid);
 
@@ -896,5 +903,35 @@ class CustomerController extends Controller
       $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
 
       return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
+    }
+
+    public function leftbarviewinvoice(Request $request)
+    {
+      $json = array();
+      $auth_id = auth()->user()->id;
+      
+      if($request->duedate!="") {
+        $duedate =   $request->duedate;
+      }  else {
+        $duedate = "";
+      }
+      $html ='<div class="add-customer-modal">
+                  <h5>Invoice</h5>
+                 </div><input type="hidden" name="ticketid" id="ticketid" value="'.$request->id.'">
+            <div class="col-md-12 mb-2">
+             <div class="input_fields_wrap">
+                <div class="mb-3">
+                  <label>Select Due Date</label>
+                  <input type="date" class="form-control" placeholder="Due Date" name="duedate" id="duedate" value="'.$duedate.'" style="position:relative;">
+                </div>
+            </div>
+          </div>
+        <div class="col-lg-6 mb-3" style="display:none;">
+          <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
+        </div><div class="col-lg-6 mb-3 mx-auto">
+          <button class="btn btn-add btn-block" type="submit">View Invoice</button>
+        </div>';
+        return json_encode(['html' =>$html]);
+          die;
     }
 }

@@ -343,6 +343,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     </div>
   </div>
 </div>
+
+<!-- Due invoice modal -->
+<div class="modal fade" id="view-invoice" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data" target="_blank">
+          @csrf
+          <div id="viewdueinvoicemodaldata"></div>
+        </form>
+      </div>
+  </div>
+</div>
+</div>
+
 @endsection
 
 @section('script')
@@ -517,6 +532,27 @@ $(document).on('click','#createctickets',function(e) {
             }
         })
  });
+
+ $(document).on('click','.viewinvoice',function(e) {
+   var id = $(this).data('id');
+  var duedate = $(this).data('duedate');
+
+   $.ajax({
+      url:"{{url('company/customer/leftbarviewinvoice')}}",
+      data: {
+        id: id,
+        duedate: duedate,
+      },
+      method: 'post',
+      dataType: 'json',
+      refresh: true,
+      success:function(data) {
+        console.log(data.html);
+        $('#viewdueinvoicemodaldata').html(data.html);
+        
+      }
+    });
+  })
 
  $('html').on('click','.info_link1',function() {
       var addressid = $(this).attr('dataval');
