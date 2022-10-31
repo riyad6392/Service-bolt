@@ -11,7 +11,7 @@
 <div class="banner" style="background: #fff;width: 100%;border-radius: 4px;height: auto;border: 2px solid #ccc;">
 <div>
     @php
-        $usrcolor = App\Models\User::select('color')->where('id',auth()->user()->id)->first();
+        $usrcolor = App\Models\User::select('color','company_address')->where('id',auth()->user()->id)->first();
         if($usrcolor->color!=""){
             $color = $usrcolor->color;
         } else {
@@ -27,8 +27,8 @@
                 </td>
                 <td style="vertical-align: top; padding: 17px">
                     <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><img src="{{$cimage}}" style="width: 40%"></p>
-                    <h4 style="color: #fff">Your Business Adress
-                    <p style="margin: 5px 0px;">{{ $address }}</p>
+                    <h4 style="color: #fff">
+                    <p style="margin: 5px 0px;">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
                     </h4>
                 </td>
             </tr>
