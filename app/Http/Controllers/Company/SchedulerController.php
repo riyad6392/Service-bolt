@@ -1602,7 +1602,7 @@ class SchedulerController extends Controller
                 $enddatetime = "";
             }
              if($row->bgcolor == null){
-                $row->bgcolor = "#000";
+                $row->bgcolor = "#ffec51";
             }
             $result = array_diff($pids, $wids);
             

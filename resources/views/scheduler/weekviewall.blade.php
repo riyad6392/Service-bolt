@@ -647,7 +647,7 @@ background: transparent!important;
                                      if(in_array($value->id,$ids)){
                                         $checked="checked";
                                         if($value->color == null) {
-                                            $color= "#000";
+                                            $color= "#ffec51";
                                         } else {
                                             $color= $value->color;    
                                         }
