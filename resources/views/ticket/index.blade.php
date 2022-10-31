@@ -1840,10 +1840,10 @@ $('#serviceform').on('submit', function(event) {
 	    function getpriceajax() {
   			var price=0;
 				$('select.selectpicker2').find('option:selected').each(function() {
-			   	price += parseInt($(this).data('price'));
+			   	price += parseFloat($(this).data('price'));
 				});
 				
-				$("#price").val(price);
+				$("#price").val(price.toFixed(2));
 	    }
 		
 		$(document).on('change', 'select.selectpicker2',function() {
@@ -1871,10 +1871,10 @@ $('#serviceform').on('submit', function(event) {
 	  function getprice() {
 	  	var price = 0;
 	  	$('select.selectpicker').find('option:selected').each(function() {
-			   	price += parseInt($(this).data('price'));
+			   	price += parseFloat($(this).data('price'));
 			});
 			
-			$("#price").val(price);	
+			$("#price").val(price.toFixed(2));	
 	  }
 
 	  function getfrequency() {
@@ -1912,10 +1912,10 @@ $('#serviceform').on('submit', function(event) {
 	    function getprice1() {
 				var price = 0;
 	  		$('select.selectpicker1').find('option:selected').each(function() {
-			   	price += parseInt($(this).data('price1'));
+			   	price += parseFloat($(this).data('price1'));
 				});
 			
-				$("#price1").val(price);	
+				$("#price1").val(price.toFixed(2));	
 	    }
 
 	    function getfrequency1() {

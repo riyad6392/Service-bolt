@@ -305,10 +305,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     function getprice() {
 	  	var price = 0;
 	  	$('select.selectpicker').find('option:selected').each(function() {
-			   	price += parseInt($(this).data('price'));
+			   	price += parseFloat($(this).data('price'));
 			});
 			
-			$("#price").val(price);	
+			$("#price").val(price.toFixed(2));	
 	  }
 
 	  function getfrequency() {

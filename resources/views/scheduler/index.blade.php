@@ -914,10 +914,10 @@ body::-webkit-scrollbar-thumb:hover {
         function getprice1() {
             var price=0;
             $('select.selectpicker1').find('option:selected').each(function() {
-                price += parseInt($(this).data('price'));
+                price += parseFloat($(this).data('price'));
             });
                 
-            $("#price").val(price);
+            $("#price").val(price.toFixed(2));
         }
 
         function getfrequency1() {
