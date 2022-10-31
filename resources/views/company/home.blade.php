@@ -314,11 +314,11 @@
               <td>${{$value->price}}</td>
               <td>{{$value->time}} {{$value->minute}}</td>
               @if($value->ticket_status == "3")
-                <td><a href="#" class="btn-pending btn-block">Completed</a></td>
+                <td><a class="btn-pending btn-block" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$value->id}}">Completed</a></td>
               @elseif($value->ticket_status == "4")
-              <td><a href="#" class="btn-pending btn-block">Picked</a></td>
+              <td><a class="btn-pending btn-block" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$value->id}}">Picked</a></td>
               @else
-                <td><a href="#" class="btn-pending btn-block">Pending</a></td>
+                <td><a class="btn-pending btn-block" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$value->id}}">Pending</a></td>
               @endif
       
             </tr>
