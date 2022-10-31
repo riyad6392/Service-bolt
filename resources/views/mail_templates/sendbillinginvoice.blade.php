@@ -74,10 +74,19 @@
             
       $servicedetails = App\Models\Service::select('servicename','price')
     ->whereIn('id', $serviceid)->get();
+
+    $userdetails = App\Models\User::select('taxtype','taxvalue')
+    ->where('id', auth()->user()->id)->first();
+
       $sum = 0;
       foreach ($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
-        $sum+= $value['price'];
+        if($userdetails->taxtype == "allservice" || $userdetails->taxtype == "both") {
+            $txvalue = $value['price']*$userdetails->taxvalue/100; 
+        } else {
+            $txvalue = 0;
+        }
+        $sum+= $value['price'] + $txvalue;
       }
 
      
@@ -87,29 +96,52 @@
       $sum1 = 0;
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
-        $sum1+= $value['price'];
+         if($userdetails->taxtype == "allproduct" || $userdetails->taxtype == "both") {
+            $txvalue1 = $value['price']*$userdetails->taxvalue/100; 
+        } else {
+            $txvalue1 = 0;
+        }
+        $sum1+= $value['price'] + $txvalue1;
       } 
 
       $totalprice = $sum+$sum1;
         @endphp
     @foreach($servicedetails as $key => $value)
+        @php
+          if($userdetails->taxtype == "allservice" || $userdetails->taxtype == "both") {
+            $txvalue = $value['price']*$userdetails->taxvalue/100;
+            $txtpercentage = $userdetails->taxvalue;
+        } else {
+            $txvalue = 0;
+            $txtpercentage = 0;
+        }  
+        @endphp
     <tr>
         <td style="padding: 15px;">{{ $value['servicename'] }}</td>
         <td style="padding: 15px;">-</td>
         <td style="padding: 15px;">1</td>
         <td style="padding: 15px;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;">0%</td>
-        <td style="padding: 15px;">${{ $value['price'] }}</td>
+        <td style="padding: 15px;">{{$txtpercentage}}%</td>
+        <td style="padding: 15px;">${{ $value['price'] + $txvalue }}</td>
     </tr>
     @endforeach
     @foreach($pdetails as $key => $value)
+    @php
+        if($userdetails->taxtype == "allproduct" || $userdetails->taxtype == "both") {
+            $txvalue1 = $value['price']*$userdetails->taxvalue/100;
+            $txtpercentage1 = $userdetails->taxvalue; 
+        } else {
+            $txvalue1 = 0;
+            $txtpercentage1 = $userdetails->taxvalue;
+        }
+    @endphp
     <tr>
         <td style="padding: 15px;">{{ $value['productname'] }}</td>
         <td style="padding: 15px;">{{ $value['description'] }}</td>
         <td style="padding: 15px;">1</td>
         <td style="padding: 15px;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;">0%</td>
-        <td style="padding: 15px;">${{ $value['price'] }}</td>
+        <td style="padding: 15px;">{{$txtpercentage1}}%</td>
+        <td style="padding: 15px;">${{ $value['price'] + $txvalue1 }}</td>
     </tr>
     @endforeach
 

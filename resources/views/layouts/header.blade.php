@@ -239,7 +239,7 @@ ul#notification {
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- sidebar -->
 @php
-if(strpos(Request::url(), 'view') !== false){
+if(strpos(Request::url(), 'customer/view') !== false){
 	$clasa = "active";
 } else {
 	$clasa = "";
