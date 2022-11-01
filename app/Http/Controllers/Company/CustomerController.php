@@ -438,6 +438,18 @@ class CustomerController extends Controller
   public function updateaddress(Request $request)
   {
     $customer = Address::where('id', $request->customerid)->get()->first();
+    
+    $address = $customer->address;
+    $cid = $customer->customerid;
+
+    $quotedetails = Quote::where('customerid',$cid)->where('address',$address)->get();
+    
+    foreach($quotedetails as $key =>$value) {
+      $quote = Quote::find($value->id); 
+      $quote->address = $request->address;
+      $quote->save();
+    }
+     
     $customer->address = $request->address;
     $customer->save();
     $request->session()->flash('success', 'Address updated successfully');
