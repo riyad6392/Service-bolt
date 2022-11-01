@@ -401,7 +401,7 @@ class UserController extends Controller
 
            // $productname = implode(',', $pname);
 
-            $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->whereIn('quote.ticket_status',array('3','4'))->get();
+            $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->whereIn('quote.ticket_status',array('3'))->get();
 
             return response()->json(['status'=>1,'message'=>'success','data'=>$main_array,'totalprice'=>$totalprice,'checklistData'=>$checklistData,'priviousTicketData'=>$prequoteData],$this->successStatus);
         } else {
