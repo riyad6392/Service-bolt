@@ -657,16 +657,14 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
         {'country': ['us']});
       });
 
-     var input4 = document.getElementById('addresst1');
-     var autocomplete4 = new google.maps.places.Autocomplete(input4);
-      
+      var input4 = document.getElementById('addresst1');
+      var autocomplete4 = new google.maps.places.Autocomplete(input4);
+        
       autocomplete4.addListener('place_changed', function() {
-         var place4 = autocomplete4.getPlace();
-          autocomplete4.setComponentRestrictions(
-      {'country': ['us']});
-    });
-
-  
+           var place4 = autocomplete4.getPlace();
+            autocomplete4.setComponentRestrictions(
+        {'country': ['us']});
+      });
     }
 </script>  
    

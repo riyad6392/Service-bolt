@@ -165,7 +165,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   	   <div class="col-lg-12 mb-2">
     	   <div class="d-flex align-items-center justify-content-between ps-4 pt-2 pe-2 pb-2 address-line2 address-line">
     	     <div class="d-flex align-items-center addressdata"><a href="javascript:void(0);" class="info_link1" dataval="{{$value->id}}"><i class="fa fa-trash"></i></a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="me-3"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z" fill="currentColor"></path></svg> <a class="" data-bs-toggle="modal" data-bs-target="#edit-address" id="editaddress" data-id="{{$value->id}}" data-address="{{$value->address}}">{{$value->address}}</a></div>
-           <a class="" data-bs-toggle="modal" data-bs-target="#edit-note" id="editnote" data-id="{{$value->id}}" data-note="{{$value->notes}}"><i class="fa fa-sticky-note-o" aria-hidden="true"></i></a>
+           <a class="" data-bs-toggle="modal" data-bs-target="#edit-note" id="editnote" data-id="{{$value->id}}" data-note="{{$value->notes}}"><img src="{{url('/')}}/images/writing.png" style="width:30px;"></a>
     	  <!--  <button class="btn btn-save confirm">Service Ticket</button> -->
         <a class="btn btn-save confirm" data-bs-toggle="modal" data-bs-target="#create-ctickets" id="createctickets" data-id="{{$value->customerid}}" data-address="{{$value->address}}" style="width:152px;">Create Ticket</a>
         <a href="{{url('company/customer/ticketviewall/')}}/{{$value->customerid}}/{{$value->address}}" class="btn btn-save confirm" style="width:152px;">View Tickets</a>
