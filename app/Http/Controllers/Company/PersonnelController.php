@@ -351,7 +351,7 @@ class PersonnelController extends Controller
           <label class="mb-2">Password</label>
              <div class="input_fields_wrap">
                 <div class="mb-3 d-flex align-items-center">
-                  <input type="password" class="form-control" placeholder="Password" name="password" id="password" value="'.@$user[0]->wpassword.'" required><span toggle="#password-field" class="fa fa-fw fa-eye-slash field_icon toggle-password"></span>
+                  <input type="password" class="form-control" placeholder="Password" name="password" id="password" value="'.@$user[0]->wpassword.'" required><span id="toggle_pwd1" class="fa fa-fw fa-eye field_icon"></span>
                 </div>
             </div>
           </div>

@@ -733,6 +733,12 @@ $("#toggle_pwd").click(function () {
   $("#wpassword").attr("type", type);
 });
 
+$('html').on('click','#toggle_pwd1',function() {
+  $(this).toggleClass("fa-eye fa-eye-slash");
+  var type = $(this).hasClass("fa-eye-slash") ? "text" : "password";
+  $("#password").attr("type", type);
+});
+
 $('html').on('click','#accept',function() {
    var id = $(this).data('id');
    var dataString =  'id='+ id;

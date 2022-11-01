@@ -28,6 +28,8 @@
 				<div class="form-group clearfix">
                 <label for="password">Current Password</label><span class="required">*</span><br> 
                 <input class="form-control @error('old_password') is-invalid @enderror" id="password" placeholder="Password" name="old_password" type="password" value="{{ old('old_password') }}" required="">
+                <span id="toggle_pwd" class="fa fa-fw fa-eye field_icon" style="position: absolute;
+    right: 4%;top:58px;"></span>
                 <br>
                 <span class="text-danger"></span>
                 @error('old_password')
@@ -38,7 +40,8 @@
 
             <div class="form-group clearfix">
                 <label for="new_password">New Password</label><span class="required">*</span><br> 
-				<input class="form-control @error('new_password') is-invalid @enderror" id="cpassword" placeholder="New Password" name="new_password" type="password" value="{{ old('new_password') }}" required="">
+				<input class="form-control @error('new_password') is-invalid @enderror" id="cpassword" placeholder="New Password" name="new_password" type="password" value="{{ old('new_password') }}" required=""><span id="toggle_pwd1" class="fa fa-fw fa-eye field_icon" style="position: absolute;
+    right: 4%;top:144px;"></span>
         <span style="color: #0f5132;">Note: Password contain at-least 1 special character</span>
                 <br>
                 <span class="text-danger"></span>
@@ -50,8 +53,8 @@
             <div class="form-group clearfix">
                 <label for="change_password">Confirm New Password</label><span class="required">*</span><br>
                 <input class="form-control @error('change_password') is-invalid @enderror" id="cpassword" placeholder="Confirm New Password" name="change_password" type="password" value="{{ old('change_password') }}" required="">
-                
-                @error('change_password')
+
+               @error('change_password')
                 <div class="invalid-feedback" style="display: block;">{{ $message }}</div>
                @enderror
                <br>
@@ -131,5 +134,17 @@ $(document).on('click','#editProduct',function(e) {
             }
         })
   });
+
+$("#toggle_pwd").click(function () {
+  $(this).toggleClass("fa-eye fa-eye-slash");
+  var type = $(this).hasClass("fa-eye-slash") ? "text" : "password";
+  $("#password").attr("type", type);
+});
+
+$("#toggle_pwd1").click(function () {
+  $(this).toggleClass("fa-eye fa-eye-slash");
+  var type = $(this).hasClass("fa-eye-slash") ? "text" : "password";
+  $("#cpassword").attr("type", type);
+});
 </script>
 @endsection
