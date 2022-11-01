@@ -39,7 +39,7 @@ class SettingController extends Controller
     }
 
     public function update(Request $request, $id = null) {
-
+       // dd($request->all());
         $user = User::find(Auth::user()->id);
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
@@ -90,18 +90,46 @@ class SettingController extends Controller
         $user->color = $request->color;
        // $user->restockproduct = $request->restockproduct;
 
+        // if(isset($request->taxtype)) {
+        //     if($request->taxtype == "allservice") {
+        //       $user->taxtype = $request->taxtype;
+        //        $user->taxvalue = $request->allservicevalue;
+        //     }
+        //     if($request->taxtype == "allproduct") {
+        //       $user->taxtype = $request->taxtype;
+        //        $user->taxvalue = $request->allproductvalue;
+        //     }
+        //     if($request->taxtype == "both") {
+        //       $user->taxtype = $request->taxtype;
+        //        $user->taxvalue = $request->bothvalue;
+        //     }
+        // }
+
         if(isset($request->taxtype)) {
-            if($request->taxtype == "allservice") {
+            if($request->taxtype == "service_products") {
               $user->taxtype = $request->taxtype;
-               $user->taxvalue = $request->allservicevalue;
+              if(isset($request->allservicevalue) || $request->allservicevalue!=null) {
+                $user->servicevalue = $request->allservicevalue;
+              } else {
+                $user->servicevalue = null;
+              }
+
+              if(isset($request->allproductvalue) || $request->allproductvalue!=null) {
+                $user->productvalue = $request->allproductvalue;
+              } else {
+                $user->productvalue = null;
+              }
             }
-            if($request->taxtype == "allproduct") {
-              $user->taxtype = $request->taxtype;
-               $user->taxvalue = $request->allproductvalue;
-            }
+
             if($request->taxtype == "both") {
-              $user->taxtype = $request->taxtype;
-               $user->taxvalue = $request->bothvalue;
+                $user->taxtype = $request->taxtype;
+                if(isset($request->bothvalue) || $request->bothvalue!=null) {
+                    $user->servicevalue = $request->bothvalue;
+                    $user->productvalue = $request->bothvalue;
+                } else {
+                    $user->servicevalue = null;
+                    $user->productvalue = null;
+                }  
             }
         }
 

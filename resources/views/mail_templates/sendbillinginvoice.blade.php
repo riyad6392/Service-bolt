@@ -75,17 +75,21 @@
       $servicedetails = App\Models\Service::select('servicename','price')
     ->whereIn('id', $serviceid)->get();
 
-    $userdetails = App\Models\User::select('taxtype','taxvalue')
+    $userdetails = App\Models\User::select('taxtype','taxvalue','servicevalue','productvalue')
     ->where('id', auth()->user()->id)->first();
 
       $sum = 0;
       foreach ($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
-        if($userdetails->taxtype == "allservice" || $userdetails->taxtype == "both") {
-            $txvalue = $value['price']*$userdetails->taxvalue/100; 
-        } else {
-            $txvalue = 0;
+        $txvalue = 0;
+        if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+            if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                $txvalue = $value['price']*$userdetails->servicevalue/100; 
+            } else {
+                $txvalue = 0;
+            }
         }
+
         $sum+= $value['price'] + $txvalue;
       }
 
@@ -96,10 +100,13 @@
       $sum1 = 0;
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
-         if($userdetails->taxtype == "allproduct" || $userdetails->taxtype == "both") {
-            $txvalue1 = $value['price']*$userdetails->taxvalue/100; 
-        } else {
-            $txvalue1 = 0;
+        $txvalue1 = 0;
+         if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+           if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+                $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+            } else {
+                $txvalue1 = 0;
+            }
         }
         $sum1+= $value['price'] + $txvalue1;
       } 
@@ -108,12 +115,16 @@
         @endphp
     @foreach($servicedetails as $key => $value)
         @php
-          if($userdetails->taxtype == "allservice" || $userdetails->taxtype == "both") {
-            $txvalue = $value['price']*$userdetails->taxvalue/100;
-            $txtpercentage = $userdetails->taxvalue;
-        } else {
-            $txvalue = 0;
-            $txtpercentage = 0;
+                $txvalue = 0;
+                $txtpercentage = 0;
+          if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+            if($userdetails->servicevalue != null || $userdetails->taxtype == "both") { 
+                $txvalue = $value['price']*$userdetails->servicevalue/100; 
+                $txtpercentage = $userdetails->servicevalue;
+            } else {
+                $txvalue = 0;
+                $txtpercentage = 0;
+            }
         }  
         @endphp
     <tr>
@@ -127,12 +138,16 @@
     @endforeach
     @foreach($pdetails as $key => $value)
     @php
-        if($userdetails->taxtype == "allproduct" || $userdetails->taxtype == "both") {
-            $txvalue1 = $value['price']*$userdetails->taxvalue/100;
-            $txtpercentage1 = $userdetails->taxvalue; 
-        } else {
-            $txvalue1 = 0;
-            $txtpercentage1 = $userdetails->taxvalue;
+        $txvalue1 = 0;
+        $txtpercentage1 = 0;
+            if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+                if($userdetails->productvalue != null || $userdetails->taxtype == "both") {
+                $txvalue1 = $value['price']*$userdetails->productvalue/100;
+                $txtpercentage1 = $userdetails->productvalue; 
+            } else {
+                $txvalue1 = 0;
+                $txtpercentage1 = 0;
+            }
         }
     @endphp
     <tr>
