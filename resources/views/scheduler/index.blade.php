@@ -1308,6 +1308,10 @@ body::-webkit-scrollbar-thumb:hover {
                   // if so, remove the element from the "Draggable Events" list
                   $(this).remove();
                 }
+                var dd = $('#calendar').fullCalendar('getDate');
+                // alert(moment);
+                // var fulldate = moment.format('Y-MM-DD');
+                // alert(fulldate);
                var hours = date._i[3];
                 var minutes = date._i[4];
                 //alert(date._i[3] + date._i[4]);
@@ -1322,13 +1326,15 @@ body::-webkit-scrollbar-thumb:hover {
                 var workerid = resourceId;
                 var giventime = `${hours}:${minutes} ${ampm}`;
 
-                var dd = date._d;
+                //var dd = date._d;
+               
                 var date = moment(new Date(dd.toString().substr(0, 16)));
                 //var fulldate = date.format("dddd - MMMM DD, YYYY");
                 // console.log(date._i);
                 // return false;
                 //var fulldate = "{{$requestdate}}";
                 var fulldate = moment(date._i).format('Y-MM-DD');
+                
                 
                 form_data = new FormData();
                 form_data.append('quoteid',ticketid);
@@ -1403,7 +1409,12 @@ body::-webkit-scrollbar-thumb:hover {
                     var giventime = `${hours}:${minutes} ${ampm}`;
 
                     //var fulldate = "{{$requestdate}}";
-                    var fulldate = moment(event.start._d).format('Y-MM-DD');
+                    var dd = $('#calendar').fullCalendar('getDate');
+
+                    var date = moment(new Date(dd.toString().substr(0, 16)));
+
+                    var fulldate = moment(date._i).format('Y-MM-DD');
+                    //var fulldate = moment(event.start._d).format('Y-MM-DD');
                 } else {
                  
                     var hours = event.start._i[3];
@@ -1435,7 +1446,12 @@ body::-webkit-scrollbar-thumb:hover {
                     var giventime = `${hours}:${minutes} ${ampm}`;
 
                     //var fulldate = "{{$requestdate}}";
-                    var fulldate = moment(event.start._d).format('Y-MM-DD');
+                    //var fulldate = moment(event.start._d).format('Y-MM-DD');
+                    var dd = $('#calendar').fullCalendar('getDate');
+
+                    var date = moment(new Date(dd.toString().substr(0, 16)));
+
+                    var fulldate = moment(date._i).format('Y-MM-DD');
                 }
                 
                 form_data = new FormData();
