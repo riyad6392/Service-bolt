@@ -372,6 +372,12 @@ class UserController extends Controller
                $imagearray = array(); 
             }
 
+            $addressnote = Address::select('notes')->where('customerid',$quoteData->customerid)->first();
+            if($addressnote->notes !=null) {
+                $addressnote = $addressnote->notes;
+            } else {
+                $addressnote = "--";
+            }
             array_push($main_array, [
                    'id'=>$quoteData->id,
                    'customerid'=>$quoteData->customerid,
@@ -389,6 +395,7 @@ class UserController extends Controller
                    'description'=>$quoteData->description,
                    'phonenumber'=>$quoteData->phonenumber,
                    'ticket_status'=>$quoteData->ticket_status,
+                   'addressnote'=>$addressnote,
                    'imagevideo'=>$imagearray,
                    'pointcheckbox'=>$pointbox,
                    'servicedata'=>$serearray,
