@@ -125,7 +125,7 @@ class WorkerAdminTicketController extends Controller
         $data['longitude'] = $longitude;
 
         Quote::create($data);
-
+     if($customer->email!=null) {   
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
@@ -136,7 +136,7 @@ class WorkerAdminTicketController extends Controller
           ->subject('Quot details!');
           $message->from($app_email,$app_name);
         });
-
+      }
           $request->session()->flash('success', 'Quote added successfully');
             
           return redirect()->route('worker.managequote');
@@ -308,7 +308,7 @@ class WorkerAdminTicketController extends Controller
         $data['ticket_status'] = 1;
 
         Quote::create($data);
-
+     if($customer->email!=null) {
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
@@ -319,7 +319,7 @@ class WorkerAdminTicketController extends Controller
           ->subject('Quot details!');
           $message->from($app_email,$app_name);
         });
-
+    }
           $request->session()->flash('success', 'Ticket added successfully');
             
           return redirect()->route('company.quote');

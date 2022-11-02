@@ -543,7 +543,7 @@ class WorkerAdminServicesController extends Controller
       $data['longitude'] = $longitude;
 
       Quote::create($data);
-
+    if($customer->email!=null) {
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
@@ -554,7 +554,7 @@ class WorkerAdminServicesController extends Controller
           ->subject('Quot details!');
           $message->from($app_email,$app_name);
       });
-
+    }
       $request->session()->flash('success', 'Quote added successfully');
       
       return redirect()->back();

@@ -897,7 +897,7 @@ class WorkerTicketController extends Controller
         }
 
         Quote::create($data);
-
+    if($customer->email!=null) {    
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
@@ -908,7 +908,7 @@ class WorkerTicketController extends Controller
           ->subject('Ticket details!');
           $message->from($app_email,$app_name);
         });
-
+    }
           $request->session()->flash('success', 'Ticket added successfully');
             
           return redirect()->route('worker.myticket');

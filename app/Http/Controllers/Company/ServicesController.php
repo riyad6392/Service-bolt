@@ -601,7 +601,7 @@ class ServicesController extends Controller
       $quoteee = Quote::where('id', $quotelastid->id)->first();
       $quoteee->invoiceid = "100".$quotelastid->id;
       $quoteee->save();
-
+    if($customer->email!=null) {
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
@@ -612,6 +612,7 @@ class ServicesController extends Controller
           ->subject($subjetline);
           $message->from($app_email,$app_name);
       });
+    }
         if($request->share =='share') {
           $request->session()->flash('success', 'Quote share successfully');
         } else {
