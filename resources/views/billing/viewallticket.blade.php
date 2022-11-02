@@ -88,7 +88,8 @@
       <table id="example" class="table no-wrap table-new table-list align-items-center">
       <thead>
       <tr>
-        <th>Number</th>
+        <th>#</th>
+        <th>Invoice Id</th>
         <th>Date</th>
         <th>Customer Name</th>
         <th>Personnel Name</th>
@@ -111,6 +112,7 @@
 
         <tr class="" target="{{$i}}" data-id="{{$value->id}}">
           <td>#{{$value->id}}</td>
+          <td>#{{$value->invoiceid}}</td>
           <td>{{date('m-d-Y', strtotime($value->date))}}</td>
           <td>{{$value->customername}}</td>
           <td>{{$value->personnelname}}</td>

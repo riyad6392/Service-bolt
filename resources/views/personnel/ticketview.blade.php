@@ -745,6 +745,20 @@ Map / Directions</a>
 <div class="col-md-6">
   <div>
 <p>{{@$productname}}</p></div></div>
+@php
+    $addressnote = App\Models\Address::select('notes')->where('customerid',$quoteData->customerid)->first();
+    
+    if($addressnote->notes !=null) {
+        $addressnote = $addressnote->notes;
+    } else {
+        $addressnote = "--";
+    }
+@endphp
+<div class="col-md-6">
+    <div>
+        <p>Address Note : {{@$addressnote}}</p>
+    </div>
+</div>
 
 </div>
 

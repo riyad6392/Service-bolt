@@ -559,7 +559,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <p>Service: {{$servicename}}</p></div></div>
 <div class="col-md-6">
   <div>
-<p>@if($quotedetails[0]->description!="")Company Notes: {{$quotedetails[0]->description}}@endif</p></div></div>
+<p>@if($quotedetails[0]->description!="")Ticket Description: {{$quotedetails[0]->description}}@endif</p></div></div>
 <div class="col-md-6">
   <div>
 <p>@if($addressnote->notes!=null) Address Notes: {{$addressnote->notes}} @endif</p></div></div>
@@ -576,6 +576,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     {
       $imagelist = explode(',',$quotedetails[0]->imagelist);
       @endphp
+      <div class="row" style="margin-top: 45px;">
       <section class="promo_section">
     <div class="container ">
       <div class="row">
@@ -611,6 +612,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
        </div>
     </div>
   </section>
+</div>
       @php
     }
   @endphp

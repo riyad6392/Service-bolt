@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\Managefield;
 use DB;
 use Image;
+use Illuminate\Support\Str;
 
 class InventoryController extends Controller
 {
@@ -267,6 +268,10 @@ class InventoryController extends Controller
                  <p class="number-1">Category</p>
                  <h6 class="heading-h6">'.$inventory[$datacount]->category.'</h6>
                 </div>
+                <div class="mb-4">
+                 <p class="number-1">Description</p>
+                 <h6 class="heading-h6">'.Str::limit($inventory[$datacount]->description, 150).'</h6>
+                </div>
                 <a class="btn btn-edit mb-2 w-100 p-3" data-bs-toggle="modal" data-bs-target="#edit-product" id="editProduct" data-id="'.$inventory[$datacount]->id.'">Edit</a>
                 <a href="javascript:void(0);" class="info_link1 btn btn-edit w-100 p-3" dataval="'.$inventory[$datacount]->id.'" style="background:antiquewhite;color:red;">Delete</a>
                 <a class="btn btn-edit mb-2 w-100 p-3" data-bs-toggle="modal" data-bs-target="#duplicate-Product" id="duplicateProduct" data-id="'.$inventory[$datacount]->id.'" style="margin-top:10px;">Duplicate</a>
@@ -291,6 +296,10 @@ class InventoryController extends Controller
                 <div class="mb-4">
                  <p class="number-1">Category</p>
                  <h6 class="heading-h6">'.$inventory[0]->category.'</h6>
+                </div>
+                <div class="mb-4">
+                 <p class="number-1">Description</p>
+                 <h6 class="heading-h6">'.Str::limit($inventory[0]->description, 150).'</h6>
                 </div>
                 <a class="btn btn-edit mb-2 w-100 p-3" data-bs-toggle="modal" data-bs-target="#edit-product" id="editProduct" data-id="'.$inventory[0]->id.'">Edit</a>
                 <a href="javascript:void(0);" class="info_link1 btn btn-edit w-100 p-3" dataval="'.$inventory[0]->id.'" style="background:antiquewhite;color:red;">Delete</a>

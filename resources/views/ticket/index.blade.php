@@ -501,8 +501,13 @@ i.fa.fa-plus.category-one {
 			  $explode_id = explode(',', $ticket->serviceid);
 			  $servicedata = App\Models\Service::select('servicename')
 			    ->whereIn('services.id',$explode_id)->get();
+			  if($ticket->payment_status!=null) {
+			  	$payment_status = $ticket->payment_status;
+			  } else {
+			  	$payment_status = "--";
+			  }
 			  if($ticket->payment_mode!=null) {
-			  	$paid_status = $ticket->payment_mode;
+			  	$paid_status = 'By '.$ticket->payment_mode;
 			  } else {
 			  	$paid_status = "--";
 			  }
@@ -533,7 +538,7 @@ i.fa.fa-plus.category-one {
 		    $i=1; break;
 		  @endphp
 		@endforeach</td>
-		<td>{{$paid_status}}</td>
+		<td>{{$payment_status}} ({{$paid_status}})</td>
 	  <td><a class="btn btn-edit p-3 w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$ticket->id}}" style="display: none;">View</a>
 	  	<a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" class="btn btn-edit p-3 w-auto">View</a>
 	 </td>
