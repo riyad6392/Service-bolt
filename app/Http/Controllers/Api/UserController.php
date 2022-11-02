@@ -607,6 +607,18 @@ class UserController extends Controller
                 $ticket1->ticket_status = 3;
                 $ticket1->save();
            }
+
+            $ticketid ='#'.$request->ticketId;
+            $ticketsub = "Ticket $ticketid has been closed";
+
+            $data1['uid'] = $quoteData->userid;
+            $data1['pid'] = $quoteData->personnelid;
+            $data1['ticketid'] = $request->ticketId;
+            $data1['message'] = $ticketsub;
+
+            Notification::create($data1);
+            event(new MyEvent($ticketsub));
+
            return response()->json(['status'=>1,'message'=>'Ticket Completed successfully'],$this->successStatus);
         } else {
             return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
