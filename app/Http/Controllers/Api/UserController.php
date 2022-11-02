@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Password; 
 use Validator;
-use Illuminate\Support\Facades\Notification;
+//use Illuminate\Support\Facades\Notification;
 use Tzsk\Otp\Facades\Otp;
 use Mail;
 use App\Helpers\Files\Storage\StorageDisk;
@@ -29,6 +29,8 @@ use App\Models\Workertimeoff;
 use App\Models\Workersethour;
 use App\Models\Balancesheet;
 use App\Models\PasswordReset;
+use App\Models\Notification;
+use App\Events\MyEvent;
 
 class UserController extends Controller
 {
@@ -640,6 +642,31 @@ class UserController extends Controller
                     $ticket1->save();
                   }
 
+                  $pidarray = explode(',', $quoteData->product_id);
+
+                  if(!empty($quoteData->product_id)) {
+                    foreach($pidarray as $key => $pid) {
+                      $productd = Inventory::where('id', $pid)->first();
+                      if(!empty($productd)) {
+                        $productd->quantity = (@$productd->quantity) - 1;
+                        $productd->save();
+                      }
+
+                    }
+                  }
+
+                  $personeldata =Quote::select('quote.personnelid','personnel.personnelname')->leftjoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id', $request->ticketId)->get()->first();
+
+                  $ticketid ='#'.$request->ticketId;
+                  $ticketsub = "Ticket $ticketid picked up by $personeldata->personnelname";
+
+                  $data1['uid'] = $quoteData->userid;
+                  $data1['pid'] = $quoteData->personnelid;
+                  $data1['ticketid'] = $request->ticketId;
+                  $data1['message'] = $ticketsub;
+
+                  Notification::create($data1);
+                  event(new MyEvent($ticketsub));
 
                 return response()->json(['status'=>1,'message'=>'Ticket Pickup successfully'],$this->successStatus);
         } else {
