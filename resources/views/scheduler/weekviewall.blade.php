@@ -1207,7 +1207,7 @@ background: transparent!important;
                   hours = hours || 12;    
                   hours = hours < 10 ? `${hours}` : hours;
                   minutes = minutes < 10 ? `${minutes}` : minutes;
-                  var giventime = `${hours}:${minutes} ${ampm}`;
+                  var giventime = `${hours}:${minutes}`;
 
                   var Endhourwithtime = event.end._i.slice(11,16);
                   Endhourwithtime = Endhourwithtime.toString();
@@ -1219,7 +1219,7 @@ background: transparent!important;
                   hours1 = hours1 || 12;    
                   hours1 = hours1 < 10 ? `${hours1}` : hours1;
                   minutes1 = minutes1 < 10 ? `${minutes1}` : minutes1;
-                  var givenendtime = `${hours1}:${minutes1} ${ampm1}`;
+                  var givenendtime = `${hours1}:${minutes1}`;
 
                   element.popover({
                   title: '',
