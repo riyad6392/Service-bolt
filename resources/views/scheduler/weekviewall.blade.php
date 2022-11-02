@@ -1198,43 +1198,40 @@ background: transparent!important;
             // },
 
             eventRender: function(event, element, view) {
-                console.log(event.start);
-                console.log('1111startbove');
-                console.log(event.end);
-                console.log('1111endabove');
-                console.log(event.start._i);
-                console.log('1111start_i_bove');
-                console.log(event.end._i);
-                console.log('1111end_i_above');
                 var hourwithtime = event.start._i.slice(11,16);
                 hourwithtime=hourwithtime.toString();
                 var hours = hourwithtime.slice(0, -3);
                   var minutes = hourwithtime.substring(3);
-                  //const ampm = hours >= 12 ? 'pm' : 'am';
+                  const ampm = hours >= 12 ? 'pm' : 'am';
                   hours %= 12;
                   hours = hours || 12;    
                   hours = hours < 10 ? `${hours}` : hours;
                   minutes = minutes < 10 ? `${minutes}` : minutes;
-                  var giventime = `${hours}:${minutes}`;
-
+                  var giventime = `${hours}:${minutes} ${ampm}`;
+                if(event.end!=null) {
                   var Endhourwithtime = event.end._i.slice(11,16);
                   Endhourwithtime = Endhourwithtime.toString();
                   var hours1 = Endhourwithtime.slice(0, -3);
                   var minutes1 = Endhourwithtime.substring(3);
-                  //const ampm1 = hours1 >= 12 ? 'pm' : 'am';
+                  const ampm1 = hours1 >= 12 ? 'pm' : 'am';
                   //alert(minutes1);
                   hours1 %= 12;
                   hours1 = hours1 || 12;    
                   hours1 = hours1 < 10 ? `${hours1}` : hours1;
                   minutes1 = minutes1 < 10 ? `${minutes1}` : minutes1;
-                  var givenendtime = `${hours1}:${minutes1}`;
+                  var givenendtime = `${hours1}:${minutes1} ${ampm1}`;
+                  var startendtime = `${giventime} - ${givenendtime}`;
+                } else {
+                   var givenendtime = "";  
+                   var startendtime = `${giventime}`;   
+                }
 
                   element.popover({
                   title: '',
                   placement: 'right',
                   html:true,
                   sanitize:false,
-                  content: '<div class="popover-design"><div class="row"><div class="col-md-7"><p>'+event.status+'</p><p>'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+giventime+' -'+givenendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class=" icon-btn" id="closeonDelete" data-id="'+event.id+'"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+                  content: '<div class="popover-design"><div class="row"><div class="col-md-7"><p>'+event.status+'</p><p>'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+startendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class=" icon-btn" id="closeonDelete" data-id="'+event.id+'"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
                   container:'body',
                   trigger:'click',
                 });
