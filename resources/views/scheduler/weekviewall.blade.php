@@ -1198,6 +1198,8 @@ background: transparent!important;
             // },
 
             eventRender: function(event, element, view) {
+                console.log(event.start);
+                console.log(event.end);
                 var hourwithtime = event.start._i.slice(11,16);
                 hourwithtime=hourwithtime.toString();
                 var hours = hourwithtime.slice(0, -3);
