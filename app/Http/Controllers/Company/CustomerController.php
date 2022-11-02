@@ -367,7 +367,7 @@ class CustomerController extends Controller
         $quoteee = Quote::where('id', $quotelastid->id)->first();
         $quoteee->invoiceid = "100".$quotelastid->id;
         $quoteee->save();
-
+    if($customer->email!=null) {
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
@@ -378,6 +378,7 @@ class CustomerController extends Controller
           ->subject('Service Ticket from '. auth()->user()->companyname);
           $message->from($app_email,$app_name);
         });
+    }
       if($request->share =='share') {
           $request->session()->flash('success', 'Ticket share successfully');
         } else {
