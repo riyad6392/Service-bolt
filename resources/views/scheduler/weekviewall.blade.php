@@ -1200,6 +1200,8 @@ background: transparent!important;
             eventRender: function(event, element, view) {
                 console.log(event.start);
                 console.log(event.end);
+                console.log(event.start._i);
+                console.log(event.end._i);
                 var hourwithtime = event.start._i.slice(11,16);
                 hourwithtime=hourwithtime.toString();
                 var hours = hourwithtime.slice(0, -3);
