@@ -1199,9 +1199,13 @@ background: transparent!important;
 
             eventRender: function(event, element, view) {
                 console.log(event.start);
+                console.log('1111startbove');
                 console.log(event.end);
+                console.log('1111endabove');
                 console.log(event.start._i);
+                console.log('1111start_i_bove');
                 console.log(event.end._i);
+                console.log('1111end_i_above');
                 var hourwithtime = event.start._i.slice(11,16);
                 hourwithtime=hourwithtime.toString();
                 var hours = hourwithtime.slice(0, -3);
