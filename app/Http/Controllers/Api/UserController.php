@@ -774,7 +774,7 @@ class UserController extends Controller
         $data['ticket_status'] = 1;
         
         Quote::create($data);
-
+    if($customer->email!=null) {    
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
@@ -785,7 +785,7 @@ class UserController extends Controller
           ->subject('Ticket details!');
           $message->from($app_email,$app_name);
         }); 
-
+     }
        return response()->json(['status'=>1,'message'=>'Ticket Created Successfully'],$this->successStatus);    
     }
 
@@ -963,7 +963,7 @@ class UserController extends Controller
       $quote->product_id = rtrim($productid, ',');
       $quote->price = $request->price;
       $quote->save();
-
+    if($customer->email!=null) {  
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
@@ -974,7 +974,7 @@ class UserController extends Controller
           ->subject('Invoice details!');
           $message->from($app_email,$app_name);
         });
-
+    }
       return response()->json(['status'=>1,'message'=>'Invoice has been send successfully'],$this->successStatus); 
     }
 

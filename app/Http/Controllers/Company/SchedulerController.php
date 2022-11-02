@@ -824,7 +824,7 @@ class SchedulerController extends Controller
         $data['ticket_status'] = 1;
         
         Quote::create($data);
-
+    if($customer->email!=null) {   
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
@@ -837,7 +837,7 @@ class SchedulerController extends Controller
           ->subject('Service Quote from ' .  auth()->user()->companyname);
           $message->from($app_email,$app_name);
         });
-
+    }
         if($request->share =='share') {
           $request->session()->flash('success', 'Ticket share successfully');
         } else {
