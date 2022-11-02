@@ -1132,12 +1132,10 @@ body::-webkit-scrollbar-thumb:hover {
             
             eventRender: function(event, element, view) {
               
-                //var start = moment(event.start).format('h:mm a'); 
-                var start = moment(event.start).format('h:mm'); 
+                var start = moment(event.start).format('h:mm a'); 
               
-                //var end = moment(event.end).format('h:mm a'); 
-                var end = moment(event.end).format('h:mm'); 
-                
+                var end = moment(event.end).format('h:mm a'); 
+              
                 var title = event.title.split("#");
                 var tid = title[1].split("\n");
                 var eventid = tid[0];
