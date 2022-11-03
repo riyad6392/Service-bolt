@@ -1732,4 +1732,37 @@ class UserController extends Controller
         return response()->json(['status'=>1],$this->successStatus);                      
     }
 
+    public function adminchecklist(Request $request)
+    {
+        $adminchecklist = DB::table('adminchecklist')->select('id','checklist')->get();
+
+        return response()->json(['status'=>1,'checklist'=>$adminchecklist],$this->successStatus);
+
+    }
+
+    public function updatenotes(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'addressid' => 'required'
+        ]);
+        if($validator->fails()) { 
+            $errors = $validator->errors()->toArray();
+            $msg_err = '';
+            if(isset($errors['addressid'])) {
+                foreach($errors['addressid'] as $e){
+                    $msg_err .= $e;
+                }
+            }
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
+        }
+
+        $address = Address::find($request->addressid);
+        
+        $address->notes = $request->notes;
+        $address->checklistid = $request->checklistid;
+        $address->save();
+
+        return response()->json(['status'=>1,'message'=>'Notes updated successfully'],$this->successStatus);
+    }
+
 }
