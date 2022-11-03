@@ -97,15 +97,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   <div class="col-lg-8 mb-2">
    <div class="show-fillter">
 	   <input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address" required="">
-      <!-- <button class="search-icon">
-	   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M14.53 15.59a8.25 8.25 0 111.06-1.06l5.69 5.69a.75.75 0 11-1.06 1.06l-5.69-5.69zM2.5 9.25a6.75 6.75 0 1111.74 4.547.746.746 0 00-.443.442A6.75 6.75 0 012.5 9.25z" fill="currentColor"></path></svg>
-	   </button> -->
-	   </div>
+    </div>
   </div>
   <div class="col-lg-3 offset-lg-1 mb-3">
-    <button class="btn btn-add btn-block" type="submit">Add Address</button>
+    <!-- <button class="btn btn-add btn-block" type="submit">Add Address</button> -->
+    <a class="btn btn-add btn-block" data-bs-toggle="modal" data-bs-target="#add-note" id="addnote" style="padding: 10px;">Add Address</a>
   </div>
 </form>
+
 
 @if(count($customerAddress)>0)
           @else
@@ -358,12 +357,64 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 </div>
 </div>
 
+<div class="modal fade" id="add-note" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+     
+      <div class="modal-body">
+        <form method="post" action="{{route('company.customeraddresscreate')}}" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="saddress" id="saddress" value="">
+        <input type="hidden" name="customerid" id="customerid" value="{{@$customerData[0]->id}}">
+        <div class="add-customer-modal">
+                  <div style="font-size:25px;">Add/Edit Notes</div>
+                 </div>
+               <div class="col-md-12 mb-2">
+                <div class="input_fields_wrap">
+                  <select class="form-control selectpicker " multiple="" data-placeholder="Select Admin Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">
+                    @foreach($adminchecklist as $key =>$value1)
+                      <option value="{{$value1->id}}">{{$value1->checklist}}</option>';
+                    @endforeach
+                 </select>
+                </div>
+              </div> 
+            <div class="col-md-12 mb-2">
+             <div class="input_fields_wrap">
+                <div class="mb-3">
+                <textarea class="form-control" name="note" id="note" placeholder="Notes" cols="45" rows="5" required></textarea>
+                  </div>
+            </div>
+          </div>
+        <div class="col-lg-6 mb-3" style="display:none;">
+          <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
+        </div><div class="col-lg-6 mb-3 mx-auto">
+          <button class="btn btn-add btn-block" type="submit">Update</button>
+        </div>
+      </form>
+      </div>
+  </div>
+</div>
+</div>
+
 @endsection
 
 @section('script')
- 
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places" async></script>
   <script>
- 
+ function initAutocomplete() {
+
+  var input = document.getElementById('addressview');
+   var autocomplete = new google.maps.places.Autocomplete(input);
+    // autocomplete.setComponentRestrictions(
+    // {'country': ['us']});
+
+   autocomplete.addListener('place_changed', function() {
+       var place = autocomplete.getPlace();
+        autocomplete.setComponentRestrictions(
+    {'country': ['us']});
+        alert(place);
+   });
+ }
 $(document).ready(function() {
     // $('#example').DataTable({
     //   "order": [[ 0, "desc" ]]
@@ -416,6 +467,7 @@ $(document).on('click','#service_list_dot',function(e) {
         })
   });
 
+
 $(document).on('click','#createctickets',function(e) {
   $('.selectpicker').selectpicker();
    var cid = $(this).data('id');
@@ -460,6 +512,28 @@ $(document).on('click','#createctickets',function(e) {
         })
   });
 
+$(document).on('click','#addnote',function(e) {
+  var address = $("#saddress").val();
+  if(address=="") {
+
+    swal({
+              title: "Search address?",
+              text: "Can you please search address!",
+              type: "warning",
+              showCancelButton: false,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "ok",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function (isConfirm) {
+              if (isConfirm) {
+                  location.reload();
+                  }
+              }
+        )
+    }    
+});
  $(document).on('click','#editnote',function(e) {
    $('.selectpicker').selectpicker();
    var cid = $(this).data('id');

@@ -146,11 +146,19 @@ class CustomerController extends Controller
     
     public function address(Request $request)
     {
+
         $cid = $request->customerid;
         $auth_id = auth()->user()->id;
         $data['authid'] = $auth_id;
         $data['customerid'] = $cid;
-        $data['address'] = $request->address;
+        $data['address'] = $request->saddress;
+        if(isset($request->adminck)) {
+          $data['checklistid'] = implode(',', $request->adminck);
+        } else {
+          $data['checklistid'] = null;
+        }
+        $data['notes'] = $request->note;
+
         Address::create($data);
 
         $request->session()->flash('success', 'Customer Address added successfully');
@@ -193,7 +201,8 @@ class CustomerController extends Controller
         $customerData = Customer::where('id',$id)->get(); 
         $customerAddress = Address::where('customerid',$id)->get();
         $recentTicket = Quote::where('customerid',$id)->where('ticket_status','!=',"5")->orderBy('id','DESC')->get();
-        return view('customer.view',compact('customerData','customerAddress','recentTicket'));
+        $adminchecklist = DB::table('adminchecklist')->get();
+        return view('customer.view',compact('customerData','customerAddress','recentTicket','adminchecklist'));
     }
 
     public function viewall(Request $request ,$id,$address) {
@@ -442,7 +451,7 @@ class CustomerController extends Controller
             <div class="col-md-12 mb-2">
              <div class="input_fields_wrap">
                 <div class="mb-3">
-                <textarea class="form-control" name="note" id="note" placeholder="Search Notes" cols="45" rows="5" required>'.$request->note.'</textarea>
+                <textarea class="form-control" name="note" id="note" placeholder="Notes" cols="45" rows="5" required>'.$request->note.'</textarea>
                   </div>
             </div>
           </div>

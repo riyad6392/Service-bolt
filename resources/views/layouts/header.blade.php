@@ -622,8 +622,7 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
            var place = autocomplete.getPlace();
             autocomplete.setComponentRestrictions(
         {'country': ['us']});
-
-       
+          $("#saddress").val($("#address").val());
        });
 
        var input1 = document.getElementById('address6');

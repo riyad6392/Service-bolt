@@ -105,4 +105,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::post('/updatenotes', [App\Http\Controllers\Api\UserController::class, 'updatenotes'])->name('updatenotes');
 
 	Route::get('/adminchecklist', [App\Http\Controllers\Api\UserController::class, 'adminchecklist'])->name('adminchecklist');
+	
+	Route::post('/setnotes', [App\Http\Controllers\Api\UserController::class, 'setnotes'])->name('setnotes');
 });

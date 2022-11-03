@@ -1774,4 +1774,31 @@ class UserController extends Controller
         return response()->json(['status'=>1,'data'=>$data,'message'=>'Notes updated successfully'],$this->successStatus);
     }
 
+    public function setnotes(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'addressid' => 'required'
+        ]);
+        if($validator->fails()) { 
+            $errors = $validator->errors()->toArray();
+            $msg_err = '';
+            if(isset($errors['addressid'])) {
+                foreach($errors['addressid'] as $e){
+                    $msg_err .= $e;
+                }
+            }
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
+        }
+
+        $addressdata = Address::select('checklistid','notes')->where('id',$request->addressid)->
+        first();
+        $ckids = explode(',',$addressdata->checklistid);
+        $data = array(
+            "notes"=>$addressdata->notes,
+            "checklistid"=>$ckids
+        );
+
+        return response()->json(['status'=>1,'data'=>$data],$this->successStatus);
+    }
+
 }
