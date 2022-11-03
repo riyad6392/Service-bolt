@@ -416,10 +416,29 @@ class CustomerController extends Controller
     {
       $json = array();
       $auth_id = auth()->user()->id;
-
+      
+      $adminchecklist = DB::table('adminchecklist')->get();
+      $addressinfo = Address::select('checklistid')->where('id',$request->cid)->first();
       $html ='<div class="add-customer-modal">
                   <div style="font-size:25px;">Add/Edit Notes</div>
-                 </div><input type="hidden" name="customerid" id="customerid" value="'.$request->cid.'">
+                 </div>';
+               $html .='<div class="col-md-12 mb-2">
+                <div class="input_fields_wrap">
+                  <select class="form-control selectpicker " multiple="" data-placeholder="Select Admin Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">';
+                    foreach($adminchecklist as $key =>$value1) {
+                      $checklistids =explode(",", $addressinfo->checklistid);
+                      
+                      if(in_array($value1->id, $checklistids)) {
+                        $selectedp = "selected";
+                      } else {
+                        $selectedp = "";
+                      }
+                      $html .='<option value="'.$value1->id.'" '.@$selectedp.'>'.$value1->checklist.'</option>';
+                    }
+                  $html .='</select>
+                </div>
+              </div>';  
+              $html .='<input type="hidden" name="customerid" id="customerid" value="'.$request->cid.'">
             <div class="col-md-12 mb-2">
              <div class="input_fields_wrap">
                 <div class="mb-3">
@@ -462,6 +481,13 @@ class CustomerController extends Controller
   {
     $customer = Address::where('id', $request->customerid)->get()->first();
     $customer->notes = $request->note;
+
+    if(isset($request->adminck)) {
+      $customer->checklistid = implode(',', $request->adminck);
+    } else {
+      $customer->checklistid = null;
+    }
+
     $customer->save();
     $request->session()->flash('success', 'Notes updated successfully');
     

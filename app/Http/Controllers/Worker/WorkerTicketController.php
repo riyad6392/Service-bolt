@@ -771,7 +771,7 @@ class WorkerTicketController extends Controller
       $quote->product_id = rtrim($productid, ',');
       $quote->price = $request->price;
       $quote->save();
-
+    if($customer->email!=null) {
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
       $email = $customer->email;
@@ -782,7 +782,7 @@ class WorkerTicketController extends Controller
           ->subject('Invoice details!');
           $message->from($app_email,$app_name);
         });
-
+    }
       $request->session()->flash('success', 'Invoice has been sent successfully');
       return redirect()->back();
     }

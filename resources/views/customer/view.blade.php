@@ -461,6 +461,7 @@ $(document).on('click','#createctickets',function(e) {
   });
 
  $(document).on('click','#editnote',function(e) {
+   $('.selectpicker').selectpicker();
    var cid = $(this).data('id');
    var note = $(this).data('note');
    $.ajax({
@@ -474,6 +475,9 @@ $(document).on('click','#createctickets',function(e) {
             refresh: true,
             success:function(data) {
               $('#vieweditnotemodaldata').html(data.html);
+              $('.selectpicker').selectpicker({
+                size: 3
+              });
             }
         })
   });
