@@ -451,7 +451,7 @@ class CustomerController extends Controller
             <div class="col-md-12 mb-2">
              <div class="input_fields_wrap">
                 <div class="mb-3">
-                <textarea class="form-control" name="note" id="note" placeholder="Notes" cols="45" rows="5" required>'.$request->note.'</textarea>
+                <textarea class="form-control" name="note" id="note" placeholder="Notes" cols="45" rows="5">'.$request->note.'</textarea>
                   </div>
             </div>
           </div>

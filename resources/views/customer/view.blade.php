@@ -381,14 +381,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             <div class="col-md-12 mb-2">
              <div class="input_fields_wrap">
                 <div class="mb-3">
-                <textarea class="form-control" name="note" id="note" placeholder="Notes" cols="45" rows="5" required></textarea>
+                <textarea class="form-control" name="note" id="note" placeholder="Notes" cols="45" rows="5"></textarea>
                   </div>
             </div>
           </div>
         <div class="col-lg-6 mb-3" style="display:none;">
           <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
         </div><div class="col-lg-6 mb-3 mx-auto">
-          <button class="btn btn-add btn-block" type="submit">Update</button>
+          <button class="btn btn-add btn-block" type="submit">Save</button>
         </div>
       </form>
       </div>
