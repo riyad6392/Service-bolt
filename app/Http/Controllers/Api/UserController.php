@@ -1759,12 +1759,19 @@ class UserController extends Controller
         $address = Address::find($request->addressid);
         
         $address->notes = $request->notes;
-        $address->checklistid = $request->checklistid;
+        $checklistid =implode(',',$request->checklistid);
+        $address->checklistid = $checklistid;
         $address->save();
 
-        $addressdata = Address::select('checklistid','notes')->where('id',$request->addressid)->get();
+        $addressdata = Address::select('checklistid','notes')->where('id',$request->addressid)->
+        first();
+        $ckids = explode(',',$addressdata->checklistid);
+        $data = array(
+            "notes"=>$addressdata->notes,
+            "checklistid"=>$ckids
+        );
 
-        return response()->json(['status'=>1,'data'=>$addressdata,'message'=>'Notes updated successfully'],$this->successStatus);
+        return response()->json(['status'=>1,'data'=>$data,'message'=>'Notes updated successfully'],$this->successStatus);
     }
 
 }
