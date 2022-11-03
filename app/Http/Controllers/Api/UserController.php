@@ -1762,7 +1762,9 @@ class UserController extends Controller
         $address->checklistid = $request->checklistid;
         $address->save();
 
-        return response()->json(['status'=>1,'message'=>'Notes updated successfully'],$this->successStatus);
+        $addressdata = Address::select('checklistid','notes')->where('id',$request->addressid)->first();
+
+        return response()->json(['status'=>1,'data'=>$addressdata,'message'=>'Notes updated successfully'],$this->successStatus);
     }
 
 }
