@@ -1484,7 +1484,7 @@ class UserController extends Controller
       $validator = Validator::make(request()->all(), [
             'customername' => 'required',
             'phonenumber' => 'required',
-            'companyname' => 'required',
+            //'companyname' => 'required',
             'email' => 'required',
         ]);
 
@@ -1498,11 +1498,6 @@ class UserController extends Controller
             }
             if(isset($errors['phonenumber'])){
                 foreach($errors['phonenumber'] as $e){
-                    $msg_err .= $e;
-                }
-            }
-            if(isset($errors['companyname'])){
-                foreach($errors['companyname'] as $e){
                     $msg_err .= $e;
                 }
             }
