@@ -226,7 +226,7 @@ i.fa.fa-plus.true-condition {
         
         <div class="add-customer-modal d-flex justify-content-between align-items-center">
         <h5>Add a new Service</h5>
-     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     <button class="btn-close" type="button" onclick="refreshPage()"></button>
           
         </div>
         @php
@@ -319,7 +319,7 @@ i.fa.fa-plus.true-condition {
           </div>
           <div class="row mt-3">
           <div class="col-lg-6 mb-2">
-            <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
+            <button class="btn btn-cancel btn-block" type="button" onclick="refreshPage()">Cancel</button>
           </div>
           <div class="col-lg-6">
             <button type="submit" class="btn btn-add btn-block">Add a Service</button>
@@ -840,6 +840,9 @@ $(document).on('click','#editService',function(e) {
   	$("#create-tickets").show();
 	});
 
+  function refreshPage() {
+    window.location.reload();
+  } 
 
 </script>
 @endsection

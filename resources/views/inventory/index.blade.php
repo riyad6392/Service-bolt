@@ -221,7 +221,7 @@
 	  
      <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add a new Product/Part</h5>
-     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     <button class="btn-close" type="button" onclick="refreshPage()"></button>
 	   
 	   </div>
 	   
@@ -291,7 +291,8 @@
     	<a href="#" data-bs-toggle="modal" data-bs-target="#add-category" class="in-plus"><i class="fa fa-plus yellow-icon"></i></a>
 	   </div>
 	   <div class="col-lg-6 ">
-	   <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
+	   <!-- <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button> -->
+	   <button class="btn btn-cancel btn-block" type="button" onclick="refreshPage()">Cancel</button>
 	   </div>
 	   <div class="col-lg-6">
 	   <button class="btn btn-add btn-block description-product">Next</button>
@@ -688,5 +689,9 @@ function readURL(input) {
             }
 	    })
   	});
+
+	function refreshPage() {
+    window.location.reload();
+	} 
 </script>
 @endsection
