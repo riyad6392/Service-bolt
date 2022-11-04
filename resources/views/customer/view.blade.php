@@ -367,7 +367,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <input type="hidden" name="saddress" id="saddress" value="">
         <input type="hidden" name="customerid" id="customerid" value="{{@$customerData[0]->id}}">
         <div class="add-customer-modal">
-                  <div style="font-size:25px;">Add/Edit Notes</div>
+                  <div style="font-size:25px;">Add Notes</div>
                  </div>
                <div class="col-md-12 mb-2">
                 <div class="input_fields_wrap">

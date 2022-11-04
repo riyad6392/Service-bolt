@@ -8,7 +8,15 @@
 <div style="max-width: 680px;margin:auto;background: url('') no-repeat center top;background-size: cover;padding: 25px;">
 <div class="banner" style="background: #fff;width: 112%;border-radius: 4px;height: auto;border: 2px solid #ccc;">
 <div>
-<div class="text-center" style="background-color: black;border-radius: 4px;" >
+    @php
+        $usrcolor = App\Models\User::select('color','company_address')->where('id',$quoteuserid)->first();
+        if($usrcolor->color!=""){
+            $color = $usrcolor->color;
+        } else {
+            $color = "#000";
+        }
+    @endphp
+<div class="text-center" style="background-color: {{$color}};border-radius: 4px;" >
     <table style="width:100%">
         <tbody>
             <tr>
@@ -17,8 +25,8 @@
                 </td>
                 <td style="vertical-align: top; padding: 17px">
                     <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><img src="{{$cimage}}" style="width: 40%"></p>
-                    <h4 style="color: #fff">Your Business Adress
-                    <p style="margin: 5px 0px;">{{ $address }}</p>
+                    <h4 style="color: #fff">
+                    <p style="margin: 5px 0px;">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
                     </h4>
                 </td>
             </tr>
@@ -32,12 +40,16 @@
  <tbody>
  <tr>
     <td style="vertical-align: top; width: 70%; padding: 12px">
-        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Bill to:<br><span style="color: black; font-weight: bold;">Company Name</span> <span style="color: black; font-weight: bold;">{{$companyname}}</span></p>
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Bill to:<br><span style="color: black; font-weight: bold;">Name - </span> <span style="color: black; font-weight: bold;">{{$customername}}</span></p>
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Company Name - </span> <span style="color: black; font-weight: bold;">{{$companyname}}</span></p>
+        
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Phone Number -</span> <span style="color: black; font-weight: bold;">{{$phone}}</span></p>
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Email -</span> <span style="color: black; font-weight: bold;">{{$email}}</span></p>
     </td>
     <td style="vertical-align: top; padding: 17px">
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Invoice:<br><span style="color: black; font-weight: bold;">#{{ $invoiceId }} </span></p>
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Date:<br><span style="color: black; font-weight: bold;">{{ $date }} </span></p>
-        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Invoice due date:<br><span style="color: black; font-weight: bold;">{{ $date }} </span></p>
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Invoice due date:<br><span style="color: black; font-weight: bold;">{{ $duedate }} </span></p>
     </h4>
     </td>
  </tr>
@@ -106,11 +118,11 @@
     margin: 22px;">
     <tbody>
      <tr>
-        <td style="vertical-align: top; padding: 17px">
+        <td style="vertical-align: top; padding: 17px;background-color: {{$color}};">
          <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 20px;">Note:
             <br><span style="color: #ccc;  font-size: 16px;">{{ @$description }}</span></p>
         </td>
-        <td style="width: 50%; padding: 12px;background-color: black; border-radius: 10px;">
+        <td style="width: 50%; padding: 12px;background-color: {{$color}}; border-radius: 10px;">
             <h5 style="margin: 0px 0 5px 0;color: #ccc;font-size: 22px; margin-left: 74%">Total:<br><h1 style="color: #fff; font-weight: bold; font-size: 36px;margin-left: 55%">${{ $totalprice }} </h1></h5>
 
         </td>
