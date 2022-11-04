@@ -599,7 +599,8 @@ class ServicesController extends Controller
       
       $quotelastid = Quote::create($data);
       $quoteee = Quote::where('id', $quotelastid->id)->first();
-      $quoteee->invoiceid = "100".$quotelastid->id;
+      $randomid = rand(100,199);
+      $quoteee->invoiceid = $randomid.''.$quotelastid->id;
       $quoteee->save();
     if($customer->email!=null) {
       $app_name = 'ServiceBolt';

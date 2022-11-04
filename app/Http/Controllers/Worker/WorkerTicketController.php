@@ -486,7 +486,6 @@ class WorkerTicketController extends Controller
     }
 
     public function view(Request $request ,$id) {
-
       $auth_id = auth()->user()->id;
      
       if(auth()->user()->role == 'worker') {
