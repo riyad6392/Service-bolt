@@ -571,11 +571,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     </div>
 </div>
 <div class="col-md-6">
-  <div>
-<p>@if($addressnote->notes!=null) Address Notes: {{$addressnote->notes}} @endif</p></div></div>
+    <div>
+        <p>@if($addressnote->notes!=null) Address Notes: {{$addressnote->notes}} @endif</p>
+    </div>
+</div>
+
 <div class="col-md-6">
-  <div>
-<p>@if($quotedetails[0]->customernotes!="") Customer Notes:{!!$quotedetails[0]->customernotes!!}@endif</p></div></div>
+    <div>
+        <p>@if($quotedetails[0]->customernotes!="") Customer Notes:{!!$quotedetails[0]->customernotes!!}@endif</p>
+    </div>
+</div>
 
 
 

@@ -512,6 +512,7 @@ class WorkerTicketController extends Controller
 
         $checklistData = DB::table('checklist')->select('*')->whereIn('serviceid',$serviceidarrays)->get();
 
+
         $sdata = Schedulerhours::where('ticketid', $quoteData->id)->get()->first();
         
         $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->where('quote.parentid','=','')->whereIn('quote.ticket_status',array('3','4'))->get();
@@ -548,7 +549,18 @@ class WorkerTicketController extends Controller
         }
         
         $cid = $quoteData->customerid;
-        return view('personnel.ticketview',compact('quoteData','checklistData','sdata','prequoteData','servicename','productname','totalprice','productData','tenture','cid'));
+
+        $addressinfo = Address::select('checklistid')->where('customerid',$cid)->where('address',$quoteData->address)->first();
+        $ckinfo = array();
+        if($addressinfo->checklistid!="") {
+          $ckids = explode(',',$addressinfo->checklistid);
+          $ckinfo = DB::table('adminchecklist')->select('checklist')->whereIn('id',$ckids)->get();
+          if(count($ckinfo)>0) {
+            $ckinfo = $ckinfo; 
+          }
+        }
+
+        return view('personnel.ticketview',compact('quoteData','checklistData','sdata','prequoteData','servicename','productname','totalprice','productData','tenture','cid','ckinfo'));
     }
 
     public function viewmap(Request $request ,$id) {
@@ -1150,7 +1162,7 @@ class WorkerTicketController extends Controller
       // $quote->price = $totalprice;
       // $quote->serviceid = $request->serviceid;
       // $quote->product_id = $request->productid;
-      
+
       // $quote->save();
 
       return json_encode(['totalprice' =>$totalprice]);

@@ -760,6 +760,17 @@ Map / Directions</a>
     </div>
 </div>
 
+@if(!empty($ckinfo) && count($ckinfo)>0)
+  <div class="col-md-6">
+    <div>
+        <p>Checklist:
+        @foreach($ckinfo as $key=>$value) 
+            {{@$value->checklist}}
+        @endforeach
+        </p>
+    </div>
+</div>  
+@endif
 </div>
 
 <p>{{$quoteData->description}}</p>
