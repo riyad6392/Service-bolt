@@ -501,10 +501,10 @@ i.fa.fa-plus.category-one {
 			  $explode_id = explode(',', $ticket->serviceid);
 			  $servicedata = App\Models\Service::select('servicename')
 			    ->whereIn('services.id',$explode_id)->get();
-			  if($ticket->payment_status!=null) {
-			  	$payment_status = $ticket->payment_status;
+			  if($ticket->payment_status!=null || $ticket->payment_mode!=null) {
+			  	$payment_status = "Completed";
 			  } else {
-			  	$payment_status = "--";
+			  	$payment_status = "Pending";
 			  }
 			  if($ticket->payment_mode!=null) {
 			  	$paid_status = 'By '.$ticket->payment_mode;

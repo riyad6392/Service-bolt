@@ -572,7 +572,6 @@ class WorkerTicketController extends Controller
     }
 
     public function paynow(Request $request ,$id) {
-      
         $quoteData = DB::table('quote')->select('*')->where('id',$id)->first();
         if($quoteData->payment_mode !=""){
           $paymentpaid = "1";
@@ -608,6 +607,7 @@ class WorkerTicketController extends Controller
                 </div>';
        $html .='<div class="row customer-form" id="product-box-tabs">
        <input type="hidden" value="'.$customer[0]->id.'" name="customerid">
+       <input type="hidden" value="'.$request->id.'" name="qid" id="qid">
           <div class="col-md-12 mb-2">
             <div class="form-group">
             <label>Customer Name</label>
@@ -1145,6 +1145,13 @@ class WorkerTicketController extends Controller
         $sum1+= (int)$value['price'];
       }
       $totalprice = $sum+$sum1;
+
+      // $quote = Quote::where('id', $request->qid)->first();
+      // $quote->price = $totalprice;
+      // $quote->serviceid = $request->serviceid;
+      // $quote->product_id = $request->productid;
+      
+      // $quote->save();
 
       return json_encode(['totalprice' =>$totalprice]);
         die;

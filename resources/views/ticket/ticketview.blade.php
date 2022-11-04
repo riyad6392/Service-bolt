@@ -522,6 +522,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 @php
   $datef = date('F d, Y', strtotime($quotedetails[0]->etc));
   $addressnote = App\Models\Address::select('notes')->where('customerid',$quotedetails[0]->customerid)->where('address',$quotedetails[0]->address)->first();
+  if($quotedetails[0]->payment_status!=null || $quotedetails[0]->payment_mode!=null) {
+    $payment_status = "Completed";
+  } else {
+    $payment_status = "Pending";
+  }
   
 @endphp
   {{$quotedetails[0]->givendate}} - {{$quotedetails[0]->giventime}}</span>
@@ -560,6 +565,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <div class="col-md-6">
   <div>
 <p>@if($quotedetails[0]->description!="")Ticket Description: {{$quotedetails[0]->description}}@endif</p></div></div>
+<div class="col-md-6">
+    <div>
+        <p>Payment Status: {{$payment_status}}</p>
+    </div>
+</div>
 <div class="col-md-6">
   <div>
 <p>@if($addressnote->notes!=null) Address Notes: {{$addressnote->notes}} @endif</p></div></div>

@@ -103,8 +103,8 @@
       @endphp
       @foreach($totalbillingData as $key=>$value)
       @php
-        if($value->payment_status!="") {
-          $pstatus = $value->payment_status;
+        if($value->payment_status!="" || $value->payment_mode!="") {
+          $pstatus = "Completed";
         } else {
           $pstatus = "Pending";
         }

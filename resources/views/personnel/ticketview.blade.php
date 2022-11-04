@@ -1249,7 +1249,8 @@ Save
   $(document).on('change','#serviceid',function(e) {
     var serviceid = $('#serviceid').val();
     var productid = $('#productid').val(); 
-    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid;
+    var qid = $('#qid').val();
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
     $.ajax({
           url:'{{route('worker.calculateprice')}}',
           data: dataString,
@@ -1264,8 +1265,10 @@ Save
   });
    $(document).on('change','#productid',function(e) {
       var serviceid = $('#serviceid').val();
-      var productid = $('#productid').val(); 
-      var dataString =  'serviceid='+ serviceid+ '&productid='+ productid;
+      var productid = $('#productid').val();
+        var qid = $('#qid').val();
+
+      var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
       $.ajax({
             url:'{{route('worker.calculateprice')}}',
             data: dataString,
