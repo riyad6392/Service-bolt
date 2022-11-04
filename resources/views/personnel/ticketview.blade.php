@@ -757,20 +757,16 @@ Map / Directions</a>
 <div class="col-md-6">
     <div>
         <p>Address Note : {{@$addressnote}}</p>
+        @if(!empty($ckinfo) && count($ckinfo)>0)
+            <ul>
+                @foreach($ckinfo as $key=>$value) 
+                    <li>{{@$value->checklist}}</li>
+                @endforeach
+            </ul>
+        @endif
+
     </div>
 </div>
-
-@if(!empty($ckinfo) && count($ckinfo)>0)
-  <div class="col-md-6">
-    <div>
-        <p>Checklist:
-        @foreach($ckinfo as $key=>$value) 
-            {{@$value->checklist}}
-        @endforeach
-        </p>
-    </div>
-</div>  
-@endif
 </div>
 
 <p>{{$quoteData->description}}</p>
