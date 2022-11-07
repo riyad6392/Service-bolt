@@ -99,17 +99,17 @@ class InventoryController extends Controller
        $auth_id = auth()->user()->id;
        $inventory = Inventory::where('id', $request->id)->get();
        $services = Service::where('userid', $auth_id)->get();
-       if($inventory[0]->image != null) {
+       if(@$inventory[0]->image != null) {
           $userimage = url('uploads/inventory/'.$inventory[0]->image);
         } else {
           $userimage = url('uploads/servicebolt-noimage.png'); 
         }
-        if($inventory[0]->category =="Dynamic Category Content 1") {
+        if(@$inventory[0]->category =="Dynamic Category Content 1") {
             $selected = "selected";
         } else {
             $selected = "";
         }
-       if($inventory[0]->category =="Dynamic Category Content 2") {
+       if(@$inventory[0]->category =="Dynamic Category Content 2") {
             $selected1 = "selected";
         } else {
             $selected1 = "";
@@ -120,17 +120,17 @@ class InventoryController extends Controller
                <h5>Edit Product/Part</h5>
                </div><div class="tabs-product row mb-4">
                <div class="col-lg-5">
-               <span class="btn btn-product information-tabs-1" id="">Information</span>
+               <span class="btn btn-product information-tabs-1" id="info1">Information</span>
                </div>
                <div class="col-lg-7">
-               <span class="btn btn-desc description-product-1" id="">Description and Images</span>
+               <span class="btn btn-desc description-product-1" id="descrip1">Description and Images</span>
                </div>
                </div>';
        $html .='<div class="row customer-form" id="product-box-tabs-1">
      <div class="col-md-12 mb-3">
      <label>Product/Name</label>
      <input type="hidden" value="'.$request->id.'" name="productid">
-        <input type="text" class="form-control" placeholder="Product Name" name="productname" id="productname" value="'.$inventory[0]->productname.'" required></div>
+        <input type="text" class="form-control" placeholder="Product Name" name="productname" id="productname" value="'.$inventory[0]->productname.'" data-parsley-required="true"></div>
         <div class="col-md-12 mb-2">
             <label>Select Service</label>
             <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" style="height:auto;">';
@@ -148,15 +148,15 @@ class InventoryController extends Controller
           </div>
        <div class="col-md-6 mb-3">
         <label>Quantity</label>
-        <input type="text" class="form-control" placeholder="Quantity" value="'.$inventory[0]->quantity.'" name="quantity" required>
+        <input type="text" class="form-control" placeholder="Quantity" value="'.$inventory[0]->quantity.'" name="quantity" data-parsley-required="true">
        </div>
        <div class="col-md-6 mb-3">
       <label>Preferred Quantity</label>
-      <input type="text" class="form-control" placeholder="Preferred Quantity" value="'.$inventory[0]->pquantity.'" name="pquantity" required>
+      <input type="text" class="form-control" placeholder="Preferred Quantity" value="'.$inventory[0]->pquantity.'" name="pquantity" data-parsley-required="true">
      </div>
      <div class="col-md-6 mb-3">
       <label>SKU</label>
-     <input type="text" class="form-control" placeholder="SKU #" value="'.$inventory[0]->sku.'" name="sku" required>
+     <input type="text" class="form-control" placeholder="SKU #" value="'.$inventory[0]->sku.'" name="sku" data-parsley-required="true">
      </div>
      <div class="col-md-6 mb-3">
       <label>Unit</label>
@@ -164,7 +164,7 @@ class InventoryController extends Controller
      </div>
      <div class="col-md-12 mb-3">
       <label>Price</label>
-     <input type="text" class="form-control" placeholder="Price" class="form-control" placeholder="SKU #" value="'.$inventory[0]->price.'" name="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" required>
+     <input type="text" class="form-control" placeholder="Price" class="form-control" placeholder="SKU #" value="'.$inventory[0]->price.'" name="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" data-parsley-required="true">
      </div>
       <div class="col-md-11 mb-5">
     <label>Category</label>
@@ -185,13 +185,13 @@ class InventoryController extends Controller
      <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
      </div>
      <div class="col-lg-6">
-     <span class="btn btn-add btn-block description-product-1" style="padding: 11px;">Next</span>
+     <span class="btn btn-add btn-block description-product-1" style="padding: 11px;" id="next1">Next</span>
      </div>
      </div>
      
      <div class="row customer-form" id="product-desc-tabs-1" style="display:none;">
       <div class="col-lg-12 mb-3">
-    <textarea class="form-control height-180" name="description">'.$inventory[0]->description.'</textarea>
+    <textarea class="form-control height-180" name="description" data-parsley-required="true">'.$inventory[0]->description.'</textarea>
     </div>
     <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
       <div class="col-lg-12 mb-2 relative">

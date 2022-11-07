@@ -483,7 +483,7 @@ i.fa.fa-plus.category-one {
 	  <table id="example2" class="table no-wrap table-new table-list align-items-center">
 	  <thead>
 	  <tr>
-	  <th>Ticket number</th>
+	  <th>Ticket #</th>
 	  <th>Customer Name</th>
 	  <th>Price</th>
 	  <th>Service Name</th>
@@ -541,6 +541,7 @@ i.fa.fa-plus.category-one {
 		<td>{{$payment_status}} ({{$paid_status}})</td>
 	  <td><a class="btn btn-edit p-3 w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$ticket->id}}" style="display: none;">View</a>
 	  	<a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" class="btn btn-edit p-3 w-auto">View</a>
+	  	<a class="btn btn-edit p-3 w-auto repoenticket" data-id="{{$ticket->id}}">Reopen</a>
 	 </td>
 	 </tr>
 	  	@php
@@ -1772,10 +1773,12 @@ $('#serviceform').on('submit', function(event) {
 		})
    $(".add-ticket-alert").click(function() {
    		var id = $(this).data('id');
+   		var name="";
    		$.ajax({
             url:"{{url('company/quote/updateticket')}}",
             data: {
-              quoteid: id 
+              quoteid: id,
+              name: name 
             },
             method: 'post',
             dataType: 'json',
@@ -1793,8 +1796,34 @@ $('#serviceform').on('submit', function(event) {
               
             }
         })
-		
-   });
+	});
+
+   $(".repoenticket").click(function() {
+   		var id = $(this).data('id');
+   		var name="reopen";
+   		$.ajax({
+            url:"{{url('company/quote/updateticket')}}",
+            data: {
+              quoteid: id,
+              name: name 
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+            	
+            	swal({
+		            title: "Success!",
+		            text: "The ticket has been reopen Successfully!",
+		            type: "success"
+		        }, function() {
+		            location.reload();
+		        });
+            	
+              
+            }
+        })
+	});
   
   $(document).on('click','#createtickets',function(e) {
    var id = $(this).data('id');

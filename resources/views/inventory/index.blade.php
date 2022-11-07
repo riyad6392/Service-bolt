@@ -21,6 +21,9 @@
     padding: 8px 34px;
     box-shadow: 0px 0px 10px #ccc;
 }
+.error-msg{
+	color: red;
+}
 </style>
 
 <div class="bland-service-page">
@@ -227,10 +230,10 @@
 	   
 	   <div class="tabs-product row mb-4">
 	   <div class="col-lg-5">
-	   <button class="btn btn-product information-tabs" id="" type="button">Information</button>
+	   <button class="btn btn-product information-tabs" id="info" type="button">Information</button>
 	   </div>
 	   <div class="col-lg-7">
-	   <button class="btn btn-desc description-product" id="" type="button">Description and Images</button>
+	   <button class="btn btn-desc description-product" id="descrip" type="button">Description and Images</button>
 	   </div>
 	   </div>
 	   
@@ -238,7 +241,7 @@
 	   <div class="row customer-form" id="product-box-tabs">
 	   <div class="col-md-12 mb-3">
 	   
-	   <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" required="">
+	   <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" data-parsley-required="true">
 	
 	   </div>
 	   
@@ -256,19 +259,19 @@
 	   <a id="Array_name" class="add_fields">+ Add more services</a>
 	   </div> -->
 	   <div class="col-md-6 mb-3">
-	   <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
+	   <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" data-parsley-required="true">
 	  
 	   
 	   </div>
 	   <div class="col-md-6 mb-3">
 	  
-	   <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="">
+	   <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" data-parsley-required="true">
 	   
 	   </div>
 	   
 	   <div class="col-md-6 mb-3">
 	  
-	   <input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" required="">
+	   <input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" data-parsley-required="true">
 	   
 	   </div>
      <div class="col-md-6 mb-3">
@@ -277,8 +280,8 @@
 	   
 	   </div>  
 	   <div class="col-md-12 mb-3">
-	   	<i class="fa fa-dollar" style="position: absolute;top:406px;left: 35px;"></i>
-	  	<input type="text" class="form-control" placeholder="Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+	   	<!-- <i class="fa fa-dollar" style="position: absolute;top:406px;left: 35px;"></i> -->
+	  	<input type="text" class="form-control" placeholder="$ Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 10px;" data-parsley-required="true">
 	   </div>
 	   
 	   <div class="col-md-11 mb-5">
@@ -295,14 +298,14 @@
 	   <button class="btn btn-cancel btn-block" type="button" onclick="refreshPage()">Cancel</button>
 	   </div>
 	   <div class="col-lg-6">
-	   <button class="btn btn-add btn-block description-product">Next</button>
+	   <button class="btn btn-add btn-block description-product" id="next">Next</button>
 	   </div>
 	   
 	   </div>
 	   
 	   <div class="row customer-form" id="product-desc-tabs" style="display:none;">
 	    <div class="col-lg-12 mb-3">
-		<textarea class="form-control height-180" name="description" id="description" required="" placeholder="Description"></textarea>
+		<textarea class="form-control height-180" name="description" id="description" data-parsley-required="true" placeholder="Description"></textarea>
 		</div>
 	   <div class="col-md-12">
 	   	<div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
@@ -426,6 +429,7 @@
 
 @endsection
 @section('script')
+<script src="//cdnjs.cloudflare.com/ajax/libs/parsley.js/2.1.2/parsley.min.js"></script>
 <script type="text/javascript">
   $('.dropify').dropify();
   $(document).ready(function() {
@@ -439,8 +443,63 @@
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
+   var parsley_valiation_options = {
+         errorTemplate: '<span class="error-msg"></span>',
+         errorClass: 'error'
+    }
+$('form').parsley(parsley_valiation_options);
+
+$('.description-product').click(function() {
+	if($("#productname").val()=="" || $("#quantity").val()=="" || $("#pquantity").val()=="" || $("#sku").val()=="" || $("#price").val()=="") {
+		$("#product-desc-tabs").hide();
+  	$("#product-box-tabs").show();
+  	$('#info').addClass('btn-product');
+  	$('#descrip').removeClass('btn-product');
+  	$('#next').removeClass('btn-product');
+	} else {
+		$("#product-desc-tabs").show();
+  	$("#product-box-tabs").hide();
+	}
+});
+
+// $(document).on('click','#next1',function(e) {
+// 	if($("#productname").val()=="" || $("#quantity").val()=="" || $("#pquantity").val()=="" || $("#sku").val()=="") {
+
+// 			if($("#productname").val()=="") {
+// 				swal('Product Name is required');
+// 				$("#product-desc-tabs-1").hide();
+// 		  	$("#product-box-tabs-1").show();
+// 		  	$('#info1').addClass('btn-product');
+// 		  	$('#descrip1').removeClass('btn-product');
+// 		  	$('#next1').removeClass('btn-product');
+// 			}
+// 			if($("#quantity").val()=="") {
+// 				swal('Quantity is required');
+// 				$("#product-desc-tabs-1").hide();
+// 		  	$("#product-box-tabs-1").show();
+// 		  	$('#info1').addClass('btn-product');
+// 		  	$('#descrip1').removeClass('btn-product');
+// 		  	$('#next1').removeClass('btn-product');
+// 			}
+// 		} 
+// 	else {
+// 		$("#product-desc-tabs-1").show();
+//   	$("#product-box-tabs-1").hide();
+// 	}
+// });
 
   jQuery(function() {
+  	 // $(document).on('click','.description-product',function(e) {
+  	 // 	if($("#productname").val()=="") {
+  	 // 		alert('pname required');
+  	 // 		$("#productname").focus();
+  	 // 	}
+  	 // 	$("#product-desc-tabs").hide();
+  	 // 	$("#product-box-tabs").show();
+  	 // 	$('#info').addClass('btn-product');
+  	 // 	$('#descrip').removeClass('btn-product');
+  	 // 	return false;
+  	 // });
    $(document).on('click','.showSingle',function(e) {
         var targetid = $(this).attr('target');
         var serviceid = $(this).attr('data-id');
@@ -455,7 +514,7 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
+              //console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -471,13 +530,17 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
+              //console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
 
   });
 $(document).on('click','#editProduct',function(e) {
+	var parsley_valiation_options = {
+         errorTemplate: '<span class="error-msg"></span>',
+         errorClass: 'error'
+    }
   $('.selectpicker').selectpicker();
    var id = $(this).data('id');
    var dataString =  'id='+ id;
@@ -493,6 +556,7 @@ $(document).on('click','#editProduct',function(e) {
               $('.selectpicker').selectpicker({
                 size: 3
               });
+              $('form').parsley(parsley_valiation_options);
             }
         })
   });
@@ -500,6 +564,10 @@ $(document).on('click','#editProduct',function(e) {
 	function showeditview(id) {
 		var id = $(this).data('id');
    		var dataString =  'id='+ id;
+   		var parsley_valiation_options = {
+         errorTemplate: '<span class="error-msg"></span>',
+         errorClass: 'error'
+    }
    		$.ajax({
             url:'{{route('company.editviewinventorymodal')}}',
             data: dataString,
@@ -512,6 +580,7 @@ $(document).on('click','#editProduct',function(e) {
               $('.selectpicker').selectpicker({
                 size: 3
               });
+              $('form').parsley(parsley_valiation_options);
             }
         })
 	}
@@ -600,13 +669,13 @@ function readURL(input) {
         dataType: 'json',
         success: function (data) {
             $("#output").text(data);
-            console.log("SUCCESS : ", data);
+            //console.log("SUCCESS : ", data);
             $("#btnSubmit").prop("disabled", false);
             location.reload();
         },
         error: function (e) {
             $("#output").text(e.responseText);
-            console.log("ERROR : ", e);
+            //console.log("ERROR : ", e);
             $("#btnSubmit").prop("disabled", false);
         }
       });

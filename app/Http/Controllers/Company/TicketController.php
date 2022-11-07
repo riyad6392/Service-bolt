@@ -60,10 +60,16 @@ class TicketController extends Controller
 
     public function updateticket(Request $request) {
     	$quoteid = $request->quoteid;
-    	$quote = Quote::where('id', $quoteid)->get()->first();
-    	$quote->ticket_status = "1";
+      $quote = Quote::where('id', $quoteid)->get()->first();
+      if($request->name!="") {
+        $quote->ticket_status = "4";
         $quote->save();
-        echo "1";
+        echo "1";  
+      } else {
+        $quote->ticket_status = "1";
+        $quote->save();
+        echo "1";  
+      }
     }
 
     public function quotecreate(Request $request)
