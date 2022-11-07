@@ -148,15 +148,15 @@ class InventoryController extends Controller
           </div>
        <div class="col-md-6 mb-3">
         <label>Quantity</label>
-        <input type="text" class="form-control" placeholder="Quantity" value="'.$inventory[0]->quantity.'" name="quantity" data-parsley-required="true">
+        <input type="text" class="form-control" placeholder="Quantity" value="'.$inventory[0]->quantity.'" name="quantity" id="quantity" data-parsley-required="true">
        </div>
        <div class="col-md-6 mb-3">
       <label>Preferred Quantity</label>
-      <input type="text" class="form-control" placeholder="Preferred Quantity" value="'.$inventory[0]->pquantity.'" name="pquantity" data-parsley-required="true">
+      <input type="text" class="form-control" placeholder="Preferred Quantity" value="'.$inventory[0]->pquantity.'" name="pquantity" id="pquantity" data-parsley-required="true">
      </div>
      <div class="col-md-6 mb-3">
       <label>SKU</label>
-     <input type="text" class="form-control" placeholder="SKU #" value="'.$inventory[0]->sku.'" name="sku" data-parsley-required="true">
+     <input type="text" class="form-control" placeholder="SKU #" value="'.$inventory[0]->sku.'" name="sku" id="sku" data-parsley-required="true">
      </div>
      <div class="col-md-6 mb-3">
       <label>Unit</label>
@@ -164,7 +164,7 @@ class InventoryController extends Controller
      </div>
      <div class="col-md-12 mb-3">
       <label>Price</label>
-     <input type="text" class="form-control" placeholder="Price" class="form-control" placeholder="SKU #" value="'.$inventory[0]->price.'" name="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" data-parsley-required="true">
+     <input type="text" class="form-control" placeholder="Price" class="form-control" placeholder="SKU #" value="'.$inventory[0]->price.'" name="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" data-parsley-required="true" id="price">
      </div>
       <div class="col-md-11 mb-5">
     <label>Category</label>
@@ -185,7 +185,8 @@ class InventoryController extends Controller
      <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
      </div>
      <div class="col-lg-6">
-     <span class="btn btn-add btn-block description-product-1" style="padding: 11px;" id="next1">Next</span>
+     
+     <button class="btn btn-add btn-block description-product-1" id="next1" name="next1" value="next1">Next</button>
      </div>
      </div>
      
