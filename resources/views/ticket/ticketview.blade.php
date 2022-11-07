@@ -581,10 +581,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <p>@if($quotedetails[0]->customernotes!="") Customer Notes:{!!$quotedetails[0]->customernotes!!}@endif</p>
     </div>
 </div>
+    <form method="post" action="{{ route('company.downloadinvoiceview') }}" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="ticketid" id="ticketid" value="{{$quotedetails[0]->id}}">
+        <div class="col-md-12">
+            <div>
+                <button class="btn add-btn-yellow w-40 viewinvoice" type="submit">Download Invoice</button>
+            </div>
 
-
-
-</div>
+        </div>
+    </form>
 
 @php
     if($quotedetails[0]->imagelist!="") 

@@ -24,6 +24,7 @@
 .error-msg{
 	color: red;
 }
+
 </style>
 
 <div class="bland-service-page">
@@ -250,7 +251,7 @@
           @endforeach
         </select>
           <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-					  <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus second"></i></a>
+					  <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus second yellow-icon1"></i></a>
 					</div>
        </div>
 
@@ -399,7 +400,7 @@
       <div class="modal-body">
       <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add a new Service</h5>
-     <button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
      </div>
         @php
@@ -871,8 +872,7 @@ function readURL(input) {
 	} 
 
 	$("#quotecancel3").click(function() {
-		//$("#add-product").show();
-  	$("#add-services").hide();
+		$("#add-services").css("display", "none");
 	});
 
 	$('#serviceform').on('submit', function(event) {
