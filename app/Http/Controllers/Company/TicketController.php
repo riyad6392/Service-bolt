@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use DB;
 use App\Models\Managefield;
 use App\Models\Tenture;
+use App\Models\User;
 
 class TicketController extends Controller
 {
@@ -1087,7 +1088,7 @@ class TicketController extends Controller
 
     $quotedetails = Quote::where('id', $request->id)->get();
 
-    $serviceid = explode(',', $quotedetails[0]->serviceid);
+    $serviceid = explode(',', @$quotedetails[0]->serviceid);
 
     $servicedetails = Service::select('servicename')->whereIn('id', $serviceid)->get();
 
@@ -1100,5 +1101,66 @@ class TicketController extends Controller
     
     return view('ticket.ticketview',compact('quotedetails','servicename','allcustomer'));
    }
+
+   
+  public function sendticketinvoice(Request $request)
+  {
+
+    $tdata = Quote::where('id', $request->ticketid)->get()->first();
+
+    $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
+
+    $serviceid = explode(',', $tdata->serviceid);
+    //dd($serviceid);
+    $servicedetails = Service::select('servicename','productid')->whereIn('id', $serviceid)->get();
+     
+    foreach ($servicedetails as $key => $value) {
+      $pid[] = $value['productid'];
+      $sname[] = $value['servicename'];
+    } 
+
+    $servicename = implode(',', $sname);
+    $productids = explode(',', $tdata->productid);
+
+    $pdetails = Inventory::select('productname','id')->whereIn('id', $productids)->get();
+    if(count($pdetails)>0) {
+    foreach ($pdetails as $key => $value) {
+      $pname[] = $value['productname'];
+    } 
+
+
+    $productname = implode(',', $pname);
+  } else {
+    $productname = "--";
+  }
+
+    $company = User::where('id', $tdata->userid)->get()->first();
+    if($company->image!=null) {
+      $companyimage = url('').'/userimage/'.$company->image;
+    } else {
+      $companyimage = url('').'/uploads/servicebolt-noimage.png';
+    }
+
+    $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
+
+    $app_name = 'ServiceBolt';
+    $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
+
+
+      if($cinfo->email!=null) {
+        $user_exist = Customer::where('email', $cinfo->email)->first();
+
+          Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givendate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate], function($message) use ($user_exist,$app_name,$app_email) {
+          $message->to($user_exist->email);
+          $message->subject('Invoice Details!');
+          $message->from($app_email,$app_name);
+        });
+        $request->session()->flash('success', 'Invoice send successfully');
+      } else {
+        $request->session()->flash('success', 'Customer Email id not exist.');
+      }
+     
+     return redirect()->back();
+  }
 
 }

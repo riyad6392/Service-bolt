@@ -258,6 +258,7 @@ Route::group([
      Route::any('/quote/customercreate', [TicketController::class, 'customercreate'])->name('customer.create');
      Route::any('/quote/checklatitude', [TicketController::class, 'checklati_long'])->name('checklati_long');
      Route::any('/quote/ticketdetail/{id}', [TicketController::class, 'ticketdetail'])->name('ticketdetail');
+     Route::any('/quote/sendticketinvoice', [TicketController::class, 'sendticketinvoice'])->name('sendticketinvoice');
 
     //Scheduler Listing
     Route::get('/scheduler', [SchedulerController::class, 'index'])->name('scheduler');

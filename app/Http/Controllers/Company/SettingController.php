@@ -56,6 +56,12 @@ class SettingController extends Controller
            $user->paymenttype = null; 
         }
 
+        if(isset($request->description)) {
+            $user->footercontent = $request->description;
+        } else {
+           $user->footercontent = null; 
+        }
+
         $logofile = $request->file('imageUpload');
         if (isset($logofile)) {
             $datetime = date('YmdHis');

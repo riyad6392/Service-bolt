@@ -9,11 +9,17 @@
 <div class="banner" style="background: #fff;width: 112%;border-radius: 4px;height: auto;border: 2px solid #ccc;">
 <div>
     @php
-        $usrcolor = App\Models\User::select('color','company_address')->where('id',$quoteuserid)->first();
+        $usrcolor = App\Models\User::select('color','company_address','footercontent')->where('id',$quoteuserid)->first();
         if($usrcolor->color!=""){
             $color = $usrcolor->color;
         } else {
             $color = "#000";
+        }
+
+        if($usrcolor->footercontent!=null) {
+            $footercontent = $usrcolor->footercontent;
+        } else {
+            $footercontent = "";
         }
     @endphp
 <div class="text-center" style="background-color: {{$color}};border-radius: 4px;" >
@@ -135,7 +141,7 @@
           <td style="text-align: center; padding: 17px">
             <img src="{{$cdimage}}" style="max-width: 100px;" >
          <p style="color: #ccc; font-size: 16px;
-        ">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero.</p>
+        ">{{$footercontent}}</p>
         </td>
         </tr>
         </tbody>

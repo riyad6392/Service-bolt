@@ -495,6 +495,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: 100%;
     height: 100%;
 }
+.add-btn-yellow1 {
+    display: inline-block;
+    background: #fee200;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #232322;
+    padding: 10.5px 16px;
+    font-size: 16px;
+    font-weight: 300;
+    width: 150px;
+    height: 43px;
+}
 </style>
 
 <div class="content">
@@ -509,7 +521,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      </h3>
      </div>
   </div>
-  
+  @if(Session::has('success'))
+
+              <div class="alert alert-success" id="selector">
+
+                  {{Session::get('success')}}
+
+              </div>
+
+          @endif
 <div class="col-md-12">
 <div class="card overflow-hidden">
 
@@ -581,16 +601,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <p>@if($quotedetails[0]->customernotes!="") Customer Notes:{!!$quotedetails[0]->customernotes!!}@endif</p>
     </div>
 </div>
-    <form method="post" action="{{ route('company.downloadinvoiceview') }}" enctype="multipart/form-data">
-        @csrf
-        <input type="hidden" name="ticketid" id="ticketid" value="{{$quotedetails[0]->id}}">
-        <div class="col-md-12">
-            <div>
-                <button class="btn add-btn-yellow w-40 viewinvoice" type="submit">Download Invoice</button>
-            </div>
-
-        </div>
-    </form>
+<a class="btn add-btn-yellow1 w-40 viewinvoice" data-id="{{$quotedetails[0]->id}}" data-bs-toggle="modal" data-bs-target="#view-invoice">Invoice</a>
 
 @php
     if($quotedetails[0]->imagelist!="") 
@@ -644,6 +655,38 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 </div>
 </div>
 </div>
+
+<div class="modal fade" id="view-invoice" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+        <form method="post" action="{{ route('company.downloadinvoiceview') }}" enctype="multipart/form-data">
+        @csrf
+            <input type="hidden" name="ticketid" id="ticketid" value="{{$quotedetails[0]->id}}">
+            <div class="col-md-12">
+                <div>
+                    <button class="btn add-btn-yellow w-50 viewinvoice" type="submit">Download Invoice</button>
+                </div>
+
+            </div>
+        </form>
+        <br>
+        <form method="post" action="{{ route('company.sendticketinvoice') }}" enctype="multipart/form-data">
+        @csrf
+            <input type="hidden" name="ticketid" id="ticketid" value="{{$quotedetails[0]->id}}">
+            <input type="hidden" name="tickettype" id="tickettype" value="sendcustomer">
+            <div class="col-md-12">
+                <div>
+                    <button class="btn add-btn-yellow w-50 viewinvoice" type="submit">Send to Customer</button>
+                </div>
+
+            </div>
+        </form>
+      </div>
+  </div>
+</div>
+</div>
+
    </div>
  </div>
  @endsection
