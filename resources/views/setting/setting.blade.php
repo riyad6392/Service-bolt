@@ -47,7 +47,7 @@
 <div class="col-lg-12 mb-4">
 <div class="card admin-setting">
 <div class="card-body">
-<h5 class="mb-4">Basic Info</h5>
+<h5 class="mb-4">Manage Basic Info</h5>
 <div class="row">
 <div class="col-lg-9">
 
@@ -80,7 +80,7 @@
 <label class="form-label">Email</label>
   <input type="email" class="form-control form-control-2" placeholder="Email Id" value="{{$userData->email}}" name="email" readonly="">
 </div>
-<h5 class="my-4">Manage Invoice</h5>
+<h5 class="my-4">Manage Invoice Info</h5>
 <div class="col-lg-6 mb-3">
   <label>Invoice Header Color</label><br>
   <span class="color-picker">
@@ -93,7 +93,7 @@
   <label>Invoice Footer content</label><br>
   <textarea class="form-control height-110" placeholder="Description" name="description" id="description">{{$userData->footercontent}}</textarea>
 </div>
-<h5 class="my-4">Set Stock Percentage (%)</h5>
+<h5 class="my-4">Manage Stock Percentage (%)</h5>
 <div class="col-lg-6 mb-3">
 <label class="form-label">Good Stock (%)</label>
   <input type="text" class="form-control form-control-2" placeholder="Good Stock" value="{{$userData->goodproduct}}" name="goodproduct" onkeypress="return checkPhone(event)">
@@ -142,7 +142,7 @@
     }
   }
 @endphp
-<h5 class="my-4">Set Tax Percentage (%)</h5>
+<h5 class="my-4">Manage Tax Percentage (%)</h5>
   <ul>
     <label class="radio-div2 me-2">Services/Products
       <input type="radio" name="taxtype" class="custom-radio serviceprodutradio" value="service_products" id="service_products" {{@$spchecked}}>
@@ -177,7 +177,7 @@
 </div>
     </li>
   </ul>
-<h5 class="my-4">Select Available Hours</h5>
+<h5 class="my-4">Manage Available Hours</h5>
 <div class="col-lg-6 mb-3">
 <label class="form-label">Opening Time</label>
 <select class="form-control" name="openingtime">
@@ -268,7 +268,7 @@
 </div>
 <hr/>
 
-<h5 class="my-4">Billing Info</h5>
+<h5 class="my-4">Manage Billing Info</h5>
 <div class="row">
 <div class="col-md-8">
 <div class="row">
@@ -306,7 +306,7 @@
 
 <hr/>
 
-<h5 class="my-4">Payment Gateway</h5>
+<h5 class="my-4">Manage Payment Gateway</h5>
 
 <div class="row">
 <div class="col-lg-9 border-end pe-lg-4">

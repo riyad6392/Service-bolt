@@ -26,7 +26,7 @@
 <div class="content">
   <div class="col-md-12">
         <div class="side-h3">
-       <h3>All Tickets</h3>
+       <h3>Invoiced Tickets</h3>
        <!-- <p style="color: #B0B7C3;">Lorem ipsum dolor sit amet</p> -->
      </div>
      </div>
@@ -104,8 +104,12 @@
       @foreach($totalbillingData as $key=>$value)
       @php
         if($value->payment_status!="" || $value->payment_mode!="") {
-          $pstatus = "Completed";
-        } else {
+          $pstatus = "Paid";
+        } 
+        elseif($value->invoiced=="1") {
+          $pstatus = "invoiced";
+        }
+        elseif($value->invoiced=="0" && $value->payment_mode=="") {
           $pstatus = "Pending";
         }
       @endphp

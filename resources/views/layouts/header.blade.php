@@ -426,7 +426,7 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
     </li>
     <li class="menu">
       <li class="link" style="margin-left:32px;">
-        <a href="{{route('company.viewallticket')}}">View All Tickets</a>
+        <a href="{{route('company.viewallticket')}}">Invoiced Tickets</a>
       </li>
     </li>
     <li class="menu">
