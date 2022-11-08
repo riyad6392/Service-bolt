@@ -173,8 +173,8 @@
     <tbody>
      <tr>
         <td style="vertical-align: top; padding: 17px;background-color: {{$color}};">
-         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 20px;">Note:
-            <br><span style="color: #ccc;  font-size: 16px;">{{ @$description }}</span></p>
+         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 20px;">Invoice Note:
+            <br><span style="color: #ccc;  font-size: 16px;">@if(@$invoicenote){{@$invoicenote}}@else --- @endif</span></p>
         </td>
         <td style="width: 50%; padding: 12px;background-color: {{$color}}; border-radius: 10px;">
             <h5 style="margin: 0px 0 5px 0;color: #ccc;font-size: 22px; margin-left: 74%">Total:<br><h1 style="color: #fff; font-weight: bold; font-size: 36px;">${{ $totalprice }} </h1></h5>

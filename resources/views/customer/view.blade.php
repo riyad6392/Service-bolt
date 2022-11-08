@@ -614,12 +614,15 @@ $(document).on('click','#addnote',function(e) {
  $(document).on('click','.viewinvoice',function(e) {
    var id = $(this).data('id');
   var duedate = $(this).data('duedate');
+  var invoicenote = $(this).data('invoicenote');
+
 
    $.ajax({
       url:"{{url('company/customer/leftbarviewinvoice')}}",
       data: {
         id: id,
         duedate: duedate,
+        invoicenote: invoicenote,
       },
       method: 'post',
       dataType: 'json',

@@ -613,7 +613,7 @@ class CustomerController extends Controller
          </div>
 
          <div class="col-md-12 mb-3">
-         <a class="btn add-btn-yellow w-100 viewinvoice" data-id="'.$quoteData[$datacount]->id.'" data-duedate="'.$quoteData[$datacount]->duedate.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>View Invoice</a>
+         <a class="btn add-btn-yellow w-100 viewinvoice" data-id="'.$quoteData[$datacount]->id.'" data-duedate="'.$quoteData[$datacount]->duedate.'" data-invoicenote="'.$quoteData[$datacount]->invoicenote.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>View Invoice</a>
          </div>
          </div></div>';
       } else {
@@ -718,7 +718,7 @@ class CustomerController extends Controller
            <div class="number-1">Date:</div> '.$quoteData->etc.'
          </div>
          <div class="col-md-12 mb-3">
-         <a class="btn add-btn-yellow w-100 mb-4 viewinvoice" data-id="'.$quoteData->id.'" data-duedate="'.$quoteData->duedate.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>View Invoice</a>
+         <a class="btn add-btn-yellow w-100 mb-4 viewinvoice" data-id="'.$quoteData->id.'" data-duedate="'.$quoteData->duedate.'" data-invoicenote="'.$quoteData->invoicenote.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>View Invoice</a>
          </div>
          </div></div>';
       }
@@ -915,6 +915,7 @@ class CustomerController extends Controller
     {
       $tdata = Quote::where('id', $request->ticketid)->get()->first();
       $tdata->duedate = $request->duedate;
+      $tdata->invoicenote = $request->description;
       $tdata->save();
 
       $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
@@ -951,7 +952,7 @@ class CustomerController extends Controller
 
       $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
       $givendate = $tdata->givendate;
-      return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
+      return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->invoicenote,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
     }
 
     public function leftbarviewinvoice(Request $request)
@@ -964,6 +965,11 @@ class CustomerController extends Controller
       }  else {
         $duedate = "";
       }
+      if($request->invoicenote!="") {
+        $invoicenote =   $request->invoicenote;
+      }  else {
+        $invoicenote = "";
+      }
       $html ='<div class="add-customer-modal">
                   <h5>Invoice</h5>
                  </div><input type="hidden" name="ticketid" id="ticketid" value="'.$request->id.'">
@@ -972,6 +978,14 @@ class CustomerController extends Controller
                 <div class="mb-3">
                   <label>Select Due Date</label>
                   <input type="date" class="form-control" placeholder="Due Date" name="duedate" id="duedate" value="'.$duedate.'" style="position:relative;">
+                </div>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2">
+             <div class="input_fields_wrap">
+                <div class="mb-3">
+                  <label>Invoice Notes</label>
+                  <textarea class="form-control height-110" placeholder="Invoice Note" name="description" id="description">'.$invoicenote.'</textarea>
                 </div>
             </div>
           </div>
