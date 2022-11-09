@@ -371,9 +371,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                  </div>
                <div class="col-md-12 mb-2">
                 <div class="input_fields_wrap">
-                  <select class="form-control selectpicker " multiple="" data-placeholder="Select Admin Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">
+                  <select class="form-control selectpicker " multiple="" data-placeholder="Select Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">
                     @foreach($adminchecklist as $key =>$value1)
-                      <option value="{{$value1->id}}">{{$value1->checklist}}</option>';
+                      <option value="{{$value1->serviceid}}">{{$value1->checklistname}}</option>';
                     @endforeach
                  </select>
                 </div>

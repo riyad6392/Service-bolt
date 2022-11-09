@@ -293,13 +293,16 @@ i.fa.fa-plus.true-condition {
               <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
             </div>
           </div>
-          <div class="col-md-12">
+          <div class="col-md-12 mb-2">
             <label>Choose Color</label><br>
             <span class="color-picker">
               <label for="colorPicker">
                 <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
               </label>
             </span>
+          </div>
+          <div class="col-lg-12 mb-2">
+            <textarea class="form-control height-180" name="description" id="description" placeholder="Description" required></textarea>
           </div>
           <div class="col-md-12">
             <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>

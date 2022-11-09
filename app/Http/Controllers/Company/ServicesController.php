@@ -96,6 +96,7 @@ class ServicesController extends Controller
       //$color = substr(md5(rand()), 0, 6);
       //$data['color'] = "#".$color;
       $data['color'] = $request->colorcode;
+      $data['description'] = $request->description;
       $serviceData = Service::create($data);
       if($request->ajax()){
         return json_encode(['id' => $serviceData->id,'time' => $serviceData->time,'minute' => $serviceData->minute,
@@ -303,7 +304,9 @@ class ServicesController extends Controller
             <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" value="'.$minute[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
             </div>
           </div>
-
+          <div class="col-lg-12 mb-2">
+            <textarea class="form-control height-180" name="description" id="description" placeholder="Description">'.$services[0]['description'].'</textarea>
+          </div>
           <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 122 * 122</div>
           <div class="col-lg-12 mb-2 relative">
                <input type="file" class="dropify" name="image" id="image" data-max-file-size="2M" data-allowed-file-extensions="jpg jpeg png gif svg bmp" accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg" data-default-file="'.$userimage.'" data-show-remove="false">
@@ -378,6 +381,7 @@ class ServicesController extends Controller
               $service->image = $imageName;
             }
             $service->color = $request->colorcode;
+            $service->description = $request->description;
             $service->save();
             $request->session()->flash('success', 'Service Updated successfully');
             return redirect()->route('company.services');

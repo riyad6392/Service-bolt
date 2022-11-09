@@ -212,7 +212,7 @@ class CustomerController extends Controller
         $customerData = Customer::where('id',$id)->get(); 
         $customerAddress = Address::where('customerid',$id)->get();
         $recentTicket = Quote::where('customerid',$id)->where('ticket_status','!=',"5")->orderBy('id','DESC')->get();
-        $adminchecklist = DB::table('adminchecklist')->get();
+        $adminchecklist = DB::table('checklist')->select('serviceid','checklistname')->where('userid',$auth_id)->groupBy('serviceid')->get();
         return view('customer.view',compact('customerData','customerAddress','recentTicket','adminchecklist'));
     }
 
@@ -438,7 +438,8 @@ class CustomerController extends Controller
       $json = array();
       $auth_id = auth()->user()->id;
       
-      $adminchecklist = DB::table('adminchecklist')->get();
+      $adminchecklist = DB::table('checklist')->select('serviceid','checklistname')->where('userid',$auth_id)->groupBy('serviceid')->get();
+
       $addressinfo = Address::select('checklistid')->where('id',$request->cid)->first();
       $html ='<div class="add-customer-modal">
                   <div style="font-size:25px;">Add/Edit Notes</div>
@@ -449,12 +450,12 @@ class CustomerController extends Controller
                     foreach($adminchecklist as $key =>$value1) {
                       $checklistids =explode(",", $addressinfo->checklistid);
                       
-                      if(in_array($value1->id, $checklistids)) {
+                      if(in_array($value1->serviceid, $checklistids)) {
                         $selectedp = "selected";
                       } else {
                         $selectedp = "";
                       }
-                      $html .='<option value="'.$value1->id.'" '.@$selectedp.'>'.$value1->checklist.'</option>';
+                      $html .='<option value="'.$value1->serviceid.'" '.@$selectedp.'>'.$value1->checklistname.'</option>';
                     }
                   $html .='</select>
                 </div>

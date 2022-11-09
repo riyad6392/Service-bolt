@@ -554,12 +554,12 @@ class WorkerTicketController extends Controller
         $ckinfo = array();
         if($addressinfo->checklistid!="") {
           $ckids = explode(',',$addressinfo->checklistid);
-          $ckinfo = DB::table('adminchecklist')->select('checklist')->whereIn('id',$ckids)->get();
+          $ckinfo = DB::table('checklist')->select('serviceid','checklistname','checklist','userid')->whereIn('serviceid',$ckids)->where('userid',$worker->userid)->groupBy('serviceid')->get();
           if(count($ckinfo)>0) {
             $ckinfo = $ckinfo; 
           }
         }
-
+        
         return view('personnel.ticketview',compact('quoteData','checklistData','sdata','prequoteData','servicename','productname','totalprice','productData','tenture','cid','ckinfo'));
     }
 

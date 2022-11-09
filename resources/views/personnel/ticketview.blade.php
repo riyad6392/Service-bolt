@@ -746,7 +746,7 @@ Map / Directions</a>
   <div>
 <p>{{@$productname}}</p></div></div>
 @php
-    $addressnote = App\Models\Address::select('notes')->where('customerid',$quoteData->customerid)->first();
+    $addressnote = App\Models\Address::select('notes')->where('customerid',$quoteData->customerid)->where('address',$quoteData->address)->first();
     
     if($addressnote->notes !=null) {
         $addressnote = $addressnote->notes;
@@ -760,7 +760,15 @@ Map / Directions</a>
         @if(!empty($ckinfo) && count($ckinfo)>0)
             <ul>
                 @foreach($ckinfo as $key=>$value) 
-                    <li>{{@$value->checklist}}</li>
+                    <li>{{@$value->checklistname}}</li>
+                        <ul>
+                            @php
+                              $checklistdata  = App\Models\Checklist::select('checklist')->where('serviceid',$value->serviceid)->where('userid',$value->userid)->get();
+                            @endphp
+                            @foreach($checklistdata as $key => $value1)
+                                <li>{{$value1->checklist}}</li>
+                            @endforeach
+                        </ul>
                 @endforeach
             </ul>
         @endif
