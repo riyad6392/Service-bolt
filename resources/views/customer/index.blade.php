@@ -309,6 +309,14 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
      <div class="col-md-12 mb-3">
       <input type="text" class="form-control" placeholder="Address" name="address" id="address" required="">
     </div>
+
+    <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="Billing Address" name="billingaddress" id="billingaddress">
+    </div>
+
+    <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="Mailing Address" name="mailingaddress" id="mailingaddress">
+    </div>
      
      <div class="col-md-6 mb-3">
      

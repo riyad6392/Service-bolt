@@ -86,7 +86,18 @@ class CustomerController extends Controller
                     $data['serviceid'] = implode(',', $request->serviceid);
                 } else {
                     $data['serviceid'] = null;
-                } 
+                }
+                if(isset($request->billingaddress)) {
+                  $data['billingaddress'] = $request->billingaddress;
+                } else {
+                  $data['billingaddress'] = null;
+                }
+
+                if(isset($request->mailingaddress)) {
+                  $data['mailingaddress'] = $request->mailingaddress;
+                } else {
+                  $data['mailingaddress'] = null;
+                }
             $cinfo = Customer::create($data);
 
             $lastId = $cinfo->id;
@@ -766,7 +777,16 @@ class CustomerController extends Controller
           </div>
           </div>
 
-          
+          <div class="col-md-12 mb-2">
+           <label>Billing Address</label>
+            <input type="text" class="form-control" placeholder="Billing Address" name="billingaddress" id="billingaddress" value="'.$customer[0]->billingaddress.'">
+          </div>
+
+          <div class="col-md-12 mb-2">
+          <label>Mailing Address</label>
+            <input type="text" class="form-control" placeholder="Mailing Address" name="mailingaddress" id="mailingaddress" value="'.$customer[0]->mailingaddress.'">
+          </div>
+
           <div class="col-md-12 mb-2">
             <label>Phone Number</label>
 
@@ -833,6 +853,18 @@ class CustomerController extends Controller
         $customer->serviceid = implode(',', $request->serviceid);
       } else {
         $customer->serviceid = null;
+      }
+
+      if(isset($request->billingaddress)) {
+        $customer->billingaddress = $request->billingaddress;
+      } else {
+        $customer->billingaddress = null;
+      }
+
+      if(isset($request->mailingaddress)) {
+        $customer->mailingaddress = $request->mailingaddress;
+      } else {
+        $customer->mailingaddress = null;
       }
 
       $logofile = $request->file('image');

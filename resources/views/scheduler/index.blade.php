@@ -561,8 +561,11 @@ body::-webkit-scrollbar-thumb:hover {
                                             ->where('services.id',$value->serviceid)->get()->first();
                                         @endphp
                                         <li class="inner red-slide">
+                                            <span class=" icon-btn" id="closeonDelete" data-id="{{$value->id}}" data-type="permanent"><i class="fa fa-trash" > </i></span>
                                             <div class='fc-event' style="background-color: {{$servicecolor->color}};" data-color='{{$servicecolor->color}}' data-id='{{$value->id}}' data-bs-toggle='modal' data-bs-target='#exampleModal' id="editsticket">
+
                                                 <div class="tickets_div">
+
                                                     <h6>#{{$value->id}}</h6>
                                                     <p> {{$value->customername}}</p>
                                                     <p>{{$value->servicename}}</p>
@@ -1146,7 +1149,7 @@ body::-webkit-scrollbar-thumb:hover {
                   placement: 'right',
                   html:true,
                   sanitize:false,
-                  content: '<div class="popover-design"><div class="row"><div class="col-md-7"><p>'+event.status+'</p><p>'+event.title+'</p></div><div class="col-md-5 text-center"><p>'+start+' -'+end+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+eventid+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class=" icon-btn" id="closeonDelete" data-id="'+eventid+'"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+eventid+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+                  content: '<div class="popover-design"><div class="row"><div class="col-md-7"><p>'+event.status+'</p><p>'+event.title+'</p><p style="width:363px;">'+event.address+'</p></div><div class="col-md-5 text-center"><p>'+start+' -'+end+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+eventid+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class=" icon-btn" id="closeonDelete" data-id="'+eventid+'"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+eventid+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
                   container:'body',
                   trigger:'click',
                 });
@@ -1548,7 +1551,9 @@ body::-webkit-scrollbar-thumb:hover {
   });
 
   $(document).on('click','#closeonDelete',function() {
-        var id = $(this).data('id');      
+        var id = $(this).data('id');
+        var type = $(this).data('type');      
+
                    swal({
                         title: "Are you sure!",
                         text: "Are you sure? you want to delete it!",
@@ -1561,7 +1566,7 @@ body::-webkit-scrollbar-thumb:hover {
                     $.ajax({
                            url:"{{url('company/scheduler/deleteTicket')}}",
                            type:"POST",
-                           data:{id:id},
+                           data:{id:id,type:type},
                            success:function()
                            {
                             location.reload();

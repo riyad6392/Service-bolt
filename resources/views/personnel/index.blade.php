@@ -505,7 +505,6 @@ function viewmodalpopup(id) {
             refresh: true,
             success:function(data) {
 
-              console.log(data.html);
               $('#viewmodaldata').html(data.html);
               $('.dropify').dropify();
               $('.selectpicker').selectpicker({

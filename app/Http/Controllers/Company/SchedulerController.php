@@ -850,7 +850,11 @@ class SchedulerController extends Controller
     {
         //$ticketid = $request->targetid;
         $ticketid = $request->id;
-        $tstatus = 1;
+        if($request->type=="permanent") {
+          DB::table('quote')->where('parentid',$ticketid)->delete(); 
+          DB::table('quote')->where('id',$ticketid)->delete();  
+        } else {
+            $tstatus = 1;
         DB::table('quote')->where('id','=',$ticketid)
           ->update([ 
               "ticket_status"=>"$tstatus",
@@ -884,7 +888,9 @@ class SchedulerController extends Controller
                 'body' => $msgarray['title'],
             );
 
-            $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+            $this->sendFirebaseNotification($puser, $msgarray, $fcmData);    
+        }
+        
 
       echo "1";
     }
@@ -1637,6 +1643,7 @@ class SchedulerController extends Controller
                     'resourceId'=>$row->personnelid,
                     'backgroundColor'   => $row->bgcolor,
                     'status'   => $ticket_status,
+                    'address'   => $row->address,
 
                 );
             //}
@@ -1762,6 +1769,7 @@ class SchedulerController extends Controller
                     'resourceId'=>$value,
                     'backgroundColor'   => $row->color,
                     'status' => $ticket_status,
+                    'address' => $row->address,
 
                 );
             }

@@ -65,7 +65,8 @@
 							<thead>
 								<tr>
 									<th style="display: none;">Id</th>
-									<th>Service </th>
+									<th>Checklist Name </th>
+									<th>Service Name</th>
 									<th>Action</th>
 					
 								</tr>
@@ -79,6 +80,7 @@
 								@foreach($checklistData as $key => $value)
 									<tr target="{{$i}}" data-id="{{$value->serviceid}}" class="user-hover showSingle">
 										<td style="display: none;">{{$value->id}}</td>
+										<td>{{$value->checklistname}}</td>
 										<td>{{$value->servicename}}</td>
 										<td>
 											View
@@ -146,6 +148,16 @@
 	 <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.checklistcreate')}}" enctype="multipart/form-data">
         @csrf
 	   <div class="row customer-form" id="product-box-tabs">
+	   	
+	  <div class="col-md-12">
+		  <div class="">
+			  <div class="mb-3">
+			  	<label>Checklist Name</label>
+			   	<input type="text" name="checklistname" id="checklistname" class="form-control" placeholder="Checklist Name" required>
+			  </div>
+		  </div>
+	  </div>
+
 		<div class="col-md-12">
 	   <div class="">
 	   <div class="mb-3">
@@ -175,7 +187,7 @@
 			        <div class="col-md-12">
 			        <div class="staresd">
 			          <div class="imgup">
-			            <input type="text" placeholder="text here" class="form-control" style="margin-bottom: 5px;" name="point[]" required="">
+			            <input type="text" placeholder="Checklist Item" class="form-control" style="margin-bottom: 5px;" name="point[]" required="">
 			            <input type="file" class="form-control" style="margin-bottom: 5px;" name="checklistimage[]" accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
 					  </div>
 			        </div>
@@ -332,7 +344,7 @@
       var addressid = $(this).attr('dataval');
       swal({
           title: "Are you sure?",
-          text: "Are you sure you want to delete this checklist!",
+          text: "Are you sure you want to delete this checklist item!",
           type: "warning",
           showCancelButton: true,
           confirmButtonColor: "#DD6B55",

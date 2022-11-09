@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Checklist extends Model
 {
     protected $table = 'checklist';
-    protected $fillable = ['userid','workerid','serviceid','checklist','checklistimage'];
+    protected $fillable = ['userid','workerid','serviceid','checklist','checklistimage','checklistname'];
 }
