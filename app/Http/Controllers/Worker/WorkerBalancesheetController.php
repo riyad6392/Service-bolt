@@ -75,9 +75,9 @@ class WorkerBalancesheetController extends Controller
         fclose($file);
     };
     return response()->stream($callback, 200, $headers);
-      foreach($balancesheet as $key =>$value) {
+      // foreach($balancesheet as $key =>$value) {
 
-      }
-      return view('personnel.balancesheet',compact('auth_id','balancesheet'));
+      // }
+      // return view('personnel.balancesheet',compact('auth_id','balancesheet'));
     }
 }
