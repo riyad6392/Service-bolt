@@ -94,6 +94,13 @@ class ChecklistController extends Controller
           Checklist::create($data);
         }
       }
+
+      DB::table('checklist')->where('serviceid','=',$request->serviceid)->where('userid','=',$auth_id)
+        ->update([ 
+            "checklistname"=>"$request->checklistname"
+      ]);
+
+
       
       $request->session()->flash('success', 'Checklist point added successfully');
             

@@ -442,11 +442,11 @@ class CustomerController extends Controller
 
       $addressinfo = Address::select('checklistid')->where('id',$request->cid)->first();
       $html ='<div class="add-customer-modal">
-                  <div style="font-size:25px;">Add/Edit Notes</div>
+                  <div style="font-size:25px;">Edit Notes</div>
                  </div>';
                $html .='<div class="col-md-12 mb-2">
                 <div class="input_fields_wrap">
-                  <select class="form-control selectpicker " multiple="" data-placeholder="Select Admin Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">';
+                  <select class="form-control selectpicker " multiple="" data-placeholder="Select Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">';
                     foreach($adminchecklist as $key =>$value1) {
                       $checklistids =explode(",", $addressinfo->checklistid);
                       

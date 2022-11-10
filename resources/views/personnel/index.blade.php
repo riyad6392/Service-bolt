@@ -510,6 +510,7 @@ function viewmodalpopup(id) {
               $('.selectpicker').selectpicker({
                 size: 5
               });
+              
             }
         })
 }
