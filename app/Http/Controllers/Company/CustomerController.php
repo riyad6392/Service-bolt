@@ -239,6 +239,7 @@ class CustomerController extends Controller
        $customer = Customer::where('id', $request->cid)->get();
        $worker = Personnel::where('userid', $auth_id)->get();
        $tenture = Tenture::where('status','Active')->get();
+       $productData = Inventory::where('user_id', $auth_id)->get();
        if(count($worker)>0) {
         $wclass = "";
        } else {
@@ -273,6 +274,13 @@ class CustomerController extends Controller
         <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="servicename[]" id="servicename" style="height:auto;" required="">';
               foreach($services as $key => $value) {
                 $html .='<option value="'.$value->id.'" data-hour="'.$value->time.'" data-min="'.$value->minute.'">'.$value->servicename.'</option>';
+              }
+        $html .='</select>
+      </div>
+      <div class="col-md-12 mb-3">
+        <select class="form-control selectpickerc1" multiple aria-label="Default select example" data-live-search="true" name="productname[]" id="productname" style="height:auto;" data-placeholder="Select Products">';
+              foreach($productData as $key => $value) {
+                $html .='<option value="'.$value->id.'" data-price="'.$value->price.'">'.$value->productname.'</option>';
               }
         $html .='</select>
       </div><div class="col-md-6 mb-3" style="display:none;">
@@ -334,24 +342,36 @@ class CustomerController extends Controller
 
       $serviceid = implode(',', $request->servicename);
 
-      $servicedetails = Service::select('servicename','productid')->whereIn('id', $request->servicename)->get();
+      $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->servicename)->get();
 
       foreach ($servicedetails as $key => $value) {
         $pid[] = $value['productid'];
         $sname[] = $value['servicename'];
       } 
-      $productid = implode(',', array_unique($pid));
-
+      
       $servicename = implode(',', $sname);
+
+      if(isset($request->productname)) {
+        $productid = implode(',', $request->productname);
+      }
+
+      $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+             
+      foreach ($productdetails as $key => $value) {
+        $pname[] = $value['productname'];
+      }
+
+      $productname = implode(',', $pname);
 
       $auth_id = auth()->user()->id;
       
       $data['userid'] = $auth_id;
       $data['customerid'] = $request->customerid;
       $data['serviceid'] = $serviceid;
+      $data['product_id'] = $productid;
       $data['customername'] =  $request->customername;
       $data['servicename'] = $servicedetails[0]->servicename;
-      $data['product_id'] = $productid;
+      $data['product_name'] = $productdetails[0]->productname;
       //$data['product_name'] = $pname;
       $data['personnelid'] = $request->personnelid;
       $data['radiogroup'] = $request->radiogroup;

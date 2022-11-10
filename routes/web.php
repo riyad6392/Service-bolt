@@ -259,6 +259,7 @@ Route::group([
      Route::any('/quote/checklatitude', [TicketController::class, 'checklati_long'])->name('checklati_long');
      Route::any('/quote/ticketdetail/{id}', [TicketController::class, 'ticketdetail'])->name('ticketdetail');
      Route::any('/quote/sendticketinvoice', [TicketController::class, 'sendticketinvoice'])->name('sendticketinvoice');
+     Route::any('/quote/calculateproductprice', [TicketController::class, 'calculateproductprice'])->name('calculateproductprice');
 
     //Scheduler Listing
     Route::get('/scheduler', [SchedulerController::class, 'index'])->name('scheduler');

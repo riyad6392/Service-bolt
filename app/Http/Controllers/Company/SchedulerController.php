@@ -778,22 +778,33 @@ class SchedulerController extends Controller
 
         $serviceid = implode(',', $request->servicename);
 
-        $servicedetails = Service::select('servicename','productid')->whereIn('id', $request->servicename)->get();
+        $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->servicename)->get();
 
         foreach ($servicedetails as $key => $value) {
-          $pid[] = $value['productid'];
           $sname[] = $value['servicename'];
         } 
-        $productid = implode(',', array_unique($pid));
-
         $servicename = implode(',', $sname);
+
+        if(isset($request->productname)) {
+            $productid = implode(',', $request->productname);
+        }
+
+        $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+             
+        foreach ($productdetails as $key => $value) {
+            $pname[] = $value['productname'];
+        }
+
+        $productname = implode(',', $pname);
 
         $auth_id = auth()->user()->id;
         $data['userid'] = $auth_id;
         $data['customerid'] = $request->customerid;
         $data['serviceid'] =  $serviceid;
         $data['servicename'] = $servicedetails[0]->servicename;
+        $data['product_name'] = $productdetails[0]->productname;
         $data['product_id'] = $productid;
+
         //$data['product_name'] = $pname;
         $data['personnelid'] = $request->personnelid;
         $data['radiogroup'] = $request->radiogroup;
@@ -1247,6 +1258,8 @@ class SchedulerController extends Controller
        $allcustomer = Customer::where('userid', $auth_id)->get();
        
        $tenture = Tenture::where('status','Active')->get();
+
+       $productData = Inventory::where('user_id', $auth_id)->get();
         
         if($quotedetails[0]->radiogroup =='perhour') {
             $checked = "checked";
@@ -1317,7 +1330,7 @@ class SchedulerController extends Controller
         </div>
           <div class="col-md-12 mb-2">
             <label>Select a Service</label>
-            <select class="form-control selectpicker1" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" style="height:auto;">';
+            <select class="form-control selectpicker1" multiple aria-label="Default select example" data-live-search="true" name="servicename[]" id="servicename" style="height:auto;">';
 
               foreach($allservices as $key => $value) {
                   $serviceids =explode(",", $quotedetails[0]->serviceid);
@@ -1331,7 +1344,21 @@ class SchedulerController extends Controller
               }
             $html .='</select>
           </div>
+          <div class="col-md-12 mb-3">
+          <label>Select Products</label>
+            <select class="form-control selectpickerpassign" multiple aria-label="Default select example" data-live-search="true" name="productname[]" id="productname" style="height:auto;" data-placeholder="Select Products">';
+                  foreach($productData as $key => $value) {
+                  $productids =explode(",", $quotedetails[0]->product_id);
 
+                    if($value->id == $productids) {
+                    $selectedp1 = "selected";
+                  } else {
+                    $selectedp1 = "";
+                }
+                    $html .='<option value="'.$value->id.'" data-price="'.$value->price.'" '.@$selectedp1.'>'.$value->productname.'</option>';
+                  }
+            $html .='</select>
+          </div>
 
           <div class="col-md-12 mb-2">
             <div class="align-items-center justify-content-lg-between d-flex services-list">
@@ -1399,31 +1426,39 @@ class SchedulerController extends Controller
     {
       //$customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
 
-      $servicedetails = Service::select('servicename','productid')->whereIn('id', $request->serviceid)->get();
+      $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->servicename)->get();
       foreach ($servicedetails as $key => $value) {
-        $pid[] = $value['productid'];
         $sname[] = $value['servicename'];
       } 
-      $productid = implode(',', array_unique($pid));
+      //$productid = implode(',', array_unique($pid));
              
       $servicename = implode(',', $sname); 
         
-      // $productd = DB::table('products')->select('productname')->where('id', $servicedetails->productid)->first();  
-      // if($productd!="") {
-      //     $pname = $productd->productname;
-      //   } else {
-      //     $pname = "";
-      //   }
+    $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+       
+    foreach ($productdetails as $key => $value) {
+      $pname[] = $value['productname'];
+    }
+
+    $productname = implode(',', $pname);
+
       $quote = Quote::where('id', $request->quoteid)->orWhere('parentid',$request->quoteid)->get();
       foreach($quote as $key =>$quote) {
-      if(isset($request->serviceid)) {
-        $quote->serviceid = implode(',', $request->serviceid);
+      if(isset($request->servicename)) {
+        $quote->serviceid = implode(',', $request->servicename);
       } else {
         $quote->serviceid = null;
       }
+      $productid = implode(',', $request->productname);
+       if(isset($request->productname)) {
+          $quote->product_id = implode(',', $request->productname);
+        }  else {
+        $quote->product_id = null;
+      }
 
       $quote->servicename = $servicedetails[0]->servicename;
-      $quote->product_id = $productid;
+      $quote->product_name = $productdetails[0]->productname;
+
       $quote->radiogroup = $request->radiogroup;
       $quote->frequency = $request->frequency;
       if($request->time!=null || $request->time!=0) {

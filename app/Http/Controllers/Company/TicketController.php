@@ -77,18 +77,32 @@ class TicketController extends Controller
     {
         
         $serviceid = implode(',', $request->servicename);
+        
+        if(isset($request->productname)) {
+          $productid = implode(',', $request->productname);
+        }
 
         $customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
 
-        $servicedetails = Service::select('servicename','productid')->whereIn('id', $request->servicename)->get();
+        $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->servicename)->get();
        
         foreach ($servicedetails as $key => $value) {
-          $pid[] = $value['productid'];
+          //$pid[] = $value['productid'];
           $sname[] = $value['servicename'];
-        } 
-        $productid = implode(',', array_unique($pid));
+        }
+
+        //$productid = implode(',', array_unique($pid));
         
         $servicename = implode(',', $sname);
+
+        $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+       
+        foreach ($productdetails as $key => $value) {
+          $pname[] = $value['productname'];
+        }
+
+        $productname = implode(',', $pname);
+
         
         //$servicedetails = Service::select('servicename','productid')->where('id', $request->servicename)->first();
         
@@ -99,17 +113,16 @@ class TicketController extends Controller
         // } else {
         //   $pname = "";
         // }
-
-
-	      $auth_id = auth()->user()->id;
+        
+        $auth_id = auth()->user()->id;
 	      $data['userid'] = $auth_id;
 	      $data['customerid'] = $request->customerid;
         $data['serviceid'] =  $serviceid;
+        $data['product_id'] = $productid;
 	      $data['servicename'] = $servicedetails[0]->servicename;
-        $data['product_id'] = rtrim($productid, ',');
-        //$data['product_name'] = $pname;
+        $data['product_name'] = $productdetails[0]->productname;
         
-	      $data['personnelid'] = $request->personnelid;
+        $data['personnelid'] = $request->personnelid;
 	      $data['radiogroup'] = $request->radiogroup;
 	      $data['frequency'] = $request->frequency;
 	      if($request->time!=null || $request->time!=0) {
@@ -516,7 +529,6 @@ class TicketController extends Controller
 
     public function ticketcreate(Request $request)
     {
-      //dd($request->all());
         $customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
 
         $serviceid = implode(',', $request->servicename);
@@ -527,16 +539,27 @@ class TicketController extends Controller
           $pid[] = $value['productid'];
           $sname[] = $value['servicename'];
         } 
-        $productid = implode(',', array_unique($pid));
-
         $servicename = implode(',', $sname);
+
+        if(isset($request->productname)) {
+          $productid = implode(',', $request->productname);
+        }
+
+        $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+               
+        foreach ($productdetails as $key => $value) {
+          $pname[] = $value['productname'];
+        }
+
+        $productname = implode(',', $pname);
         
         $auth_id = auth()->user()->id;
         $data['userid'] = $auth_id;
         $data['customerid'] = $request->customerid;
         $data['serviceid'] =  $serviceid;
         $data['servicename'] = $servicedetails[0]->servicename;
-        $data['product_id'] = rtrim($productid, ',');
+        $data['product_name'] = $productdetails[0]->productname;
+        $data['product_id'] = $productid;
         //$data['product_name'] = $pname;
         
         $data['personnelid'] = $request->personnelid;
@@ -604,6 +627,7 @@ class TicketController extends Controller
        $json = array();
        $auth_id = auth()->user()->id;
        $allservices = Service::where('userid', $auth_id)->get();
+       $allproducts = Inventory::where('user_id', $auth_id)->get();
        $allworker = Personnel::where('userid', $auth_id)->get();
 
        $quotedetailsnew = Quote::where('id', $request->id)->get()->toArray();
@@ -694,6 +718,22 @@ class TicketController extends Controller
         $html .='</select>
           </div>
 
+          <div class="col-md-12 mb-2">
+            <label>Select Products</label>
+            <select class="form-control selectpicker2" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" style="height:auto;" data-placeholder="Select Products">';
+              foreach($allproducts as $key => $value) {
+                $productids =explode(",", $quotedetails[0]->product_id);
+                 if(in_array($value->id, $productids)){
+                  $selectedp = "selected";
+                 } else {
+                  $selectedp = "";
+                 }
+
+                $html .='<option value="'.$value->id.'" '.@$selectedp.' data-price="'.$value->price.'">'.$value->productname.'</option>';
+              }
+        $html .='</select>
+          </div>
+
           <div class="col-md-12 mb-2" style="display:none;">
             <label>Select a Personnel</label>
             <select class="form-select" name="personnelid" id="personnelid">
@@ -778,24 +818,22 @@ class TicketController extends Controller
     {
       $customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
 
-      //$servicedetails = Service::select('servicename','productid')->where('id', $request->serviceid)->first();
-      //$serviceid = implode(',', $request->serviceid);
-
-      $servicedetails = Service::select('servicename','productid')->whereIn('id', $request->serviceid)->get();
+      $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->serviceid)->get();
       foreach ($servicedetails as $key => $value) {
         $pid[] = $value['productid'];
         $sname[] = $value['servicename'];
       } 
-      $productid = implode(',', array_unique($pid));
+      //$productid = implode(',', array_unique($pid));
              
       $servicename = implode(',', $sname); 
 
-      // $productd = DB::table('products')->select('productname')->where('id', $servicedetails->productid)->first();  
-      // if($productd!="") {
-      //     $pname = $productd->productname;
-      //   } else {
-      //     $pname = "";
-      //   }
+      $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productid)->get();
+
+      foreach ($productdetails as $key => $value) {
+        $pname[] = $value['productname'];
+      } 
+      $productname = implode(',', $pname); 
+
       $quote = Quote::where('id', $request->quoteid)->get()->first();
       $quote->customerid =  $request->customerid;
 
@@ -805,9 +843,16 @@ class TicketController extends Controller
       } else {
         $quote->serviceid = null;
       }
+
+      if(isset($request->productid)) {
+        $quote->product_id = implode(',', $request->productid);
+      } else {
+        $quote->product_id = null;
+      }
+
       $quote->servicename = $servicedetails[0]->servicename;
-      $quote->product_id = $productid;
-      //$quote->product_name = $pname;
+      $quote->product_name = $productdetails[0]->productname;
+
       $quote->personnelid = $request->personnelid;
       $quote->radiogroup = $request->radiogroup;
       $quote->frequency = $request->frequency;
@@ -1161,6 +1206,30 @@ class TicketController extends Controller
       }
      
      return redirect()->back();
+  }
+
+
+  public function calculateproductprice(Request $request) {
+    $json = array();
+    $serviceidarray = explode(',', $request->serviceid);
+      $servicedetails = Service::select('servicename','price')->whereIn('id', $serviceidarray)->get();
+      $sum = 0;
+      foreach ($servicedetails as $key => $value) {
+        $sname[] = $value['servicename'];
+        $sum+= (int)$value['price'];
+      } 
+
+    $pidarray = explode(',', $request->productid);
+      $pdetails = Inventory::select('productname','id','price')->whereIn('id', $pidarray)->get();
+      $sum1 = 0;
+      foreach ($pdetails as $key => $value) {
+        $pname[] = $value['productname'];
+        $sum1+= (int)$value['price'];
+      }
+      $totalprice = $sum+$sum1;
+
+      return json_encode(['totalprice' =>$totalprice]);
+      die;
   }
 
 }

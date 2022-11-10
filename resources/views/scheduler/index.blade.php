@@ -737,6 +737,14 @@ body::-webkit-scrollbar-thumb:hover {
         @endforeach
        </select>
      </div>
+
+     <div class="col-md-12 mb-3">
+        <select class="selectpickers1 form-control {{$cname}}" name="productname[]" id="productname" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Products">
+            @foreach($productData as $key =>$value)
+                <option value="{{$value->id}}" data-price="{{$value->price}}">{{$value->productname}}</option>
+            @endforeach
+            </select>
+      </div>
      
      <div class="col-md-6 mb-3" style="display: none;">
       <select class="form-select" name="personnelid" id="personnelid">
@@ -897,47 +905,14 @@ body::-webkit-scrollbar-thumb:hover {
 
 <script type="">
     $(document).ready(function () {
-        $('.selectpicker1').selectpicker();
-        function gethours1() {
-                var h=0;
-                var m=0;
-                $('select.selectpicker1').find('option:selected').each(function() {
-                h += parseInt($(this).data('hour'));
-                  m += parseInt($(this).data('min'));
-                  
-                });
-                var realmin = m % 60;
-            var hours = Math.floor(m / 60);
-            h = h+hours;
-                
-            $("#time").val(h);
-                $("#minute").val(realmin);
-        }
-
-        function getprice1() {
-            var price=0;
-            $('select.selectpicker1').find('option:selected').each(function() {
-                price += parseFloat($(this).data('price'));
-            });
-                
-            $("#price").val(price.toFixed(2));
-        }
-
-        function getfrequency1() {
-            var frequency = "";
-            $("#frequency option").removeAttr('selected');
-            $('select.selectpicker1').find('option:selected').each(function() {
-                frequency = $(this).data('frequency');
-            });
-            $("#frequency option[value='"+frequency+"']").attr('selected', 'selected');
-        }
         
-        $(document).on('change', 'select.selectpicker1',function() {
+        
+        // $(document).on('change', 'select.selectpicker1',function() {
             
-            gethours1();
-            getprice1();
-            getfrequency1();
-        });
+        //     gethours1();
+        //     getprice1();
+        //     getfrequency1();
+        // });
         $('html, body').animate({
             scrollTop: $('#srcoll-here').offset().top
         }, 'slow');
@@ -1503,6 +1478,7 @@ body::-webkit-scrollbar-thumb:hover {
               $('.selectpicker1').selectpicker({
                 size: 5
               });
+              $('.selectpickerpassign').selectpicker();
             }
         })
     });
@@ -1596,6 +1572,80 @@ body::-webkit-scrollbar-thumb:hover {
       $("#cname").append('Choose Any one primary personnel');
            
     });
- 
+
+    $('.selectpicker1').selectpicker();
+        function gethours1() {
+                var h=0;
+                var m=0;
+                $('select.selectpicker1').find('option:selected').each(function() {
+                h += parseInt($(this).data('hour'));
+                  m += parseInt($(this).data('min'));
+                  
+                });
+                var realmin = m % 60;
+            var hours = Math.floor(m / 60);
+            h = h+hours;
+                
+            $("#time").val(h);
+                $("#minute").val(realmin);
+        }
+
+        function getprice1() {
+            var price=0;
+            $('select.selectpicker1').find('option:selected').each(function() {
+                price += parseFloat($(this).data('price'));
+            });
+                
+            $("#price").val(price.toFixed(2));
+        }
+
+        function getfrequency1() {
+            var frequency = "";
+            $("#frequency option").removeAttr('selected');
+            $('select.selectpicker1').find('option:selected').each(function() {
+                frequency = $(this).data('frequency');
+            });
+            $("#frequency option[value='"+frequency+"']").attr('selected', 'selected');
+        }
+    $(".selectpickers1").selectpicker();
+
+    $(document).on('change','#servicename',function(e) {
+    
+    gethours1();
+    getfrequency1();
+    var serviceid = $('#servicename').val();
+    var productid = $('#productname').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            $('#price').val(data.totalprice);
+          }
+      })
+
+
+})
+$(document).on('change','#productname',function(e) {
+    var serviceid = $('#servicename').val();
+    var productid = $('#productname').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            $('#price').val(data.totalprice);
+          }
+      })
+});
+
  </script>
 @endsection

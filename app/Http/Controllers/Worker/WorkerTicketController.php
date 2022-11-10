@@ -653,7 +653,7 @@ class WorkerTicketController extends Controller
           <div class="col-md-12 mb-3">
           <label>Select Products</label>
       <div class="d-flex align-items-center">
-        <select class="form-control selectpicker" data-live-search="false" multiple="" data-placeholder="Select Produts" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="productid[]" id="productid" style="height:auto;" required="">';
+        <select class="form-control selectpicker" data-live-search="true" multiple="" data-placeholder="Select Products" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="productid[]" id="productid" style="height:auto;" required="">';
 
               foreach($productData as $key => $value) {
                 $productids =explode(",", $quote->product_id);

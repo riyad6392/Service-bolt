@@ -673,6 +673,17 @@ i.fa.fa-plus.category-one {
           <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus second"></i></a>
         </div>
 	  </div>
+
+	  <div class="col-md-11 mb-3">
+	  	<select class="selectpickerp1 form-control {{$cname}}" name="productname[]" id="productname" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Products">
+	  		@foreach($productData as $key =>$value)
+				<option value="{{$value->id}}" data-price="{{$value->price}}">{{$value->productname}}</option>
+			@endforeach
+			</select>
+			<!-- <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus second"></i></a>
+        </div> -->
+	  </div>
 	   
 	   <div class="col-md-6 mb-3" style="display: none;">
 	  	<select class="form-select {{$wname}}" name="personnelid" id="personnelid">
@@ -841,7 +852,7 @@ i.fa.fa-plus.category-one {
 	 		}
 	 	@endphp
 		<div class="col-md-11 mb-3">
-	  	<select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" class="service" required="" multiple aria-label="Default select example" data-live-search="true">
+	  	<select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicenamet1" class="service" required="" multiple aria-label="Default select example" data-live-search="true">
 	  		@foreach($services as $key =>$value)
 				<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price1="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
 			@endforeach
@@ -850,6 +861,14 @@ i.fa.fa-plus.category-one {
           <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services1" class="" id="hidequoteservice2"><i class="fa fa-plus next-one"></i></a>
         </div>
 	   </div>
+
+	   	<div class="col-md-11 mb-3">
+			<select class="selectpickert1 form-control {{$cname}}" name="productname[]" id="productnamet1" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Products">
+				@foreach($productData as $key =>$value)
+				<option value="{{$value->id}}" data-price="{{$value->price}}">{{$value->productname}}</option>
+			@endforeach
+			</select>
+		</div>
 	   
 	   <div class="col-md-6 mb-3" style="display: none;">
 	  	<select class="form-select {{$wname}}" name="personnelid" id="personnelid">
@@ -1073,7 +1092,7 @@ i.fa.fa-plus.category-one {
   
 	 <div class="add-customer-modal d-flex justify-content-between align-items-center">
 	 <h5>Add Address</h5>
-     <button type="button" class="btn-close" data-bs-dismiss="modal" id="address" aria-label="Close"></button>
+     <button class="btn-close"  data-bs-dismiss="modal" aria-label="Close" id="quotecancel1212"></button>
      </div>
      
      
@@ -1191,7 +1210,7 @@ i.fa.fa-plus.category-one {
      
      
      <div class="col-lg-6 mb-3">
-     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel">Cancel</button>
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel_1">Cancel</button>
      </div>
      <div class="col-lg-6 mb-3">
      <button type="submit" class="btn btn-add btn-block">Add Customer</button>
@@ -1268,7 +1287,8 @@ i.fa.fa-plus.category-one {
      
      
      <div class="col-lg-6 mb-3">
-     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="ticketcancel">Cancel</button>
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="ticketcancelcustomer">Cancel</button>
+
      </div>
      <div class="col-lg-6 mb-3">
      <button type="submit" class="btn btn-add btn-block">Add Customer</button>
@@ -1381,7 +1401,8 @@ i.fa.fa-plus.category-one {
           </div>
           <div class="row mt-3">
           <div class="col-lg-6 mb-2">
-            <button class="btn btn-cancel btn-block" id="quotecancel3" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+
           </div>
           <div class="col-lg-6">
             <button type="submit" class="btn btn-add btn-block">Add a Service</button>
@@ -1493,7 +1514,7 @@ i.fa.fa-plus.category-one {
           </div>
           <div class="row mt-3">
           <div class="col-lg-6 mb-2">
-            <button class="btn btn-cancel btn-block" id="quotecancel4" data-bs-dismiss="modal">Cancel</button>
+            <button class="btn btn-cancel btn-block" id="quotecancel41" data-bs-dismiss="modal">Cancel</button>
           </div>
           <div class="col-lg-6">
             <button type="submit" class="btn btn-add btn-block">Add a Service</button>
@@ -1618,23 +1639,41 @@ $('#serviceform').on('submit', function(event) {
 
 	$("#ticketcancel").click(function() {
 		$("#add-tickets1").show();
-  	$("#add-customer2").hide();
+  		$("#add-customer2").hide();
+	});
+
+	$("#ticketcancelcustomer").click(function() {
+		$("#add-tickets1").show();
+  		$("#add-customer2").hide();
 	});
 	
 
   $("#quotecancel").click(function() {
 		$("#add-tickets").show();
-  	$("#add-customer").hide();
+  		$("#add-customer").hide();
+	});
+  $("#quotecancel_1").click(function() {
+		$("#add-tickets").show();
+  		$("#add-customer").hide();
 	});
 
 	$("#quotecancel3").click(function() {
 		$("#add-tickets").show();
   	$("#add-customer").hide();
 	});
+	$("#quotecancel31").click(function() {
+		$("#add-tickets").show();
+  	$("#add-customer").hide();
+	});
 
 	$("#quotecancel4").click(function() {
 		$("#add-tickets1").show();
-  	$("#add-services1").hide();
+  		$("#add-services1").hide();
+	});
+
+	$("#quotecancel41").click(function() {
+		$("#add-tickets1").show();
+  		$("#add-services1").hide();
 	});
 	
 	$('html').on('click','#hidequote1',function() {
@@ -1650,6 +1689,10 @@ $('#serviceform').on('submit', function(event) {
   	$("#add-address").hide();
 	});
 	$("#quotecancel12").click(function() {
+		$("#add-tickets").show();
+  	$("#add-address").hide();
+	});
+	$("#quotecancel1212").click(function() {
 		$("#add-tickets").show();
   	$("#add-address").hide();
 	});
@@ -1887,85 +1930,21 @@ $('#serviceform').on('submit', function(event) {
 
 		 
   	$(document).ready(function() {
-	   function gethours() {
-				var h=0;
-				var m=0;
-				$('select.selectpicker').find('option:selected').each(function() {
-			   	h += parseInt($(this).data('hour'));
-				  m += parseInt($(this).data('min'));
-				  
-				});
-				var realmin = m % 60;
-    		var hours = Math.floor(m / 60);
-    		h = h+hours;
-		    $("#time").val(h);
-				$("#minute").val(realmin);
-	    }
-
-	  function getprice() {
-	  	var price = 0;
-	  	$('select.selectpicker').find('option:selected').each(function() {
-			   	price += parseFloat($(this).data('price'));
-			});
-			
-			$("#price").val(price.toFixed(2));	
-	  }
-
-	  function getfrequency() {
-	  	var frequency = "";
-	  	$("#frequency option").removeAttr('selected');
-	  	$('select.selectpicker').find('option:selected').each(function() {
-			   	frequency = $(this).data('frequency');
-			});
-			$("#frequency option[value='"+frequency+"']").attr('selected', 'selected');
-			
-	  }
+	   
 		
-		$('select.selectpicker').on('change', function() {
-			gethours();
-			getprice();
-			getfrequency();
-		});
+		// $('select.selectpicker').on('change', function() {
+		// 	gethours();
+		// 	getprice();
+		// 	getfrequency();
+		// });
 		$('.selectpicker1').selectpicker();
-		function gethours1() {
-				var h=0;
-				var m=0;
-				$('select.selectpicker1').find('option:selected').each(function() {
-			   	h += parseInt($(this).data('hour'));
-				  m += parseInt($(this).data('min'));
-				  
-				});
-				var realmin = m % 60;
-    		var hours = Math.floor(m / 60);
-    		h = h+hours;
-				
-		    $("#time1").val(h);
-				$("#minute1").val(realmin);
-	    }
-
-	    function getprice1() {
-				var price = 0;
-	  		$('select.selectpicker1').find('option:selected').each(function() {
-			   	price += parseFloat($(this).data('price1'));
-				});
-			
-				$("#price1").val(price.toFixed(2));	
-	    }
-
-	    function getfrequency1() {
-		  	var frequency = "";
-		  	$("#frequency option").removeAttr('selected');
-		  	$('select.selectpicker1').find('option:selected').each(function() {
-				   	frequency = $(this).data('frequency');
-				});
-				$("#frequency option[value='"+frequency+"']").attr('selected', 'selected').change();
-			}
 		
-			$('select.selectpicker1').on('change', function() {
-				gethours1();
-				getprice1();
-				getfrequency1();
-			});
+		
+			// $('select.selectpicker1').on('change', function() {
+			// 	gethours1();
+			// 	getprice1();
+			// 	getfrequency1();
+			// });
 
 		$('#customerid').on('change', function() {
 			var customerid = this.value;
@@ -2221,5 +2200,168 @@ $(document).on('click','.service_list_dot',function(e) {
 	    }
 	})
  });
+$(".selectpickerp1").selectpicker();
+
+function gethours() {
+				var h=0;
+				var m=0;
+				$('select.selectpicker').find('option:selected').each(function() {
+			   	h += parseInt($(this).data('hour'));
+				  m += parseInt($(this).data('min'));
+
+				  
+				});
+				//if(h == NaN) {
+				var realmin = m % 60;
+	    		var hours = Math.floor(m / 60);
+	    		h = h+hours;
+			    $("#time").val(h);
+				$("#minute").val(realmin);
+			//}
+	    }
+
+	function getprice() {
+	  	var price = 0;
+	  	$('select.selectpicker').find('option:selected').each(function() {
+			   	price += parseFloat($(this).data('price'));
+			});
+			
+			$("#price").val(price.toFixed(2));	
+	}
+	function getpricep1() {
+	  	var price = parseFloat($("#price").val());
+	  	$('select.selectpickerp1').find('option:selected').each(function() {
+	  		price += parseFloat($(this).data('price'));
+		});
+		
+		$("#price").val(price.toFixed(2));	
+	  }
+
+	  function getfrequency() {
+	  	var frequency = "";
+	  	$("#frequency option").removeAttr('selected');
+	  	$('select.selectpicker').find('option:selected').each(function() {
+			   	frequency = $(this).data('frequency');
+			});
+			$("#frequency option[value='"+frequency+"']").attr('selected', 'selected');
+			
+	  }
+
+$(document).on('change','#servicename',function(e) {
+	
+	gethours();
+	//getprice();
+	getfrequency();
+	var serviceid = $('#servicename').val();
+    var productid = $('#productname').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            console.log(data.totalprice);
+            $('#price').val(data.totalprice);
+          }
+      })
+
+
+})
+$(document).on('change','#productname',function(e) {
+	//getpricep1();
+	var serviceid = $('#servicename').val();
+    var productid = $('#productname').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            console.log(data.totalprice);
+            $('#price').val(data.totalprice);
+          }
+      })
+});
+	$(".selectpickert1").selectpicker();
+
+	function gethours1() {
+		var h=0;
+		var m=0;
+		$('select.selectpicker1').find('option:selected').each(function() {
+	   	h += parseInt($(this).data('hour'));
+		  m += parseInt($(this).data('min'));
+		  
+		});
+		var realmin = m % 60;
+	var hours = Math.floor(m / 60);
+	h = h+hours;
+		
+	$("#time1").val(h);
+		$("#minute1").val(realmin);
+	}
+
+    function getprice1() {
+			var price = 0;
+  		$('select.selectpicker1').find('option:selected').each(function() {
+		   	price += parseFloat($(this).data('price1'));
+			});
+		
+			$("#price1").val(price.toFixed(2));	
+    }
+
+    function getfrequency1() {
+	  	var frequency = "";
+	  	$("#frequency option").removeAttr('selected');
+	  	$('select.selectpicker1').find('option:selected').each(function() {
+			   	frequency = $(this).data('frequency');
+			});
+		$("#frequency option[value='"+frequency+"']").attr('selected', 'selected').change();
+	}
+
+	$(document).on('change','#servicenamet1',function(e) {
+	
+	gethours1();
+	getfrequency1();
+	var serviceid = $('#servicenamet1').val();
+    var productid = $('#productnamet1').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            console.log(data.totalprice);
+            $('#price1').val(data.totalprice);
+          }
+      })
+
+
+})
+$(document).on('change','#productnamet1',function(e) {
+	var serviceid = $('#servicenamet1').val();
+    var productid = $('#productnamet1').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            console.log(data.totalprice);
+            $('#price1').val(data.totalprice);
+          }
+      })
+});
 </script>
 @endsection

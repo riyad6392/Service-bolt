@@ -427,24 +427,11 @@ $(document).ready(function() {
       }
    });
 
-   function gethours() {
-        var h=0;
-        var m=0;
-        $('select.selectpicker').find('option:selected').each(function() {
-          h += parseInt($(this).data('hour'));
-          m += parseInt($(this).data('min'));
-          
-        });
-        var realmin = m % 60;
-        var hours = Math.floor(m / 60);
-        h = h+hours;
-        $("#time").val(h);
-        $("#minute").val(realmin);
-      }
+   
     
-    $(document).on('change', 'select.selectpicker',function() {
-      gethours();
-    });
+    // $(document).on('change', 'select.selectpicker',function() {
+    //   gethours();
+    // });
 
 $(document).on('click','#service_list_dot',function(e) {
    var id = $(this).data('id');
@@ -489,6 +476,7 @@ $(document).on('click','#createctickets',function(e) {
               $('.selectpicker').selectpicker({
                 size: 3
               });
+              $(".selectpickerc1").selectpicker();
             }
         })
   });
@@ -673,6 +661,7 @@ $(document).on('click','#addnote',function(e) {
  });
 
  $(document).on('change','#servicename',function(e) {
+    gethours();
     var servicename = $('#servicename').val();
     var dataString =  'servicename='+ servicename;
     $.ajax({
@@ -693,5 +682,84 @@ $('table tr').each(function(a,b) {
          $(this).addClass('selectedrow').siblings().removeClass('selectedrow');
     });
   });
+
+
+function gethours() {
+        var h=0;
+        var m=0;
+        $('select.selectpicker').find('option:selected').each(function() {
+          h += parseInt($(this).data('hour'));
+          m += parseInt($(this).data('min'));
+          
+        });
+        var realmin = m % 60;
+        var hours = Math.floor(m / 60);
+        h = h+hours;
+        $("#time").val(h);
+        $("#minute").val(realmin);
+      }
+function gethours() {
+        var h=0;
+        var m=0;
+        $('select.selectpicker').find('option:selected').each(function() {
+          h += parseInt($(this).data('hour'));
+          m += parseInt($(this).data('min'));
+
+          
+        });
+        //if(h == NaN) {
+        var realmin = m % 60;
+          var hours = Math.floor(m / 60);
+          h = h+hours;
+          $("#time").val(h);
+        $("#minute").val(realmin);
+      //}
+      }
+
+  function getprice() {
+      var price = 0;
+      $('select.selectpicker').find('option:selected').each(function() {
+          price += parseFloat($(this).data('price'));
+      });
+      
+      $("#price").val(price.toFixed(2));  
+  }
+  function getpricep1() {
+      var price = parseFloat($("#price").val());
+      $('select.selectpickerc1').find('option:selected').each(function() {
+        price += parseFloat($(this).data('price'));
+    });
+    
+    $("#price").val(price.toFixed(2));  
+    }
+
+    function getfrequency() {
+      var frequency = "";
+      $("#frequency option").removeAttr('selected');
+      $('select.selectpicker').find('option:selected').each(function() {
+          frequency = $(this).data('frequency');
+      });
+      $("#frequency option[value='"+frequency+"']").attr('selected', 'selected');
+      
+    }
+
+$(document).on('change','#productname',function(e) {
+  //getpricep1();
+  var serviceid = $('#servicename').val();
+    var productid = $('#productname').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            console.log(data.totalprice);
+            $('#price').val(data.totalprice);
+          }
+      })
+});
 </script>
 @endsection
