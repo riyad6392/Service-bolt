@@ -225,7 +225,7 @@ class BillingController extends Controller
         $style1 = "";
     }
 
-    if($billingData[$datacount]->tickettotal==null || $billingData[$datacount]->tickettotal="" || $billingData[$datacount]->tickettotal == "0") {
+    if($billingData[$datacount]->tickettotal==null || $billingData[$datacount]->tickettotal=="" || $billingData[$datacount]->tickettotal == "0") {
         $newprice = $billingData[$datacount]->price;
     } else {
         $newprice = $billingData[$datacount]->tickettotal;
@@ -285,7 +285,7 @@ class BillingController extends Controller
         </div>';
       } else {
         $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.tickettotal','quote.givendate','quote.payment_status','quote.payment_mode','quote.ticket_status','quote.invoiceid','quote.personnelid','quote.duedate','quote.invoicenote', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
-        if($billingData[0]->tickettotal==null || $billingData[0]->tickettotal="" || $billingData[0]->tickettotal == "0") {
+        if($billingData[0]->tickettotal==null || $billingData[0]->tickettotal=="" || $billingData[0]->tickettotal == "0") {
             $newprice = $billingData[0]->price;
         } else {
             $newprice = $billingData[0]->tickettotal;

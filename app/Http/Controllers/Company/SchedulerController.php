@@ -785,24 +785,28 @@ class SchedulerController extends Controller
         } 
         $servicename = implode(',', $sname);
 
+        $productid = "";
+        $productname = "";
         if(isset($request->productname)) {
             $productid = implode(',', $request->productname);
         }
-
-        $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+        if($request->productname!="") {
+            $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
              
-        foreach ($productdetails as $key => $value) {
-            $pname[] = $value['productname'];
-        }
+            foreach ($productdetails as $key => $value) {
+                $pname[] = $value['productname'];
+            }
 
-        $productname = implode(',', $pname);
+            $productname = $productdetails[0]->productname;   
+        }
+        
 
         $auth_id = auth()->user()->id;
         $data['userid'] = $auth_id;
         $data['customerid'] = $request->customerid;
         $data['serviceid'] =  $serviceid;
         $data['servicename'] = $servicedetails[0]->servicename;
-        $data['product_name'] = $productdetails[0]->productname;
+        $data['product_name'] = $productname;
         $data['product_id'] = $productid;
 
         //$data['product_name'] = $pname;
@@ -1434,14 +1438,18 @@ class SchedulerController extends Controller
       //$productid = implode(',', array_unique($pid));
              
       $servicename = implode(',', $sname); 
-        
-    $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
-       
-    foreach ($productdetails as $key => $value) {
-      $pname[] = $value['productname'];
-    }
 
-    $productname = implode(',', $pname);
+      $productname = null;
+     if($request->productname!="") {
+        $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+       
+        foreach ($productdetails as $key => $value) {
+          $pname[] = $value['productname'];
+        }
+
+        $productname = $productdetails[0]->productname; 
+     }   
+    
 
       $quote = Quote::where('id', $request->quoteid)->orWhere('parentid',$request->quoteid)->get();
       foreach($quote as $key =>$quote) {
@@ -1450,7 +1458,7 @@ class SchedulerController extends Controller
       } else {
         $quote->serviceid = null;
       }
-      $productid = implode(',', $request->productname);
+      
        if(isset($request->productname)) {
           $quote->product_id = implode(',', $request->productname);
         }  else {
@@ -1458,7 +1466,7 @@ class SchedulerController extends Controller
       }
 
       $quote->servicename = $servicedetails[0]->servicename;
-      $quote->product_name = $productdetails[0]->productname;
+      $quote->product_name = $productname;
 
       $quote->radiogroup = $request->radiogroup;
       $quote->frequency = $request->frequency;

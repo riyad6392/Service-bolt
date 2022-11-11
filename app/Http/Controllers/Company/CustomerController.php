@@ -350,18 +350,22 @@ class CustomerController extends Controller
       } 
       
       $servicename = implode(',', $sname);
-
+      $productid = "";
+      $productname = "";
       if(isset($request->productname)) {
         $productid = implode(',', $request->productname);
       }
 
-      $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+      if($request->productname!="") {
+        $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
              
-      foreach ($productdetails as $key => $value) {
-        $pname[] = $value['productname'];
-      }
+        foreach ($productdetails as $key => $value) {
+          $pname[] = $value['productname'];
+        }
 
-      $productname = implode(',', $pname);
+        $productname = $productdetails[0]->productname;
+      }
+      
 
       $auth_id = auth()->user()->id;
       
@@ -371,7 +375,7 @@ class CustomerController extends Controller
       $data['product_id'] = $productid;
       $data['customername'] =  $request->customername;
       $data['servicename'] = $servicedetails[0]->servicename;
-      $data['product_name'] = $productdetails[0]->productname;
+      $data['product_name'] = $productname;
       //$data['product_name'] = $pname;
       $data['personnelid'] = $request->personnelid;
       $data['radiogroup'] = $request->radiogroup;
