@@ -1350,7 +1350,7 @@ class SchedulerController extends Controller
                   foreach($productData as $key => $value) {
                   $productids =explode(",", $quotedetails[0]->product_id);
 
-                    if($value->id == $productids) {
+                    if(in_array($value->id, $productids)) {
                     $selectedp1 = "selected";
                   } else {
                     $selectedp1 = "";
