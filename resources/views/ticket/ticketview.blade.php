@@ -550,6 +550,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   
 @endphp
   {{$quotedetails[0]->givendate}} - {{$quotedetails[0]->giventime}}</span>
+  <a class="btn add-btn-yellow1 w-40 viewinvoice" data-id="{{$quotedetails[0]->id}}" data-bs-toggle="modal" data-bs-target="#view-invoice" style="margin-left: 70px;">Invoice</a>
 </h5>
 <div class="text-lead mb-3">
     <p>Customer name: {{$quotedetails[0]->customername}}</p>
@@ -575,13 +576,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     </div>
     <div class="col-md-6">
       <div>
-        <p>Price: ${{$quotedetails[0]->price}}</p>
+        <p>Billing Price: ${{$quotedetails[0]->price}}</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div>
+        <p>Ticket Total Price: ${{$quotedetails[0]->tickettotal}}</p>
       </div>
     </div>
     
     <div class="col-md-6">
       <div>
 <p>Service: {{$servicename}}</p></div></div>
+@if($productname!="")
+   <div class="col-md-6">
+      <div>
+<p>Product: {{$productname}}</p></div></div>
+@endif
 <div class="col-md-6">
   <div>
 <p>@if($quotedetails[0]->description!="")Ticket Description: {{$quotedetails[0]->description}}@endif</p></div></div>
@@ -601,7 +612,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <p>@if($quotedetails[0]->customernotes!="") Customer Notes:{!!$quotedetails[0]->customernotes!!}@endif</p>
     </div>
 </div>
-<a class="btn add-btn-yellow1 w-40 viewinvoice" data-id="{{$quotedetails[0]->id}}" data-bs-toggle="modal" data-bs-target="#view-invoice">Invoice</a>
+
 
 @php
     if($quotedetails[0]->imagelist!="") 
