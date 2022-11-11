@@ -225,6 +225,12 @@ class BillingController extends Controller
         $style1 = "";
     }
 
+    if($billingData[$datacount]->tickettotal==null || $billingData[$datacount]->tickettotal="" || $billingData[$datacount]->tickettotal == "0") {
+        $newprice = $billingData[$datacount]->price;
+    } else {
+        $newprice = $billingData[$datacount]->tickettotal;
+    }
+
       $html ='<div>
           <div class="card">
             <div class="card-body p-4">
@@ -246,7 +252,7 @@ class BillingController extends Controller
                   </div>
                   <div class="mb-4">
                     <p class="number-1">Ticket Total Price</p>
-                    <h6 class="heading-h6">$'.$billingData[$datacount]->tickettotal.'</h6>
+                    <h6 class="heading-h6">$'.$newprice.'</h6>
                   </div>
                   <input type="hidden" name="ticketid" id="ticketid" value="'.$billingData[$datacount]->id.'">
                   <input type="hidden" name="amount" id="amount" value="'.$billingData[$datacount]->price.'">
@@ -279,7 +285,11 @@ class BillingController extends Controller
         </div>';
       } else {
         $billingData = DB::table('quote')->select('quote.id','quote.customerid','quote.price','quote.tickettotal','quote.givendate','quote.payment_status','quote.payment_mode','quote.ticket_status','quote.invoiceid','quote.personnelid','quote.duedate','quote.invoicenote', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
-        
+        if($billingData[0]->tickettotal==null || $billingData[0]->tickettotal="" || $billingData[0]->tickettotal == "0") {
+            $newprice = $billingData[0]->price;
+        } else {
+            $newprice = $billingData[0]->tickettotal;
+        }
         if($billingData[0]->invoiceid=="") {
           $quote = Quote::where('id',$request->serviceid)->first();
           $randomid = rand(100,199);
@@ -335,7 +345,7 @@ class BillingController extends Controller
                   </div>
                   <div class="mb-4">
                     <p class="number-1">Ticket Total Price</p>
-                    <h6 class="heading-h6">$'.$billingData[0]->tickettotal.'</h6>
+                    <h6 class="heading-h6">$'.$newprice.'</h6>
                   </div>
                   <input type="hidden" name="ticketid" id="ticketid" value="'.$billingData[0]->id.'">
                   <input type="hidden" name="amount" id="amount" value="'.$billingData[0]->price.'">
