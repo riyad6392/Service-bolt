@@ -119,6 +119,7 @@
      <table id="example" class="table no-wrap table-new table-list align-items-center">
     <thead>
     <tr>
+        <th style="display:none;">Id</th>
         <th>Customer</th>
         <th>Ticket Total</th>
         <th>Personnel</th>
@@ -132,6 +133,7 @@
     @foreach($billingData as $key=>$value)
       <tr class="user-hover showSingle" target="{{$i}}" data-id="{{$value->id}}">
         <input type="hidden" name="personnelid" id="personnelid" value="{{$value->personnelid}}">
+        <td style="display: none;">{{$value->id}}</td>
         <td>{{$value->customername}}</td>
         <td>{{number_format((float)$value->price, 2, '.', '')}}</td>
         <td>

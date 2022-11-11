@@ -136,6 +136,7 @@ class TicketController extends Controller
 	      $data['description'] = $request->description;
 	      $data['customername'] =  $customer->customername;
         $data['address'] = $request->address;
+        $data['tickettotal'] = $request->ticketprice;
 
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
@@ -153,6 +154,7 @@ class TicketController extends Controller
         $quoteee = Quote::where('id', $quotelastid->id)->first();
         $randomid = rand(100,199);
         $quoteee->invoiceid = $randomid.''.$quotelastid->id;
+
         $quoteee->save();
 
     if($customer->email!=null) { 
@@ -529,6 +531,7 @@ class TicketController extends Controller
 
     public function ticketcreate(Request $request)
     {
+
         $customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
 
         $serviceid = implode(',', $request->servicename);
@@ -576,7 +579,7 @@ class TicketController extends Controller
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
         $data['address'] = $request->address;
-
+        $data['tickettotal'] = $request->ticketprice1;
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
         $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
@@ -668,7 +671,7 @@ class TicketController extends Controller
        <h5>Edit</h5>
        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
        </div>';
-       $html .='<div class="row customer-form" id="product-box-tabs">
+       $html .='<input type="hidden" value="'.$quotedetails[0]->tickettotal.'" name="tickettotaledit" id="tickettotaledit"><div class="row customer-form" id="product-box-tabs">
        <input type="hidden" value="'.$request->id.'" name="quoteid">
           <div class="col-md-12 mb-2">
             <label>Select Customer</label>
@@ -704,7 +707,7 @@ class TicketController extends Controller
         </div>
           <div class="col-md-12 mb-2">
             <label>Select a Service</label>
-            <select class="form-control selectpicker2" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" style="height:auto;">';
+            <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" style="height:auto;">';
               foreach($allservices as $key => $value) {
                 $serviceids =explode(",", $quotedetails[0]->serviceid);
                  if(in_array($value->id, $serviceids)){
@@ -720,7 +723,7 @@ class TicketController extends Controller
 
           <div class="col-md-12 mb-2">
             <label>Select Products</label>
-            <select class="form-control selectpicker2" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" style="height:auto;" data-placeholder="Select Products">';
+            <select class="form-control selectpickerp1" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" style="height:auto;" data-placeholder="Select Products">';
               foreach($allproducts as $key => $value) {
                 $productids =explode(",", $quotedetails[0]->product_id);
                  if(in_array($value->id, $productids)){
@@ -791,7 +794,7 @@ class TicketController extends Controller
           <div class="col-md-12 mb-3 position-relative">
             <label>Price</label>
 <i class="fa fa-dollar" style="position: absolute;top: 41px;left: 27px;"></i>
-            <input type="text" class="form-control" placeholder="Price" name="price" id="price" value="'.$quotedetails[0]->price.'" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+            <input type="text" class="form-control" placeholder="Price" name="price" id="priceticketedit" value="'.$quotedetails[0]->price.'" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
            </div>
            <div class="col-md-12 mb-3">
             <label style="position: relative;left: 0px;margin-bottom: 11px;">ETC</label>
@@ -871,7 +874,7 @@ class TicketController extends Controller
       $quote->description = $request->description;
       $quote->customername =  $customer->customername;
       $quote->address = $request->address;
-
+      $quote->tickettotal = $request->tickettotaledit;
       $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
       $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
@@ -1165,7 +1168,7 @@ class TicketController extends Controller
     } 
 
     $servicename = implode(',', $sname);
-    $productids = explode(',', $tdata->productid);
+    $productids = explode(',', $tdata->product_id);
 
     $pdetails = Inventory::select('productname','id')->whereIn('id', $productids)->get();
     if(count($pdetails)>0) {
@@ -1227,6 +1230,7 @@ class TicketController extends Controller
         $sum1+= (int)$value['price'];
       }
       $totalprice = $sum+$sum1;
+
 
       return json_encode(['totalprice' =>$totalprice]);
       die;

@@ -692,6 +692,7 @@ body::-webkit-scrollbar-thumb:hover {
           $custmername = "active-focus";
         }
       @endphp
+      <input type="hidden" name="tickettotal" id="tickettotal" value="">
      <div class="row customer-form">
      <div class="col-md-12 mb-2">
        <div class="input_fields_wrap">
@@ -1625,6 +1626,7 @@ body::-webkit-scrollbar-thumb:hover {
           refresh: true,
           success:function(data) {
             $('#price').val(data.totalprice);
+            $('#tickettotal').val(data.totalprice);
           }
       })
 
@@ -1642,7 +1644,8 @@ $(document).on('change','#productname',function(e) {
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            $('#price').val(data.totalprice);
+            $('#price').val(data.totalprice); 
+            $('#tickettotal').val(data.totalprice);
           }
       })
 });

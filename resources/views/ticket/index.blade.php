@@ -621,6 +621,7 @@ i.fa.fa-plus.category-one {
 	 			$custmername = "active-focus";
 	 		}
 	 	@endphp
+	 	<input type="hidden" name="ticketprice" id="ticketprice" value="">
 	   <div class="row customer-form">
 	   <div class="col-md-11 mb-2">
 		   <div class="input_fields_wrap">
@@ -810,6 +811,7 @@ i.fa.fa-plus.category-one {
 	 			$custmername = "active-focus";
 	 		}
 	 	@endphp
+	 	<input type="hidden" name="ticketprice1" id="ticketprice1" value="">
 	   <div class="row customer-form">
 	   <div class="col-md-12 mb-2">
 		   <div class="input_fields_wrap">
@@ -2046,9 +2048,10 @@ $('#serviceform').on('submit', function(event) {
             success:function(data) {
               console.log(data.html);
               $('#viewmodaldata1').html(data.html);
-              $('.selectpicker2').selectpicker({
+              $('.selectpicker').selectpicker({
                 size: 3
               });
+              $(".selectpickerp1").selectpicker();
             }
         })
   });
@@ -2250,10 +2253,9 @@ function gethours() {
 $(document).on('change','#servicename',function(e) {
 	
 	gethours();
-	//getprice();
 	getfrequency();
 	var serviceid = $('#servicename').val();
-    var productid = $('#productname').val(); 
+	var productid = $('#productname').val(); 
     var qid = "";
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
     $.ajax({
@@ -2263,9 +2265,10 @@ $(document).on('change','#servicename',function(e) {
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            console.log(data.totalprice);
+            //console.log(data.totalprice);
             $('#price').val(data.totalprice);
-          }
+            $('#ticketprice').val(data.totalprice);
+           }
       })
 
 
@@ -2283,11 +2286,57 @@ $(document).on('change','#productname',function(e) {
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            console.log(data.totalprice);
+            //console.log(data.totalprice);
             $('#price').val(data.totalprice);
-          }
+            $('#ticketprice').val(data.totalprice);
+		  }
       })
 });
+
+$(document).on('change','#serviceid',function(e) {
+	
+	gethours();
+	//getprice();
+	getfrequency();
+	var serviceid = $('#serviceid').val();
+	var productid = $('#productid').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            //console.log(data.totalprice);
+            $('#priceticketedit').val(data.totalprice);
+            $('#tickettotaledit').val(data.totalprice);
+           }
+      })
+
+
+})
+$(document).on('change','#productid',function(e) {
+	//getpricep1();
+	var serviceid = $('#serviceid').val();
+    var productid = $('#productid').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            //console.log(data.totalprice);
+            $('#priceticketedit').val(data.totalprice);
+            $('#tickettotaledit').val(data.totalprice);
+		  }
+      })
+});
+
 	$(".selectpickert1").selectpicker();
 
 	function gethours1() {
@@ -2341,7 +2390,8 @@ $(document).on('change','#productname',function(e) {
           success:function(data) {
             console.log(data.totalprice);
             $('#price1').val(data.totalprice);
-          }
+            $('#ticketprice1').val(data.totalprice);
+           }
       })
 
 
@@ -2360,6 +2410,8 @@ $(document).on('change','#productnamet1',function(e) {
           success:function(data) {
             console.log(data.totalprice);
             $('#price1').val(data.totalprice);
+            $('#ticketprice1').val(data.totalprice);
+
           }
       })
 });

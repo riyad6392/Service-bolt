@@ -660,22 +660,7 @@ $(document).on('click','#addnote',function(e) {
   
  });
 
- $(document).on('change','#servicename',function(e) {
-    gethours();
-    var servicename = $('#servicename').val();
-    var dataString =  'servicename='+ servicename;
-    $.ajax({
-          url:"{{url('company/customer/calculateprice')}}",
-          data: dataString,
-          method: 'post',
-          dataType: 'json',
-          refresh: true,
-          success:function(data) {
-            console.log(data.totalprice);
-            $('#price').val(data.totalprice);
-          }
-      })
-   });
+
 
 $('table tr').each(function(a,b) {
     $(b).click(function() {
@@ -758,8 +743,29 @@ $(document).on('change','#productname',function(e) {
           success:function(data) {
             console.log(data.totalprice);
             $('#price').val(data.totalprice);
+            $('#tickettotal').val(data.totalprice);
           }
       })
 });
+
+ $(document).on('change','#servicename',function(e) {
+    gethours();
+    var serviceid = $('#servicename').val();
+    var productid = $('#productname').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+           url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            $('#price').val(data.totalprice);
+            $('#tickettotal').val(data.totalprice);
+            
+          }
+      })
+   });
 </script>
 @endsection

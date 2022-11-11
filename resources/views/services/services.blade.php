@@ -553,7 +553,7 @@ i.fa.fa-plus.true-condition {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-				console.log(data);
+				//console.log(data);
 				if(data.status=='success') {
 				$("#saveaddress").attr("disabled", true);
 				$(".find_msg").html(data.msg);
@@ -589,7 +589,7 @@ i.fa.fa-plus.true-condition {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
+              //console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -622,7 +622,7 @@ i.fa.fa-plus.true-condition {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
+              //console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -656,7 +656,7 @@ $(document).on('click','#editService',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
+              //console.log(data.html);
               $('#viewquotemodaldata').html(data.html);
             }
         })
@@ -750,13 +750,13 @@ $(document).on('click','#editService',function(e) {
         dataType: 'json',
         success: function (data) {
             $("#output").text(data);
-            console.log("SUCCESS : ", data);
+            //console.log("SUCCESS : ", data);
             $("#btnSubmit").prop("disabled", false);
             location.reload();
         },
         error: function (e) {
             $("#output").text(e.responseText);
-            console.log("ERROR : ", e);
+            //console.log("ERROR : ", e);
             $("#btnSubmit").prop("disabled", false);
         }
       });
@@ -776,7 +776,7 @@ $(document).on('click','#editService',function(e) {
             cache: false,
             processData: false,
             success:function(data) {
-              console.log(data);
+              //console.log(data);
               $("#add-customer").modal('hide');
               $("#customerid_service").append("<option value="+data.id+">"+data.customername+"</option>");
               //$("#customerid_service").selectpicker('refresh');
@@ -798,7 +798,7 @@ $(document).on('click','#editService',function(e) {
             cache: false,
             processData: false,
             success:function(data) {
-              console.log(data);
+              //console.log(data);
               $("#add-customer").modal('hide');
               $("#customerid_service").append("<option value="+data.id+">"+data.customername+"</option>");
               //$("#customerid_service").selectpicker('refresh');

@@ -33,7 +33,7 @@
                 <td style="vertical-align: top; padding: 17px">
                     <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><img src="{{$cimage}}" style="width: 40%"></p>
                     <h4 style="color: #fff">
-                    <p style="margin: 5px 0px;">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
+                    <p style="margin: 5px 0px;color:#fff;">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
                     </h4>
                 </td>
             </tr>
@@ -52,6 +52,7 @@
         
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Phone Number -</span> <span style="color: black; font-weight: bold;">{{$phone}}</span></p>
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Email -</span> <span style="color: black; font-weight: bold;">{{$email}}</span></p>
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Service Address -</span> <span style="color: black; font-weight: bold;">{{$address}}</span></p>
     </td>
     <td style="vertical-align: top; padding: 17px">
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Invoice:<br><span style="color: black; font-weight: bold;">#{{ $invoiceId }} </span></p>
@@ -77,7 +78,7 @@
     <tbody style="padding: 12px; text-align: center;">
         @php
             
-      $servicedetails = App\Models\Service::select('servicename','price')
+      $servicedetails = App\Models\Service::select('servicename','price','description')
     ->whereIn('id', $serviceid)->get();
 
     $userdetails = App\Models\User::select('taxtype','taxvalue','servicevalue','productvalue')
@@ -102,6 +103,7 @@
       $pdetails = 
       App\Models\Inventory::select('productname','id','price','description')
     ->whereIn('id', $productid)->get();
+
       $sum1 = 0;
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
@@ -134,13 +136,14 @@
         @endphp
     <tr>
         <td style="padding: 15px;">{{ $value['servicename'] }}</td>
-        <td style="padding: 15px;">-</td>
+        <td style="padding: 15px;">{{ $value['description'] }}</td>
         <td style="padding: 15px;">1</td>
         <td style="padding: 15px;">${{ $value['price'] }}</td>
         <td style="padding: 15px;">{{$txtpercentage}}%</td>
         <td style="padding: 15px;">${{ $value['price'] + $txvalue }}</td>
     </tr>
     @endforeach
+
     @foreach($pdetails as $key => $value)
     @php
         $txvalue1 = 0;
@@ -173,11 +176,11 @@
     <tbody>
      <tr>
         <td style="vertical-align: top; padding: 17px;background-color: {{$color}};">
-         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 20px;">Invoice Note:
-            <br><span style="color: #ccc;  font-size: 16px;">@if(@$invoicenote){{@$invoicenote}}@else --- @endif</span></p>
+         <p style="margin: 0px 0 5px 0;color: #fff; font-size: 20px;">Invoice Note:
+            <br><span style="color: #fff;  font-size: 16px;">@if(@$invoicenote){{@$invoicenote}}@else --- @endif</span></p>
         </td>
         <td style="width: 50%; padding: 12px;background-color: {{$color}}; border-radius: 10px;">
-            <h5 style="margin: 0px 0 5px 0;color: #ccc;font-size: 22px; margin-left: 74%">Total:<br><h1 style="color: #fff; font-weight: bold; font-size: 36px;">${{ $totalprice }} </h1></h5>
+            <h5 style="margin: 0px 0 5px 0;color: #fff;font-size: 22px; margin-left: 74%">Total:<br><h1 style="color: #fff; font-weight: bold; font-size: 36px;">${{ $totalprice }} </h1></h5>
 
         </td>
         </tr>

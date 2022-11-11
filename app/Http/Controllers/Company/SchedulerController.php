@@ -820,7 +820,7 @@ class SchedulerController extends Controller
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
         $data['address'] = $request->address;
-
+        $data['tickettotal'] = $request->tickettotal;
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
         $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
@@ -1305,7 +1305,7 @@ class SchedulerController extends Controller
        <h5>Edit</h5>
        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
        </div>';
-       $html .='<div class="row customer-form" id="product-box-tabs">
+       $html .='<input type="hidden" name="tickettotal" id="tickettotal" value="'.$quotedetails[0]->tickettotal.'"><div class="row customer-form" id="product-box-tabs">
        <input type="hidden" value="'.$request->id.'" name="quoteid">
           <div class="col-md-12 mb-2">
             <label>Customer Name</label>
@@ -1424,6 +1424,7 @@ class SchedulerController extends Controller
 
     public function sticketupdate(Request $request)
     {
+
       //$customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
 
       $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->servicename)->get();
@@ -1476,7 +1477,7 @@ class SchedulerController extends Controller
       $quote->etc = $request->etc;
       $quote->description = $request->description;
       $quote->address = $request->address;
-
+      $quote->tickettotal = $request->tickettotal;
       $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
       $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 

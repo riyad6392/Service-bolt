@@ -252,7 +252,7 @@ class CustomerController extends Controller
              
       $html  .='<div class="row customer-form"><div class="col-md-12 mb-2">';
 
-        $html .='<input type="hidden" name="customername" id="customername" value="'.$customer[0]->customername.'"><div class="input_fields_wrap">
+        $html .='<input type="hidden" name="tickettotal" id="tickettotal" value=""><input type="hidden" name="customername" id="customername" value="'.$customer[0]->customername.'"><div class="input_fields_wrap">
           <div class="mb-3">
             <select class="form-select" name="customerid" id="customerid" required="" readonly="">';
                 foreach($customer as $key => $value) {
@@ -386,6 +386,8 @@ class CustomerController extends Controller
       $data['etc'] = $request->etc;
       $data['description'] = $request->description;
       $data['address'] = $request->address;
+      $data['tickettotal'] = $request->tickettotal;
+      
       $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
         $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
@@ -974,7 +976,7 @@ class CustomerController extends Controller
       $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
       $serviceid = explode(',', $tdata->serviceid);
 
-      $servicedetails = Service::select('servicename','productid')->whereIn('id', $serviceid)->get();
+      $servicedetails = Service::select('servicename','productid','description')->whereIn('id', $serviceid)->get();
              
       foreach ($servicedetails as $key => $value) {
         $pid[] = $value['productid'];
@@ -982,9 +984,8 @@ class CustomerController extends Controller
       } 
 
       $servicename = implode(',', $sname);
-      $productids = explode(',', $tdata->productid);
-
-      $pdetails = Inventory::select('productname','id')->whereIn('id', $productids)->get();
+      $productids = explode(',', $tdata->product_id);
+      $pdetails = Inventory::select('productname','id','description')->whereIn('id', $productids)->get();
       if(count($pdetails)>0) {
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];

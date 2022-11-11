@@ -1158,8 +1158,8 @@ class WorkerTicketController extends Controller
       }
       $totalprice = $sum+$sum1;
 
-      // $quote = Quote::where('id', $request->qid)->first();
-      // $quote->price = $totalprice;
+      $quote = Quote::where('id', $request->qid)->first();
+      $quote->tickettotal = $totalprice;
       // $quote->serviceid = $request->serviceid;
       // $quote->product_id = $request->productid;
 

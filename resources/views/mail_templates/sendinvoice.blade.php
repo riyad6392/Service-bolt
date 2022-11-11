@@ -76,7 +76,7 @@
     <tbody style="padding: 12px; text-align: center;">
         @php
             $serviceidarray = explode(',', $serviceid);
-      $servicedetails = App\Models\Service::select('servicename','price')
+      $servicedetails = App\Models\Service::select('servicename','price','description')
     ->whereIn('id', $serviceidarray)->get();
       $sum = 0;
       foreach ($servicedetails as $key => $value) {

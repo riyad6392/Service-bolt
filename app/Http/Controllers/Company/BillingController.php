@@ -48,7 +48,7 @@ class BillingController extends Controller
         }
       
       $totalbillingData = DB::table('quote')
-        ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname', DB::raw('sum(price) as totalprice'),'quote.id',DB::raw('COUNT(quote.id) as totalticket'))
+        ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname', DB::raw('sum(price) as totalprice'),DB::raw('sum(tickettotal) as tickettotalprice'),'quote.id',DB::raw('COUNT(quote.id) as totalticket'))
         ->join('customer', 'customer.id', '=', 'quote.customerid')
         ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
         ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.givenstartdate','!=',null)
@@ -134,7 +134,7 @@ class BillingController extends Controller
         $date = $request->from;
         if(!isset($request->to)) {
           $todate = $date;
-        } else{
+        } else {
           $todate = $request->to;
         }
         
@@ -154,7 +154,7 @@ class BillingController extends Controller
             $billingData->where('quote.personnelid',$pid);
         }
         $billingData= $billingData->orderBy('quote.id','desc')->get();
-
+        
 //->where('quote.personnelid',$pid)
         $table="quote";
         $fields = DB::getSchemaBuilder()->getColumnListing($table);
@@ -557,7 +557,7 @@ class BillingController extends Controller
       } 
 
       $servicename = implode(',', $sname);
-      $productids = explode(',', $tdata->productid);
+      $productids = explode(',', $tdata->product_id);
 
       $pdetails = Inventory::select('productname','id')->whereIn('id', $productids)->get();
       if(count($pdetails)>0) {
@@ -760,7 +760,7 @@ class BillingController extends Controller
         } 
 
         $servicename = implode(',', $sname);
-        $productids = explode(',', $tdata->productid);
+        $productids = explode(',', $tdata->product_id);
 
         $pdetails = Inventory::select('productname','id')->whereIn('id', $productids)->get();
         if(count($pdetails)>0) {
