@@ -86,10 +86,17 @@
       $i = 1;
     @endphp
     @foreach($totalbillingData as $key=>$value)
+      @php
+        if($value->tickettotalprice==null || $value->tickettotalprice==0 || $value->tickettotalprice=="") {
+          $newprice = $value->totalprice;
+        } else {
+          $newprice = $value->tickettotalprice;
+        }
+      @endphp
       <tr class="" target="{{$i}}" data-id="{{$value->id}}">
         <td>{{date('m-d-Y', strtotime($value->date))}}</td>
         <td>{{$value->totalticket}}</td>
-        <td>{{number_format((float)$value->tickettotalprice, 2, '.', '')}}</td>
+        <td>{{number_format((float)$newprice, 2, '.', '')}}</td>
         <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
         <td><a href="{{url('company/billing/billingview/')}}?from={{$value->date}}" class="user-hover" style="color:#29DBBA;">View</a></td>
       </tr>

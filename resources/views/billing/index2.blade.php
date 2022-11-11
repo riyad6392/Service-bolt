@@ -131,11 +131,18 @@
       $i = 1;
     @endphp
     @foreach($billingData as $key=>$value)
+       @php
+        if($value->tickettotal==null || $value->tickettotal==0 || $value->tickettotal=="") {
+          $newprice = $value->price;
+        } else {
+          $newprice = $value->tickettotal;
+        }
+      @endphp
       <tr class="user-hover showSingle" target="{{$i}}" data-id="{{$value->id}}">
         <input type="hidden" name="personnelid" id="personnelid" value="{{$value->personnelid}}">
         <td style="display: none;">{{$value->id}}</td>
         <td>{{$value->customername}}</td>
-        <td>{{number_format((float)$value->tickettotal, 2, '.', '')}}</td>
+        <td>{{number_format((float)$newprice, 2, '.', '')}}</td>
         <td>
           @if($value->personnelname!="")
             {{@$value->personnelname}}
