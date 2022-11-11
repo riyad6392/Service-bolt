@@ -135,7 +135,7 @@
         <input type="hidden" name="personnelid" id="personnelid" value="{{$value->personnelid}}">
         <td style="display: none;">{{$value->id}}</td>
         <td>{{$value->customername}}</td>
-        <td>{{number_format((float)$value->price, 2, '.', '')}}</td>
+        <td>{{number_format((float)$value->tickettotal, 2, '.', '')}}</td>
         <td>
           @if($value->personnelname!="")
             {{@$value->personnelname}}

@@ -56,16 +56,8 @@
     	<div class="card card-pay mb-3">
 	  <div class="card-body">
 	  <h4>Paid succesfully.</h4>
-	  @php
-	  	$userdetails = App\Models\User::select('taxtype','taxvalue')
-    ->where('id', auth()->user()->id)->first();
-    	if($userdetails->taxtype == "allservice" || $userdetails->taxtype == "both") {
-          $txvalue = $price + $price*$userdetails->taxvalue/100; 
-      } else {
-          $txvalue = $price;
-      }
-	  @endphp
-	  <h4>Total: <span>${{number_format((float)$txvalue, 2, '.', '')}}</span></h4>
+	  
+	  <h4>Total: <span>${{number_format((float)$price, 2, '.', '')}}</span></h4>
 	  
 	  
 	
@@ -80,16 +72,8 @@
 	  <p>@if($servicename!="") Service Name - {{$servicename}}@endif</p>
 	  <p>@if($productname!="") Product Name - {{$productname}} @endif</p>
 	  <h4>You have to pay</h4>
-	  @php
-	  	$userdetails = App\Models\User::select('taxtype','taxvalue')
-    ->where('id', auth()->user()->id)->first();
-    	if($userdetails->taxtype == "allservice" || $userdetails->taxtype == "both") {
-          $txvalue = $price + $price*$userdetails->taxvalue/100; 
-      } else {
-          $txvalue = $price;
-      }
-	  @endphp
-	  <h4>Total: <span>${{number_format((float)$txvalue, 2, '.', '')}}</span></h4>
+	  
+	  <h4>Total: <span>${{number_format((float)$price, 2, '.', '')}}</span></h4>
 	  
 	  
 	
@@ -141,16 +125,8 @@
 	  <p>@if($servicename!="") Service Name - {{$servicename}}@endif</p>
 	  <p>@if($productname!="") Product Name - {{$productname}} @endif</p>
 	  <h4>You have to pay</h4>
-	  @php
-	  	$userdetails = App\Models\User::select('taxtype','taxvalue')
-    ->where('id', auth()->user()->id)->first();
-    	if($userdetails->taxtype == "allservice" || $userdetails->taxtype == "both") {
-          $txvalue = $price + $price*$userdetails->taxvalue/100; 
-      } else {
-          $txvalue = $price;
-      }
-	  @endphp
-	  <h4>Total: <span>${{number_format((float)$txvalue, 2, '.', '')}}</span></h4>
+	  
+	  <h4>Total: <span>${{number_format((float)$price, 2, '.', '')}}</span></h4>
 	  
 	  
 	
@@ -178,7 +154,7 @@
 									<div class="mb-3">
 									<label class="form-label">Enter Cash Amount</label>
 									<input type="hidden" class="form-control form-control-2" name="method" id="method"  value="Cash" placeholder="">
-									<input type="text" class="form-control form-control-2" name="amount" required id="amount"  value="{{$txvalue}}" placeholder="">
+									<input type="text" class="form-control form-control-2" name="amount" required id="amount"  value="{{$price}}" placeholder="">
 									
 									</div>
 									<div class="mt-4 text-center">
@@ -211,7 +187,7 @@
 									
 										<div class="mb-3">
 									<label class="form-label">Amount</label>
-									<input type="text" class="form-control form-control-2" name="amount" id="amount" required  value="{{$txvalue}}" placeholder="" required>
+									<input type="text" class="form-control form-control-2" name="amount" id="amount" required  value="{{$price}}" placeholder="" required>
 
 									</div>
 																											<div class="mt-4 text-center">
@@ -246,7 +222,7 @@
 	  <div class="card card-pay mb-3">
 	  <div class="card-body">
 	  <h5 class="mb-4">Account Due</h5>
-	  <h5 class="mb-4">Total: <span>${{number_format((float)$txvalue, 2, '.', '')}}</span></h5>
+	  <h5 class="mb-4">Total: <span>${{number_format((float)$price, 2, '.', '')}}</span></h5>
 	  </div>
 	  </div>
 	  <div class="text-center">
