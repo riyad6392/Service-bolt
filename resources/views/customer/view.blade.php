@@ -187,7 +187,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
              <div class="card">
        <div class="card-body customer-scroll-div">
 	    <h5 class="mb-4">Recent Tickets</h5>
-		
+		 
 		<div class="">
     <table id="example" class="table no-wrap table-new table-list align-items-center">
     <thead>
@@ -348,7 +348,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
       <div class="modal-body">
-        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data" target="_blank">
+        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data">
           @csrf
           <div id="viewdueinvoicemodaldata"></div>
         </form>

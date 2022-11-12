@@ -349,6 +349,8 @@ class WorkerTicketController extends Controller
           
             $ticket->save();
 
+            
+
             $ticket1 = Quote::where('parentid', $request->ticketid)->get()->first();
             if($ticket1!=null || $ticket1!="") {
             $ticket1->ticket_status = 3;

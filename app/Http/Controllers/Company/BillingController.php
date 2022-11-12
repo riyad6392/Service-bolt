@@ -848,4 +848,63 @@ class BillingController extends Controller
         return view('billing.viewallticket',compact('auth_id','totalbillingData','personnelUser','pid'));
     }
 
+    public function viewallticketfilter(Request $request) {
+      $auth_id = auth()->user()->id;
+      if(auth()->user()->role == 'company') {
+          $auth_id = auth()->user()->id;
+      } else {
+         return redirect()->back();
+      }
+    
+    $totalbillingData = DB::table('quote')
+      ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname','quote.id','quote.price','quote.payment_status','quote.payment_mode','quote.invoiceid','quote.invoiced')
+      ->join('customer', 'customer.id', '=', 'quote.customerid')
+      ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
+      ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['2','3','4','5'])->where('quote.givenstartdate','!=',null);
+      if(isset($request->pid)) {
+          $pid = $request->pid;
+          $totalbillingData->where('quote.personnelid',$pid);
+      }
+      if(isset($request->from)) {
+        if(!isset($request->to)) {
+          $todate = $request->from;
+        } else {
+          $todate = $request->to;
+        }
+        $totalbillingData->whereBetween('quote.givenstartdate', [$request->from, $todate]);
+      }
+      $totalbillingData = $totalbillingData->orderBy('quote.id','desc')->get();
+        $fileName = date('d-m-Y').'_order.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+        $columns = array('Invoice Id','Date','Customer Name','Personnel Name','Amount', 'Payment Status');
+
+        $callback = function() use($totalbillingData, $columns) {
+        $file = fopen('php://output', 'w');
+        fputcsv($file, $columns);
+
+          foreach ($totalbillingData as $key =>$value) {
+            if($value->payment_status!="" || $value->payment_mode!="") {
+              $pstatus = "Paid";
+            } 
+            elseif($value->invoiced=="1") {
+              $pstatus = "invoiced";
+            }
+            elseif($value->invoiced=="0" && $value->payment_mode=="") {
+              $pstatus = "Pending";
+            }
+            $newdate  = date("M, d Y", strtotime($value->date));
+            fputcsv($file, array($value->id, $newdate, $value->customername, $value->personnelname,$value->price, $pstatus));
+          }
+
+          fclose($file);
+      };
+        return response()->stream($callback, 200, $headers);
+    }
+
 }

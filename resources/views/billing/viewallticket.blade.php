@@ -25,10 +25,22 @@
 </style>
 <div class="content">
   <div class="col-md-12">
-        <div class="side-h3">
-       <h3>Invoiced Tickets</h3>
-       <!-- <p style="color: #B0B7C3;">Lorem ipsum dolor sit amet</p> -->
-     </div>
+      <div class="side-h3">
+         <h3>Invoiced Tickets</h3>
+         <form action="{{ route('company.viewallticketfilter') }}" method="post">
+          @csrf
+          <div class="row">
+            <div class="col-md-4">
+            </div><div class="col-md-3">
+            </div><div class="col-md-3">
+            </div>
+            <div class="col-md-2">
+             <button class="btn add-btn-yellow py-2 px-5" type="submit" name="search" value="excel">{{ __('Export') }}</button>
+            </div>
+          </div>
+         </form>
+      </div>
+
      </div>
   <form method="post" action="{{route('company.viewallticket') }}" class="row pe-0">
       @csrf

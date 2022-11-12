@@ -329,6 +329,8 @@ Route::group([
 
     Route::any('/billing/viewallticket', [BillingController::class, 'viewallticket'])->name('viewallticket');
 
+    Route::any('/billing/viewallticketfilter', [BillingController::class, 'viewallticketfilter'])->name('viewallticketfilter');
+
     Route::any('/billing/paynow/', [BillingController::class, 'paynow'])->name('paynow');
 
     Route::any('/billing/directpaynow/', [BillingController::class, 'directpaynow'])->name('directpaynow');

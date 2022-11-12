@@ -18,6 +18,7 @@ use Mail;
 use Illuminate\Support\Str;
 use DB;
 use Image;
+use PDF;
 
 class CustomerController extends Controller
 {
@@ -651,7 +652,7 @@ class CustomerController extends Controller
          </div>
 
          <div class="col-md-12 mb-3">
-         <a class="btn add-btn-yellow w-100 viewinvoice" data-id="'.$quoteData[$datacount]->id.'" data-duedate="'.$quoteData[$datacount]->duedate.'" data-invoicenote="'.$quoteData[$datacount]->invoicenote.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>View Invoice</a>
+         <a class="btn add-btn-yellow w-100 viewinvoice" data-id="'.$quoteData[$datacount]->id.'" data-duedate="'.$quoteData[$datacount]->duedate.'" data-invoicenote="'.$quoteData[$datacount]->invoicenote.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>Invoice</a>
          </div>
          </div></div>';
       } else {
@@ -756,7 +757,7 @@ class CustomerController extends Controller
            <div class="number-1">Date:</div> '.$quoteData->etc.'
          </div>
          <div class="col-md-12 mb-3">
-         <a class="btn add-btn-yellow w-100 mb-4 viewinvoice" data-id="'.$quoteData->id.'" data-duedate="'.$quoteData->duedate.'" data-invoicenote="'.$quoteData->invoicenote.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>View Invoice</a>
+         <a class="btn add-btn-yellow w-100 mb-4 viewinvoice" data-id="'.$quoteData->id.'" data-duedate="'.$quoteData->duedate.'" data-invoicenote="'.$quoteData->invoicenote.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>Invoice</a>
          </div>
          </div></div>';
       }
@@ -1010,7 +1011,36 @@ class CustomerController extends Controller
 
       $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
       $givendate = $tdata->givendate;
-      return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->invoicenote,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
+      if($request->invoicetype == "viewinvoice") {
+        return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->invoicenote,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]); 
+      }
+
+      if($request->invoicetype == "downloadinvoice") {
+        $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->invoicenote,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
+          return $pdf->download($tdata->id .'_invoice.pdf');
+      }
+
+      if($request->invoicetype == "sendinvoice") {
+        $app_name = 'ServiceBolt';
+        $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
+        $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
+        if($cinfo->email!=null) {
+          $user_exist = Customer::where('email', $cinfo->email)->first();
+
+            $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->invoicenote,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
+
+            Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->invoicenote,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate], function($message) use ($user_exist,$app_name,$app_email,$pdf) {
+            $message->to($user_exist->email);
+            $message->subject('Invoice PDF!');
+            $message->from($app_email,$app_name);
+            $message->attachData($pdf->output(), "invoice.pdf");
+          });
+
+          return redirect()->back()->withSuccess('Invoice send successfully');
+        } else {
+          return redirect()->back()->withSuccess('Customer Email id not exist.');
+        }
+      }
     }
 
     public function leftbarviewinvoice(Request $request)
@@ -1047,10 +1077,16 @@ class CustomerController extends Controller
                 </div>
             </div>
           </div>
-        <div class="col-lg-6 mb-3" style="display:none;">
-          <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
-        </div><div class="col-lg-6 mb-3 mx-auto">
-          <button class="btn btn-add btn-block" type="submit">View Invoice</button>
+        <div class="row">
+          <div class="col-lg-4 mb-3 mx-auto">
+            <button class="btn btn-add btn-block" type="submit" name="invoicetype" value="viewinvoice">View Invoice</button>
+          </div>
+          <div class="col-lg-4 mb-3 mx-auto">
+            <button class="btn btn-add btn-block" type="submit" name="invoicetype" value="downloadinvoice">Download</button>
+          </div>
+          <div class="col-lg-4 mb-3 mx-auto">
+            <button class="btn btn-add btn-block" type="submit" name="invoicetype" value="sendinvoice">Send to Customer</button>
+          </div>
         </div>';
         return json_encode(['html' =>$html]);
           die;
