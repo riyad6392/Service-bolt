@@ -4,6 +4,8 @@
     <br>
     Service Name: {{ $servicename }}
     <br>
+    Product Name: {{ @$productname }}
+    <br>
     Type: {{ $type }}
     <br>
     Frequency: {{ $frequency }}

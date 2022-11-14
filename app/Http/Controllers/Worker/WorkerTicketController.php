@@ -852,16 +852,36 @@ class WorkerTicketController extends Controller
 
         $serviceid = implode(',', $request->servicename);
 
-        $servicedetails = Service::select('servicename','productid')->whereIn('id', $request->servicename)->get();
+        $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->servicename)->get();
 
         foreach($servicedetails as $key => $value) {
           $pid[] = $value['productid'];
           $sname[] = $value['servicename'];
         }
-
-        $productid = implode(',', array_unique($pid));
-        
         $servicename = implode(',', $sname);
+
+        $productid = "";
+        $productname = "";
+        $productnames = "";
+
+        if(isset($request->productname)) {
+          $productid = implode(',', $request->productname);
+        }
+        if($request->productname!="") {
+          $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+               
+        foreach ($productdetails as $key => $value) {
+          $pname[] = $value['productname'];
+        }
+        $productname = $productdetails[0]->productname;
+
+        $productnames = implode(',', $pname);
+
+        }
+        
+        //$productid = implode(',', array_unique($pid));
+        
+       
 
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
@@ -871,9 +891,8 @@ class WorkerTicketController extends Controller
         $data['customerid'] = $request->customerid;
         $data['serviceid'] =  $serviceid;
         $data['servicename'] = $servicedetails[0]->servicename;
-        $data['product_id'] = rtrim($productid, ',');
-        //$data['product_name'] = $pname;
-        
+        $data['product_name'] = $productname;
+        $data['product_id'] = $productid;
         $data['personnelid'] = $request->personnelid;
         $data['radiogroup'] = $request->radiogroup;
         $data['frequency'] = $request->frequency;
@@ -885,6 +904,7 @@ class WorkerTicketController extends Controller
           $data['minute'] = $request->minute.' Minutes';;
         }
         $data['price'] = $request->price;
+        $data['tickettotal'] = $request->ticketprice;
         $data['etc'] = $request->etc;
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
@@ -918,7 +938,7 @@ class WorkerTicketController extends Controller
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
         
-      Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
+      Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicename,'productname'=>$productnames,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Ticket details!');
           $message->from($app_email,$app_name);
