@@ -31,6 +31,7 @@ use App\Models\Balancesheet;
 use App\Models\PasswordReset;
 use App\Models\Notification;
 use App\Events\MyEvent;
+use App\Models\Checklist;
 
 class UserController extends Controller
 {
@@ -521,7 +522,7 @@ class UserController extends Controller
         $mainarray = array();
         if($customerData[0]->serviceid!="") {
             $serviceids =explode(",",$customerData[0]->serviceid);
-            $servicearray = Service::select('id','servicename')->whereIn('id',$serviceids)->get();
+            $servicearray = Service::select('id','servicename','price')->whereIn('id',$serviceids)->get();
 
             foreach($servicearray as $key=> $servicedata) {
                 $mainarray[] = array(
@@ -780,7 +781,11 @@ class UserController extends Controller
 
         $data['ticket_status'] = 1;
         
-        Quote::create($data);
+        $quotelastid = Quote::create($data);
+        $quoteee = Quote::where('id', $quotelastid->id)->first();
+        $randomid = rand(100,199);
+        $quoteee->invoiceid = $randomid.''.$quotelastid->id;
+        $quoteee->save();
     if($customer->email!=null) {    
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
@@ -800,7 +805,7 @@ class UserController extends Controller
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
 
-        $services = Service::select('id','servicename')->where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->get();
+        $services = Service::select('id','servicename','price')->where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->get();
 
        return response()->json(['status'=>1,'message'=>'success','services'=>$services],$this->successStatus);   
     }
@@ -976,7 +981,7 @@ class UserController extends Controller
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
         
-      Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givendate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
+      Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Invoice details!');
           $message->from($app_email,$app_name);
@@ -992,7 +997,7 @@ class UserController extends Controller
 
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
 
-        $productData = Inventory::select('id','productname')->where('user_id',$worker->userid)->orderBy('id','DESC')->get();
+        $productData = Inventory::select('id','productname','price')->where('user_id',$worker->userid)->orderBy('id','DESC')->get();
 
         return response()->json(['status'=>1,'message'=>'Success','product'=>$productData],$this->successStatus);    
     }
@@ -1181,7 +1186,7 @@ class UserController extends Controller
 
        $sid = explode(',',$customer[0]->serviceid);
 
-       $serviceData = Service::select('id','servicename')->whereIn('id',$sid)->orderBy('id','ASC')->get(); 
+       $serviceData = Service::select('id','servicename','price')->whereIn('id',$sid)->orderBy('id','ASC')->get(); 
 
         if ($serviceData) {
             return response()->json(['status'=>1,'message'=>'success','services'=>$serviceData],$this->successStatus);
@@ -1729,7 +1734,10 @@ class UserController extends Controller
 
     public function adminchecklist(Request $request)
     {
-        $adminchecklist = DB::table('adminchecklist')->select('id','checklist')->get();
+        $user = Auth::user();
+        $auth_id = $user->id;
+        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+        $adminchecklist = DB::table('checklist')->select('checklist.serviceid as id','checklist.checklistname as checklist')->where('checklist.userid',$worker->userid)->groupBy('checklist.serviceid')->get();
 
         return response()->json(['status'=>1,'checklist'=>$adminchecklist],$this->successStatus);
 
@@ -1769,7 +1777,7 @@ class UserController extends Controller
         return response()->json(['status'=>1,'data'=>$data,'message'=>'Notes updated successfully'],$this->successStatus);
     }
 
-    public function setnotes(Request $request)
+    public function setnotes1(Request $request)
     {
         $validator = Validator::make(request()->all(), [
             'addressid' => 'required'
@@ -1794,6 +1802,68 @@ class UserController extends Controller
         );
 
         return response()->json(['status'=>1,'data'=>$data],$this->successStatus);
+    }
+
+    public function setnotes(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'addressid' => 'required'
+        ]);
+        if($validator->fails()) { 
+            $errors = $validator->errors()->toArray();
+            $msg_err = '';
+            if(isset($errors['addressid'])) {
+                foreach($errors['addressid'] as $e){
+                    $msg_err .= $e;
+                }
+            }
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
+        }
+
+        $addressdata = Address::select('checklistid','notes')->where('id',$request->addressid)->
+        first();
+        if($addressdata->notes!="" || $addressdata->notes!=null) {
+            $addressnote = $addressdata->notes;
+        } else {
+            $addressnote = "--";
+        }
+        $ckids = explode(',',$addressdata->checklistid);
+
+        $data = array(
+            "notes"=>$addressdata->notes,
+            "checklistid"=>$ckids
+        );
+
+        $auth_id = auth()->user()->id;
+        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+        $ckinfo = array();
+        $finalarray = array();
+        $html = "";
+        $html .="<p>Address Note : '".$addressnote."'</p>";
+        if($addressdata->checklistid!="") {
+          $ckids = explode(',',$addressdata->checklistid);
+          $ckinfo = DB::table('checklist')->select('serviceid','checklistname','checklist','userid')->whereIn('serviceid',$ckids)->where('userid',$worker->userid)->groupBy('serviceid')->get();
+          
+            if(!empty($ckinfo) && count($ckinfo)>0)
+                $html .="<ul>";
+                {
+                    foreach($ckinfo as $key=>$value) {
+                        $html .="<li>".$value->checklistname."</li>";
+                            
+                                  $checklistdata  = Checklist::select('checklist')->where('serviceid',$value->serviceid)->where('userid',$value->userid)->get();
+                            $html .="<ul>";
+                                foreach($checklistdata as $key => $value1) {
+                                    $html .="<li>".$value1->checklist."</li>";
+                                }
+                            $html .="</ul>";
+                        }
+                 $html .="</ul>";
+                }
+           
+        }
+
+        return response()->json(['status'=>1,'data'=>$html],$this->successStatus);
     }
 
 }

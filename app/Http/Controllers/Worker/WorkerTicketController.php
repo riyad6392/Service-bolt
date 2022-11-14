@@ -602,9 +602,11 @@ class WorkerTicketController extends Controller
        $quote = Quote::where('id', $request->id)->first();
        $customer = Customer::where('id', $quote->customerid)->get();
 
+       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
        $sid = explode(',',$customer[0]->serviceid);
+       $serviceData = Service::where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
 
-       $serviceData = Service::whereIn('id',$sid)->orderBy('id','ASC')->get();
+       //$serviceData = Service::whereIn('id',$sid)->orderBy('id','ASC')->get();
        
 
        $userData =  User::select('workerid','userid')->where('id',$auth_id)->first();
@@ -647,7 +649,7 @@ class WorkerTicketController extends Controller
                  } else {
                   $selectedp = "";
                  }
-                $html .='<option value="'.$value->id.'" '.@$selectedp.'>'.$value->servicename.'</option>';
+                $html .='<option value="'.$value->id.'" '.@$selectedp.'>'.$value->servicename.' ($'.$value->price.')</option>';
               }
         $html .='</select>
         <a href="#" data-bs-toggle="modal" data-bs-target="#add-services" id="sclick"><i class="fa fa-plus"></i></a>
@@ -664,7 +666,7 @@ class WorkerTicketController extends Controller
                  } else {
                   $selectedp = "";
                  }
-                $html .='<option value="'.$value->id.'" '.@$selectedp.'>'.$value->productname.'</option>';
+                $html .='<option value="'.$value->id.'" '.@$selectedp.'>'.$value->productname.' ($'.$value->price.')</option>';
               }
         $html .='</select>
         <a href="#" data-bs-toggle="modal" data-bs-target="#add-product" id="pclick"><i class="fa fa-plus"></i></a>
@@ -790,7 +792,7 @@ class WorkerTicketController extends Controller
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
         
-      Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givendate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
+      Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Invoice details!');
           $message->from($app_email,$app_name);

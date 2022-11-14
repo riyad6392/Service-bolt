@@ -51,6 +51,7 @@
         
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Phone Number -</span> <span style="color: black; font-weight: bold;">{{$phone}}</span></p>
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Email -</span> <span style="color: black; font-weight: bold;">{{$email}}</span></p>
+        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><br><span style="color: black; font-weight: bold;">Service Address -</span> <span style="color: black; font-weight: bold;">{{$address}}</span></p>
     </td>
     <td style="vertical-align: top; padding: 17px">
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Invoice:<br><span style="color: black; font-weight: bold;">#{{ $invoiceId }} </span></p>
