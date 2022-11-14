@@ -876,13 +876,8 @@ class WorkerTicketController extends Controller
         $productname = $productdetails[0]->productname;
 
         $productnames = implode(',', $pname);
-
-        }
+      }
         
-        //$productid = implode(',', array_unique($pid));
-        
-       
-
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
 
@@ -931,7 +926,13 @@ class WorkerTicketController extends Controller
           $data['ticket_status'] = 1;
         }
 
-        Quote::create($data);
+        $quotelastid = Quote::create($data);
+
+        $quoteee = Quote::where('id', $quotelastid->id)->first();
+        $randomid = rand(100,199);
+        $quoteee->invoiceid = $randomid.''.$quotelastid->id;
+        $quoteee->save();
+
     if($customer->email!=null) {    
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');

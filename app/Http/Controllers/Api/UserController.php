@@ -765,6 +765,7 @@ class UserController extends Controller
           $data['minute'] = $request->minute.' Minutes';;
         }
         $data['price'] = $request->price;
+        $data['ticketprice'] = $request->ticketprice;
         $data['etc'] = $request->etc;
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
