@@ -374,6 +374,7 @@ class UserController extends Controller
             }
 
             $addressnote = Address::select('notes')->where('customerid',$quoteData->customerid)->first();
+            $addressinfo = Address::select('id')->where('customerid',$quoteData->customerid)->where('address',$quoteData->address)->first();
             if($addressnote->notes !=null) {
                 $addressnote = $addressnote->notes;
             } else {
@@ -381,6 +382,7 @@ class UserController extends Controller
             }
             array_push($main_array, [
                    'id'=>$quoteData->id,
+                   'addressid'=>$addressinfo->id,
                    'customerid'=>$quoteData->customerid,
                    'customername'=>$quoteData->customername,
                    'address'=>$quoteData->address,

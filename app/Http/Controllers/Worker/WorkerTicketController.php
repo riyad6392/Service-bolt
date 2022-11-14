@@ -612,7 +612,7 @@ class WorkerTicketController extends Controller
        $userData =  User::select('workerid','userid')->where('id',$auth_id)->first();
        $workers = Personnel::where('id',$userData->workerid)->first();
 
-       $productData = DB::table('products')->where('user_id',$userData->userid)->orderBy('id','desc')->get();
+       $productData = DB::table('products')->where('user_id',$userData->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
 
        $permissonarray = explode(',',$workers->ticketid);
 
@@ -810,12 +810,12 @@ class WorkerTicketController extends Controller
       } else {
          return redirect()->back();
       }
-
       
-
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
       $customer = Customer::where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();
-      $services = Service::where('userid', $worker->userid)->get();
+      $services = Service::where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->get();
+      $products = Inventory::where('user_id', $worker->userid)->orWhere('workerid',$worker->workerid)->get();
+
       //$workerlist = Personnel::where('userid', $worker->userid)->where('id','!=',$worker->workerid)->get();
       $workerlist = Personnel::where('userid', $worker->userid)->get();
       
@@ -824,7 +824,7 @@ class WorkerTicketController extends Controller
       $permissonarray = explode(',',$personnel->ticketid);
       $tenture = Tenture::where('status','Active')->get();
       if(in_array("Create Ticket", $permissonarray)) {
-        return view('personnel.createticket',compact('auth_id','customer','services','workerlist','tenture'));
+        return view('personnel.createticket',compact('auth_id','customer','services','workerlist','tenture','products'));
       } else {
         return redirect()->back();
       }
