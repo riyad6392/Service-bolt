@@ -1779,7 +1779,7 @@ class UserController extends Controller
         return response()->json(['status'=>1,'data'=>$data,'message'=>'Notes updated successfully'],$this->successStatus);
     }
 
-    public function setnotes1(Request $request)
+    public function setnotes(Request $request)
     {
         $validator = Validator::make(request()->all(), [
             'addressid' => 'required'
@@ -1806,7 +1806,7 @@ class UserController extends Controller
         return response()->json(['status'=>1,'data'=>$data],$this->successStatus);
     }
 
-    public function setnotes(Request $request)
+    public function setnotesview(Request $request)
     {
         $validator = Validator::make(request()->all(), [
             'addressid' => 'required'
