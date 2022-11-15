@@ -1691,6 +1691,7 @@ class UserController extends Controller
         if(!empty($request->checknumber)) {
             $quote->checknumber = $request->checknumber;
         }
+        $quote->tickettotal = $request->ticketprice;
 
         $quote->save();
 

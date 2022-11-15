@@ -134,13 +134,13 @@
             }
         }  
         @endphp
-    <tr style="color:#ccc;box-shadow: 0px 0px 7px #ccc;">
-        <td style="padding: 15px;">{{ $value['servicename'] }}</td>
-        <td style="padding: 15px;">{{ $value['description'] }}</td>
-        <td style="padding: 15px;">1</td>
-        <td style="padding: 15px;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;">{{$txtpercentage}}%</td>
-        <td style="padding: 15px;">${{ $value['price'] + $txvalue }}</td>
+    <tr style="color:#ccc;">
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['servicename'] }}</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">1</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{$txtpercentage}}%</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] + $txvalue }}</td>
     </tr>
     @endforeach
 
@@ -158,13 +158,13 @@
             }
         }
     @endphp
-    <tr  style="color:#5a5959;box-shadow: 0px 0px 7px #ccc;">
-        <td style="padding: 15px;">{{ $value['productname'] }}</td>
-        <td style="padding: 15px;">{{ $value['description'] }}</td>
-        <td style="padding: 15px;">1</td>
-        <td style="padding: 15px;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;">{{$txtpercentage1}}%</td>
-        <td style="padding: 15px;">${{ $value['price'] + $txvalue1 }}</td>
+    <tr  style="color:#5a5959;">
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['productname'] }}</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">1</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{$txtpercentage1}}%</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] + $txvalue1 }}</td>
     </tr>
     @endforeach
 
