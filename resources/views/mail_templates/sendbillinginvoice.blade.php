@@ -134,7 +134,7 @@
             }
         }  
         @endphp
-    <tr style="color:#ccc">
+    <tr style="color:#ccc;box-shadow: 0px 0px 7px #ccc;">
         <td style="padding: 15px;">{{ $value['servicename'] }}</td>
         <td style="padding: 15px;">{{ $value['description'] }}</td>
         <td style="padding: 15px;">1</td>

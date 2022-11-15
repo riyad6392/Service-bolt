@@ -179,7 +179,7 @@ ul {
      <li class="dots">
       <label class="radio-div2 me-2">
         <input type="radio" name="taxtype" class="custom-radio secondradio" id="both" value="both" {{@$bchecked}}>
-        <span class="checkmark">Both</span>
+        <span class="checkmark">Both (All Services/Products)</span>
       </label>
         <div class="mb-3 mt-4">
 <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="bothvalue" value="{{@$bothvalue}}" id="both1">

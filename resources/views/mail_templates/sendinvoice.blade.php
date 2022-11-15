@@ -98,7 +98,7 @@
       $totalprice = $sum+$sum1;
         @endphp
     @foreach($servicedetails as $key => $value)
-    <tr  style="color:#5a5959;box-shadow: 0px 0px 7px #ccc;">
+    <tr  style="color:#ccc;box-shadow: 0px 0px 7px #ccc!important;">
         <td style="padding: 15px;">{{ $value['servicename'] }}</td>
         <td style="padding: 15px;">-</td>
         <td style="padding: 15px;">1</td>
@@ -108,7 +108,7 @@
     </tr>
     @endforeach
     @foreach($pdetails as $key => $value)
-    <tr  style="color:#ddd;">
+    <tr  style="color:#5a5959;box-shadow: 0px 0px 7px #ccc!important;">
         <td style="padding: 15px;">{{ $value['productname'] }}</td>
         <td style="padding: 15px;">{{ $value['description'] }}</td>
         <td style="padding: 15px;">1</td>
@@ -124,16 +124,16 @@
     <table style="width: 94%;background:#f8f6f6;border-radius: 10px;
     margin: 22px;">
     <tbody>
-     <tr>
+    <tr>
         <td style="vertical-align: top; padding: 17px;background-color: {{$color}};">
-         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 20px;">Note:
+         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 20px;border-radius: 10px;">Note:
             <br><span style="color: #ccc;  font-size: 16px;">{{ @$description }}</span></p>
         </td>
         <td style="width: 50%; padding: 12px;background-color: {{$color}}; border-radius: 10px;">
-            <h5 style="margin: 0px 0 5px 0;color: #ccc;font-size: 22px; ">Total:<br><h1 style="color: #fff; font-weight: bold; font-size: 36px;margin-left: 55%">${{ $totalprice }} </h1></h5>
+            <h5 style="margin: 0px 0 5px 0;color: #ccc;font-size: 22px; ">Total:<br><h1 style="color: #fff; font-weight: bold; font-size: 36px;">${{ $totalprice }} </h1></h5>
 
         </td>
-        </tr>
+    </tr>
     </tbody>
 </table>
     <table style="width:96%;margin: auto;">
