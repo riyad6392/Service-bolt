@@ -952,6 +952,8 @@ class WorkerTicketController extends Controller
 
    public function viewticketpopup(Request $request)
    {
+      $auth_id = auth()->user()->id;
+      $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
        $json = array();
        $quotedetailsnew = Quote::where('id', $request->id)->get()->toArray();
        $quotedetails = Quote::where('id', $request->id)->get();
@@ -962,9 +964,12 @@ class WorkerTicketController extends Controller
 
       $sid = explode(',',$customer[0]->serviceid);
 
-      $serviceData = Service::whereIn('id',$sid)->orderBy('id','ASC')->get();
+      //$serviceData = Service::whereIn('id',$sid)->orderBy('id','ASC')->get();
+      $serviceData = Service::where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
 
-      $productData = DB::table('products')->orderBy('id','ASC')->get();
+
+      //$productData = DB::table('products')->orderBy('id','ASC')->get();
+      $productData = Inventory::where('user_id', $worker->userid)->orWhere('workerid',$worker->workerid)->get();
       
       $time =  explode(" ", $quotedetails[0]->time);
       $minute =  explode(" ", $quotedetails[0]->minute);

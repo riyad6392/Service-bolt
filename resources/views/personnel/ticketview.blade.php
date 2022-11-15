@@ -1264,6 +1264,7 @@ Save
   $(document).on('change','#serviceid',function(e) {
     var serviceid = $('#serviceid').val();
     var productid = $('#productid').val(); 
+    alert(serviceid);
     var qid = $('#qid').val();
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
     $.ajax({

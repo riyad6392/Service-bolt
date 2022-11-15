@@ -767,7 +767,7 @@ class UserController extends Controller
           $data['minute'] = $request->minute.' Minutes';;
         }
         $data['price'] = $request->price;
-        $data['ticketprice'] = $request->ticketprice;
+        $data['tickettotal'] = $request->ticketprice;
         $data['etc'] = $request->etc;
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
@@ -979,6 +979,8 @@ class UserController extends Controller
       $quote->servicename = $servicedetails[0]->servicename;
       $quote->product_id = rtrim($productid, ',');
       $quote->price = $request->price;
+      $quote->tickettotal = $request->ticketprice;
+
       $quote->save();
     if($customer->email!=null) {  
       $app_name = 'ServiceBolt';
