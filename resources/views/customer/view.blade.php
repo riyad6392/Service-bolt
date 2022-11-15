@@ -374,7 +374,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                   <select class="form-control selectpicker " multiple="" data-placeholder="Select Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">
                     @foreach($adminchecklist as $key =>$value1)
                       <option value="{{$value1->serviceid}}">{{$value1->checklistname}}</option>';
+                      @php
+                        $checklistdata  = App\Models\Checklist::select('checklist')->where('serviceid',$value1->serviceid)->get();
+                       @endphp 
+                        @foreach($checklistdata as $key => $value2) {
+                          <option value="{{$value1->serviceid}}" style="margin-left: 25px;" disabled>{{$value2->checklist}}</option>';
+                        @endforeach
                     @endforeach
+
                  </select>
                 </div>
               </div> 
