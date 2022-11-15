@@ -25,6 +25,17 @@
 	color: red;
 }
 
+i.fa.fa-plus.second.yellow-icon1 {
+    background: yellow;
+    width: 30px;
+    height: 30px;
+    padding: 7px 10px;
+    color: black;
+    position: relative;
+    top: -12px;
+    left: 12px;
+    border-radius: 17px;
+}
 </style>
 
 <div class="bland-service-page">
@@ -244,13 +255,16 @@
 	   	<input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" data-parsley-required="true">
 		</div>
 	   
-	   <div class="col-md-12 mb-3">
+	   <div class="col-md-11 mb-3">
         <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
           @foreach ($serviceData as $service)
             <option value="{{$service->id}}">{{$service->servicename}}</option>
           @endforeach
         </select>
-          <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          
+       </div>
+       <div class="col-md-1">
+       	<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
 					  <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus second yellow-icon1"></i></a>
 					</div>
        </div>

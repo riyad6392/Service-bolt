@@ -50,7 +50,10 @@ span.icon-btn .fa-trash {
     justify-content: center;
     border-radius: 100%;
     border:1px solid #ccc;
+    position: relative;
+    top: 10px;
 }
+
 .popover-design p {
     font-weight: 600;
 }

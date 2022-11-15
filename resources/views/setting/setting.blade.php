@@ -24,6 +24,9 @@
     width: auto;
     display: block;
 }
+ul {
+    list-style: none;
+}
 </style>
 <div class="">
 <div class="content">
@@ -143,40 +146,48 @@
   }
 @endphp
 <h5 class="my-4">Manage Tax Percentage (%)</h5>
+<div class="col-lg-6">
   <ul>
-    <label class="radio-div2 me-2">Services/Products
+    <label class="radio-div2 me-2  mx-3">
       <input type="radio" name="taxtype" class="custom-radio serviceprodutradio" value="service_products" id="service_products" {{@$spchecked}}>
-      <span class="checkmark"></span>
+      <span class="checkmark">Services/Products</span>
     </label>
-    <li class="d-flex" style="margin-left:18px;">
-      <label class="radio-div2 me-2">All Services 
+    <li class="dots" style="margin-left:18px;">
+      <label class="radio-div2 me-2"> 
         <input type="checkbox" name="taxtype1" class="custom-radio secondradio" value="allservice" id="s1" {{@$schecked}}>
-        <span class="checkmark"></span>
+        <span class="checkmark">All Services</span>
       </label>
       <div class="mb-3">
           <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="allservicevalue" value="{{@$allservicevalue}}" id="s2">
       </div>
     </li>
 
-    <li class="d-flex" style="margin-left:18px;">
-      <label class="radio-div2 me-2">All Products
+    <li class="dots" style="margin-left:18px;">
+      <label class="radio-div2 me-2">
         <input type="checkbox" name="taxtype1" class="custom-radio secondradio" value="allproduct" id="p1" {{@$pchecked}}>
-        <span class="checkmark"></span>
+        <span class="checkmark">All Products</span>
       </label>
           <div class="mb-3">
             <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="allproductvalue" value="{{@$allproductvalue}}" id="p2">
           </div>
       </li>
-    <li class="d-flex">
-      <label class="radio-div2 me-2">Both
+   
+  </ul>
+</div>
+<div class="col-lg-6">
+  <ul>
+     <li class="dots">
+      <label class="radio-div2 me-2">
         <input type="radio" name="taxtype" class="custom-radio secondradio" id="both" value="both" {{@$bchecked}}>
-        <span class="checkmark"></span>
+        <span class="checkmark">Both</span>
       </label>
-        <div class="mb-3">
+        <div class="mb-3 mt-4">
 <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="bothvalue" value="{{@$bothvalue}}" id="both1">
 </div>
     </li>
   </ul>
+</div>
+  
 <h5 class="my-4">Manage Available Hours</h5>
 <div class="col-lg-6 mb-3">
 <label class="form-label">Opening Time</label>

@@ -3138,3 +3138,6 @@ a.category i.fa.fa-plus.yellow-icon-category {
   border-radius: 100px;
   left: 405px;
 }
+form.post-4 {
+    text-align: center !important;
+}

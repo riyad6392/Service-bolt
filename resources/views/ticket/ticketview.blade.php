@@ -507,6 +507,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: 150px;
     height: 43px;
 }
+.modal-content.customer-modal-box {
+    width: 85%;
+    position: relative;
+    left: 27%;
+}
+.img-fluid {
+    max-width: 80% !important;
+    height: 82% !important;
+    padding: 12px;
+}
+section.promo_section {
+    background: #fff !important;
+    padding: 14px;
+}
 </style>
 
 <div class="content">
@@ -630,7 +644,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           @if($imgtype[1]=="mp4" || $imgtype[1]=="3gp" || $imgtype[1]=="mov" || $imgtype[1]=="avi" || $imgtype[1]=="wmv" || $imgtype[1]=="flv" || $imgtype[1]=="m3u8")
           <div class="col-lg-4 col-sm-4">
             <div class="removediv">
-              <div class="images position-relative" style="top:-35px;">
+              <div class="images position-relative" style="">
                   <a href="{{url('/')}}/uploads/ticketnote/{{$image}}" target="_blank"><video width="250" height="200" controls>
                     <source src="{{url('/')}}/uploads/ticketnote/{{$image}}" type="video/mp4">
                   </video></a>
@@ -671,7 +685,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
       <div class="modal-body">
-        <form method="post" action="{{ route('company.downloadinvoiceview') }}" enctype="multipart/form-data">
+        <form class="post-4" method="post" action="{{ route('company.downloadinvoiceview') }}" enctype="multipart/form-data">
         @csrf
             <input type="hidden" name="ticketid" id="ticketid" value="{{$quotedetails[0]->id}}">
             <div class="col-md-12">
@@ -682,7 +696,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             </div>
         </form>
         <br>
-        <form method="post" action="{{ route('company.sendticketinvoice') }}" enctype="multipart/form-data">
+        <form class="post-4" method="post" action="{{ route('company.sendticketinvoice') }}" enctype="multipart/form-data">
         @csrf
             <input type="hidden" name="ticketid" id="ticketid" value="{{$quotedetails[0]->id}}">
             <input type="hidden" name="tickettype" id="tickettype" value="sendcustomer">

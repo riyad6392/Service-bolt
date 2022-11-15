@@ -22,6 +22,12 @@
       padding: 8px 34px;
       box-shadow: 0px 0px 10px #ccc;
   }
+  .side-h3 {
+    padding: 30px 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
 </style>
 <div class="content">
   <div class="col-md-12">
@@ -30,10 +36,7 @@
          <form action="{{ route('company.viewallticketfilter') }}" method="post">
           @csrf
           <div class="row">
-            <div class="col-md-4">
-            </div><div class="col-md-3">
-            </div><div class="col-md-3">
-            </div>
+            
             <div class="col-md-2">
              <button class="btn add-btn-yellow py-2 px-5" type="submit" name="search" value="excel">{{ __('Export') }}</button>
             </div>
