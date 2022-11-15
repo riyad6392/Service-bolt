@@ -322,6 +322,7 @@ class UserController extends Controller
                  $serearray[] = array (
                      'id' =>$value['id'],
                      'servicename' => $value['servicename'],
+                     'price' => $value['price'],
                      
                    );
              // $sname[] = $value['servicename'];
@@ -338,6 +339,7 @@ class UserController extends Controller
                 $proarray[] = array (
                      'id' =>$value['id'],
                      'productname' => $value['productname'],
+                     'price' => $value['price'],
                 );
               //$pname[] = $value['productname'];
               $sum1+= (int)$value['price'];
