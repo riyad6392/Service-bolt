@@ -1843,7 +1843,7 @@ class UserController extends Controller
         $ckinfo = array();
         $finalarray = array();
         $html = "";
-        $html .="<p>Address Note : '".$addressnote."'</p>";
+        $html .="<p>Address Note : ".$addressnote."</p>";
         if($addressdata->checklistid!="") {
           $ckids = explode(',',$addressdata->checklistid);
           $ckinfo = DB::table('checklist')->select('serviceid','checklistname','checklist','userid')->whereIn('serviceid',$ckids)->where('userid',$worker->userid)->groupBy('serviceid')->get();
