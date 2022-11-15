@@ -1241,7 +1241,7 @@ class TicketController extends Controller
       $sum = 0;
       foreach ($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
-        $sum+= (int)$value['price'];
+        $sum+= (float)$value['price'];
       } 
 
     $pidarray = explode(',', $request->productid);
@@ -1249,10 +1249,10 @@ class TicketController extends Controller
       $sum1 = 0;
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
-        $sum1+= (int)$value['price'];
+        $sum1+= (float)$value['price'];
       }
       $totalprice = $sum+$sum1;
-
+      $totalprice = number_format($totalprice,2);
 
       return json_encode(['totalprice' =>$totalprice]);
       die;

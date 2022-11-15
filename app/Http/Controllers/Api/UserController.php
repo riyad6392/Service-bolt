@@ -322,6 +322,7 @@ class UserController extends Controller
                  $serearray[] = array (
                      'id' =>$value['id'],
                      'servicename' => $value['servicename'],
+                     'price' => $value['price'],
                      
                    );
              // $sname[] = $value['servicename'];
@@ -338,6 +339,7 @@ class UserController extends Controller
                 $proarray[] = array (
                      'id' =>$value['id'],
                      'productname' => $value['productname'],
+                     'price' => $value['price'],
                 );
               //$pname[] = $value['productname'];
               $sum1+= (int)$value['price'];
@@ -765,7 +767,7 @@ class UserController extends Controller
           $data['minute'] = $request->minute.' Minutes';;
         }
         $data['price'] = $request->price;
-        $data['ticketprice'] = $request->ticketprice;
+        $data['tickettotal'] = $request->ticketprice;
         $data['etc'] = $request->etc;
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
@@ -977,6 +979,8 @@ class UserController extends Controller
       $quote->servicename = $servicedetails[0]->servicename;
       $quote->product_id = rtrim($productid, ',');
       $quote->price = $request->price;
+      $quote->tickettotal = $request->ticketprice;
+
       $quote->save();
     if($customer->email!=null) {  
       $app_name = 'ServiceBolt';
@@ -1843,7 +1847,7 @@ class UserController extends Controller
         $ckinfo = array();
         $finalarray = array();
         $html = "";
-        $html .="<p>Address Note : '".$addressnote."'</p>";
+        $html .="<p>Address Note : ".$addressnote."</p>";
         if($addressdata->checklistid!="") {
           $ckids = explode(',',$addressdata->checklistid);
           $ckinfo = DB::table('checklist')->select('serviceid','checklistname','checklist','userid')->whereIn('serviceid',$ckids)->where('userid',$worker->userid)->groupBy('serviceid')->get();
