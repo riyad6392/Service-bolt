@@ -594,7 +594,7 @@ class CustomerController extends Controller
       }
 
       if($quoteData[$datacount]->ticket_status == 1) {
-        $tstatus = "disabled";
+        $tstatus = "pointer-events:none;background:#fee2002e;";
       } else {
         $tstatus = "";
       }
@@ -658,7 +658,7 @@ class CustomerController extends Controller
          </div>
 
          <div class="col-md-12 mb-3">
-         <a class="btn add-btn-yellow w-100 viewinvoice" data-id="'.$quoteData[$datacount]->id.'" data-duedate="'.$quoteData[$datacount]->duedate.'" data-invoicenote="'.$quoteData[$datacount]->invoicenote.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>Invoice</a>
+         <a class="btn add-btn-yellow w-100 viewinvoice" data-id="'.$quoteData[$datacount]->id.'" data-duedate="'.$quoteData[$datacount]->duedate.'" data-invoicenote="'.$quoteData[$datacount]->invoicenote.'" data-bs-toggle="modal" data-bs-target="#view-invoice" style="'.$tstatus.'">Invoice</a>
          </div>
          </div></div>';
       } else {
@@ -698,7 +698,7 @@ class CustomerController extends Controller
 
       if($quoteData->ticket_status == 1) {
         
-        $tstatus = "disabled";
+        $tstatus = "pointer-events:none;background:#fee2002e;";
       } else {
         $tstatus = "";
       }
@@ -763,7 +763,7 @@ class CustomerController extends Controller
            <div class="number-1">Date:</div> '.$quoteData->etc.'
          </div>
          <div class="col-md-12 mb-3">
-         <a class="btn add-btn-yellow w-100 mb-4 viewinvoice" data-id="'.$quoteData->id.'" data-duedate="'.$quoteData->duedate.'" data-invoicenote="'.$quoteData->invoicenote.'" data-bs-toggle="modal" data-bs-target="#view-invoice" '.$tstatus.'>Invoice</a>
+         <a class="btn add-btn-yellow w-100 mb-4 viewinvoice" data-id="'.$quoteData->id.'" data-duedate="'.$quoteData->duedate.'" data-invoicenote="'.$quoteData->invoicenote.'" data-bs-toggle="modal" data-bs-target="#view-invoice" style="'.$tstatus.'">Invoice</a>
          </div>
          </div></div>';
       }

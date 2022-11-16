@@ -1004,10 +1004,7 @@ span.closeon i {
                 $("#minute").val(realmin);
         }
         
-        $(document).on('change', 'select.selectpicker1',function() {
-            gethours1();
-        });
-
+        
         $(document).on('change', 'select.selectpicker3',function() {
             var id=$(this).find('option:selected').data('id');
             window.location.href = "{{url('company/scheduler/detailweek/')}}/"+id;
@@ -1435,6 +1432,7 @@ span.closeon i {
               $('.selectpicker1').selectpicker({
                 size: 5
               });
+              $('.selectpickerpassign').selectpicker();
             }
         })
     });
@@ -1481,5 +1479,42 @@ span.closeon i {
             }
         })
    });
+
+    $(document).on('change','#servicename',function(e) {
+    var serviceid = $('#servicename').val();
+    var productid = $('#productname').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            $('#price').val(data.totalprice);
+            $('#tickettotal').val(data.totalprice);
+          }
+      })
+
+
+})
+$(document).on('change','#productname',function(e) {
+    var serviceid = $('#servicename').val();
+    var productid = $('#productname').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            $('#price').val(data.totalprice); 
+            $('#tickettotal').val(data.totalprice);
+          }
+      })
+});
 </script>
 @endsection

@@ -1265,6 +1265,9 @@ Save
     var serviceid = $('#serviceid').val();
     var productid = $('#productid').val(); 
     var qid = $('#qid').val();
+    if(qid==undefined) {
+      var qid = "";
+    }
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
     $.ajax({
           url:'{{route('worker.calculateprice')}}',
@@ -1281,8 +1284,10 @@ Save
    $(document).on('change','#productid',function(e) {
       var serviceid = $('#serviceid').val();
       var productid = $('#productid').val();
-        var qid = $('#qid').val();
-
+      var qid = $('#qid').val();
+        if(qid==undefined) {
+          var qid = "";
+        }
       var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
       $.ajax({
             url:'{{route('worker.calculateprice')}}',

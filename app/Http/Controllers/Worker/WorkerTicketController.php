@@ -1007,7 +1007,7 @@ class WorkerTicketController extends Controller
        $html ='<div class="add-customer-modal">
                   <h5>Schedule Next Appointment</h5>
                 </div>';
-       $html .='<div class="row customer-form" id="product-box-tabs">
+       $html .='<input type="hidden" name="ticketprice" id="ticketprice" value="'.$quotedetails[0]->tickettotal.'"><div class="row customer-form" id="product-box-tabs">
        <input type="hidden" value="'.$request->id.'" name="quoteid">
           <div class="col-md-12 mb-2">
             <label>Customer</label>
@@ -1041,7 +1041,7 @@ class WorkerTicketController extends Controller
           </div>
           <div class="col-md-12 mb-2">
             <label>Product</label>
-            <select class="form-control selectpicker" data-live-search="false" multiple="" data-placeholder="Select Produts" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="productid[]" id="productid" style="height:auto;" required="">';
+            <select class="form-control selectpicker" data-live-search="false" multiple="" data-placeholder="Select Produts" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="productid[]" id="productid" style="height:auto;">';
 
               foreach($productData as $key => $value) {
                 $productids =explode(",", $quotedetails[0]->product_id);
@@ -1154,6 +1154,8 @@ class WorkerTicketController extends Controller
           $data['minute'] = $request->minute.' Minutes';;
         }
       $data['price'] = $request->price;
+      $data['tickettotal'] = $request->ticketprice;
+      
       $data['etc'] = $request->etc;
       $data['description'] = $request->description;
       $data['customername'] =  $quote->customername;
@@ -1187,14 +1189,11 @@ class WorkerTicketController extends Controller
       $totalprice = $sum+$sum1;
       $totalprice = number_format($totalprice,2);
       $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
+      if($request->qid != null) {
+         $quote = Quote::where('id', $request->qid)->first();
+          $quote->tickettotal = $totalprice;
+      }
       
-      $quote = Quote::where('id', $request->qid)->first();
-      $quote->tickettotal = $totalprice;
-      // $quote->serviceid = $request->serviceid;
-      // $quote->product_id = $request->productid;
-
-      // $quote->save();
-
       return json_encode(['totalprice' =>$totalprice]);
         die;
     }
