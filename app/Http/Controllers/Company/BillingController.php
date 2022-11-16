@@ -208,22 +208,22 @@ class BillingController extends Controller
         $invoiceid = "-";
       }
       $ticketstatus = "";
+      
       if($billingData[$datacount]->ticket_status==5) {
         $ticketstatus = "(Direct Ticket)";
       }
 
-     
-     
-      $pstatus1 = 'Completed';  
-      if($billingData[0]->payment_status==null && $billingData[0]->payment_mode==null) {
-          $pstatus1 = 'Pending';           
-      } 
+      if($billingData[$datacount]->payment_status==null && $billingData[$datacount]->payment_mode==null) {
+        $pstatus1 = 'Pending';           
+      } else {
+        $pstatus1 = 'Completed'; 
+      }
            
       if($pstatus1 =='Completed')  {
         $style1 = "disabled";
-    } else {
-        $style1 = "";
-    }
+      } else {
+          $style1 = "";
+      }
 
     if($billingData[$datacount]->tickettotal==null || $billingData[$datacount]->tickettotal=="" || $billingData[$datacount]->tickettotal == "0") {
         $newprice = $billingData[$datacount]->price;
@@ -313,10 +313,12 @@ class BillingController extends Controller
         $ticketstatus = "(Direct Tiket)";
       }
 
-      $pstatus = 'Completed';  
+      
       if($billingData[0]->payment_status==null && $billingData[0]->payment_mode==null) {
           $pstatus = 'Pending';           
-      } 
+      } else {
+        $pstatus = 'Completed';  
+      }
            
       if($pstatus =='Completed')  {
         $style = "disabled";

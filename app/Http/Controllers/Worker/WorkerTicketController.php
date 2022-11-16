@@ -621,7 +621,7 @@ class WorkerTicketController extends Controller
        $html ='<div class="add-customer-modal">
                   <h5>Create Invoice</h5>
                 </div>';
-       $html .='<input type="hidden" name="ticketprice" id="ticketprice" value=""><div class="row customer-form" id="product-box-tabs">
+       $html .='<input type="hidden" name="ticketprice" id="ticketprice" value="'.$quote->tickettotal.'"><div class="row customer-form" id="product-box-tabs">
        <input type="hidden" value="'.$customer[0]->id.'" name="customerid">
        <input type="hidden" value="'.$request->id.'" name="qid" id="qid">
           <div class="col-md-12 mb-2">
