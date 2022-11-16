@@ -1858,19 +1858,21 @@ class UserController extends Controller
           $ckinfo = DB::table('checklist')->select('serviceid','checklistname','checklist','userid')->whereIn('serviceid',$ckids)->where('userid',$worker->userid)->groupBy('serviceid')->get();
           
             if(!empty($ckinfo) && count($ckinfo)>0)
-                $html .="<ul>";
+                $html .="<div>";
                 {
+                    $i=1;
                     foreach($ckinfo as $key=>$value) {
-                        $html .="<li>".$value->checklistname."</li>";
+                        $html .="<p>"."($i)" . $value->checklistname."</p>";
                             
                                   $checklistdata  = Checklist::select('checklist')->where('serviceid',$value->serviceid)->where('userid',$value->userid)->get();
-                            $html .="<ul>";
+                            $html .="<div>";
                                 foreach($checklistdata as $key => $value1) {
-                                    $html .="<li>".$value1->checklist."</li>";
+                                    $html .="<span style='margin-left:30px;'>".$value1->checklist."</span><br>";
                                 }
-                            $html .="</ul>";
+                            $html .="</div>";
+                            $i++;
                         }
-                 $html .="</ul>";
+                 $html .="</div>";
                 }
            
         }
