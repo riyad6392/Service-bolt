@@ -695,7 +695,7 @@ Service Report</div>
 
 
   
-    $(function() {
+        $(function() {
             var lastTab = localStorage.getItem('lastTab');
             $('#myTab').removeClass('hidden');
             if (lastTab) {
@@ -706,11 +706,6 @@ Service Report</div>
                 localStorage.setItem('lastTab', $(this).data('bs-target'));
             });
         });
-
-
-        window.onbeforeunload = function(e) {
-          
-    }
 </script>
 @endsection
 

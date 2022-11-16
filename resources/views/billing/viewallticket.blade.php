@@ -33,15 +33,7 @@
   <div class="col-md-12">
       <div class="side-h3">
          <h3>Invoiced Tickets</h3>
-         <form action="{{ route('company.viewallticketfilter') }}" method="post">
-          @csrf
-          <div class="row">
-            
-            <div class="col-md-2">
-             <button class="btn add-btn-yellow py-2 px-5" type="submit" name="search" value="excel">{{ __('Export') }}</button>
-            </div>
-          </div>
-         </form>
+         
       </div>
 
      </div>
@@ -57,28 +49,33 @@
         </select>
       </div>
       @if(isset($from))
-        <div class="col-lg-3 mb-3">
+        <div class="col-lg-2 mb-2">
           <input type="date" id="from" value="{{$from}}" name="from" class="form-control">
         </div>
-        <div class="col-lg-3 mb-3">
+        <div class="col-lg-2 mb-2">
           <input type="date" id="to" value="{{$to}}" name="to" class="form-control">
         </div>
       @else
-        <div class="col-lg-3 mb-3">
+        <div class="col-lg-2 mb-2">
           <input type="date" id="from" value="{{@$_REQUEST['from']}}" name="from" class="form-control">
         </div>
         @if(!isset($_REQUEST['to']))
-        <div class="col-lg-3 mb-3">
+        <div class="col-lg-2 mb-2">
           <input type="date" id="to" value="{{@$_REQUEST['from']}}" name="to" class="form-control">
         </div>
         @else
-          <div class="col-lg-3 mb-3">
+          <div class="col-lg-2 mb-2">
           <input type="date" id="to" value="{{@$_REQUEST['to']}}" name="to" class="form-control">
         </div>
         @endif
       @endif
-      <div class="col-lg-3 mb-3 pe-0" >
-       <button class="btn btn-block button" type="submit" id="search1">Search</button>
+      <div class="col-lg-2 mb-2 pe-0" >
+       <button class="btn btn-block button" type="submit" id="search1" name="search" value="search">Search</button>
+      </div>
+
+      <div class="col-md-2">
+         <button class="btn btn-block button" type="submit" name="search" value="excel">{{ __('Export') }}</button>
+        </div>
       </div>
 
      </div>

@@ -813,7 +813,7 @@ class BillingController extends Controller
 
     public function viewallticket(Request $request)
     {
-        //dd($request->to);
+        
         $auth_id = auth()->user()->id;
         if(auth()->user()->role == 'company') {
             $auth_id = auth()->user()->id;
@@ -838,7 +838,7 @@ class BillingController extends Controller
           }
           $totalbillingData->whereBetween('quote.givenstartdate', [$request->from, $todate]);
         }
-        $totalbillingData = $totalbillingData->get();
+        $totalbillingData = $totalbillingData->orderBy('quote.id','desc')->get();
 
         $personnelUser = Personnel::select('*')->where('userid',$auth_id)->orderBy('id','DESC')->get();
 
@@ -846,6 +846,41 @@ class BillingController extends Controller
           $pid = $request->pid;
         } else {
           $pid = "";
+        }
+
+        if($request->search == "excel") 
+        {
+        $fileName = date('d-m-Y').'_order.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+        $columns = array('Invoice Id','Date','Customer Name','Personnel Name','Amount', 'Payment Status');
+
+          $callback = function() use($totalbillingData, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+              foreach ($totalbillingData as $key =>$value) {
+                if($value->payment_status!="" || $value->payment_mode!="") {
+                  $pstatus = "Paid";
+                } 
+                elseif($value->invoiced=="1") {
+                  $pstatus = "invoiced";
+                }
+                elseif($value->invoiced=="0" && $value->payment_mode=="") {
+                  $pstatus = "Pending";
+                }
+                $newdate  = date("M, d Y", strtotime($value->date));
+                fputcsv($file, array($value->id, $newdate, $value->customername, $value->personnelname,$value->price, $pstatus));
+              }
+
+              fclose($file);
+          };
+          return response()->stream($callback, 200, $headers);
         }
         return view('billing.viewallticket',compact('auth_id','totalbillingData','personnelUser','pid'));
     }

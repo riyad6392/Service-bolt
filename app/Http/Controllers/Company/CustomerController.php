@@ -484,11 +484,6 @@ class CustomerController extends Controller
                         $selectedp = "";
                       }
                       $html .='<option value="'.$value1->serviceid.'" '.@$selectedp.'>'.$value1->checklistname.'</option>';
-
-                      $checklistdata  = Checklist::select('checklist')->where('serviceid',$value1->serviceid)->get();
-                      foreach($checklistdata as $key => $value2) {
-                         $html .='<option value="'.$value2->serviceid.'" style="margin-left: 25px;" disabled>'.$value2->checklist.'</option>';
-                      }
                     }
                   $html .='</select>
                 </div>
