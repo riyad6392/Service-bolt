@@ -1031,6 +1031,10 @@ class CustomerController extends Controller
         $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
         $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
         if($cinfo->email!=null) {
+
+          $tdata1 = Quote::where('id', $request->ticketid)->get()->first();
+          $tdata1->invoiced = 1;
+          $tdata1->save();
           $user_exist = Customer::where('email', $cinfo->email)->first();
 
             $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->invoicenote,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);

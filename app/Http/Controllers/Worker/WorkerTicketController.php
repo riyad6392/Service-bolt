@@ -621,7 +621,7 @@ class WorkerTicketController extends Controller
        $html ='<div class="add-customer-modal">
                   <h5>Create Invoice</h5>
                 </div>';
-       $html .='<div class="row customer-form" id="product-box-tabs">
+       $html .='<input type="hidden" name="ticketprice" id="ticketprice" value=""><div class="row customer-form" id="product-box-tabs">
        <input type="hidden" value="'.$customer[0]->id.'" name="customerid">
        <input type="hidden" value="'.$request->id.'" name="qid" id="qid">
           <div class="col-md-12 mb-2">
@@ -684,15 +684,15 @@ class WorkerTicketController extends Controller
           
       if(in_array("Create Invoice for payment", $permissonarray)) {
        $html .= '<div class="row"><div class="col-lg-6 mb-2">
-            <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;">Send Invoice</button>
+            <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="sendinvoice">Send Invoice</button>
           </div>
           <div class="col-lg-6">
-            <a href="'.$paynowurl.'" class="add-btn-yellow w-100" style="text-align:center;">Pay Now</a>
+            <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="paynow">Pay Now</button>
           </div></div>';
       }
       elseif(in_array("Generate PDF for invoice", $permissonarray)) {
        $html .= '<div class="row"><div class="col-lg-6 mb-2">
-            <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;">Send Invoice</button>
+            <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="sendinvoice">Send Invoice</button>
           </div>
           </div>';
         }
@@ -725,6 +725,7 @@ class WorkerTicketController extends Controller
 
     public function sendinvoice(Request $request)
     {
+      
       $customerid = $request->customerid;
 
       $customer = Customer::where('id', $customerid)->get()->first();
@@ -751,22 +752,6 @@ class WorkerTicketController extends Controller
 
       $productname = implode(',', $pname);
 
-      // if($request->serviceid) {
-      //   $serviceid =implode(",", $request->serviceid);
-      //   $customer->serviceid =  $serviceid;
-      // } else {
-      //   $customer->serviceid = null;
-      // }
-
-      // if($request->productid) {
-      //   $productid =implode(",", $request->productid);
-      //   $customer->productid =  $productid;
-      // } else {
-      //   $customer->productid = null;
-      // }
-
-      // $customer->save();
-
       $quote = Quote::where('id', $request->id)->get()->first();
 
       $company = User::where('id', $quote->userid)->get()->first();
@@ -785,20 +770,32 @@ class WorkerTicketController extends Controller
       $quote->servicename = $servicedetails[0]->servicename;
       $quote->product_id = rtrim($productid, ',');
       $quote->price = $request->price;
+      $quote->tickettotal = $request->ticketprice;
       $quote->save();
-    if($customer->email!=null) {
-      $app_name = 'ServiceBolt';
-      $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
-      $email = $customer->email;
-      $user_exist = Customer::where('email', $email)->first();
-      //return view('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid]); 
+      if($request->type=="paynow") {
+        $paynowurl = url('personnel/myticket/paynow/').'/'.$request->id;
+        return redirect($paynowurl);
+      }
+      if($request->type=="sendinvoice") {
+        if($customer->email!=null) {
+          $tdata1 = Quote::where('id', $request->id)->get()->first();
+          $tdata1->invoiced = 1;
+          $tdata1->save();
+          $app_name = 'ServiceBolt';
+          $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
+          $email = $customer->email;
+          $user_exist = Customer::where('email', $email)->first();
+          //return view('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid]); 
 
-      Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
-          $message->to($user_exist->email)
-          ->subject('Invoice details!');
-          $message->from($app_email,$app_name);
-        });
-    }
+          Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
+              $message->to($user_exist->email)
+              ->subject('Invoice details!');
+              $message->from($app_email,$app_name);
+            });
+        }
+      }
+
+    
       $request->session()->flash('success', 'Invoice has been sent successfully');
       return redirect()->back();
     }
@@ -1177,7 +1174,7 @@ class WorkerTicketController extends Controller
       $sum = 0;
       foreach ($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
-        $sum+= (int)$value['price'];
+        $sum+= (float)$value['price'];
       } 
 
       $pidarray = explode(',', $request->productid);
@@ -1185,10 +1182,12 @@ class WorkerTicketController extends Controller
       $sum1 = 0;
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
-        $sum1+= (int)$value['price'];
+        $sum1+= (float)$value['price'];
       }
       $totalprice = $sum+$sum1;
-
+      $totalprice = number_format($totalprice,2);
+      $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
+      
       $quote = Quote::where('id', $request->qid)->first();
       $quote->tickettotal = $totalprice;
       // $quote->serviceid = $request->serviceid;

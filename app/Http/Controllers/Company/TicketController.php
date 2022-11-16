@@ -1253,6 +1253,7 @@ class TicketController extends Controller
       }
       $totalprice = $sum+$sum1;
       $totalprice = number_format($totalprice,2);
+      $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
 
       return json_encode(['totalprice' =>$totalprice]);
       die;

@@ -124,7 +124,7 @@
         elseif($value->invoiced=="1") {
           $pstatus = "invoiced";
         }
-        elseif($value->invoiced=="0" && $value->payment_mode=="") {
+        elseif($value->invoiced=="0" && ($value->payment_mode=="" || $value->payment_status=="")) {
           $pstatus = "Pending";
         }
       @endphp

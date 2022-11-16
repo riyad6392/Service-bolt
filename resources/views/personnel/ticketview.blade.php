@@ -1264,7 +1264,6 @@ Save
   $(document).on('change','#serviceid',function(e) {
     var serviceid = $('#serviceid').val();
     var productid = $('#productid').val(); 
-    alert(serviceid);
     var qid = $('#qid').val();
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
     $.ajax({
@@ -1274,8 +1273,8 @@ Save
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            console.log(data.totalprice);
             $('#price12').val(data.totalprice);
+            $('#ticketprice').val(data.totalprice);
           }
       })
   });
@@ -1292,8 +1291,10 @@ Save
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.totalprice);
-              $('#price12').val(data.totalprice);
+              //console.log(data.totalprice);
+              $('#price12').val(data.totalprice); 
+              $('#ticketprice').val(data.totalprice);
+
             }
         })
      });
