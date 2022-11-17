@@ -128,7 +128,7 @@
 
         <tr class="" target="{{$i}}" data-id="{{$value->id}}">
           <td>#{{$value->id}}</td>
-          <td>#{{$value->invoiceid}}</td>
+          <td><a class="btn add-btn-yellow w-100 viewinvoice" data-id="{{$value->id}}" data-duedate="{{$value->duedate}}" data-invoicenote="{{$value->invoicenote}}" data-bs-toggle="modal" data-bs-target="#view-invoice">#{{$value->invoiceid}}</a></td>
           <td>{{date('m-d-Y', strtotime($value->date))}}</td>
           <td>{{$value->customername}}</td>
           <td>{{$value->personnelname}}</td>
@@ -172,6 +172,21 @@
   </div>
 </div>
 </div>
+
+<!-- Due invoice modal -->
+<div class="modal fade" id="view-invoice" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data">
+          @csrf
+          <div id="viewdueinvoicemodaldata"></div>
+        </form>
+      </div>
+  </div>
+</div>
+</div>
+
 @endsection
 
 @section('script')
@@ -281,7 +296,6 @@
       dataType: 'json',
       refresh: true,
       success:function(data) {
-        console.log(data.html);
         $('#viewinvoicemodaldata').html(data.html);
         
       }
@@ -307,6 +321,28 @@
       }
   })
  });
+
+ $(document).on('click','.viewinvoice',function(e) {
+   var id = $(this).data('id');
+   var duedate = $(this).data('duedate');
+   var invoicenote = $(this).data('invoicenote');
+    $.ajax({
+      url:"{{url('company/customer/leftbarviewinvoice')}}",
+      data: {
+        id: id,
+        duedate: duedate,
+        invoicenote: invoicenote,
+      },
+      method: 'post',
+      dataType: 'json',
+      refresh: true,
+      success:function(data) {
+        console.log(data.html);
+        $('#viewdueinvoicemodaldata').html(data.html);
+        
+      }
+    });
+  })  
 </script>
 @endsection
 

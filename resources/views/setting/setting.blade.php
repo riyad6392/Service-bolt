@@ -27,6 +27,15 @@
 ul {
     list-style: none;
 }
+
+.avatar-upload .avatar-preview > div {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 </style>
 <div class="">
 <div class="content">

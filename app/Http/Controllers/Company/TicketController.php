@@ -1225,7 +1225,7 @@ class TicketController extends Controller
           $message->attachData($pdf->output(), "invoice.pdf");
         });
 
-        $request->session()->flash('success', 'Invoice send successfully');
+        $request->session()->flash('success', 'Invoice sent');
       } else {
         $request->session()->flash('success', 'Customer Email id not exist.');
       }
