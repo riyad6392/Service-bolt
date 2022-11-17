@@ -119,7 +119,7 @@
           $pstatus = "Paid";
         } 
         elseif($value->invoiced=="1") {
-          $pstatus = "invoiced";
+          $pstatus = "Invoiced";
         }
         elseif($value->invoiced=="0" && ($value->payment_mode=="" || $value->payment_status=="")) {
           $pstatus = "Pending";

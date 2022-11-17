@@ -102,6 +102,14 @@ ul {
   </span>
 </div>
 <div class="col-lg-6 mb-3">
+  <label>Invoice Text Color</label><br>
+  <span class="color-picker">
+    <label for="colorPicker">
+      <input type="color" value="{{$userData->txtcolor}}" id="txtcolorPicker" name="txtcolor" style="width:235px;">
+    </label>
+  </span>
+</div>
+<div class="col-lg-6 mb-3">
   <label>Invoice Footer content</label><br>
   <textarea class="form-control height-110" placeholder="Description" name="description" id="description">{{$userData->footercontent}}</textarea>
 </div>

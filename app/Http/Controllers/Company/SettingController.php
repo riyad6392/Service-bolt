@@ -39,7 +39,6 @@ class SettingController extends Controller
     }
 
     public function update(Request $request, $id = null) {
-       // dd($request->all());
         $user = User::find(Auth::user()->id);
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
@@ -64,20 +63,11 @@ class SettingController extends Controller
 
         $logofile = $request->file('imageUpload');
         if (isset($logofile)) {
-            // $datetime = date('YmdHis');
-            // $image = $request->imageUpload->getClientOriginalName();
-            // $image = str_replace(" ", "", $image);
-            // $imageName = $datetime . '_' . $image;
-            // $logofile->move(public_path('userimage/'), $imageName);
-
-            //Image::make(public_path('userimage/').$imageName)->fit(300,300)->save(public_path('userimage/').$imageName);
-
            $new_file = $logofile;
            $path = 'userimage/';
            $old_file_name = $user->image;
            $imageName = custom_fileupload($new_file,$path,$old_file_name);
-
-            $user->image = $imageName;
+           $user->image = $imageName;
         }
 
         $user->openingtime = $request->openingtime;
@@ -99,6 +89,8 @@ class SettingController extends Controller
         $user->goodproduct = $request->goodproduct;
         $user->lowproduct = $request->lowproduct;
         $user->color = $request->color;
+        $user->txtcolor = $request->txtcolor;
+        
        // $user->restockproduct = $request->restockproduct;
 
         // if(isset($request->taxtype)) {

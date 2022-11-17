@@ -1041,7 +1041,7 @@ class CustomerController extends Controller
             $message->attachData($pdf->output(), "invoice.pdf");
           });
 
-          return redirect()->back()->withSuccess('Invoice send successfully');
+          return redirect()->back()->withSuccess('Invoice sent');
         } else {
           return redirect()->back()->withSuccess('Customer Email id not exist.');
         }
