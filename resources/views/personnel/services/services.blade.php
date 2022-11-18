@@ -217,20 +217,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           <div class="col-md-12 mb-2">
             <input type="number" class="form-control" placeholder="Service Default Price" name="price" id="price" required="">
           </div>
-          <div class="col-md-12 mb-2">
-            <div class="d-flex align-items-center">
-            <select class="form-select me-2 {{$pname}}" name="defaultproduct" id="defaultproduct" >
-              <option selected="" value="">Select Product</option>
-               @foreach ($productData as $product)
-                <option value="{{$product->id}}">{{$product->productname}}</option>
-              @endforeach
+          <div class="col-md-12 mb-3">
+            <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Products" name="defaultproduct[]" id="defaultproduct">
+            @foreach ($productData as $product)
+                  <option value="{{$product->id}}">{{$product->productname}}</option>
+                @endforeach
             </select>
-           <div class="wrapper" style="display: none;">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
- <div class="tooltip">If you are not seeing the products in dropdown then add it in inventory section then select here.</div>
-</div>
           </div>
-        </div>
           <div class="col-md-12 mb-2">
             <div class="align-items-center justify-content-lg-between d-flex services-list">
               <p>
@@ -271,13 +264,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
             <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div></div>
-          <div class="col-md-12">
+          <div class="col-md-12 mb-2">
             <label>Choose Color</label><br>
             <span class="color-picker">
               <label for="colorPicker">
                 <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
               </label>
             </span>
+          </div>
+          <div class="col-lg-12 mb-2">
+            <textarea class="form-control height-180" name="description" id="description" placeholder="Description" required></textarea>
           </div>
           <div class="col-md-12">
             <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
@@ -400,7 +396,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
-
+  //$('.selectpicker').selectpicker();
+  $('.selectpicker').selectpicker({
+    size: 3
+  });
   jQuery(function() {
    $(document).on('click','.showSingle',function(e) {
         var targetid = $(this).attr('target');
@@ -450,6 +449,7 @@ $(document).on('click','#editService',function(e) {
               console.log(data.html);
               $('#viewmodaldata').html(data.html);
               $('.dropify').dropify();
+              $('.selectpicker').selectpicker();
             }
         })
   });

@@ -512,6 +512,7 @@ function viewmodalpopup(id) {
               });
               
             }
+            
         })
 }
 $(document).on('click','#editPersonnel',function(e) {

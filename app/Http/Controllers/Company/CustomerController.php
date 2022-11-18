@@ -159,7 +159,7 @@ class CustomerController extends Controller
     
     public function address(Request $request)
     {
-
+        
         $cid = $request->customerid;
         $auth_id = auth()->user()->id;
         $data['authid'] = $auth_id;
@@ -565,12 +565,24 @@ class CustomerController extends Controller
 
       $serviceid = explode(',', $quoteData[$datacount]->serviceid);
 
-       $servicedetails = Service::select('servicename')->whereIn('id', $serviceid)->get();
+      $servicedetails = Service::select('servicename')->whereIn('id', $serviceid)->get();
 
       foreach ($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
       } 
       $servicename = implode(',', $sname);
+
+      $productname = "";
+      if($quoteData[$datacount]->product_id!="") {
+        $product_id = explode(',', $quoteData[$datacount]->product_id);
+
+        $productdetails = Inventory::select('productname')->whereIn('id', $product_id)->get();
+
+        foreach($productdetails as $key => $value) {
+          $pname[] = $value['productname'];
+        } 
+        $productname = implode(',', $pname);
+      }
 
       if($quoteData[$datacount]->ticket_status == "3") {
         $ticketstatus = "Completed";
@@ -636,8 +648,12 @@ class CustomerController extends Controller
          <div class="col-md-12 mb-3">
            <div class="number-1">Service Name: </div>'.$servicename.'
            
-         </div>
-         <div class="col-md-12 mb-3">
+         </div>';
+          if($productname !="") {
+            $html .='<div class="col-md-12 mb-3">
+              <div class="number-1">Product Name:</div>'.$productname.'</div>';
+          }
+          $html .='<div class="col-md-12 mb-3">
             <div class="number-1">Frequency:</div>'.$quoteData[$datacount]->frequency.'
           </div>
           <div class="col-md-12 mb-2">
@@ -664,6 +680,18 @@ class CustomerController extends Controller
         } else {
           $imagepath = url('/').'/uploads/servicebolt-noimage.png';
         }
+      }
+
+      $productname = "";
+      if($quoteData->product_id!="") {
+        $product_id = explode(',', $quoteData->product_id);
+
+        $productdetails = Inventory::select('productname')->whereIn('id', $product_id)->get();
+
+        foreach($productdetails as $key => $value) {
+          $pname[] = $value['productname'];
+        } 
+        $productname = implode(',', $pname);
       } 
 
       $serviceid = explode(',', $quoteData->serviceid);
@@ -742,8 +770,12 @@ class CustomerController extends Controller
          <div class="col-md-12 mb-3">
            <div class="number-1">Service Name:</div> '.$servicename.'
            
-         </div>
-         <div class="col-md-12 mb-2">
+         </div>';
+          if($productname !="") {
+            $html .='<div class="col-md-12 mb-3">
+              <div class="number-1">Product Name:</div>'.$productname.'</div>';
+          }
+          $html .='<div class="col-md-12 mb-2">
             <div class="number-1">Frequency:</div>'.$quoteData->frequency.'
           </div>
           <div class="col-md-12 mb-2">

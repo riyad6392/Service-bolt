@@ -231,6 +231,7 @@
     
      <form class="form-material m-t-40 row form-valide" method="post" action="{{route('company.directpaynow')}}" enctype="multipart/form-data">
         @csrf
+        <input type="hidden" name="ticketprice" id="ticketprice" value=""> 
         @php
       if(count($customer)>0) {
         $custmername = "";
@@ -262,7 +263,7 @@
     </div>
 
     <div class="col-md-12 mb-3">
-      <select class="selectpicker form-control me-2" multiple aria-label="Default select example" data-placeholder="Select Products" data-live-search="true" name="productname[]" id="productname" >
+      <select class="selectpickerp1 form-control me-2" multiple aria-label="Default select example" data-placeholder="Select Products" data-live-search="true" name="productname[]" id="productname" >
               @foreach($productData as $product)
                 <option value="{{$product->id}}">{{$product->productname}}</option>
               @endforeach
@@ -421,6 +422,71 @@
       }
   })
  });
+
+ $(".selectpickerp1").selectpicker();
+  function gethours() {
+    var h=0;
+    var m=0;
+    $('select.selectpicker').find('option:selected').each(function() {
+      h += parseInt($(this).data('hour'));
+      m += parseInt($(this).data('min'));
+    });
+    var realmin = m % 60;
+      var hours = Math.floor(m / 60);
+      h = h+hours;
+      $("#time").val(h);
+    $("#minute").val(realmin);
+  }
+  function getfrequency() {
+      var frequency = "";
+      $("#frequency option").removeAttr('selected');
+      $('select.selectpicker').find('option:selected').each(function() {
+          frequency = $(this).data('frequency');
+      });
+      $("#frequency option[value='"+frequency+"']").attr('selected', 'selected');
+      
+  }
+
+ $(document).on('change','#servicename',function(e) {
+  gethours();
+  getfrequency();
+  var serviceid = $('#servicename').val();
+  var productid = $('#productname').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            //console.log(data.totalprice);
+            $('#price').val(data.totalprice);
+            $('#ticketprice').val(data.totalprice);
+           }
+      })
+});
+
+$(document).on('change','#productname',function(e) {
+  //getpricep1();
+  var serviceid = $('#servicename').val();
+    var productid = $('#productname').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            //console.log(data.totalprice);
+            $('#price').val(data.totalprice);
+            $('#ticketprice').val(data.totalprice);
+      }
+      })
+});
 </script>
 @endsection
 

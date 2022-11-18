@@ -79,6 +79,9 @@ class WorkerAdminServicesController extends Controller
           } else {
              $data['productid'] = null;
           }
+
+          $data['description'] = $request->description;
+
           $data['type'] = $request->radiogroup;
           $data['frequency'] = $request->frequency;
           if($request->time!=null || $request->time!=0) {
@@ -145,41 +148,9 @@ class WorkerAdminServicesController extends Controller
         if($services[0]['type'] =='flatrate') {
             $checked2 = "checked";
         }
-
-        // if($services[0]->frequency =='One Time') {
-        //     $selectedfo = "selected";
-        // }
-
-        // if($services[0]->frequency =='Weekly') {
-        //     $selectedf = "selected";
-        // }
-        // if($services[0]->frequency =='Be weekly') {
-        //     $selectedf1 = "selected";
-        // }
-        // if($services[0]->frequency =='Monthly') {
-        //     $selectedf2 = "selected";
-        // }
-        // if($services[0]['time'] =='15 Minutes') {
-        //     $selectedt1 = "selected";
-        // }
-        // if($services[0]->time =='30 Minutes') {
-        //     $selectedt2 = "selected";
-        // }
-        // if($services[0]->time =='45 Minutes') {
-        //     $selectedt3 = "selected";
-        // }
-        // if($services[0]->time =='1 Hours') {
-        //     $selectedt4 = "selected";
-        // }
        $time =  explode(" ", $services[0]['time']);
        $minute =  explode(" ", $services[0]['minute']); 
-        // $cheklist =explode (",", $services[0]->checklist); 
-        // if(in_array('point1', $cheklist)) {
-        //     $checkeds = "checked";
-        // }
-        // if(in_array('point2', $cheklist)) {
-        //     $checkeds1 = "checked";
-        // }
+     
        $html ='<div class="add-customer-modal">
                   <h5>Edit Service</h5>
                 </div>';
@@ -198,15 +169,15 @@ class WorkerAdminServicesController extends Controller
           </div>
           <div class="col-md-12 mb-2">
             <label>Select Product</label>
-            <select class="form-select" name="defaultproduct" id="defaultproduct">
-              <option value="">Select Product</option>';
+            <select class="form-control selectpicker" name="defaultproduct[]" id="defaultproduct" multiple aria-label="Default select example" data-placeholder="Select Products" data-live-search="true">';
 
               foreach($productData as $key => $value) {
-                  if($value->id == $services[0]['productid']) {
-                    $selectedp = "selected";
-                  } else {
-                    $selectedp = "";
-                }
+                $productids =explode(",", $services[0]['productid']);
+                if(in_array($value->id, $productids)) {
+                  $selectedp = "selected";
+                 } else {
+                  $selectedp = "";
+                 }
                 $html .='<option value="'.$value->id.'" '.@$selectedp.'>'.$value->productname.'</option>';
               }
         $html .='</select>
@@ -249,13 +220,16 @@ class WorkerAdminServicesController extends Controller
             <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" value="'.$minute[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
             </div>
           </div>
-          <div class="col-md-12">
+          <div class="col-md-12 mb-2">
             <label>Choose Color</label><br>
             <span class="color-picker">
               <label for="colorPicker">
                 <input type="color" value="'.$services[0]['color'].'" id="colorPicker1" name="colorcode" style="width:235px;">
               </label>
             </span>
+          </div>
+           <div class="col-lg-12 mb-2">
+            <textarea class="form-control height-180" name="description" id="description" placeholder="Description" required>'.$services[0]['description'].'</textarea>
           </div>
            <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 122 * 122</div>
           <div class="col-lg-12 mb-2 relative">
@@ -303,7 +277,11 @@ class WorkerAdminServicesController extends Controller
             $service = Service::where('id', $request->serviceid)->get()->first();
             $service->servicename = $request->servicename;
             $service->price = $request->price;
-            $service->productid = $request->defaultproduct;
+            if(isset($request->defaultproduct)) {
+             $service->productid = implode(',', $request->defaultproduct);
+            } else {
+              $service->productid = null;
+            }
             $service->type = $request->radiogroup;
             $service->frequency = $request->frequency;
             if(isset($request->pointckbox)) {
@@ -326,6 +304,7 @@ class WorkerAdminServicesController extends Controller
               $service->image = $imageName;
             }
             $service->color = $request->colorcode;
+            $service->description = $request->description;
             $service->save();
             $request->session()->flash('success', 'Service Updated successfully');
             return redirect()->route('company.services');

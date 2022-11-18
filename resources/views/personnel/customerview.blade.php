@@ -104,7 +104,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      </div>
   </div>
   <div class="col-lg-3 offset-lg-1 mb-3" style="display: block;">
-    <button class="btn btn-add btn-block" type="submit">Add Address</button>
+    <!-- <button class="btn btn-add btn-block" type="submit">Add Address</button> -->
+    <a class="btn btn-add btn-block" data-bs-toggle="modal" data-bs-target="#add-note" id="addnote" style="padding: 10px;">Add Address</a>
   </div>
 </form>
 
@@ -153,13 +154,26 @@ input[type="date"]::-webkit-calendar-picker-indicator {
        <div class="col-lg-12 mb-2">
          <div class="d-flex align-items-center justify-content-between ps-4 pt-2 pe-4 pb-2 address-line2 address-line">
            <div class="d-flex align-items-center"><a href="javascript:void(0);" class="info_link1" dataval="{{$value->id}}"><i class="fa fa-trash"></i></a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="me-3"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z" fill="currentColor"></path></svg> <a class="" data-bs-toggle="modal" data-bs-target="#edit-address" id="editaddress" data-id="{{$value->id}}" data-address="{{$value->address}}">{{$value->address}}</a></div>
+           <a class="" data-bs-toggle="modal" data-bs-target="#edit-note" id="editnote" data-id="{{$value->id}}" data-note="{{$value->notes}}"><img src="{{url('/')}}/images/writing.png" style="width:30px;"></a>
         <!--  <button class="btn btn-save confirm">Service Ticket</button> -->
         <a class="btn btn-save confirm" data-bs-toggle="modal" data-bs-target="#create-ctickets" id="createctickets" data-id="{{$value->customerid}}" data-address="{{$value->address}}" style="display: none;">Service Ticket</a>
          </div>
        </div>
      @endforeach
   
-     
+    <!-- edit notes modal open -->
+    <div class="modal fade" id="edit-note" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content customer-modal-box">
+          <div class="modal-body">
+            <form method="post" action="{{ route('company.updatenotes') }}" enctype="multipart/form-data">
+              @csrf
+              <div id="vieweditnotemodaldata"></div>
+            </form>
+          </div>
+      </div>
+    </div>
+    </div> 
      
      
   
@@ -330,6 +344,46 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="add-note" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+     
+      <div class="modal-body">
+        <form method="post" action="{{route('company.customeraddresscreate')}}" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="saddress" id="saddress" value="">
+        <input type="hidden" name="customerid" id="customerid" value="{{@$customerData[0]->id}}">
+        <div class="add-customer-modal">
+                  <div style="font-size:25px;">Add Notes</div>
+                 </div>
+               <div class="col-md-12 mb-2">
+                <div class="input_fields_wrap">
+                  <select class="form-control selectpicker " multiple="" data-placeholder="Select Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">
+                    @foreach($adminchecklist as $key =>$value1)
+                      <option value="{{$value1->serviceid}}">{{$value1->checklistname}}</option>';
+                    @endforeach
+
+                 </select>
+                </div>
+              </div> 
+            <div class="col-md-12 mb-2">
+             <div class="input_fields_wrap">
+                <div class="mb-3">
+                <textarea class="form-control" name="note" id="note" placeholder="Notes" cols="45" rows="5"></textarea>
+                  </div>
+            </div>
+          </div>
+        <div class="col-lg-6 mb-3" style="display:none;">
+          <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
+        </div><div class="col-lg-6 mb-3 mx-auto">
+          <button class="btn btn-add btn-block" type="submit">Save</button>
+        </div>
+      </form>
+      </div>
+  </div>
+</div>
+</div>
 @endsection
 
 @section('script')
@@ -462,6 +516,53 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     $(b).click(function() {
          $(this).addClass('selectedrow').siblings().removeClass('selectedrow');
     });
+  });
+
+  $(document).on('click','#addnote',function(e) {
+  var address = $("#address").val();
+  if(address=="") {
+
+    swal({
+              title: "Search address?",
+              text: "Can you please search address!",
+              type: "warning",
+              showCancelButton: false,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "ok",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function (isConfirm) {
+              if (isConfirm) {
+                  location.reload();
+                  }
+              }
+        )
+    }   else {
+      $("#saddress").val(address);
+    }  
+});
+
+  $(document).on('click','#editnote',function(e) {
+   $('.selectpicker').selectpicker();
+   var cid = $(this).data('id');
+   var note = $(this).data('note');
+   $.ajax({
+            url:'{{route('worker.vieweditnotemodal')}}',
+            data: {
+              'cid':cid,
+              'note':note,
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#vieweditnotemodaldata').html(data.html);
+              $('.selectpicker').selectpicker({
+                size: 3
+              });
+            }
+        })
   });
 </script>
 @endsection

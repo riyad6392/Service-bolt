@@ -128,10 +128,10 @@ class WorkerAdminProductController extends Controller
                <h5>Edit Product/Part</h5>
                </div><div class="tabs-product row mb-4">
                <div class="col-lg-5">
-               <span class="btn btn-product information-tabs-1" id="">Information</span>
+               <span class="btn btn-product information-tabs-1" id="info1">Information</span>
                </div>
                <div class="col-lg-7">
-               <span class="btn btn-desc description-product-1" id="">Description and Images</span>
+               <span class="btn btn-desc description-product-1" id="descrip1">Description and Images</span>
                </div>
                </div>';
        $html .='<div class="row customer-form" id="product-box-tabs-1">
@@ -156,19 +156,19 @@ class WorkerAdminProductController extends Controller
           </div>
        <div class="col-md-6 mb-3">
         <label>Quantity</label>
-        <input type="text" class="form-control" placeholder="Quantity" value="'.$inventory[0]->quantity.'" name="quantity" required>
+        <input type="text" class="form-control" placeholder="Quantity" value="'.$inventory[0]->quantity.'" name="quantity" id="quantity" required>
        </div>
        <div class="col-md-6 mb-3">
       <label>Preferred Quantity</label>
-      <input type="text" class="form-control" placeholder="Preferred Quantity" value="'.$inventory[0]->pquantity.'" name="pquantity" required>
+      <input type="text" class="form-control" placeholder="Preferred Quantity" value="'.$inventory[0]->pquantity.'" name="pquantity" id="pquantity" required>
      </div>
      <div class="col-md-12 mb-3">
       <label>SKU</label>
-     <input type="text" class="form-control" placeholder="SKU #" value="'.$inventory[0]->sku.'" name="sku" required>
+     <input type="text" class="form-control" placeholder="SKU #" value="'.$inventory[0]->sku.'" name="sku" id="sku" required>
      </div>
      <div class="col-md-12 mb-3">
       <label>Price</label>
-     <input type="text" class="form-control" placeholder="Price" class="form-control" placeholder="SKU #" value="'.$inventory[0]->price.'" name="price" required>
+     <input type="text" class="form-control" placeholder="Price" class="form-control" placeholder="Price" value="'.$inventory[0]->price.'" name="price" id="price" required>
      </div>
       <div class="col-md-12 mb-3">
     <label>Category</label>
@@ -189,13 +189,13 @@ class WorkerAdminProductController extends Controller
      <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
      </div>
      <div class="col-lg-6">
-     <span class="btn btn-add btn-block description-product-1">Next</span>
+     <button class="btn btn-add btn-block description-product-1" id="next1" name="next1" value="next1">Next</button>
      </div>
      </div>
      
      <div class="row customer-form" id="product-desc-tabs-1" style="display:none;">
       <div class="col-lg-12 mb-3">
-    <textarea class="form-control height-180" name="description">'.$inventory[0]->description.'</textarea>
+    <textarea class="form-control height-180" name="description" id="description" required>'.$inventory[0]->description.'</textarea>
     </div>
     <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
       <div class="col-lg-12 mb-2 relative">

@@ -111,11 +111,14 @@ class WorkerCustomerController extends Controller
          return redirect()->back();
       }
 
-      $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
+      $worker = DB::table('users')->select('workerid','userid')->where('id',$auth_id)->first();
       $customerData = Customer::where('id',$id)->get(); 
       $customerAddress = Address::where('customerid',$id)->get();
       $recentTicket = Quote::where('customerid',$id)->where('personnelid','!=',null)->where('parentid','=',"")->orderBy('id','DESC')->get();
-      return view('personnel.customerview',compact('customerData','customerAddress','recentTicket'));
+
+      $adminchecklist = DB::table('checklist')->select('serviceid','checklistname')->where('userid',$worker->userid)->groupBy('serviceid')->get();
+
+      return view('personnel.customerview',compact('customerData','customerAddress','recentTicket','adminchecklist'));
     }
 
     public function deleteAddress(Request $request)
@@ -313,6 +316,17 @@ class WorkerCustomerController extends Controller
       if(isset($request->serviceid)) {
           $data['serviceid'] = implode(',', $request->serviceid);
       }
+      if(isset($request->billingaddress)) {
+        $data['billingaddress'] = $request->billingaddress;
+      } else {
+        $data['billingaddress'] = null;
+      }
+
+      if(isset($request->mailingaddress)) {
+        $data['mailingaddress'] = $request->mailingaddress;
+      } else {
+        $data['mailingaddress'] = null;
+      }
       Customer::create($data);
       $request->session()->flash('success', 'Customer added successfully');
       return redirect()->route('worker.customer');
@@ -372,6 +386,16 @@ class WorkerCustomerController extends Controller
             <label>Customer Name</label>
             <input type="text" class="form-control" placeholder="Customer Name" name="customername" id="customername" value="'.$customer[0]->customername.'" required>
           </div>
+          </div>
+
+          <div class="col-md-12 mb-2">
+           <label>Billing Address</label>
+            <input type="text" class="form-control" placeholder="Billing Address" name="billingaddress" id="billingaddress" value="'.$customer[0]->billingaddress.'">
+          </div>
+
+          <div class="col-md-12 mb-2">
+          <label>Mailing Address</label>
+            <input type="text" class="form-control" placeholder="Mailing Address" name="mailingaddress" id="mailingaddress" value="'.$customer[0]->mailingaddress.'">
           </div>
           
           <div class="col-md-12 mb-2">
@@ -447,9 +471,64 @@ class WorkerCustomerController extends Controller
            $imageName = custom_fileupload1($new_file,$path,$thumbnailpath,$old_file_name);
            $customer->image = $imageName;
       }
+      if(isset($request->billingaddress)) {
+        $customer->billingaddress = $request->billingaddress;
+      } else {
+        $customer->billingaddress = null;
+      }
+
+      if(isset($request->mailingaddress)) {
+        $customer->mailingaddress = $request->mailingaddress;
+      } else {
+        $customer->mailingaddress = null;
+      }
       $customer->save();
       $request->session()->flash('success', 'Customer Updated successfully');
       return redirect()->route('worker.customer');
+    }
+
+    public function vieweditnotemodal(Request $request)
+    {
+      $json = array();
+      $auth_id = auth()->user()->id;
+      $worker = DB::table('users')->select('workerid','userid')->where('id',$auth_id)->first();
+      $adminchecklist = DB::table('checklist')->select('serviceid','checklistname')->where('userid',$worker->userid)->groupBy('serviceid')->get();
+
+      $addressinfo = Address::select('checklistid')->where('id',$request->cid)->first();
+      $html ='<div class="add-customer-modal">
+                  <div style="font-size:25px;">Edit Notes</div>
+                 </div>';
+               $html .='<div class="col-md-12 mb-2">
+                <div class="input_fields_wrap">
+                  <select class="form-control selectpicker " multiple="" data-placeholder="Select Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">';
+                    foreach($adminchecklist as $key =>$value1) {
+                      $checklistids =explode(",", $addressinfo->checklistid);
+                      
+                      if(in_array($value1->serviceid, $checklistids)) {
+                        $selectedp = "selected";
+                      } else {
+                        $selectedp = "";
+                      }
+                      $html .='<option value="'.$value1->serviceid.'" '.@$selectedp.'>'.$value1->checklistname.'</option>';
+                    }
+                  $html .='</select>
+                </div>
+              </div>';  
+              $html .='<input type="hidden" name="customerid" id="customerid" value="'.$request->cid.'">
+            <div class="col-md-12 mb-2">
+             <div class="input_fields_wrap">
+                <div class="mb-3">
+                <textarea class="form-control" name="note" id="note" placeholder="Notes" cols="45" rows="5">'.$request->note.'</textarea>
+                  </div>
+            </div>
+          </div>
+        <div class="col-lg-6 mb-3" style="display:none;">
+          <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
+        </div><div class="col-lg-6 mb-3 mx-auto">
+          <button class="btn btn-add btn-block" type="submit">Update</button>
+        </div>';
+        return json_encode(['html' =>$html]);
+          die;
     }
     
 }

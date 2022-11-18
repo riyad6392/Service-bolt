@@ -720,13 +720,13 @@ class BillingController extends Controller
         $productname = "";
         $pid = "";
       }
-      return view('billing.directpaynow',compact('customerid','customer','amount','servicename','productname','serviceid','pid')); 
+      $ticketprice = $request->ticketprice;
+      return view('billing.directpaynow',compact('customerid','customer','amount','servicename','productname','serviceid','pid','ticketprice')); 
     }
 
 
     public function directicketsave(Request $request)
     {
-      
           $auth_id = auth()->user()->id;
           $etc = date('Y-m-d');
 
@@ -735,6 +735,7 @@ class BillingController extends Controller
             'customerid' => $request->customerid,
             'customername' => $request->customername,
             'price' => $request->amount,
+            'tickettotal' => $request->ticketprice,
             'radiogroup' => 'flatrate',
             'frequency' => 'One Time',
             'payment_mode' => $request->method,

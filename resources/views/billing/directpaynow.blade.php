@@ -113,6 +113,8 @@
                   <input type="hidden" name="customerid" id="customerid" value="{{$customer->id}}">
                   <input type="hidden" name="sid" id="sid" value="{{$serviceid}}">
                   <input type="hidden" name="pid" id="pid" value="{{$pid}}">
+                  <input type="hidden" name="ticketprice" id="ticketprice" value="{{$ticketprice}}">
+                  
 							@csrf 
 								<div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
 									<div class="accordion-body">

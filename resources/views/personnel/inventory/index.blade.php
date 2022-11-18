@@ -22,6 +22,9 @@
     padding: 8px 34px;
     box-shadow: 0px 0px 10px #ccc;
 }
+.error-msg {
+	color: red;
+}
 </style>
 <div class="">
 <div class="content">
@@ -205,10 +208,10 @@
 	   
 	   <div class="tabs-product row mb-4">
 	   <div class="col-lg-5">
-	   <button class="btn btn-product information-tabs" id="" type="button">Information</button>
+	   <button class="btn btn-product information-tabs" id="info" type="button">Information</button>
 	   </div>
 	   <div class="col-lg-7">
-	   <button class="btn btn-desc description-product" id="" type="button">Description and Images</button>
+	   <button class="btn btn-desc description-product" id="descrip" type="button">Description and Images</button>
 	   </div>
 	   </div>
 	   
@@ -266,7 +269,7 @@
 	   <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
 	   </div>
 	   <div class="col-lg-6">
-	   <button class="btn btn-add btn-block description-product">Next</button>
+	   <button class="btn btn-add btn-block description-product" id="next">Next</button>
 	   </div>
 	   
 	   </div>
@@ -357,6 +360,7 @@
 <!-- dots Modal End -->
 @endsection
 @section('script')
+<script src="//cdnjs.cloudflare.com/ajax/libs/parsley.js/2.1.2/parsley.min.js"></script>
 <script type="text/javascript">
   $('.dropify').dropify();
   $(document).ready(function() {
@@ -370,6 +374,44 @@
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
+
+    var parsley_valiation_options = {
+         errorTemplate: '<span class="error-msg"></span>',
+         errorClass: 'error'
+    }
+
+		$('form').parsley(parsley_valiation_options);
+
+		$('.description-product').click(function() {
+			if($("#productname").val()=="" || $("#quantity").val()=="" || $("#pquantity").val()=="" || $("#sku").val()=="" || $("#price").val()=="") {
+				$("#product-desc-tabs").hide();
+		  	$("#product-box-tabs").show();
+		  	$('#info').addClass('btn-product');
+		  	$('#descrip').removeClass('btn-product');
+		  	$('#next').removeClass('btn-product');
+			} else {
+				$("#product-desc-tabs").show();
+		  	$("#product-box-tabs").hide();
+		  	return false;
+			}
+		});
+
+		$(document).on('click','#next1',function(e) {
+			return false;
+			if($(document).find('#productname').val()=="" || $(document).find('#quantity').val()=="" || $(document).find('#pquantity').val()=="" || $(document).find('#sku').val()=="" || $(document).find('#price').val()=="" || $(document).find('#description').val()=="") {
+				$("#product-desc-tabs-1").hide();
+		  	$("#product-box-tabs-1").show();
+		  	$('#info1').addClass('btn-product');
+		  	$('#descrip1').removeClass('btn-product');
+		  	$('#next1').removeClass('btn-product');
+		  }
+			else {
+				$("#product-desc-tabs-1").show();
+		  	$("#product-box-tabs-1").hide();
+		  	return false;
+		  }
+		
+	});
 
   jQuery(function() {
    $(document).on('click','.showSingle',function(e) {
@@ -424,6 +466,7 @@ $(document).on('click','#editProduct',function(e) {
               $('.selectpicker').selectpicker({
                 size: 3
               });
+              $('form').parsley(parsley_valiation_options);
             }
         })
   });

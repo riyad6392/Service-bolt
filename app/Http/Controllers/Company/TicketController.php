@@ -927,6 +927,18 @@ class TicketController extends Controller
         $sname[] = $value['servicename'];
       } 
       $servicename = implode(',', $sname);
+      $productname = "";
+      if($quotedetails[0]->product_id!="") {
+        $product_id = explode(',', $quotedetails[0]->product_id);
+
+         $productdetails = Inventory::select('productname')->whereIn('id', $product_id)->get();
+
+        foreach ($productdetails as $key => $value) {
+          $pname[] = $value['productname'];
+        } 
+        $productname = implode(',', $pname);
+      }
+       
 
        $allcustomer = Customer::where('userid', $auth_id)->get();
       
@@ -981,8 +993,12 @@ class TicketController extends Controller
           </div>
         </div>
           <div class="col-md-12 mb-2">
-            <label>Service Name:&nbsp;</label>'.$servicename.'</div>
-          <div class="col-md-12 mb-2">
+            <label>Service Name:&nbsp;</label>'.$servicename.'</div>';
+          if($productname !="") {
+            $html .='<div class="col-md-12 mb-2">
+              <label>Product Name:&nbsp;</label>'.$productname.'</div>';
+          }
+          $html .='<div class="col-md-12 mb-2">
             <label>Frequency:&nbsp;</label>'.$quotedetails[0]->frequency.'
           </div>
           <div class="col-md-12 mb-2">

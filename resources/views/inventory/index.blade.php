@@ -912,8 +912,6 @@ function readURL(input) {
   });
   $("#hidequoteservice").click(function() {
   	//$("#add-product").hide();
-  	
-
-	});
+  });
 </script>
 @endsection

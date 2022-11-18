@@ -453,6 +453,8 @@ Route::group([
 
     Route::any('/customer/update', [WorkerCustomerController::class, 'update'])->name('customerupdate');
 
+    Route::any('/customer/vieweditnotemodal', [WorkerCustomerController::class, 'vieweditnotemodal'])->name('vieweditnotemodal');
+
     //balance-sheet module
     Route::get('/balancesheet', [WorkerBalancesheetController::class, 'index'])->name('balancesheet');
     Route::post('/balancesheetfilter', [WorkerBalancesheetController::class, 'balancesheetfilter'])->name('balancesheetfilter');
