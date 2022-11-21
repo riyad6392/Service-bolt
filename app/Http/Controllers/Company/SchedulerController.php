@@ -778,10 +778,22 @@ class SchedulerController extends Controller
 
         $serviceid = implode(',', $request->servicename);
 
-        $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->servicename)->get();
+        $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', auth()->user()->id)->first();
 
+        $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->servicename)->get();
+        $sum = 0;
         foreach ($servicedetails as $key => $value) {
           $sname[] = $value['servicename'];
+            $txvalue = 0;
+            if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+              if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                  $txvalue = $value['price']*$userdetails->servicevalue/100; 
+              } else {
+                  $txvalue = 0;
+              }
+            }
+            $sum+= $txvalue;
+
         } 
         $servicename = implode(',', $sname);
 
@@ -790,16 +802,28 @@ class SchedulerController extends Controller
         if(isset($request->productname)) {
             $productid = implode(',', $request->productname);
         }
+        $sum1 = 0;
+        $txvalue1 = 0;
         if($request->productname!="") {
             $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
              
             foreach ($productdetails as $key => $value) {
                 $pname[] = $value['productname'];
+                if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+                    if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+                        $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+                    } else {
+                        $txvalue1 = 0;
+                    }
+                }
+                $sum1+= $txvalue1;
             }
 
             $productname = $productdetails[0]->productname;   
         }
-        
+        $totaltax = $sum+$sum1;
+        $totaltax = number_format($totaltax,2);
+        $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
 
         $auth_id = auth()->user()->id;
         $data['userid'] = $auth_id;
@@ -825,6 +849,7 @@ class SchedulerController extends Controller
         $data['customername'] =  $customer->customername;
         $data['address'] = $request->address;
         $data['tickettotal'] = $request->tickettotal;
+        $data['tax'] = $totaltax;
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
         $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
@@ -1429,27 +1454,52 @@ class SchedulerController extends Controller
     public function sticketupdate(Request $request)
     {
 
-      //$customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
+      $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', auth()->user()->id)->first();
 
       $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->servicename)->get();
+      $sum = 0;
       foreach ($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
+        $txvalue = 0;
+        if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+          if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+              $txvalue = $value['price']*$userdetails->servicevalue/100; 
+          } else {
+              $txvalue = 0;
+          }
+        }
+        $sum+= $txvalue;
       } 
       //$productid = implode(',', array_unique($pid));
              
       $servicename = implode(',', $sname); 
 
       $productname = null;
+
+    $sum1 = 0;
+    $txvalue1 = 0;
+
      if($request->productname!="") {
         $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
        
         foreach ($productdetails as $key => $value) {
           $pname[] = $value['productname'];
+          if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+            if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+                $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+            } else {
+                $txvalue1 = 0;
+            }
+            }
+            $sum1+= $txvalue1;
         }
 
         $productname = $productdetails[0]->productname; 
      }   
     
+    $totaltax = $sum+$sum1;
+    $totaltax = number_format($totaltax,2);
+    $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
 
       $quote = Quote::where('id', $request->quoteid)->orWhere('parentid',$request->quoteid)->get();
       foreach($quote as $key =>$quote) {
@@ -1486,6 +1536,7 @@ class SchedulerController extends Controller
       $quote->description = $request->description;
       $quote->address = $request->address;
       $quote->tickettotal = $request->tickettotal;
+      $quote->tax = $totaltax;
       $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
       $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 

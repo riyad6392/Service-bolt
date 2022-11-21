@@ -725,33 +725,61 @@ class WorkerTicketController extends Controller
 
     public function sendinvoice(Request $request)
     {
-      
+      $auth_id = auth()->user()->id;
+      $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
       $customerid = $request->customerid;
 
       $customer = Customer::where('id', $customerid)->get()->first();
 
       $serviceid = implode(',', $request->serviceid);
 
-      $servicedetails = Service::select('servicename','productid')->whereIn('id', $request->serviceid)->get();
-       
-      foreach ($servicedetails as $key => $value) {
+      $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', $worker->userid)->first();
+
+      $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->serviceid)->get();
+      $sum = 0;
+      foreach($servicedetails as $key => $value) {
         $pid[] = $value['productid'];
         $sname[] = $value['servicename'];
-      } 
-      //$productid = implode(',', array_unique($pid));
-      $productid = implode(',', $request->productid);
-      
+        $txvalue = 0;
+        if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+          if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+              $txvalue = $value['price']*$userdetails->servicevalue/100; 
+          } else {
+              $txvalue = 0;
+          }
+        }
+        $sum+= $txvalue;
+      }
       $servicename = implode(',', $sname);
 
-      $pdetails = Inventory::select('productname','id')->whereIn('id', $request->productid)->get();
+      $productid = "";
+      $productname = "";
+      $sum1 = 0;
+      $txvalue1 = 0;
+      if($request->productid!="") {
+        $productid = implode(',', $request->productid);
+
+        $pdetails = Inventory::select('productname','id','price')->whereIn('id', $request->productid)->get();
       
-      foreach ($pdetails as $key => $value) {
-        $pname[] = $value['productname'];
-      } 
+          foreach ($pdetails as $key => $value) {
+            $pname[] = $value['productname'];
+            if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+              if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+                  $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+              } else {
+                  $txvalue1 = 0;
+              }
+              }
+              $sum1+= $txvalue1;
+          } 
+          $productname = implode(',', $pname);
+      }
 
-
-      $productname = implode(',', $pname);
-
+      $totaltax = $sum+$sum1;
+      $totaltax = number_format($totaltax,2);
+      $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
+      
       $quote = Quote::where('id', $request->id)->get()->first();
 
       $company = User::where('id', $quote->userid)->get()->first();
@@ -771,6 +799,7 @@ class WorkerTicketController extends Controller
       $quote->product_id = rtrim($productid, ',');
       $quote->price = $request->price;
       $quote->tickettotal = $request->ticketprice;
+      $quote->tax = $totaltax;
       $quote->save();
       if($request->type=="paynow") {
         $paynowurl = url('personnel/myticket/paynow/').'/'.$request->id;
@@ -785,8 +814,6 @@ class WorkerTicketController extends Controller
           $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
           $email = $customer->email;
           $user_exist = Customer::where('email', $email)->first();
-          //return view('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid]); 
-
           Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
               $message->to($user_exist->email)
               ->subject('Invoice details!');

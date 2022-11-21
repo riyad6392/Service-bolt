@@ -17,7 +17,9 @@
 
           @endif
      </p>
-   
+   @php
+	  	$totalprice = $quoteData->price + $quoteData->tax;
+	  @endphp
 	<div class="tabs">
 	@if($paymentpaid==1)
   @else
@@ -56,7 +58,8 @@
     	<div class="card card-pay mb-3">
 	  <div class="card-body">
 	  <h4>Paid succesfully.</h4>
-	  <h4>Total: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span></h4>
+	  <h4>Total: <span>${{number_format((float)$totalprice, 2, '.', '')}}</span></h4>
+	  (Price: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span>, Tax: <span>${{number_format((float)$quoteData->tax, 2, '.', '')}}</span>)
 	  
 	  
 	
@@ -69,7 +72,8 @@
     	<div class="card card-pay mb-3">
 	  <div class="card-body">
 	  <h4>You have to pay</h4>
-	  <h4>Total: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span></h4>
+	  <h4>Total: <span>${{number_format((float)$totalprice, 2, '.', '')}}</span></h4>
+	  (Price: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span>, Tax: <span>${{number_format((float)$quoteData->tax, 2, '.', '')}}</span>)
 	  
 	  
 	
@@ -118,7 +122,8 @@
       <div class="card card-pay mb-3">
 	  <div class="card-body">
 	  <h4>You have to pay</h4>
-	  <h4>Total: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span></h4>
+	  <h4>Total: <span>${{number_format((float)$totalprice, 2, '.', '')}}</span></h4>
+	  (Price: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span>, Tax: <span>${{number_format((float)$quoteData->tax, 2, '.', '')}}</span>)
 	  
 	  
 	
@@ -142,7 +147,7 @@
 									<div class="accordion-body">
 									<div class="mb-3">
 									<label class="form-label">Enter Cash Ammount</label>
-									<input type="text" class="form-control form-control-2" value="{{number_format((float)$quoteData->price, 2, '.', '')}}" placeholder="Cash Amount" name="payment_amount" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+									<input type="text" class="form-control form-control-2" value="{{number_format((float)$totalprice, 2, '.', '')}}" placeholder="Cash Amount" name="payment_amount" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
 									</div>
 									<input type="hidden" name="payment_mode" value="Cash">
 									<input type="hidden" value="{{$quoteData->id}}" name="tid">
@@ -174,7 +179,7 @@
 									<input type="hidden" value="{{$quoteData->id}}" name="tid">
 									<div class="mb-3">
 										<label class="form-label">Amount</label>
-										<input type="text" class="form-control form-control-2" placeholder="Amount" name="payment_amount" value="{{number_format((float)$quoteData->price, 2, '.', '')}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+										<input type="text" class="form-control form-control-2" placeholder="Amount" name="payment_amount" value="{{number_format((float)$totalprice, 2, '.', '')}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
 									</div>
 								<div class="mt-4 text-center">
 									<button class="btn btn-add w-100 fw-bold" type="submit">Pay</button>
@@ -208,7 +213,8 @@
 	  <div class="card card-pay mb-3">
 	  <div class="card-body">
 	  <h5 class="mb-4">Account Due</h5>
-	  <h5 class="mb-4">Total: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span></h5>
+	  <h5 class="mb-4">Total: <span>${{number_format((float)$totalprice, 2, '.', '')}}</span></h5>
+	  (Price: <span>${{number_format((float)$quoteData->price, 2, '.', '')}}</span>, Tax: <span>${{number_format((float)$quoteData->tax, 2, '.', '')}}</span>)
 	  </div>
 	  </div>
 	  <div class="text-center">

@@ -13,6 +13,8 @@ use App\Models\Personnel;
 use App\Models\Quote;
 use App\Models\Managefield;
 use App\Models\Tenture;
+use App\Models\User;
+
 use Mail;
 use Illuminate\Support\Str;
 use DB;
@@ -557,14 +559,60 @@ class ServicesController extends Controller
 
       $customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
 
-      $servicedetails = Service::select('servicename','productid')->where('id', $request->serviceid)->first();
+      $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', auth()->user()->id)->first();
 
-        $productd = DB::table('products')->select('productname')->where('id', $servicedetails->productid)->first();
-        if($productd!="") {
-          $pname = $productd->productname;
-        } else {
-          $pname = "";
+      $servicedetails = Service::select('servicename','productid','price')->where('id', $request->serviceid)->first();
+
+      $sum = 0;
+      $txvalue = 0;
+      if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+        if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+            $txvalue = $servicedetails->price *$userdetails->servicevalue/100; 
+        } else { 
+            $txvalue = 0;
         }
+      }
+
+      $sum = $txvalue;
+      $tprice1 = $servicedetails->price;
+
+      $productd = DB::table('products')->select('productname','price')->where('id', $servicedetails->productid)->first();
+
+      if($productd!="") {
+        $pname = $productd->productname;
+      } else {
+        $pname = "";
+      }
+
+      $sum1 = 0;
+      $txvalue1 = 0;
+      $tprice = 0;
+      if($servicedetails->productid!="") {
+        $pids = explode(',',$servicedetails->productid);
+        $productdetails = Inventory::select('productname','price')->whereIn('id', $pids)->get();
+        foreach ($productdetails as $key => $value) {
+          //$pname[] = $value['productname'];
+          if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+            if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+                $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+            } else {
+                $txvalue1 = 0;
+            }
+            }
+            $sum1+= $txvalue1;
+            $tprice+= $value['price'];
+        }
+      }
+
+      $totlticketprice = $tprice1+$tprice;
+      $totlticketprice = number_format($totlticketprice,2);
+      $totlticketprice = preg_replace('/[^\d.]/', '', $totlticketprice);
+
+      $totaltax = $sum+$sum1;
+      $totaltax = number_format($totaltax,2);
+      $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
+
+
       $auth_id = auth()->user()->id;
       
       $data['userid'] = $auth_id;
@@ -583,6 +631,8 @@ class ServicesController extends Controller
       $data['etc'] = $request->etc;
       $data['description'] = $request->description;
       $data['address'] = $request->address;
+      $data['tickettotal'] = $totlticketprice;
+      $data['tax'] = $totaltax;
       
       $formattedAddr = str_replace(' ','+',$request->address);
       //Send request and receive json data by address
@@ -593,11 +643,11 @@ class ServicesController extends Controller
       if($output->results!=NULL) {
         $latitude  = $output->results[0]->geometry->location->lat; 
         $longitude = $output->results[0]->geometry->location->lng;
-        }
-        else {
-          $latitude  = 0; 
-          $longitude = 0;
-        }
+      }
+      else {
+        $latitude  = 0; 
+        $longitude = 0;
+      }
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
       

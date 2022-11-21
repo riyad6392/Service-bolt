@@ -63,7 +63,13 @@
     <td style="vertical-align: top; padding: 17px">
         <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Invoice:<br><span style="color: black; font-weight: bold;">#{{ $invoiceId }} </span></p>
         <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Date:<br><span style="color: black; font-weight: bold;">{{date('m-d-Y', strtotime($date))}} </span></p>
-        <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Invoice due date:<br><span style="color: black; font-weight: bold;">{{date('m-d-Y', strtotime($duedate))}} </span></p>
+        <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Invoice due date:<br><span style="color: black; font-weight: bold;">
+            @if($duedate!="")
+                {{date('m-d-Y', strtotime($duedate))}}
+            @else
+                ---
+            @endif
+         </span></p>
     </h4>
     </td>
  </tr>
@@ -83,15 +89,30 @@
     </thead>
     <tbody style="padding: 12px; text-align: center;">
         @php
-            $serviceidarray = explode(',', $serviceid);
-      $servicedetails = App\Models\Service::select('servicename','price','description')
-    ->whereIn('id', $serviceidarray)->get();
+          $serviceidarray = explode(',', $serviceid);
+          $servicedetails = App\Models\Service::select('servicename','price','description')
+        ->whereIn('id', $serviceidarray)->get();
+
+        $worker = App\Models\User::select('userid','workerid')->where('id',auth()->user()->id)->first();
+
+        $userdetails = App\Models\User::select('taxtype','taxvalue','servicevalue','productvalue')
+        ->where('id', $worker->userid)->first();
+
       $sum = 0;
       foreach ($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
-        $sum+= $value['price'];
-      }
+        $txvalue = 0;
+        $txtpercentage = 0;
+        if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+            if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                $txvalue = $value['price']*$userdetails->servicevalue/100;
 
+                $txtpercentage = $userdetails->servicevalue; 
+            }
+        }
+        $sum+= $value['price'] + $txvalue;
+       }
+       
       $pidarray = explode(',', $productid);
       $pdetails = 
       App\Models\Inventory::select('productname','id','price','description')
@@ -99,13 +120,38 @@
       $sum1 = 0;
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
-        $sum1+= $value['price'];
+        $txvalue1 = 0;
+         if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+           if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+                $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+                $txtpercentage1 = $userdetails->productvalue; 
+            } else {
+                $txvalue1 = 0;
+                $txtpercentage1 = 0;
+            }
+        }
+
+        $sum1+= $value['price'] + $txvalue1;
+
       } 
 
       $totalprice = $sum+$sum1;
+      $totalprice = number_format($totalprice,2);
+      $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
       $i=0;
         @endphp
     @foreach($servicedetails as $key => $value)
+    @php
+         $txvalue = 0;
+        $txtpercentage = 0;
+        if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+            if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                $txvalue = $value['price']*$userdetails->servicevalue/100;
+
+                $txtpercentage = $userdetails->servicevalue; 
+            }
+        }
+    @endphp
         @if($i % 2 == 0)
             <tr style="color:#ccc;">
         @else
@@ -115,8 +161,8 @@
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">-</td>
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">1</td>
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
-            <td style="padding: 15px;border-bottom: 1px solid #ccc;">0%</td>
-            <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
+            <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{$txtpercentage}}%</td>
+            <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] + $txvalue }}</td>
         </tr>
     @php
         $i++;
@@ -126,6 +172,18 @@
         $i=0+count($servicedetails);
      @endphp
     @foreach($pdetails as $key => $value)
+        @php
+            $txvalue1 = 0;
+         if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+           if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+                $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+                $txtpercentage1 = $userdetails->productvalue; 
+            } else {
+                $txvalue1 = 0;
+                $txtpercentage1 = 0;
+            }
+        }
+        @endphp
         @if($i % 2 == 0)
             <tr style="color:#ccc;">
         @else
@@ -135,8 +193,8 @@
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">1</td>
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">0%</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{$txtpercentage1}}%</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] + $txvalue1 }}</td>
     </tr>
     @php
         $i++;

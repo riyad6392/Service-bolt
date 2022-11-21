@@ -68,7 +68,13 @@
             <span style="color: black; font-weight: bold;">{{date('m-d-Y', strtotime($date))}} </span>
         </p>
         <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Invoice due date:<br>
-            <span style="color: black; font-weight: bold;">{{date('m-d-Y', strtotime($duedate))}}</span>
+            <span style="color: black; font-weight: bold;">
+            @if($duedate!="")
+                {{date('m-d-Y', strtotime($duedate))}}
+            @else
+                ---
+            @endif    
+        </span>
         </p>
     </h4>
     </td>

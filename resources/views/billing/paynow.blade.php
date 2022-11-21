@@ -18,6 +18,9 @@
 	{{Session::get('success')}}
 </div>
 @endif
+		@php
+	  	$totalprice = $price + $tax;
+	  @endphp
 	<div class="tabs">
 	@if($paymentpaid==1)
   @else
@@ -73,7 +76,8 @@
 	  <p>@if($productname!="") Product Name - {{$productname}} @endif</p>
 	  <h4>You have to pay</h4>
 	  
-	  <h4>Total: <span>${{number_format((float)$price, 2, '.', '')}}</span></h4>
+	  <h4>Total: <span>${{number_format((float)$totalprice, 2, '.', '')}}</span></h4>
+	  (Price: <span>${{number_format((float)$price, 2, '.', '')}}</span>, Tax: <span>${{number_format((float)$tax, 2, '.', '')}}</span>)
 	  
 	  
 	
@@ -124,9 +128,9 @@
 	  <div class="card-body">
 	  <p>@if($servicename!="") Service Name - {{$servicename}}@endif</p>
 	  <p>@if($productname!="") Product Name - {{$productname}} @endif</p>
-	  <h4>You have to pay</h4>
-	  
-	  <h4>Total: <span>${{number_format((float)$price, 2, '.', '')}}</span></h4>
+	  <h4>You have to pay</h4> 
+	  <h4>Total: <span>${{number_format((float)$totalprice, 2, '.', '')}}</span></h4>
+	  (Price: <span>${{number_format((float)$price, 2, '.', '')}}</span>, Tax: <span>${{number_format((float)$tax, 2, '.', '')}}</span>)
 	  
 	  
 	
@@ -154,7 +158,7 @@
 									<div class="mb-3">
 									<label class="form-label">Enter Cash Amount</label>
 									<input type="hidden" class="form-control form-control-2" name="method" id="method"  value="Cash" placeholder="">
-									<input type="text" class="form-control form-control-2" name="amount" required id="amount"  value="{{$price}}" placeholder="">
+									<input type="text" class="form-control form-control-2" name="amount" required id="amount"  value="{{$totalprice}}" placeholder="">
 									
 									</div>
 									<div class="mt-4 text-center">
@@ -187,7 +191,7 @@
 									
 										<div class="mb-3">
 									<label class="form-label">Amount</label>
-									<input type="text" class="form-control form-control-2" name="amount" id="amount" required  value="{{$price}}" placeholder="" required>
+									<input type="text" class="form-control form-control-2" name="amount" id="amount" required  value="{{$totalprice}}" placeholder="" required>
 
 									</div>
 																											<div class="mt-4 text-center">
@@ -222,7 +226,7 @@
 	  <div class="card card-pay mb-3">
 	  <div class="card-body">
 	  <h5 class="mb-4">Account Due</h5>
-	  <h5 class="mb-4">Total: <span>${{number_format((float)$price, 2, '.', '')}}</span></h5>
+	  <h5 class="mb-4">Total: <span>${{number_format((float)$totalprice, 2, '.', '')}}</span></h5>
 	  </div>
 	  </div>
 	  <div class="text-center">
