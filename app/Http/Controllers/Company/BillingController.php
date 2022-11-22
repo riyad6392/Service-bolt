@@ -352,10 +352,9 @@ class BillingController extends Controller
       $ids = $billingData[0]->id;
       if(!empty($billingData[0]->parentid))
       {
-          $ids=$billingData[0]->parentid;
-
+        $ids=$billingData[0]->parentid;
       }
-        
+      
       $html ='<div>
           <div class="card">
             <div class="card-body p-4">

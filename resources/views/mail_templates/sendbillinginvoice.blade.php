@@ -137,6 +137,8 @@
       } 
 
       $totalprice = $sum+$sum1;
+      $totalprice = number_format($totalprice,2);
+      $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
       $i=0;
         @endphp
     @foreach($servicedetails as $key => $value)
@@ -164,7 +166,7 @@
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">1</td>
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{$txtpercentage}}%</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] + $txvalue }}</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ number_format((float)$value['price'] + (float)$txvalue, 2, '.', '') }}</td>
     </tr>
     @php
         $i++;
@@ -197,7 +199,7 @@
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">1</td>
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{$txtpercentage1}}%</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] + $txvalue1 }}</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ number_format((float)$value['price'] + (float)$txvalue1, 2, '.', '') }}</td>
     </tr>
     @php
         $i++;
