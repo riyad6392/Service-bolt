@@ -873,15 +873,29 @@ class WorkerTicketController extends Controller
 
     public function ticketcreate(Request $request)
     {
+        $auth_id = auth()->user()->id;
+        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+        $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', $worker->userid)->first();
+
         $customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
 
         $serviceid = implode(',', $request->servicename);
 
         $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->servicename)->get();
-
+        $sum = 0;
         foreach($servicedetails as $key => $value) {
           $pid[] = $value['productid'];
           $sname[] = $value['servicename'];
+          $txvalue = 0;
+          if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+            if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                $txvalue = $value['price']*$userdetails->servicevalue/100; 
+            } else {
+                $txvalue = 0;
+            }
+          }
+          $sum+= $txvalue;
         }
         $servicename = implode(',', $sname);
 
@@ -894,14 +908,27 @@ class WorkerTicketController extends Controller
         }
         if($request->productname!="") {
           $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
-               
+        $sum1 = 0;
+        $txvalue1 = 0;       
         foreach ($productdetails as $key => $value) {
           $pname[] = $value['productname'];
+          if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+        if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+            $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+        } else {
+            $txvalue1 = 0;
+        }
+        }
+        $sum1+= $txvalue1;
         }
         $productname = $productdetails[0]->productname;
 
         $productnames = implode(',', $pname);
       }
+
+      $totaltax = $sum+$sum1;
+      $totaltax = number_format($totaltax,2);
+      $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
         
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
@@ -929,7 +956,7 @@ class WorkerTicketController extends Controller
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
         $data['address'] = $request->address;
-        
+        $data['tax'] = $totaltax;
 
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
@@ -1143,27 +1170,53 @@ class WorkerTicketController extends Controller
 
     public function schedulecreate(Request $request)
     {
-      
+      $auth_id = auth()->user()->id;
+      $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+      $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', $worker->userid)->first();
+
       $quote = Quote::where('id', $request->quoteid)->get()->first();
 
       $serviceid = implode(',', $request->serviceid);
 
-      $servicedetails = Service::select('servicename')->whereIn('id', $request->serviceid)->get();
-       
-      foreach ($servicedetails as $key => $value) {
+      $servicedetails = Service::select('servicename','price')->whereIn('id', $request->serviceid)->get();
+      $sum = 0; 
+      foreach($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
+        $txvalue = 0;
+        if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+          if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+              $txvalue = $value['price']*$userdetails->servicevalue/100; 
+          } else {
+              $txvalue = 0;
+          }
+        }
+        $sum+= $txvalue;
       } 
 
       $productid = implode(',', $request->productid);
 
-      $pdetails = Inventory::select('productname')->whereIn('id', $request->productid)->get();
-       
+      $pdetails = Inventory::select('productname','price')->whereIn('id', $request->productid)->get();
+      $sum1 = 0;
+      $txvalue1 = 0; 
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
+        if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+        if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+            $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+        } else {
+            $txvalue1 = 0;
+        }
+        }
+        $sum1+= $txvalue1;
       } 
 
       $servicename = implode(',', $sname);
       $productname = implode(',', $pname);
+
+      $totaltax = $sum+$sum1;
+      $totaltax = number_format($totaltax,2);
+      $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
 
       $data['customerid'] =  $quote->customerid;
       $data['userid'] =  $quote->userid;
@@ -1182,6 +1235,7 @@ class WorkerTicketController extends Controller
         }
       $data['price'] = $request->price;
       $data['tickettotal'] = $request->ticketprice;
+      $data['tax'] = $totaltax;
       
       $data['etc'] = $request->etc;
       $data['description'] = $request->description;

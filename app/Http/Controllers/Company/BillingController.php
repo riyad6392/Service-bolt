@@ -408,21 +408,17 @@ class BillingController extends Controller
 
     public function update(Request $request)
     {
-      //dd($request->all());
-        $auth_id = auth()->user()->id;
-
-          $id = DB::table('balancesheet')->insertGetId([
-            'userid' => $auth_id,
-            'workerid' => $request->personnelid,
-            'ticketid' => $request->ticketid,
-            'amount' => $request->amount,
-            'customername' => $request->customername,
-            'paymentmethod' => $request->method,
-            'status' => "Completed"
-        ]);
-
-          //Balancesheet::create($data);
-       
+      $auth_id = auth()->user()->id;
+        $id = DB::table('balancesheet')->insertGetId([
+          'userid' => $auth_id,
+          'workerid' => $request->personnelid,
+          'ticketid' => $request->ticketid,
+          'amount' => $request->amount,
+          'customername' => $request->customername,
+          'paymentmethod' => $request->method,
+          'status' => "Completed"
+      ]);
+        
         $tdata = Quote::where('id', $request->ticketid)->get()->first();
         $tdata->payment_status = "Completed";
         $tdata->price =  $request->amount;

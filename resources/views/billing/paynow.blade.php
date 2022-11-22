@@ -60,7 +60,7 @@
 	  <div class="card-body">
 	  <h4>Paid succesfully.</h4>
 	  
-	  <h4>Total: <span>${{number_format((float)$price, 2, '.', '')}}</span></h4>
+	  <h4>Total: <span>${{number_format((float)$totalprice, 2, '.', '')}}</span></h4>
 	  
 	  
 	
