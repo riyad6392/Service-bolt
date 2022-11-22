@@ -729,19 +729,62 @@ class UserController extends Controller
 
     public function createticket(Request $request) {
 
+        $auth_id = auth()->user()->id;
+        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+        $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', $worker->userid)->first();
+
         $customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
 
         $serviceid = $request->serviceid;
         $servids = explode(',',$serviceid);
 
-        $servicedetails = Service::select('servicename','productid')->whereIn('id', $servids)->get();
-
+        $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $servids)->get();
+        $sum = 0;
         foreach($servicedetails as $key => $value) {
           $pid[] = $value['productid'];
           $sname[] = $value['servicename'];
+          $txvalue = 0;
+          if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+            if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                $txvalue = $value['price']*$userdetails->servicevalue/100; 
+            } else {
+                $txvalue = 0;
+            }
+          }
+          $sum+= $txvalue;
         }
 
-        $productid = implode(',', array_unique($pid));
+        //$productid = implode(',', array_unique($pid));
+        
+        $servicename = implode(',', $sname);
+
+        $productid = "";
+        $productname = "";
+        $sum1 = 0;
+        $txvalue1 = 0;
+        if($request->productid!="") {
+          $productid = explode(',', $request->productid);
+
+          $pdetails = Inventory::select('productname','id','price')->whereIn('id', $productid)->get();
+
+            foreach ($pdetails as $key => $value) {
+              $pname[] = $value['productname'];
+              if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+                if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+                    $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+                } else {
+                    $txvalue1 = 0;
+                }
+                }
+                $sum1+= $txvalue1;
+            } 
+            $productname = implode(',', $pname);
+        }
+
+        $totaltax = $sum+$sum1;
+        $totaltax = number_format($totaltax,2);
+        $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
         
         $servicename = implode(',', $sname);
 
@@ -753,10 +796,9 @@ class UserController extends Controller
         $data['customerid'] = $request->customerid;
         $data['serviceid'] =  $serviceid;
         $data['servicename'] = $servicedetails[0]->servicename;
+        $data['product_name'] = $pdetails[0]->productname;
         if($request->productid) {
             $data['product_id'] = $request->productid;
-        } else {
-            $data['product_id'] = rtrim($productid, ',');
         }
         $data['radiogroup'] = $request->radiogroup;
         $data['frequency'] = $request->frequency;
@@ -768,6 +810,7 @@ class UserController extends Controller
         }
         $data['price'] = $request->price;
         $data['tickettotal'] = $request->ticketprice;
+        $data['tax'] = $totaltax;
         $data['etc'] = $request->etc;
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
