@@ -137,6 +137,12 @@
         } else {
           $newprice = $value->tickettotal;
         }
+        $ids=$value->id;
+        if(!empty($value->parentid))
+        {
+            $ids=$value->parentid;
+
+        }
       @endphp
       <tr class="user-hover showSingle" target="{{$i}}" data-id="{{$value->id}}">
         <input type="hidden" name="personnelid" id="personnelid" value="{{$value->personnelid}}">

@@ -1232,11 +1232,6 @@ class SchedulerController extends Controller
       $quote = Quote::where('id', $request->quoteid)->first();
       $quote->primaryname =$request->primaryname;
       $quote->save();
-      // $qpid = $quote->personnelid;
-      // $pids = $request->personnelid;
-      // array_push($pids,$qpid);
-      // $quote->personnelid = implode(',', $pids);
-      // $quote->save();
       if(isset($request->personnelid)) {
       foreach ($request->personnelid as $pid) {
         $data['userid'] =  $quote->userid;
@@ -1267,6 +1262,12 @@ class SchedulerController extends Controller
         $data['givenenddate'] = $quote->givenenddate;
         $data['primaryname'] = $request->primaryname;
         $data['ticket_status'] = $quote->ticket_status;
+        $data['payment_status'] = $quote->payment_status;
+        $data['payment_mode'] = $quote->payment_mode;
+        $data['checknumber'] = $quote->checknumber;
+        $data['payment_amount'] = $quote->payment_amount;
+
+
         Quote::create($data);
       } 
     }

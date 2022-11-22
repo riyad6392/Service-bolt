@@ -311,7 +311,7 @@ class UserController extends Controller
 
         $checklistData = DB::table('checklist')->select('id','checklist')->whereIn('serviceid',$serviceidarrays)->get();
 
-        $quoteData = DB::table('quote')->select('quote.id','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.givenstartdate','quote.givenenddate','quote.time','quote.minute','quote.description','quote.product_id','quote.serviceid','quote.imagelist', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist','quote.price')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
+        $quoteData = DB::table('quote')->select('quote.id','quote.tax','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.givenstartdate','quote.givenenddate','quote.time','quote.minute','quote.description','quote.product_id','quote.serviceid','quote.imagelist', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist','quote.price')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
         
         if($quoteData) {
             $serviceidarray = explode(',', $quoteData->serviceid);
@@ -384,6 +384,8 @@ class UserController extends Controller
             }
             array_push($main_array, [
                    'id'=>$quoteData->id,
+                   'price'=>$quoteData->price,
+                   'tax'=>$quoteData->tax,
                    'addressid'=>$addressinfo->id,
                    'customerid'=>$quoteData->customerid,
                    'customername'=>$quoteData->customername,
@@ -411,7 +413,9 @@ class UserController extends Controller
             //$servicename = implode(',', $sname);
 
            // $totalprice = $sum+$sum1;
-            $totalprice = $quoteData->price;
+            $totalprice = (float)$quoteData->price+(float)$quoteData->tax;
+            $totalprice = number_format((float)$totalprice, 2, '.', '');
+            //$totalprice = $quoteData->price;
 
            // $productname = implode(',', $pname);
 
