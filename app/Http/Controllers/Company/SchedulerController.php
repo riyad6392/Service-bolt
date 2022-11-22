@@ -1256,6 +1256,8 @@ class SchedulerController extends Controller
         $data['time'] = $quote->time;
         $data['minute'] = $quote->minute;
         $data['price'] = $quote->price;
+        $data['tickettotal'] = $quote->tickettotal;
+        $data['tax'] = $quote->tax;
         $data['etc'] = $quote->etc;
         $data['description'] = $quote->description;
         $data['giventime'] = $quote->giventime;

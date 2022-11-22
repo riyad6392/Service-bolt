@@ -796,7 +796,7 @@ class UserController extends Controller
         $data['customerid'] = $request->customerid;
         $data['serviceid'] =  $serviceid;
         $data['servicename'] = $servicedetails[0]->servicename;
-        $data['product_name'] = $pdetails[0]->productname;
+        $data['product_name'] = $productname;
         if($request->productid) {
             $data['product_id'] = $request->productid;
         }
@@ -980,30 +980,61 @@ class UserController extends Controller
     }
 
     public function sendinvoice(Request $request) {
-        $customerid = $request->customerid;
+        $auth_id = auth()->user()->id;
+        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+        $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', $worker->userid)->first();
+
+      $customerid = $request->customerid;
 
       $customer = Customer::where('id', $customerid)->get()->first();
 
-      //$serviceid = implode(',', $request->serviceid);
       $serviceid = $request->serviceid;
-      $servicedetails = Service::select('servicename','productid')->whereIn('id', array($request->serviceid))->get();
-       
+      $servicedetails = Service::select('servicename','productid','price')->whereIn('id', array($request->serviceid))->get();
+      $sum = 0; 
       foreach ($servicedetails as $key => $value) {
         $pid[] = $value['productid'];
         $sname[] = $value['servicename'];
+        $txvalue = 0;
+          if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+            if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                $txvalue = $value['price']*$userdetails->servicevalue/100; 
+            } else {
+                $txvalue = 0;
+            }
+          }
+          $sum+= $txvalue;
       }
+       $servicename = implode(',', $sname);
 
-      //$productid = implode(',', $request->productid);
-      $productid = $request->productid;
-      $servicename = implode(',', $sname);
+        $productid = "";
+        $productname = "";
+        $sum1 = 0;
+        $txvalue1 = 0;
+       if($request->productid!="") {
+        $productid = $request->productid;
+         $pdetails = Inventory::select('productname','id','price')->whereIn('id', array($request->productid))->get();
+      
+          foreach ($pdetails as $key => $value) {
+            $pname[] = $value['productname'];
+            if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+                if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+                    $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+                } else {
+                    $txvalue1 = 0;
+                }
+            }
+            $sum1+= $txvalue1;
+          }
+          $productname = implode(',', $pname);    
+       }
 
-      $pdetails = Inventory::select('productname','id')->whereIn('id', array($request->productid))->get();
+        $totaltax = $sum+$sum1;
+        $totaltax = number_format($totaltax,2);
+        $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
+       
       
-      foreach ($pdetails as $key => $value) {
-        $pname[] = $value['productname'];
-      } 
       
-      $productname = implode(',', $pname);
       $quote = Quote::where('id', $request->id)->get()->first();
 
       $company = User::where('id', $quote->userid)->get()->first();
@@ -1020,10 +1051,10 @@ class UserController extends Controller
       }
       $quote->serviceid = $serviceid;
       $quote->servicename = $servicedetails[0]->servicename;
-      $quote->product_id = rtrim($productid, ',');
+      $quote->product_id = $productid;
       $quote->price = $request->price;
       $quote->tickettotal = $request->ticketprice;
-
+      $quote->tax = $totaltax;
       $quote->save();
     if($customer->email!=null) {  
       $app_name = 'ServiceBolt';
@@ -1154,26 +1185,59 @@ class UserController extends Controller
     }
 
     public function resendSchedule(Request $request) {
-        
+        $auth_id = auth()->user()->id;
+        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+        $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', $worker->userid)->first();
+
       $quote = Quote::where('id', $request->ticketid)->get()->first();
       $serviceid = $request->serviceid;
 
-      $servicedetails = Service::select('servicename','productid')->whereIn('id', array($request->serviceid))->get();
-       
+      $servicedetails = Service::select('servicename','productid','price')->whereIn('id', array($request->serviceid))->get();
+      $sum = 0; 
       foreach ($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
+        $txvalue = 0;
+        if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+            if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                $txvalue = $value['price']*$userdetails->servicevalue/100; 
+            } else {
+                $txvalue = 0;
+            }
+        }
+        $sum+= $txvalue;
       } 
 
+    $productid = "";
+    $productname = "";
+    $sum1 = 0;
+    $txvalue1 = 0;
+
+    if($request->productid!="") {
       $productid = $request->productid;
 
-      $pdetails = Inventory::select('productname','id')->whereIn('id', array($request->productid))->get();
+      $pdetails = Inventory::select('productname','id','price')->whereIn('id', array($request->productid))->get();
        
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
-      } 
+        if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+        if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+            $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+        } else {
+            $txvalue1 = 0;
+        }
+        }
+        $sum1+= $txvalue1;
+      }
 
-      $servicename = implode(',', $sname);
-      $productname = implode(',', $pname);
+      $productname = implode(',', $pname); 
+    }
+      
+    $servicename = implode(',', $sname);
+    
+    $totaltax = $sum+$sum1;
+    $totaltax = number_format($totaltax,2);
+    $totaltax = preg_replace('/[^\d.]/', '', $totaltax); 
 
       $data['customerid'] =  $quote->customerid;
       $data['userid'] =  $quote->userid;
@@ -1181,7 +1245,7 @@ class UserController extends Controller
       $data['serviceid'] = $serviceid;
       $data['servicename'] = $servicedetails[0]->servicename;
       $data['product_id'] = $productid;
-      $data['product_name'] = $pdetails[0]->productname;
+      $data['product_name'] = $productname;
       $data['personnelid'] = $quote->personnelid;
       $data['radiogroup'] = $request->radiogroup;
       $data['frequency'] = $request->frequency;
@@ -1192,6 +1256,7 @@ class UserController extends Controller
           $data['minute'] = $request->minute.' Minutes';;
         }
       $data['price'] = $request->price;
+      $data['tax'] = $totaltax;
       $data['etc'] = $request->etc;
       $data['description'] = $request->description;
       $data['customername'] =  $quote->customername;
