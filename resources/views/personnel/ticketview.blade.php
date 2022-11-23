@@ -4372,12 +4372,15 @@ Save
                     }
                 });
             } else {
-                //console.log(e.target.files[0].size);
-                if(e.target.files[0].size>="2110000") {
-                    swal('Not allowed maximum upload size of 2 MB');
-                    return false;
+                var files = e.target.files;
+                for(var i = 0, f; f = files[i]; i++) {
+                    var fsize = files[i].size;
+                                    
+                    if(fsize>="2110000") {
+                        swal('Not allowed maximum upload size of 2 MB');
+                        return false;
+                    }
                 }
-                //console.log(e.target.files[0].size);
                 if (e.target && e.target.files === undefined) {
                     files = e.target.value ? [{name: e.target.value.replace(/^.+\\/, '')}] : [];
                 } else {
