@@ -4381,7 +4381,7 @@ Save
                         return false;
                     }
                 }
-                if (e.target && e.target.files === undefined) {
+                if(e.target && e.target.files === undefined) {
                     files = e.target.value ? [{name: e.target.value.replace(/^.+\\/, '')}] : [];
                 } else {
                     files = e.target.files || {};
