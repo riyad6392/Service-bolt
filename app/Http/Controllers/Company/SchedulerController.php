@@ -1362,7 +1362,7 @@ class SchedulerController extends Controller
         </div>
           <div class="col-md-12 mb-2">
             <label>Select a Service</label>
-            <select class="form-control selectpicker1" multiple aria-label="Default select example" data-live-search="true" name="servicename[]" id="servicename" style="height:auto;">';
+            <select class="form-control selectpicker1" multiple aria-label="Default select example" data-live-search="true" name="servicename[]" id="servicename" style="height:auto;" required>';
 
               foreach($allservices as $key => $value) {
                   $serviceids =explode(",", $quotedetails[0]->serviceid);
