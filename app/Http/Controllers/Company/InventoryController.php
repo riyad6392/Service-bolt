@@ -9,6 +9,7 @@ use App\Models\Service;
 use App\Models\Inventory;
 use App\Models\Category;
 use App\Models\Managefield;
+use App\Models\Quote;
 use DB;
 use Image;
 use Illuminate\Support\Str;
@@ -317,8 +318,13 @@ class InventoryController extends Controller
     public function deleteProduct(Request $request)
     {      
       $id = $request->id;
-      DB::table('products')->delete($id);
-      echo "1";
+      $productinfo = Quote::whereRaw('FIND_IN_SET("'.$id.'",product_id)')->first();
+      if($productinfo !=null) {
+        echo "0";
+      } else {
+        DB::table('products')->delete($id);
+        echo "1";
+      }
     }
 
     public function savefieldproduct(Request $request)

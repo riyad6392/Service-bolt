@@ -638,7 +638,7 @@ $(document).on('click','#addnote',function(e) {
           closeOnCancel: false
         },
         function (isConfirm) {
-          if (isConfirm) {
+          if(isConfirm) {
              $.ajax({
               url:"{{url('company/customer/deleteAddress')}}",
               data: {
@@ -648,8 +648,16 @@ $(document).on('click','#addnote',function(e) {
               dataType: 'json',
               refresh: true,
               success:function(data) {
-               swal("Done!","It was succesfully deleted!","success");
-              location.reload();
+                if(data == 0) {
+                    swal({
+                      title: "Can not delete!",
+                      text: "This Address already exist in ticket!",
+                      type: "warning",
+                    });
+                } else {
+                  swal("Done!","It was succesfully deleted!","success");
+                  location.reload();
+                }
               }
             })
           } 

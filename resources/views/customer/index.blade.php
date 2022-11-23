@@ -772,8 +772,16 @@ $(document).on('click','#editCustomer',function(e) {
                 dataType: 'json',
                 refresh: true,
                 success:function(data) {
-                 swal("Done!","Customer deleted succesfully!","success");
-                location.reload();
+                  if(data == 0) {
+                    swal({
+                      title: "Can not delete!",
+                      text: "This customer already exist in ticket!",
+                      type: "warning",
+                    });
+                  } else {
+                    swal("Done!","Customer deleted succesfully!","success");
+                    location.reload();
+                  }
                 }
             })
           } 

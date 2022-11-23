@@ -435,7 +435,7 @@ class CustomerController extends Controller
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
         $data['ticket_status'] = 1;
-
+        //dd($data);
         $quotelastid = Quote::create($data);
         $quoteee = Quote::where('id', $quotelastid->id)->first();
         $randomid = rand(100,199);
@@ -829,8 +829,14 @@ class CustomerController extends Controller
     {
       $auth_id = auth()->user()->id;
       $id = $request->id;
-      DB::table('address')->delete($id);
-      echo "1";
+      $addressinfo = DB::table('address')->select('customerid','address')->where('id',$id)->first();
+      $alreadyexist = DB::table('quote')->select('id','customerid','address')->where('customerid',$addressinfo->customerid)->where('address',$addressinfo->address)->first();
+      if($alreadyexist!=null) {
+        echo "0";
+      } else {
+        DB::table('address')->delete($id);
+        echo "1";
+      }
     }
 
     public function viewcustomermodal(Request $request)
@@ -971,8 +977,14 @@ class CustomerController extends Controller
     {
       $auth_id = auth()->user()->id;
       $id = $request->id;
-      DB::table('customer')->delete($id);
-      echo "1";
+      $alreadyexist = DB::table('quote')->where('customerid',$id)->first();
+      if($alreadyexist!=null){
+        echo "0";
+      } else {
+        DB::table('customer')->delete($id);
+        echo "1";
+      }
+      
     }
 
     public function savefieldpage(Request $request)

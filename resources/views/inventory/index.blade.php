@@ -756,8 +756,16 @@ function readURL(input) {
                 dataType: 'json',
                 refresh: true,
                 success:function(data) {
-                 swal("Done!","Product deleted succesfully!","success");
-                location.reload();
+                 if(data == 0) {
+                 	  swal({
+                 	  	type: "warning",
+                      title: "Can not delete!",
+                      text: "This product already exist in ticket!",
+                    });
+                 } else {
+                 	swal("Done!","Product deleted succesfully!","success");
+                  location.reload();
+                 }
                 }
             })
           } 

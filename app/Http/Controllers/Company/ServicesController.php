@@ -413,10 +413,15 @@ class ServicesController extends Controller
                   <p class="number-1">Price</p>
                   <h6 class="heading-h6">'.$services[$datacount]->price.'</h6>
                 </div>
-                <div class="mb-5">
+                <div class="mb-4">
                   <p class="number-1">Default Time</p>
                   <h6 class="heading-h6">'.$services[$datacount]->time.' '.$services[$datacount]->minute.'</h6>
-                </div>  <a class="btn add-btn-yellow w-100 p-3 mb-3" data-bs-toggle="modal" data-bs-target="#create-tickets" id="createtickets" data-id="'.$services[$datacount]->id.'">Create a Quote</a>
+                </div>
+                <div class="mb-5">
+                 <p class="number-1">Description</p>
+                 <h6 class="heading-h6">'.Str::limit($services[$datacount]->description, 150).'</h6>
+                </div>
+                  <a class="btn add-btn-yellow w-100 p-3 mb-3" data-bs-toggle="modal" data-bs-target="#create-tickets" id="createtickets" data-id="'.$services[$datacount]->id.'">Create a Quote</a>
                 <a class="btn btn-edit w-100 p-3" data-bs-toggle="modal" data-bs-target="#edit-services" id="editService" data-id="'.$services[$datacount]->id.'">Edit</a>
               </div>
             </div>';
@@ -436,10 +441,15 @@ class ServicesController extends Controller
                   <p class="number-1">Price</p>
                   <h6 class="heading-h6">'.$services[0]->price.'</h6>
                 </div>
-                <div class="mb-5">
+                <div class="mb-4">
                   <p class="number-1">Default Time</p>
                   <h6 class="heading-h6">'.$services[0]->time.' '.$services[0]->minute.'</h6>
-                </div>  <a class="btn add-btn-yellow w-100 p-3 mb-3" data-bs-toggle="modal" data-bs-target="#create-tickets" id="createtickets" data-id="'.$services[0]->id.'">Create a Quote</a>
+                </div> 
+                <div class="mb-5">
+                 <p class="number-1">Description</p>
+                 <h6 class="heading-h6">'.Str::limit($services[0]->description, 150).'</h6>
+                </div>
+                 <a class="btn add-btn-yellow w-100 p-3 mb-3" data-bs-toggle="modal" data-bs-target="#create-tickets" id="createtickets" data-id="'.$services[0]->id.'">Create a Quote</a>
                 <a class="btn btn-edit w-100 p-3" data-bs-toggle="modal" data-bs-target="#edit-services" id="editService" data-id="'.$services[0]->id.'">Edit</a>
               </div>
             </div>';
