@@ -290,7 +290,7 @@ i.fa.fa-plus.true-condition {
             <label>Default Service Time</label><br>
             <div class="timepicker timepicker1" style="display:inline-block;">
               <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
             </div>
           </div>
           <div class="col-md-12 mb-2">
