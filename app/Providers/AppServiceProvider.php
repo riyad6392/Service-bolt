@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\User;
+use Config;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,5 +26,23 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+      $mailsetting = User::where('role','superadmin')->first();
+      //dd($mailsetting);
+      if($mailsetting) {
+        $data = [
+            'driver' => env('MAIL_DRIVER', 'smtp'),
+            'port' => env('MAIL_PORT', 587),
+            'host' => $mailsetting->host,
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => $mailsetting->smtpusername,
+            'password' => $mailsetting->smtppassword,
+            'from' => [
+                'address' => $mailsetting->smtpusername,
+                'name' => 'ServiceBolt',
+            ]
+        ];
+       // dd($data);
+        Config::set('mail',$data);
+      }
     }
 }

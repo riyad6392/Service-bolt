@@ -49,7 +49,7 @@
         <div class="mb-3">
           <label class="form-label">Mail Password</label>
   
-          <input type="text" class="form-control" placeholder="SMTP Password" value="{{$userData->smtppassword}}" name="smtppassword" id="smtppassword" required="">
+          <input type="password" class="form-control" placeholder="SMTP Password" value="{{$userData->smtppassword}}" name="smtppassword" id="smtppassword" required="">
         </div>
       </div>
 </div>
