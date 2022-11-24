@@ -25,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
       $mailsetting = User::where('role','superadmin')->first();
       //dd($mailsetting);
       if($mailsetting) {
@@ -41,7 +40,6 @@ class AppServiceProvider extends ServiceProvider
                 'name' => 'ServiceBolt',
             ]
         ];
-       // dd($data);
         Config::set('mail',$data);
       }
     }

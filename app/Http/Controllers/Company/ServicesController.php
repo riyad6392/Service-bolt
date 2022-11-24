@@ -597,11 +597,13 @@ class ServicesController extends Controller
       $sum1 = 0;
       $txvalue1 = 0;
       $tprice = 0;
+      $productname = "";
+      $productname1 = "";
       if($servicedetails->productid!="") {
         $pids = explode(',',$servicedetails->productid);
         $productdetails = Inventory::select('productname','price')->whereIn('id', $pids)->get();
         foreach ($productdetails as $key => $value) {
-          //$pname[] = $value['productname'];
+          $pname[] = $value['productname'];
           if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
             if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
                 $txvalue1 = $value['price']*$userdetails->productvalue/100; 
@@ -612,6 +614,8 @@ class ServicesController extends Controller
             $sum1+= $txvalue1;
             $tprice+= $value['price'];
         }
+        $productname = implode(',', $pname);
+        $productname1 = $productdetails[0]->productname;
       }
 
       $totlticketprice = $tprice1+$tprice;
@@ -631,7 +635,7 @@ class ServicesController extends Controller
       $data['customername'] =  $customer->customername;
       $data['servicename'] = $servicedetails->servicename;
       $data['product_id'] = $servicedetails->productid;
-        $data['product_name'] = $pname;
+      $data['product_name'] = $productname1;
       //$data['personnelid'] = $request->personnelid;
       $data['radiogroup'] = $request->radiogroup;
       $data['frequency'] = $request->frequency;
@@ -672,7 +676,7 @@ class ServicesController extends Controller
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
       $subjetline ='Service Quote from ' . auth()->user()->companyname;
-      Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$request->address, 'servicename'=>$servicedetails->servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email,$subjetline) {
+      Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$request->address, 'servicename'=>$servicedetails->servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email,$subjetline) {
           $message->to($user_exist->email)
           ->subject($subjetline);
           $message->from($app_email,$app_name);

@@ -10,6 +10,10 @@
     <br>
     Service: {{ $servicename }}
     <br>
+    Product: {{ @$productname }}
+    <br>
+    Time: {{ @$time }} {{ @$minute }}
+    <br>
     Estimation Date: {{ $date }}
     <br>
     <p>Thanks</p>

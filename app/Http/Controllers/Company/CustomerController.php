@@ -365,6 +365,7 @@ class CustomerController extends Controller
       $servicename = implode(',', $sname);
       $productid = "";
       $productname = "";
+      $productname1 = "";
       if(isset($request->productname)) {
         $productid = implode(',', $request->productname);
       }
@@ -385,8 +386,8 @@ class CustomerController extends Controller
             }
             $sum1+= $txvalue1;
         }
-
-        $productname = $productdetails[0]->productname;
+        $productname = implode(',', $pname);
+        $productname1 = $productdetails[0]->productname;
       }
       
       $totaltax = $sum+$sum1;
@@ -401,7 +402,7 @@ class CustomerController extends Controller
       $data['product_id'] = $productid;
       $data['customername'] =  $request->customername;
       $data['servicename'] = $servicedetails[0]->servicename;
-      $data['product_name'] = $productname;
+      $data['product_name'] = $productname1;
       //$data['product_name'] = $pname;
       $data['personnelid'] = $request->personnelid;
       $data['radiogroup'] = $request->radiogroup;
@@ -447,7 +448,7 @@ class CustomerController extends Controller
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
         
-      Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
+      Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Service Ticket from '. auth()->user()->companyname);
           $message->from($app_email,$app_name);

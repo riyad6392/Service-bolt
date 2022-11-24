@@ -10,7 +10,7 @@
     <br>
     Frequency: {{ $frequency }}
     <br>
-    Time: {{ $time }}
+    Time: {{ @$time }} {{ @$minute }}
     <br>
     Price: {{ $price }}
     <br>

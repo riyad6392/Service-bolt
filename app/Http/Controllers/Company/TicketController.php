@@ -111,6 +111,7 @@ class TicketController extends Controller
 
         $sum1 = 0;
         $txvalue1 = 0;
+        $productname1 = "";
         if($request->productname!="") {
           $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
          
@@ -125,7 +126,8 @@ class TicketController extends Controller
             }
             $sum1+= $txvalue1;
           }
-          $productname = $productdetails[0]->productname;
+          $productname = implode(',', $pname);
+          $productname1 = $productdetails[0]->productname;
         }
         $totaltax = $sum+$sum1;
         $totaltax = number_format($totaltax,2);
@@ -137,7 +139,7 @@ class TicketController extends Controller
         $data['serviceid'] =  $serviceid;
         $data['product_id'] = $productid;
 	      $data['servicename'] = $servicedetails[0]->servicename;
-        $data['product_name'] = $productname;
+        $data['product_name'] = $productname1;
         
         $data['personnelid'] = $request->personnelid;
 	      $data['radiogroup'] = $request->radiogroup;
@@ -180,7 +182,7 @@ class TicketController extends Controller
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
         
-      Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
+      Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$request->address, 'servicename'=>$servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Service Quote from ' . auth()->user()->companyname);
           $message->from($app_email,$app_name);
@@ -576,6 +578,7 @@ class TicketController extends Controller
 
         $productid = "";
         $productname = "";
+        $productname1 = "";
 
           if(isset($request->productname)) {
             $productid = implode(',', $request->productname);
@@ -600,7 +603,8 @@ class TicketController extends Controller
               $sum1+= $txvalue1;
 
               }
-              $productname = $productdetails[0]->productname;
+              $productname = implode(',', $pname);
+              $productname1 = $productdetails[0]->productname;
           }
         $totaltax = $sum+$sum1;
         $totaltax = number_format($totaltax,2);
@@ -610,7 +614,7 @@ class TicketController extends Controller
         $data['customerid'] = $request->customerid;
         $data['serviceid'] =  $serviceid;
         $data['servicename'] = $servicedetails[0]->servicename;
-        $data['product_name'] = $productname;
+        $data['product_name'] = $productname1;
         $data['product_id'] = $productid;
         //$data['product_name'] = $pname;
         
@@ -660,7 +664,7 @@ class TicketController extends Controller
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
         
-      Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
+      Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'productname'=>$productname,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Service Ticket from '. auth()->user()->companyname);
           $message->from($app_email,$app_name);
@@ -1179,6 +1183,15 @@ class TicketController extends Controller
       } 
 
       $servicename = implode(',', $sname);
+      $productname = "";
+      if($tdata->product_id!="") {
+        $parray = explode(',', $tdata->product_id);
+        $productdetails = Inventory::select('productname','price')->whereIn('id', $parray)->get();
+        foreach ($productdetails as $key => $value) {
+            $pname[] = $value['productname'];
+        }
+        $productname = implode(',', $pname);
+      }
 
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
@@ -1191,7 +1204,7 @@ class TicketController extends Controller
       if($tdata->ticket_status==1){
         $title = "Ticket Details:-";
         $qid = "Ticket Id";
-       Mail::send('mail_templates.sharequotedetail', ['title'=>$title,'qid'=>$qid,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'address'=>$tdata->address,'servicename'=>$servicename,'price'=>$tdata->price,'date'=>$tdata->etc], function($message) use ($contactList,$app_name,$app_email) {
+       Mail::send('mail_templates.sharequotedetail', ['title'=>$title,'qid'=>$qid,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'address'=>$tdata->address,'servicename'=>$servicename,'productname'=>$productname,'time'=>$tdata->time,'minute'=>$tdata->minute,'price'=>$tdata->price,'date'=>$tdata->etc], function($message) use ($contactList,$app_name,$app_email) {
           $message->to($contactList);
          
           $message->subject('Ticket Details!');
@@ -1200,7 +1213,7 @@ class TicketController extends Controller
       } else {
         $title = "Quote Details:-";
         $qid = "Quote Id";
-         Mail::send('mail_templates.sharequotedetail', ['title'=>$title,'qid'=>$qid,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'address'=>$tdata->address,'servicename'=>$servicename,'price'=>$tdata->price,'date'=>$tdata->etc], function($message) use ($contactList,$app_name,$app_email) {
+         Mail::send('mail_templates.sharequotedetail', ['title'=>$title,'qid'=>$qid,'ticketid'=>$tdata->id,'customername'=>$tdata->customername,'address'=>$tdata->address,'servicename'=>$servicename,'productname'=>$productname,'time'=>$tdata->time,'minute'=>$tdata->minute,'price'=>$tdata->price,'date'=>$tdata->etc], function($message) use ($contactList,$app_name,$app_email) {
             $message->to($contactList);
            
             $message->subject('Quote Details!');

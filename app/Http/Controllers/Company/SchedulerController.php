@@ -799,6 +799,7 @@ class SchedulerController extends Controller
 
         $productid = "";
         $productname = "";
+        $productname1 = "";
         if(isset($request->productname)) {
             $productid = implode(',', $request->productname);
         }
@@ -818,8 +819,8 @@ class SchedulerController extends Controller
                 }
                 $sum1+= $txvalue1;
             }
-
-            $productname = $productdetails[0]->productname;   
+            $productname = implode(',', $pname);
+            $productname1 = $productdetails[0]->productname;   
         }
         $totaltax = $sum+$sum1;
         $totaltax = number_format($totaltax,2);
@@ -830,7 +831,7 @@ class SchedulerController extends Controller
         $data['customerid'] = $request->customerid;
         $data['serviceid'] =  $serviceid;
         $data['servicename'] = $servicedetails[0]->servicename;
-        $data['product_name'] = $productname;
+        $data['product_name'] = $productname1;
         $data['product_id'] = $productid;
 
         //$data['product_name'] = $pname;
@@ -863,7 +864,7 @@ class SchedulerController extends Controller
         $data['longitude'] = $longitude;
         $data['ticket_status'] = 1;
         
-        Quote::create($data);
+       $quotelastid = Quote::create($data);
     if($customer->email!=null) {   
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
@@ -871,7 +872,7 @@ class SchedulerController extends Controller
       $user_exist = Customer::where('email', $email)->first();
         $name = 'service ticket';
       Mail::send('mail_templates.sharequote',
-       ['address'=>$request->address,'name'=>$name, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description],
+       ['address'=>$request->address,'name'=>$name, 'servicename'=>$servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description],
         function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Service Quote from ' .  auth()->user()->companyname);

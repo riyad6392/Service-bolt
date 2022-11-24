@@ -765,6 +765,8 @@ class UserController extends Controller
 
         $productid = "";
         $productname = "";
+        $productname1 = "";
+
         $sum1 = 0;
         $txvalue1 = 0;
         if($request->productid!="") {
@@ -784,6 +786,8 @@ class UserController extends Controller
                 $sum1+= $txvalue1;
             } 
             $productname = implode(',', $pname);
+            $productname1 = $pdetails[0]->productname;
+
         }
 
         $totaltax = $sum+$sum1;
@@ -800,7 +804,7 @@ class UserController extends Controller
         $data['customerid'] = $request->customerid;
         $data['serviceid'] =  $serviceid;
         $data['servicename'] = $servicedetails[0]->servicename;
-        $data['product_name'] = $productname;
+        $data['product_name'] = $productname1;
         if($request->productid) {
             $data['product_id'] = $request->productid;
         }
@@ -844,7 +848,7 @@ class UserController extends Controller
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
       $name = "Ticket";  
-      Mail::send('mail_templates.sharequote', ['address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->hour,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description,'name'=>$name], function($message) use ($user_exist,$app_name,$app_email) {
+      Mail::send('mail_templates.sharequote', ['address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'productname'=>$productname,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description,'name'=>$name], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Ticket details!');
           $message->from($app_email,$app_name);
