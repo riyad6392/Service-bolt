@@ -430,8 +430,7 @@ class BillingController extends Controller
           'customername' => $request->customername,
           'paymentmethod' => $request->method,
           'status' => "Completed"
-      ]);
-        
+        ]);
         $tdata = Quote::where('id', $request->ticketid)->get()->first();
         $tdata->payment_status = "Completed";
         $tdata->price =  $request->amount;

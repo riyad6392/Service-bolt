@@ -1294,8 +1294,17 @@ class WorkerTicketController extends Controller
 
     public function sendpayment(Request $request)
     {
-
       $quote = Quote::where('id', $request->tid)->first();
+      $id = DB::table('balancesheet')->insertGetId([
+          'userid' => $quote->userid,
+          'workerid' => $quote->personnelid,
+          'ticketid' => $request->tid,
+          'amount' => $request->payment_amount,
+          'customername' => $quote->customername,
+          'paymentmethod' => $request->payment_mode,
+          'status' => "Completed"
+        ]);
+
       $quote->payment_amount = $request->payment_amount;
       $quote->payment_mode = $request->payment_mode;
       
