@@ -4,12 +4,9 @@
 </body>
  <script src='js/jquery.min.js'></script>
 <script src="js/bootstrap.bundle.min.js"></script>
-
-    <script async defer src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
  
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
-   <script src="js/chart.js"></script>
+   <!-- <script src="js/chart.js"></script> -->
    <script src="js/drop-zone.js"></script>
    <script src='js/jquery-ui.js'></script>
   

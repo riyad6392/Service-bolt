@@ -400,22 +400,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 @endsection
 
 @section('script')
- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places" async></script>
   <script>
- function initAutocomplete() {
-
-  var input = document.getElementById('addressview');
-   var autocomplete = new google.maps.places.Autocomplete(input);
-    // autocomplete.setComponentRestrictions(
-    // {'country': ['us']});
-
-   autocomplete.addListener('place_changed', function() {
-       var place = autocomplete.getPlace();
-        autocomplete.setComponentRestrictions(
-    {'country': ['us']});
-        alert(place);
-   });
- }
 $(document).ready(function() {
     // $('#example').DataTable({
     //   "order": [[ 0, "desc" ]]
@@ -495,8 +480,8 @@ $(document).on('click','#createctickets',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#vieweditaddressmodaldata').html(data.html);
+              initAutocomplete();
             }
         })
   });

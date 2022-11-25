@@ -561,13 +561,8 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
 <script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script> -->
 <script src="{{ asset('js/bootstrap-select.min.js')}}"></script>
-
-   <!--  <script async defer src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script> -->
-   
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
- 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
-   <script src="{{ asset('js/chart.js')}}"></script>
+   <!-- <script src="{{ asset('js/chart.js')}}"></script> -->
    <script src="{{ asset('js/drop-zone.js')}}"></script>
    <script src="{{ asset('js/dropify.js')}}"></script>
    
@@ -611,14 +606,13 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
   	$(window).on('load', function () {
     	$('.loadershow').hide();
   	}) 
+  
     function initAutocomplete() {
 
       var input = document.getElementById('address');
-       var autocomplete = new google.maps.places.Autocomplete(input);
-        // autocomplete.setComponentRestrictions(
-        // {'country': ['us']});
 
-       autocomplete.addListener('place_changed', function() {
+       var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener('place_changed', function() {
            var place = autocomplete.getPlace();
             autocomplete.setComponentRestrictions(
         {'country': ['us']});

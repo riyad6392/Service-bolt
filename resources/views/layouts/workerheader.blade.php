@@ -512,13 +512,9 @@ if(strpos(Request::url(), 'myticket') !== false || strpos(Request::url(), 'compl
 <script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script> -->
 <script src="{{ asset('js/bootstrap-select.min.js')}}"></script>
-
-   <!--  <script async defer src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script> -->
-   
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
  
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
-   <script src="{{ asset('js/chart.js')}}"></script>
+   <!-- <script src="{{ asset('js/chart.js')}}"></script> -->
    <script src="{{ asset('js/drop-zone.js')}}"></script>
    <script src="{{ asset('js/dropify.js')}}"></script>
   
@@ -553,6 +549,23 @@ if(strpos(Request::url(), 'myticket') !== false || strpos(Request::url(), 'compl
             autocomplete.setComponentRestrictions(
             {'country': ['us']});
         });
+
+        var input1 = document.getElementById('address6');
+       var autocomplete1 = new google.maps.places.Autocomplete(input1);
+        autocomplete1.addListener('place_changed', function() {
+           var place1 = autocomplete1.getPlace();
+            autocomplete1.setComponentRestrictions(
+        {'country': ['us']});
+      });
+
+      var input2 = document.getElementById('addressview');
+       var autocomplete2 = new google.maps.places.Autocomplete(input2);
+
+       autocomplete2.addListener('place_changed', function() {
+           var place2 = autocomplete2.getPlace();
+            autocomplete2.setComponentRestrictions(
+        {'country': ['us']});
+      });
     }
   $(document).ready(function() {
         $('#multiple-checkboxes').multiselect({

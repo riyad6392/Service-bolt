@@ -140,7 +140,7 @@ class WorkerCustomerController extends Controller
             <div class="col-md-12 mb-2">
              <div class="input_fields_wrap">
                 <div class="mb-3">
-                  <input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address" value="'.$request->address.'" required="">
+                  <input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address6" value="'.$request->address.'" required="">
                 </div>
             </div>
           </div>

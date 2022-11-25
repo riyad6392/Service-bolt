@@ -95,7 +95,7 @@
                       <input type="text" class="form-control form-control-2" placeholder="Name" value="{{$workerData->personnelname}}" name="personnelname" required=""> </div>
                     <div class="col-lg-6 mb-3">
                       <label class="form-label">Address</label>
-                      <input type="text" class="form-control form-control-2" placeholder="Address" value="{{$workerData->address}}" name="address" required=""> </div>
+                      <input type="text" class="form-control form-control-2" placeholder="Address" value="{{$workerData->address}}" name="address" id="address" required=""> </div>
                     <div class="col-lg-12 mb-3">
                       <label class="form-label">Phone</label>
                       <input type="text" class="form-control form-control-2" placeholder="Phone" value="{{$workerData->phone}}" name="phone" required="" onkeypress="return checkPhone(event)" maxlength="12"> </div>
@@ -430,20 +430,9 @@
       </form>
     </div>
   </div>
-</div> @endsection @section('script')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places" async></script>
-<script>
-function initAutocomplete() {
-  var input = document.getElementById('address');
-  var autocomplete = new google.maps.places.Autocomplete(input);
-  autocomplete.addListener('place_changed', function() {
-    var place = autocomplete.getPlace();
-    autocomplete.setComponentRestrictions({
-      'country': ['us']
-    });
-  });
-}
-</script>
+</div> 
+@endsection 
+@section('script')
 <script type="text/javascript">
 function checkPhone(event) {
   var code = (event.which) ? event.which : event.keyCode;

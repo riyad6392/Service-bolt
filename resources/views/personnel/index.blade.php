@@ -350,32 +350,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 @endsection
 @section('script')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places"
-      async
-    ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/eonasdan-bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
 <script>
-             
-
     $('.dropify').dropify();
-    function initAutocomplete() {
-
-  var input = document.getElementById('address');
-           var autocomplete = new google.maps.places.Autocomplete(input);
-            // autocomplete.setComponentRestrictions(
-            // {'country': ['us']});
-
-           autocomplete.addListener('place_changed', function() {
-               var place = autocomplete.getPlace();
-                autocomplete.setComponentRestrictions(
-            {'country': ['us']});
-
-           
-           });
-
-  
-}
 </script>
 <script type="text/javascript">
   
@@ -463,7 +441,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
                $('.selectpicker').selectpicker({
                 size: 3
@@ -482,7 +459,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-             // console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
                 
                $('.selectpicker').selectpicker({
@@ -498,22 +474,20 @@ $('#selector').delay(2000).fadeOut('slow');
 function viewmodalpopup(id) {
    var dataString =  'id='+ id;
    $.ajax({
-            url:'{{route('company.viewpersonnelmodal')}}',
-            data: dataString,
-            method: 'post',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-
-              $('#viewmodaldata').html(data.html);
-              $('.dropify').dropify();
-              $('.selectpicker').selectpicker({
-                size: 5
-              });
-              
-            }
-            
-        })
+      url:'{{route('company.viewpersonnelmodal')}}',
+      data: dataString,
+      method: 'post',
+      dataType: 'json',
+      refresh: true,
+      success:function(data) {
+        $('#viewmodaldata').html(data.html);
+        $('.dropify').dropify();
+        $('.selectpicker').selectpicker({
+          size: 5
+        });
+        initAutocomplete();
+      }
+   })
 }
 $(document).on('click','#editPersonnel',function(e) {
    var id = $(this).data('id');
@@ -525,13 +499,12 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-
-              console.log(data.html);
               $('#viewmodaldata').html(data.html);
               $('.dropify').dropify();
               $('.selectpicker').selectpicker({
                 size: 5
               });
+              initAutocomplete();
             }
         })
   });
@@ -576,7 +549,6 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata1').html(data.html);
               
             }
@@ -598,7 +570,6 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldatatimesheet').html(data.html);
               
             }
@@ -624,7 +595,6 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldatatimesheet').html(data.html);
               
             }
@@ -689,7 +659,6 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldatatimeoff').html(data.html);
               
             }
@@ -710,7 +679,6 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldatatimeoff').html(data.html);
               
             }

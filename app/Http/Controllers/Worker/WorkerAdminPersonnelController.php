@@ -283,7 +283,7 @@ class WorkerAdminPersonnelController extends Controller
           <label>Address</label>
              <div class="input_fields_wrap">
                 <div class="mb-3">
-                  <input type="text" class="form-control" placeholder="Address" name="address" id="address" value="'.$personnel[0]->address.'" required="">
+                  <input type="text" class="form-control" placeholder="Address" name="address" id="address6" value="'.$personnel[0]->address.'" required="">
                 </div>
             </div>
           </div>

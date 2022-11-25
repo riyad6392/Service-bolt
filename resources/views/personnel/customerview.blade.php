@@ -32,6 +32,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     height: 450px;
     overflow-y: auto;
   }
+
+  .pac-container.pac-logo {
+      z-index: 9999;
+  }
 </style>
 <div class="">
 <div class="content">
@@ -468,8 +472,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#vieweditaddressmodaldata').html(data.html);
+              initAutocomplete();
             }
         })
   });

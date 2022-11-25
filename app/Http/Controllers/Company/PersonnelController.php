@@ -300,7 +300,7 @@ class PersonnelController extends Controller
           <label class="mb-2">Address</label>
              <div class="input_fields_wrap">
                 <div class="mb-3">
-                  <input type="text" class="form-control" placeholder="Address" name="address" id="address" value="'.$personnel[0]->address.'" required="">
+                  <input type="text" class="form-control" placeholder="Address" name="address" id="address6" value="'.$personnel[0]->address.'" required="">
                 </div>
             </div>
           </div>
@@ -430,7 +430,6 @@ class PersonnelController extends Controller
       //     }
       //   }
       // }
-      
       $personnel->personnelname = $request->personnelname;
       $personnel->phone = $request->phone;
       $personnel->address = $request->address;
@@ -443,6 +442,7 @@ class PersonnelController extends Controller
       //  $personnel->email = $request->email;
       // }
       $formattedAddr = str_replace(' ','+',$request->address);
+
       //Send request and receive json data by address
       $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
       $output = json_decode($geocodeFromAddr);

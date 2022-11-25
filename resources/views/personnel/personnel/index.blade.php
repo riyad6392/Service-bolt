@@ -19,6 +19,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .inner.show {
     height: 102px;
 }
+
+.pac-container.pac-logo{
+  z-index: 9999;
+}
 </style>
 <div class="">
 <div class="content">
@@ -321,25 +325,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 @endsection
 @section('script')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBC9O1b8JhFyUiE2kAU-ULbcio2siKePYU&callback=initAutocomplete&libraries=places"
-      async
-    ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/eonasdan-bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
 <script>
   $('.dropify').dropify();
-  function initAutocomplete() {
-    var input = document.getElementById('address');
-    var autocomplete = new google.maps.places.Autocomplete(input);
-      // autocomplete.setComponentRestrictions(
-      // {'country': ['us']});
-
-    autocomplete.addListener('place_changed', function() {
-         var place = autocomplete.getPlace();
-          autocomplete.setComponentRestrictions(
-      {'country': ['us']});
-    });
-  }
 </script>
 <script type="text/javascript">
   $(document).ready(function() {
@@ -472,6 +461,7 @@ $(document).on('click','#editPersonnel',function(e) {
               $('.selectpicker').selectpicker({
                 size: 5
               });
+              initAutocomplete();
             }
         })
   });

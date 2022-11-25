@@ -941,28 +941,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   </div>
 </div>
 @section('script')
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places"
-      async
-    ></script> -->
-  <script>
-//     function initAutocomplete() {
-
-//   var input = document.getElementById('address');
-//            var autocomplete = new google.maps.places.Autocomplete(input);
-//             // autocomplete.setComponentRestrictions(
-//             // {'country': ['us']});
-
-//            autocomplete.addListener('place_changed', function() {
-//                var place = autocomplete.getPlace();
-//                 autocomplete.setComponentRestrictions(
-//             {'country': ['us']});
-
-           
-//            });
-
-  
-// }
-</script>
 <script type="text/javascript">
  
   $(document).ready(function() {
