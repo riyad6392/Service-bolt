@@ -178,7 +178,7 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
             </td>
            
               <td>{{$customer->phonenumber}}</td>
-              <td>{{$customer->email}}</td>
+              <td>@if($customer->email) {{$customer->email}} @else ---- @endif</td>
               <td>{{$customer->companyname}}</td>
               @php
               $i=0;
@@ -239,15 +239,14 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
                   @endphp
                   <td>
                     @foreach($servicedata as $servicename)
-                  @php
-                    if(count($servicedata) == 0){
-                      $servicename = '-';
-                    } else {
-                      $servicename = $servicename->servicename;
-                    }
-                  @endphp
-
-                {{$servicename}}
+                     @php
+                      if(count($servicedata) == 0){
+                        $servicename = '-';
+                      } else {
+                        $servicename = $servicename->servicename;
+                      }
+                    @endphp
+                    {{$servicename}}
                   @if(count($servicedata)>1) 
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" class="sup-dot" xmlns="http://www.w3.org/2000/svg" data-bs-toggle="modal" data-bs-target="#service-list-dot" id="service_list_dot" data-id="{{ $customer->serviceid }}" data-name="{{$customer->customername}}">
                       <circle cx="5" cy="5" r="5" fill="#FA8F61"></circle>
@@ -339,7 +338,7 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
      </div>
      <div class="col-md-11 mb-3">
       <div class="d-flex align-items-center">
-        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" required>
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
           @foreach ($services as $service)
             <option value="{{$service->id}}">{{$service->servicename}}</option>
           @endforeach

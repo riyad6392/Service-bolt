@@ -104,7 +104,7 @@
                 </div>
               </td>
               <td>{{$customer->phonenumber}}</td>
-              <td>{{$customer->email}}</td>
+              <td>@if($customer->email) {{$customer->email}} @else --- @endif</td>
               <td>{{$customer->companyname}}</td>
               @php
               $i=0;
@@ -204,7 +204,7 @@
      
      <div class="col-md-6 mb-3">
     
-     <input type="email" class="form-control" placeholder="Email" name="email" id="email" required="">
+     <input type="email" class="form-control" placeholder="Email" name="email" id="email">
      
      </div>
      
