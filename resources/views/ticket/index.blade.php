@@ -1172,7 +1172,7 @@ i.fa.fa-plus.category-one {
      
      <div class="col-md-6 mb-3">
      
-     <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="">
+     <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
      
      </div>
      
@@ -1249,7 +1249,7 @@ i.fa.fa-plus.category-one {
      
      <div class="col-md-6 mb-3">
      
-     <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="">
+     <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
      
      </div>
      
