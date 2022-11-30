@@ -8,7 +8,7 @@
 
 <body>
 <div style="max-width: 680px;margin:auto;background: url('') no-repeat center top;background-size: cover;padding: 25px;">
-<div class="banner" style="background: #fff;width: 100%;border-radius: 4px;height: auto;border: 2px solid #ccc;">
+<div class="banner" style="background: #fff;width: 100%;border-radius: 4px;height: auto;border: 1px solid #ccc;">
 <div>
     @php
         $usrcolor = App\Models\User::select('color','company_address','footercontent','txtcolor')->where('id',auth()->user()->id)->first();
@@ -57,12 +57,12 @@
  <tr>
     <td style="vertical-align: top; width: 70%; padding: 12px">
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Bill to:</p>
-            <span style="color: black; font-weight: bold;">Name - {{$customername}}</span> <br>
-            <span style="color: black; font-weight: bold;">Company Name -{{$companyname}}</span>
+            <span style="color: black; font-weight: bold;">Name - </span>{{$customername}} <br>
+            <span style="color: black; font-weight: bold;">Company Name -</span>{{$companyname}}
         
-        <br><span style="color: black; font-weight: bold;">Phone Number -{{$phone}}</span>
-        <br><span style="color: black; font-weight: bold;">Email -{{$email}}</span>
-        <br><span style="color: black; font-weight: bold;">Service Address -{{$address}}</span>
+        <br><span style="color: black; font-weight: bold;">Phone Number -</span>{{$phone}}
+        <br><span style="color: black; font-weight: bold;">Email -</span>{{$email}}
+        <br><span style="color: black; font-weight: bold;">Service Address -</span>{{$address}}
     </td>
     <td style="vertical-align: top; padding: 17px">
         <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Invoice:<br>
@@ -87,7 +87,7 @@
 </table>
 <div class="table-responsive">
     <table class="table table-striped no-wrap table-new table-list align-items-center" style="width: 100%;">
-    <thead style="width: 100%; color: #000;padding: 12px;">
+    <thead style="width: 100%; background-color: #ccc;padding: 12px;">
         <tr>
             <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">Item</th>
             <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">DESCRIPTION</th>
@@ -161,16 +161,16 @@
         }  
         @endphp
         @if($i % 2 == 0)
-            <tr style="background-color:#ccc;">
+            <tr style="background-color:#fff;">
         @else
-            <tr style="background-color:#5a5959;">
+            <tr style="background-color:#ccc;">
         @endif        
-        <td style="padding: 15px;width: 50%;border-bottom: 1px solid #ccc;">{{ $value['servicename'] }}</td>
-        <td style="padding: 15px;width: 50%;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
-        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">1</td>
-        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">{{$txtpercentage}}%</td>
-        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">${{ number_format((float)$value['price'] + (float)$txvalue, 2, '.', '') }}</td>
+        <td style="padding: 15px;width: 50%;">{{ $value['servicename'] }}</td>
+        <td style="padding: 15px;width: 50%;text-align: left;">{{ $value['description'] }}</td>
+        <td style="padding: 15px;width: 15%;">1</td>
+        <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
+        <td style="padding: 15px;width: 15%;">{{$txtpercentage}}%</td>
+        <td style="padding: 15px;width: 15%;">${{ number_format((float)$value['price'] + (float)$txvalue, 2, '.', '') }}</td>
     </tr>
     @php
         $i++;
@@ -194,16 +194,16 @@
         }
     @endphp
         @if($i % 2 == 0)
-            <tr style="background-color:#ccc;">
+            <tr style="background-color:#fff;">
         @else
-            <tr style="background-color:#5a5959;">
+            <tr style="background-color:#ccc;">
         @endif 
-        <td style="padding: 15px;width: 50%;border-bottom: 1px solid #ccc;">{{ $value['productname'] }}</td>
-        <td style="padding: 15px;width: 50%;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
-        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">1</td>
-        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">{{$txtpercentage1}}%</td>
-        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">${{ number_format((float)$value['price'] + (float)$txvalue1, 2, '.', '') }}</td>
+        <td style="padding: 15px;width: 50%;">{{ $value['productname'] }}</td>
+        <td style="padding: 15px;width: 50%;text-align: left;">{{ $value['description'] }}</td>
+        <td style="padding: 15px;width: 15%;">1</td>
+        <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
+        <td style="padding: 15px;width: 15%;">{{$txtpercentage1}}%</td>
+        <td style="padding: 15px;width: 15%;">${{ number_format((float)$value['price'] + (float)$txvalue1, 2, '.', '') }}</td>
     </tr>
     @php
         $i++;

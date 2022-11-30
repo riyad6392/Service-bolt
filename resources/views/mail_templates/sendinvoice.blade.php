@@ -55,12 +55,12 @@
  <tr>
     <td style="vertical-align: top; width: 70%; padding: 12px">
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Bill to:</p>
-            <span style="color: black; font-weight: bold;">Name - {{$customername}}</span> <br>
-            <span style="color: black; font-weight: bold;">Company Name -{{$companyname}}</span>
+            <span style="color: black; font-weight: bold;">Name - </span>{{$customername}} <br>
+            <span style="color: black; font-weight: bold;">Company Name -</span>{{$companyname}}
         
-        <br><span style="color: black; font-weight: bold;">Phone Number -{{$phone}}</span>
-        <br><span style="color: black; font-weight: bold;">Email -{{$email}}</span>
-        <br><span style="color: black; font-weight: bold;">Service Address -{{$address}}</span>
+        <br><span style="color: black; font-weight: bold;">Phone Number -</span>{{$phone}}
+        <br><span style="color: black; font-weight: bold;">Email -</span>{{$email}}
+        <br><span style="color: black; font-weight: bold;">Service Address -</span>{{$address}}
     </td>
     <td style="vertical-align: top; padding: 17px">
         <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Invoice:<br><span style="color: black; font-weight: bold;">#{{ $invoiceId }} </span></p>
