@@ -32,17 +32,17 @@
     <table style="width:100%">
         <tbody>
             <tr>
-                  <td style="position: relative;left: 16% !important;font-size: 21px;text-align:center;"> Invoice</td>  
+                  <td style="position: relative;left: 16% !important;font-size: 21px;text-align:center;color:{{$txtcolor}};"> INVOICE</td>  
             </tr>
             <tr>
             
-                <td style=" width: 70%;">
+                <td style=" width: 78%;">
                     <h1 style="color: {{$txtcolor}};margin: 0;"><img src="{{$cimage}}" style="width: 30%"></h1>
                 </td>
                 <td style="vertical-align: top; padding: 1px 0px;">
                    
                     <h4 style="color: #fff; margin:0;">
-                    <p style="margin: 5px 0px;color:{{$txtcolor}};">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
+                    <p style="margin: 0px 0px;color:{{$txtcolor}};">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
                     </h4>
                 </td>
             </tr>

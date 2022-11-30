@@ -32,13 +32,15 @@
     <table style="width:100%">
         <tbody>
             <tr>
-                <td style=" width: 70%; padding: 12px;">
-                    <h1 style="color: {{$txtcolor}};">INVOICE #{{ $invoiceId }}</h1>
+                <td style="position: relative;left: 16% !important;font-size: 21px;text-align:center;color:{{$txtcolor}};"> INVOICE</td>  
+            </tr>
+            <tr>
+                <td style=" width: 78%;">
+                    <h1 style="color: {{$txtcolor}};"><img src="{{$cimage}}" style="width: 30%"></h1>
                 </td>
                 <td style="vertical-align: top; padding: 1px 0px;">
-                    <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; "><img src="{{$cimage}}" style="width: 60%"></p>
                     <h4 style="color: #fff">
-                    <p style="margin: 5px 0px;color:{{$txtcolor}};">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
+                    <p style="margin: 0px 0px;color:{{$txtcolor}};">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
                     </h4>
                 </td>
             </tr>
@@ -77,7 +79,7 @@
 </table>
 <div class="table-responsive">
     <table class="table no-wrap table-new table-list align-items-center">
-    <thead style="color: #ccc;padding: 12px;">
+    <thead style="color: #000;padding: 12px;">
         <tr>
             <th style="padding: 15px; width: 50%; font-size:13px;border-bottom: 1px solid #ccc;">SERVICE PROVIDED</th>
             <th style="padding: 15px; width: 50%; font-size:13px;border-bottom: 1px solid #ccc;">DESCRIPTION</th>
@@ -153,9 +155,9 @@
         }
     @endphp
         @if($i % 2 == 0)
-            <tr style="color:#ccc;">
+            <tr style="background-color:#ccc;">
         @else
-            <tr style="color:#5a5959;">
+            <tr style="background-color:#5a5959;">
         @endif  
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['servicename'] }}</td>
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">-</td>
@@ -185,9 +187,9 @@
         }
         @endphp
         @if($i % 2 == 0)
-            <tr style="color:#ccc;">
+            <tr style="background-color:#ccc;">
         @else
-            <tr style="color:#5a5959;">
+            <tr style="background-color:#5a5959;">
         @endif
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['productname'] }}</td>
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
@@ -204,11 +206,11 @@
     </tbody>
     </table>
   <div class="text-center" style="border-radius: 4px;" >
-    <table style="width: 94%;background:#f8f6f6;border-radius: 10px;
-    margin: 22px;">
+    <table style="width: 100%;background:#f8f6f6;border-radius: 10px;
+    margin: 0px;">
     <tbody>
     <tr>
-        <td style="vertical-align: top; padding: 17px;background-color: {{$color}};">
+        <td style="vertical-align: top; padding: 12px;background-color: {{$color}};">
          <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 20px;border-radius: 10px;">Invoice Note:
             <br><span style="color: {{$txtcolor}};  font-size: 16px;">{{ @$description }}</span></p>
         </td>
