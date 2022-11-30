@@ -32,11 +32,11 @@
     <table style="width:100%">
         <tbody>
             <tr>
-                  <td style="position: relative;left: 47% !important;font-size: 21px;"> Invoice</td>  
+                  <td style="position: relative;left: 16% !important;font-size: 21px;text-align:center;"> Invoice</td>  
             </tr>
             <tr>
             
-                <td style=" width: 70%; padding: 12px">
+                <td style=" width: 70%;">
                     <h1 style="color: {{$txtcolor}};margin: 0;"><img src="{{$cimage}}" style="width: 30%"></h1>
                 </td>
                 <td style="vertical-align: top; padding: 1px 0px;">
@@ -86,7 +86,7 @@
   </tbody>
 </table>
 <div class="table-responsive">
-    <table class="table table-striped no-wrap table-new table-list align-items-center">
+    <table class="table table-striped no-wrap table-new table-list align-items-center" style="width: 100%;">
     <thead style="width: 100%; color: #000;padding: 12px;">
         <tr>
             <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">Item</th>
@@ -165,12 +165,12 @@
         @else
             <tr style="background-color:#5a5959;">
         @endif        
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['servicename'] }}</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">1</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{$txtpercentage}}%</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ number_format((float)$value['price'] + (float)$txvalue, 2, '.', '') }}</td>
+        <td style="padding: 15px;width: 50%;border-bottom: 1px solid #ccc;">{{ $value['servicename'] }}</td>
+        <td style="padding: 15px;width: 50%;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
+        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">1</td>
+        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
+        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">{{$txtpercentage}}%</td>
+        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">${{ number_format((float)$value['price'] + (float)$txvalue, 2, '.', '') }}</td>
     </tr>
     @php
         $i++;
@@ -198,12 +198,12 @@
         @else
             <tr style="background-color:#5a5959;">
         @endif 
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['productname'] }}</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">1</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{$txtpercentage1}}%</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ number_format((float)$value['price'] + (float)$txvalue1, 2, '.', '') }}</td>
+        <td style="padding: 15px;width: 50%;border-bottom: 1px solid #ccc;">{{ $value['productname'] }}</td>
+        <td style="padding: 15px;width: 50%;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
+        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">1</td>
+        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
+        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">{{$txtpercentage1}}%</td>
+        <td style="padding: 15px;width: 15%;border-bottom: 1px solid #ccc;">${{ number_format((float)$value['price'] + (float)$txvalue1, 2, '.', '') }}</td>
     </tr>
     @php
         $i++;
