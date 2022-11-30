@@ -36,7 +36,7 @@
             </tr>
             <tr>
                 <td style=" width: 78%;">
-                    <h1 style="color: {{$txtcolor}};"><img src="{{$cimage}}" style="width: 30%"></h1>
+                    <h1 style="color: {{$txtcolor}};"><img src="{{$cimage}}" style="width: 100px;"></h1>
                 </td>
                 <td style="vertical-align: top; padding: 1px 0px;">
                     <h4 style="color: #fff">
