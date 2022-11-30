@@ -234,7 +234,7 @@
          <tr>
           <td style="text-align: center; ">
             <img src="{{$cdimage}}" style="max-width: 100px;" >
-         <p style="color: #ccc; font-size: 16px;
+         <p style="color: #000; font-size: 16px;
         ">{{$footercontent}}</p>
         </td>
         </tr>
