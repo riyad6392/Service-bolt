@@ -165,7 +165,7 @@
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">-</td>
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">1</td>
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
-            <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{$txtpercentage}}%</td>
+            <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{@$txtpercentage}}%</td>
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ number_format((float)$value['price'] + (float)$txvalue, 2, '.', '') }}</td>
         </tr>
     @php
@@ -198,7 +198,7 @@
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">1</td>
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{$txtpercentage1}}%</td>
+        <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{@$txtpercentage1}}%</td>
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ number_format((float)$value['price'] + (float)$txvalue1, 2, '.', '') }}</td>
     </tr>
     @php
