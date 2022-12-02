@@ -8,7 +8,7 @@
 
 <body>
 <div style="max-width: 680px;margin:auto;background: url('') no-repeat center top;background-size: cover;padding: 25px;">
-<div class="banner" style="background: #fff;width: 100%;border-radius: 4px;height: auto;border: 1px solid #ccc;">
+<div class="banner" style="background: #fff;width: 100%;border-radius: 0px;height: auto;border: 0px solid #a4a0a0;;">
 <div>
     @php
         $usrcolor = App\Models\User::select('color','company_address','footercontent','txtcolor')->where('id',auth()->user()->id)->first();
@@ -28,8 +28,8 @@
            $txtcolor = "#fff";
         }
     @endphp
-<div class="text-center" style="background-color: {{$color}};border-radius: 4px;">
-    <table style="width:100%">
+<div class="text-center" style="background-color: {{$color}};border-radius: 0px;border:2px solid #a4a0a0">
+    <table style="width:100%; ">
         <tbody>
             <tr>
                   <td style="position: relative;left: 16% !important;font-size: 21px;text-align:center;color:{{$txtcolor}};"> INVOICE</td>  
@@ -51,8 +51,8 @@
     <div style="border-bottom: 2px solid #ccc;text-align: center;">
     </div>
 </div>
-<table style="width: 100%;border: 1px solid #ccc;border-radius: 6px;
-    background: #f8f7f7;padding: 0px 0px;">
+<table style="width: 100%;border: 2px solid #a4a0a0;border-radius: 1px;
+    background: #f8f7f7;padding: 0px 0px; border-top: 0;">
  <tbody>
  <tr>
     <td style="vertical-align: top; width: 70%; padding: 12px">
@@ -86,7 +86,7 @@
   </tbody>
 </table>
 <div class="table-responsive">
-    <table class="table table-striped no-wrap table-new table-list align-items-center" style="width: 100%;">
+    <table class="table table-striped no-wrap table-new table-list align-items-center" style="width: 100%;background: #a4a0a0;">
     <thead style="width: 100%; background-color: #ccc;padding: 12px;">
         <tr>
             <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">Item</th>
@@ -212,7 +212,8 @@
 
     </tbody>
     </table>
-  <div class="text-center" style="border-radius: 4px;" >
+  <div class="text-center" style=" border-radius: 1px;
+    border: 2px solid #a4a0a0;  border-top: 0;" >
     <table style="width: 100%;background:#f8f6f6;border-radius: 10px;
     margin: 0px;">
     <tbody>

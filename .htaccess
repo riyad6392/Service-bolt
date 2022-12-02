@@ -19,6 +19,8 @@
  
 </ifmodule>
 
+AddType application/octet-stream fileinfo
+
 # BEGIN cPanel-generated php ini directives, do not edit
 # Manual editing of this file may result in unexpected behavior.
 # To make changes to this file, use the cPanel MultiPHP INI Editor (Home >> Software >> MultiPHP INI Editor)
@@ -48,4 +50,3 @@
    php_flag zlib.output_compression Off
 </IfModule>
 # END cPanel-generated php ini directives, do not edit
-AddType application/octet-stream fileinfo
