@@ -120,6 +120,7 @@
       App\Models\Inventory::select('productname','id','price','description')
     ->whereIn('id', $pidarray)->get();
       $sum1 = 0;
+      $txtpercentage1 = 0;
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
         $txvalue1 = 0;
@@ -141,6 +142,7 @@
       $totalprice = number_format($totalprice,2);
       $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
       $i=0;
+      $txtpercentage = 0;
         @endphp
     @foreach($servicedetails as $key => $value)
     @php
@@ -172,6 +174,7 @@
     @endforeach
     @php
         $i=0+count($servicedetails);
+        $txtpercentage1 = 0;
      @endphp
     @foreach($pdetails as $key => $value)
         @php
