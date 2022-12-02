@@ -6,7 +6,7 @@
 
 <body>
 <div style="max-width: 680px;margin:auto;background: url('') no-repeat center top;background-size: cover;padding: 25px;">
-<div class="banner" style="background: #fff;width: 112%;border-radius: 4px;height: auto;border: 2px solid #ccc;">
+<div class="banner" style="background: #fff;width: 112%;border-radius: 4px;height: auto;border: 0px solid #a4a0a0;">
 <div>
     @php
         $usrcolor = App\Models\User::select('color','company_address','footercontent','txtcolor')->where('id',$quoteuserid)->first();
@@ -28,7 +28,7 @@
            $txtcolor = "#fff";
         }
     @endphp
-<div class="text-center" style="background-color: {{$color}};border-radius: 4px;" >
+<div class="text-center" style="background-color: {{$color}};border-radius: 0px;border:2px solid #a4a0a0">
     <table style="width:100%">
         <tbody>
             <tr>
@@ -78,10 +78,10 @@
   </tbody>
 </table>
 <div class="table-responsive">
-    <table class="table no-wrap table-new table-list align-items-center">
-    <thead style="color: #000;padding: 12px;">
+    <table class="table no-wrap table-new table-list align-items-center" style="width: 100%;background: #a4a0a0;">
+    <thead style="width: 100%; background-color: #ccc;padding: 12px;">
         <tr>
-            <th style="padding: 15px; width: 50%; font-size:13px;border-bottom: 1px solid #ccc;">SERVICE PROVIDED</th>
+            <th style="padding: 15px; width: 50%; font-size:13px;border-bottom: 1px solid #ccc;">Item</th>
             <th style="padding: 15px; width: 50%; font-size:13px;border-bottom: 1px solid #ccc;">DESCRIPTION</th>
             <th style="padding: 15px; width: 50%; font-size:13px;border-bottom: 1px solid #ccc;">QTY</th>
             <th style="padding: 15px; width: 15%; font-size:13px;border-bottom: 1px solid #ccc;">PRICE</th>
@@ -155,9 +155,9 @@
         }
     @endphp
         @if($i % 2 == 0)
-            <tr style="background-color:#ccc;">
+            <tr style="background-color:#fff;">
         @else
-            <tr style="background-color:#5a5959;">
+            <tr style="background-color:#ccc;">
         @endif  
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['servicename'] }}</td>
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">-</td>
@@ -187,9 +187,9 @@
         }
         @endphp
         @if($i % 2 == 0)
-            <tr style="background-color:#ccc;">
+            <tr style="background-color:#fff;">
         @else
-            <tr style="background-color:#5a5959;">
+            <tr style="background-color:#ccc;">
         @endif
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['productname'] }}</td>
         <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{ $value['description'] }}</td>
@@ -205,7 +205,8 @@
 
     </tbody>
     </table>
-  <div class="text-center" style="border-radius: 4px;" >
+  <div class="text-center" style="border-radius: 1px;
+    border: 2px solid #a4a0a0;  border-top: 0;" >
     <table style="width: 100%;background:#f8f6f6;border-radius: 10px;
     margin: 0px;">
     <tbody>
