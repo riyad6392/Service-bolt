@@ -422,24 +422,147 @@ class BillingController extends Controller
     public function update(Request $request)
     {
       $auth_id = auth()->user()->id;
+      $url = 'https://x1.cardknox.com/gatewayjson';
+      if($request->method == "Credit Card") {
+            $data = array(
+              'xCardNum' => $request->card_number,
+              'xExp' => $request->expiration_date,
+              'xKey' => 'serviceboltdev63cf6781c560436fa9f052cafa45a5d',
+              'xVersion' => '4.5.9',
+              "xSoftwareName" => 'ServiceBolt',
+              'xSoftwareVersion' => '1.0.0',
+              "xCommand"=>'cc:sale',
+              "xAmount"=>$request->amount,
+              "xCVV" =>$request->cvv
+          );
+
+          $headers = array(
+            'Content-Type: application/json',
+          );
+
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, 'https://x1.cardknox.com/gatewayjson');
+          curl_setopt($ch, CURLOPT_POST, true);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+          $result = curl_exec($ch);
+          curl_close($ch);
+          $finalresult = json_decode($result);
+         
+          if($finalresult->xStatus == "Approved") {
+            $id = DB::table('balancesheet')->insertGetId([
+              'userid' => $auth_id,
+              'workerid' => $request->personnelid,
+              'ticketid' => $request->ticketid,
+              'amount' => $request->amount,
+              'customername' => $request->customername,
+              'paymentmethod' => $request->method,
+              'status' => "Completed"
+            ]);
+            $tdata = Quote::where('id', $request->ticketid)->get()->first();
+            $tdata->payment_status = "Completed";
+            $tdata->price =  $request->amount;
+            $tdata->payment_mode = $request->method;
+            $tdata->checknumber = $request->check_no;
+            $tdata->card_number = $request->card_number;
+            $tdata->expiration_date = $request->expiration_date;
+            $tdata->cvv = $request->cvv;
+
+            //$tdata->invoiceid = $id;
+            $tdata->save();
+            $request->session()->flash('success', 'Payment Completed Successfully');
+            return redirect()->back();
+          } else {
+            $request->session()->flash('error', $finalresult->xError);
+            return redirect()->back();
+          }  
+      }
+
+      if($request->method == "Check") {
+        $data = array(
+          'xKey' => 'serviceboltdev63cf6781c560436fa9f052cafa45a5d',
+          'xVersion' => '4.5.9',
+          "xSoftwareName" => 'ServiceBolt',
+          'xSoftwareVersion' => '1.0.0',
+          "xCommand"=>'check:sale',
+          "xAmount"=>$request->amount,
+          "xCustom01" =>$request->customername,
+          "xAccount" =>$request->check_no,
+          "xAccountType" =>'Checking',
+          "xCurrency" =>'USD'
+        );
+
+          $headers = array(
+            'Content-Type: application/json',
+          );
+
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, 'https://x1.cardknox.com/gatewayjson');
+          curl_setopt($ch, CURLOPT_POST, true);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+          $result = curl_exec($ch);
+          curl_close($ch);
+          $finalresult = json_decode($result);
+         
+          if($finalresult->xStatus == "Approved") {
+            $id = DB::table('balancesheet')->insertGetId([
+              'userid' => $auth_id,
+              'workerid' => $request->personnelid,
+              'ticketid' => $request->ticketid,
+              'amount' => $request->amount,
+              'customername' => $request->customername,
+              'paymentmethod' => $request->method,
+              'status' => "Completed"
+            ]);
+            $tdata = Quote::where('id', $request->ticketid)->get()->first();
+            $tdata->payment_status = "Completed";
+            $tdata->price =  $request->amount;
+            $tdata->payment_mode = $request->method;
+            $tdata->checknumber = $request->check_no;
+            $tdata->card_number = $request->card_number;
+            $tdata->expiration_date = $request->expiration_date;
+            $tdata->cvv = $request->cvv;
+
+            //$tdata->invoiceid = $id;
+            $tdata->save();
+            $request->session()->flash('success', 'Payment Completed Successfully');
+            return redirect()->back();
+          } else {
+            $request->session()->flash('error', $finalresult->xError);
+            return redirect()->back();
+          }  
+      }
+
+      if($request->method == "Cash") {
         $id = DB::table('balancesheet')->insertGetId([
-          'userid' => $auth_id,
-          'workerid' => $request->personnelid,
-          'ticketid' => $request->ticketid,
-          'amount' => $request->amount,
-          'customername' => $request->customername,
-          'paymentmethod' => $request->method,
-          'status' => "Completed"
-        ]);
-        $tdata = Quote::where('id', $request->ticketid)->get()->first();
-        $tdata->payment_status = "Completed";
-        $tdata->price =  $request->amount;
-        $tdata->payment_mode = $request->method;
-        $tdata->checknumber = $request->check_no;
-        //$tdata->invoiceid = $id;
-        $tdata->save();
-        $request->session()->flash('success', 'Payment Completed Successfully');
-        return redirect()->back();
+              'userid' => $auth_id,
+              'workerid' => $request->personnelid,
+              'ticketid' => $request->ticketid,
+              'amount' => $request->amount,
+              'customername' => $request->customername,
+              'paymentmethod' => $request->method,
+              'status' => "Completed"
+            ]);
+            $tdata = Quote::where('id', $request->ticketid)->get()->first();
+            $tdata->payment_status = "Completed";
+            $tdata->price =  $request->amount;
+            $tdata->payment_mode = $request->method;
+            $tdata->checknumber = $request->check_no;
+            $tdata->card_number = $request->card_number;
+            $tdata->expiration_date = $request->expiration_date;
+            $tdata->cvv = $request->cvv;
+
+            //$tdata->invoiceid = $id;
+            $tdata->save();
+            $request->session()->flash('success', 'Payment Completed Successfully');
+            return redirect()->back();
+      }
+      
     }
 
     public function savefieldbilling(Request $request)

@@ -217,4 +217,8 @@ class HomeController extends Controller
     public function payment(Request $request) {
         return view('company.payment');
     }
+
+    public function aggrement(Request $request) {
+        return view('company.aggrement');
+    }
 }
