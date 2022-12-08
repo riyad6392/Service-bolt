@@ -213,4 +213,8 @@ class HomeController extends Controller
         //dd($data);
       return json_encode(['html' =>$data]);
     }
+
+    public function payment(Request $request) {
+        return view('company.payment');
+    }
 }

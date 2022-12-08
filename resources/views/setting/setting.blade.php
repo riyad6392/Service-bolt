@@ -36,6 +36,13 @@ ul {
     background-repeat: no-repeat;
     background-position: center;
 }
+label.credit {
+    display: block;
+}
+label.credit img {
+    margin: 28px 0px;
+    width: 160px;
+}
 </style>
 <div class="">
 <div class="content">
@@ -337,34 +344,15 @@ ul {
 <h5 class="my-4">Manage Payment Gateway</h5>
 
 <div class="row">
-<div class="col-lg-9 border-end pe-lg-4">
+<div class="col-lg-6 border-end pe-lg-4">
 <div class="row justify-content-around text-color">
-<label class="form-label col-md-12 mb-4">Choose one to set up</label>
-<div class="col-md-3 text-center">
+<!-- <label class="form-label col-md-12 mb-4">Choose one to set up</label> -->
+<div class="col-md-6 text-center">
 <div class="card-app mb-4">
 <input type="radio" id="control_01" name="select" value="1" checked>
-  <label for="control_01">
-    <img src="{{url('/')}}/images/icon-1.jpg" alt=""/>
-  </label>
-</div>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-</div>
-
-<div class="col-md-3 text-center">
-<div class="card-app mb-4">
-<input type="radio" id="control_02" name="select" value="2">
-  <label for="control_02">
-    <img src="{{url('/')}}/images/icon-2.jpg" alt=""/>
-  </label>
-</div>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-</div>
-
-<div class="col-md-3 text-center">
-<div class="card-app mb-4">
-<input type="radio" id="control_03" name="select" value="3">
-  <label for="control_03">
-    <img src="{{url('/')}}/images/icon-3.jpg" alt=""/>
+  <label for="control_01" class="credit">
+    <img src="{{url('/')}}/images/logo.png" alt=""/>
+    <p class="credit">Credit Card</p>
   </label>
 </div>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
@@ -381,7 +369,7 @@ ul {
     );
     
   @endphp
-<div class="col-lg-3 ps-lg-4">
+<div class="col-lg-6 ps-lg-4">
 <label class="form-label mb-lg-5">Select payment types available</label>
 <div class="services-list">
 

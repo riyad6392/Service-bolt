@@ -50,7 +50,7 @@ class ReportController extends Controller
             $personnelid = [];
             $tickedatadetails = "";
 
-            $personeldata = Personnel::select('personnel.id','quote.primaryname')->join('quote','quote.primaryname','=','personnel.id')->where('ticket_status','3')->groupBy('primaryname')->get()->pluck('primaryname')->toArray();
+            $personeldata = Personnel::select('personnel.id','quote.primaryname')->join('quote','quote.primaryname','=','personnel.id')->where('ticket_status','3')->whereIn('personnel.id',$pdata)->groupBy('primaryname')->get()->pluck('primaryname')->toArray();
 
             if($request->since!=null && $request->until!=null) {
                 @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('quote.personnelid',$personeldata)->where('quote.ticket_status',3)->whereBetween('quote.ticketdate', [$request->since, $request->until])->groupBy('quote.personnelid')->get();    

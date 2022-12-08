@@ -129,6 +129,7 @@ Route::group([
     'middleware' => ['auth','company']
 ], function(){
     Route::get('/home', [CompanyHomeController::class, 'index'])->name('home');
+    Route::get('/payment', [CompanyHomeController::class, 'payment'])->name('payment');
 
     Route::any('/home/mapdata', [CompanyHomeController::class, 'mapdata'])->name('homemapdata');
 
