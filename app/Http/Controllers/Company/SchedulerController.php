@@ -2070,7 +2070,7 @@ class SchedulerController extends Controller
     {
         $url = 'https://fcm.googleapis.com/fcm/send';
 
-        $fcmApiKey = "AAAARQKM8JU:APA91bGX3j2-L9qPoU7PhhTrxIZzjUDDUa8XFkyMsyYHUVr8uqC5yHofDtQR73vlmUarnbQDAexn2TQVRGlWhf99gVkD8UcCvSIX_1DcqX5ZdLy8xu3JOfAMgJmN3Zl6NZ-H3WBKXJDl";
+        $fcmApiKey = "AAAAFX2ZqIc:APA91bHVgbAesQlMy8WmJygjLayYgk8yGNWf6Aec1IqTRmtM3Q6JZjp_FDrIDl09ySa1MQoN5YALzXkJ5qjpmVlYFUxTeI2mNRqkdJx4qB3xWO0aHPAOmaQxvkmBVwMdO9cWkNQJhbAu";
 
         $fcmMsg = array(
             'title' => $msgarray['title'],
