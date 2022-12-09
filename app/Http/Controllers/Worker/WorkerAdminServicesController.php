@@ -531,7 +531,7 @@ class WorkerAdminServicesController extends Controller
       Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicedetails->servicename,'productname'=>$pname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Quot details!');
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
       });
     }
       $request->session()->flash('success', 'Quote added successfully');

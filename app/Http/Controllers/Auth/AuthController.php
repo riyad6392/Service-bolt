@@ -208,7 +208,7 @@ class AuthController extends Controller
         Mail::send('mail_templates.registration', ['email'=>$email, 'password'=>$password], function($message) use ($user_exist,$app_name,$app_email) {
             $message->to($user_exist->email)
             ->subject('Thank you for Registration!');
-            $message->from($app_email,$app_name);
+            //$message->from($app_email,$app_name);
         });
 
         $credentials = array('email'=>$request->email,'password'=>$request->password);

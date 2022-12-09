@@ -358,7 +358,7 @@ class WorkerAdminBillingController extends Controller
             $message->cc($contactbccList);
           }
           $message->subject('Billing Invoice!');
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
         });
 
        $request->session()->flash('success', 'Billing Invoice shared successfully');

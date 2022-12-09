@@ -61,10 +61,13 @@ form {
      </div>
     </div>
     <iframe id="agreement" class="agreement" data-ifields-id="agreement" src="https://cdn.cardknox.com/ifields/2.6.2006.0102/agreement.htm"></iframe>
+     <!-- <iframe id="agreement" class="agreement" data-ifields-id="agreement" src="https://cdn.cardknox.com/ifields/2.14.2211.1101/ifield-sample.htm?agreement"></iframe> -->
+    
 </div>
 @endsection
 @section('script')
     <script src="https://cdn.cardknox.com/ifields/2.6.2006.0102/ifields.min.js"></script>
+
 <script type="text/javascript">
 
 function handleAgreementResponse(response) {
@@ -82,6 +85,9 @@ function handleAgreementResponse(response) {
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
+    if(typeof ckCustomerAgreement === 'undefined') {
+        throw new ReferenceError("ckCustomerAgreement is not defined");
+    }
     ckCustomerAgreement.enableAgreement({
         iframeField: 'agreement',
         xKey: 'ifields_serviceboltdeva682f99929fd4ecc9e3ef29',
@@ -95,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     .catch(err => {
         console.error("Agreement Token Error", exMsg(err));
         handleAgreementResponse(err);
-});
+    });
 });
 
 

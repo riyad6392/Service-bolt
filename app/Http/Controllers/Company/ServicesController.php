@@ -679,7 +679,7 @@ class ServicesController extends Controller
       Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$request->address, 'servicename'=>$servicedetails->servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email,$subjetline) {
           $message->to($user_exist->email)
           ->subject($subjetline);
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
       });
     }
         if($request->share =='share') {

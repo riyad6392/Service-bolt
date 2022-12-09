@@ -175,7 +175,7 @@ class WorkerTicketController extends Controller
           Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {
             $message->to($user_exist->email)
             ->subject($ticketsub);
-            $message->from($app_email,$app_name);
+            //$message->from($app_email,$app_name);
           });
 
           $data1['uid'] = $worker->userid;
@@ -229,7 +229,7 @@ class WorkerTicketController extends Controller
             Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {
               $message->to($user_exist->email)
               ->subject($ticketsub);
-              $message->from($app_email,$app_name);
+              //$message->from($app_email,$app_name);
             });
 
             $data1['uid'] = $worker->userid;
@@ -322,7 +322,7 @@ class WorkerTicketController extends Controller
           Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {
             $message->to($user_exist->email)
             ->subject($ticketsub);
-            $message->from($app_email,$app_name);
+            //$message->from($app_email,$app_name);
           });
 
           $data1['uid'] = $worker->userid;
@@ -396,7 +396,7 @@ class WorkerTicketController extends Controller
             Mail::send('mail_templates.sendpickup', ['ticketId'=>$ticket->id,'address'=>$ticket->address, 'customername'=>$ticket->customername,'price'=>$ticket->price,'hours'=>$ticket->time,'minutes'=>$ticket->minute,'starttime'=>$ticket->giventime,'date'=>$ticket->givendate,'name'=>$user_exist->firstname,'heading'=>$ticketheading], function($message) use ($user_exist,$app_name,$app_email,$ticketsub) {
               $message->to($user_exist->email)
               ->subject($ticketsub);
-              $message->from($app_email,$app_name);
+              //$message->from($app_email,$app_name);
             });
 
           $data1['uid'] = $worker->userid;
@@ -817,7 +817,7 @@ class WorkerTicketController extends Controller
           Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
               $message->to($user_exist->email)
               ->subject('Invoice details!');
-              $message->from($app_email,$app_name);
+              //$message->from($app_email,$app_name);
             });
         }
       }
@@ -994,7 +994,7 @@ class WorkerTicketController extends Controller
       Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicename,'productname'=>$productnames,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Ticket details!');
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
         });
     }
           $request->session()->flash('success', 'Ticket added successfully');

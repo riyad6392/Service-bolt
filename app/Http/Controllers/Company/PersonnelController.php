@@ -145,7 +145,7 @@ class PersonnelController extends Controller
         Mail::send('mail_templates.workerregistration', ['email'=>$email, 'password'=>$password,'loginurl'=>$workerloginurl], function($message) use ($user_exist,$app_name,$app_email) {
             $message->to($user_exist->email)
             ->subject('Thank you for Registration!');
-            $message->from($app_email,$app_name);
+            //$message->from($app_email,$app_name);
         });
 
            
@@ -507,7 +507,7 @@ class PersonnelController extends Controller
         Mail::send('mail_templates.workerregistration', ['email'=>$request->email, 'password'=>$request->password,'loginurl'=>$workerloginurl], function($message) use ($user_exist,$app_name,$app_email) {
             $message->to($user_exist->email)
             ->subject('Thank you for Registration!');
-            $message->from($app_email,$app_name);
+            //$message->from($app_email,$app_name);
         });
         }      
       }

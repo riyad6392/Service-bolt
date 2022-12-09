@@ -185,7 +185,7 @@ class TicketController extends Controller
       Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$request->address, 'servicename'=>$servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Service Quote from ' . auth()->user()->companyname);
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
         });
     }
         if($request->share =='share') {
@@ -667,7 +667,7 @@ class TicketController extends Controller
       Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'productname'=>$productname,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Service Ticket from '. auth()->user()->companyname);
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
         });
     }
         
@@ -1208,7 +1208,7 @@ class TicketController extends Controller
           $message->to($contactList);
          
           $message->subject('Ticket Details!');
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
         });
       } else {
         $title = "Quote Details:-";
@@ -1217,7 +1217,7 @@ class TicketController extends Controller
             $message->to($contactList);
            
             $message->subject('Quote Details!');
-            $message->from($app_email,$app_name);
+            //$message->from($app_email,$app_name);
           });
      }
        $request->session()->flash('success', 'Ticket shared successfully');
@@ -1324,7 +1324,7 @@ class TicketController extends Controller
           Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate], function($message) use ($user_exist,$app_name,$app_email,$pdf) {
           $message->to($user_exist->email);
           $message->subject('Invoice Details!');
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
           $message->attachData($pdf->output(), "invoice.pdf");
         });
 

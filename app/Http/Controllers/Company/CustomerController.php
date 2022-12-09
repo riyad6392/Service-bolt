@@ -451,7 +451,7 @@ class CustomerController extends Controller
       Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Service Ticket from '. auth()->user()->companyname);
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
         });
     }
       if($request->share =='share') {
@@ -1106,7 +1106,7 @@ class CustomerController extends Controller
             Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->invoicenote,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate], function($message) use ($user_exist,$app_name,$app_email,$pdf) {
             $message->to($user_exist->email);
             $message->subject('Invoice PDF!');
-            $message->from($app_email,$app_name);
+            //$message->from($app_email,$app_name);
             $message->attachData($pdf->output(), "invoice.pdf");
           });
 

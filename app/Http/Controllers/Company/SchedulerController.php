@@ -876,7 +876,7 @@ class SchedulerController extends Controller
         function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Service Quote from ' .  auth()->user()->companyname);
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
         });
     }
         if($request->share =='share') {

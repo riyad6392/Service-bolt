@@ -64,15 +64,15 @@ form {
    <input id="name" name="xName" placeholder="Name" autocomplete="cc-name"></input>
    <br />
    <!-- Use the following src for the iframe on your form and replace ****version**** with the desired version: src="https://cdn.cardknox.com/ifields/****version****/ifield.htm" -->
-   <iframe data-ifields-id="ach" data-ifields-placeholder="Checking Account Number" src="https://cdn.cardknox.com/ifields/2.6.2006.0102/ifield.htm"></iframe>
+   <iframe data-ifields-id="ach" data-ifields-placeholder="Checking Account Number" src="https://cdn.cardknox.com/ifields/2.6.2006.0102/ifield.htm?agreement"></iframe>
    <input data-ifields-id="ach-token" name="xACH" type="hidden"></input>
    <br />
    <!-- Use the following src for the iframe on your form and replace ****version**** with the desired version: src="https://cdn.cardknox.com/ifields/****version****/ifield.htm" -->
-   <iframe data-ifields-id="card-number" data-ifields-placeholder="Card Number" src="https://cdn.cardknox.com/ifields/2.6.2006.0102/ifield.htm"></iframe>
+   <iframe data-ifields-id="card-number" data-ifields-placeholder="Card Number" src="https://cdn.cardknox.com/ifields/2.6.2006.0102/ifield.htm?agreement"></iframe>
    <input data-ifields-id="card-number-token" name="xCardNum" type="hidden"></input>
    <br />
    <!-- Use the following src for the iframe on your form and replace ****version**** with the desired version: src="https://cdn.cardknox.com/ifields/****version****/ifield.htm" -->
-   <iframe data-ifields-id="cvv" data-ifields-placeholder="CVV" src="https://cdn.cardknox.com/ifields/2.6.2006.0102/ifield.htm"></iframe>
+   <iframe data-ifields-id="cvv" data-ifields-placeholder="CVV" src="https://cdn.cardknox.com/ifields/2.6.2006.0102/ifield.htm?agreement"></iframe>
    <input data-ifields-id="cvv-token" name="xCVV" type="hidden"></input>
    <br />
    <input id="amount" name="xAmount" placeholder="Amount"></input>

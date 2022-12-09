@@ -507,7 +507,7 @@ class SchedulerController extends Controller
       Mail::send('mail_templates.sharequote', ['address'=>$request->address, 'servicename'=>$servicedetails->servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$request->time,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Quot details!');
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
         });
 
           $request->session()->flash('success', 'Ticket added successfully');

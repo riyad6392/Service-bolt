@@ -851,7 +851,7 @@ class UserController extends Controller
       Mail::send('mail_templates.sharequote', ['address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'productname'=>$productname,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description,'name'=>$name], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Ticket details!');
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
         }); 
      }
        return response()->json(['status'=>1,'message'=>'Ticket Created Successfully'],$this->successStatus);    
@@ -1077,7 +1077,7 @@ class UserController extends Controller
       Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Invoice details!');
-          $message->from($app_email,$app_name);
+          //$message->from($app_email,$app_name);
         });
     }
       return response()->json(['status'=>1,'message'=>'Invoice has been send successfully'],$this->successStatus); 
@@ -1705,7 +1705,7 @@ class UserController extends Controller
               Mail::send('mail_templates.appforgotpaasword', ['otpcode'=>$code], function($message) use ($app_name,$app_email,$email) {
                   $message->to($email)
                   ->subject('Forgot password OTP Code');
-                  $message->from($app_email,$app_name);
+                  //$message->from($app_email,$app_name);
                 }); 
 
             return response()->json(['status'=>1,'message'=>"We will send 4 digit code to your email for verification.","code"=>$code],$this->successStatus);

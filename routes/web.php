@@ -131,6 +131,7 @@ Route::group([
     Route::get('/home', [CompanyHomeController::class, 'index'])->name('home');
     Route::get('/payment', [CompanyHomeController::class, 'payment'])->name('payment');
     Route::get('/aggrement', [CompanyHomeController::class, 'aggrement'])->name('aggrement');
+    Route::get('/agreements', [CompanyHomeController::class, 'agreements'])->name('agreements');
 
 
     Route::any('/home/mapdata', [CompanyHomeController::class, 'mapdata'])->name('homemapdata');
