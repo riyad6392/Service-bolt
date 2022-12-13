@@ -84,7 +84,11 @@ class InventoryController extends Controller
                 $data['category'] = $request->category;
                 $data['description'] = $request->description;
          
-            Inventory::create($data);
+            $inventoryData = Inventory::create($data);
+
+            if($request->ajax()) {
+              return json_encode(['id' => $inventoryData->id,'price' => $inventoryData->price,'productname' =>$inventoryData->productname]);
+            }
             if(isset($request->duplicate)) {
               $request->session()->flash('success', 'Duplicate Product added successfully');  
             } else {

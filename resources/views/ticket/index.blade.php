@@ -64,6 +64,26 @@ i.fa.fa-plus.second {
     border-radius: 100px;
 }
 
+i.fa.fa-plus.third {
+    position: absolute;
+    top: 305px;
+    right: 35px;
+    color: black;
+    background: yellow;
+    padding: 7px 9px;
+    border-radius: 100px;
+}
+
+i.fa.fa-plus.next-two {
+    position: absolute;
+    top: 305px;
+    right: 13px;
+    color: black;
+    background: yellow;
+    padding: 7px 9px;
+    border-radius: 100px;
+}
+
 i.fa.fa-plus.select-customer {
     position: absolute;
     color: black;
@@ -676,14 +696,14 @@ i.fa.fa-plus.category-one {
 	  </div>
 
 	  <div class="col-md-11 mb-3">
-	  	<select class="selectpickerp1 form-control {{$cname}}" name="productname[]" id="productname" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Products">
+	  	<select class="selectpickerp1 form-control {{$cname}}" name="productname[]" id="productname" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Products" class="productclass">
 	  		@foreach($productData as $key =>$value)
 				<option value="{{$value->id}}" data-price="{{$value->price}}">{{$value->productname}}</option>
 			@endforeach
 			</select>
-			<!-- <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus second"></i></a>
-        </div> -->
+		<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-products" class="" id="hidequoteproduct"><i class="fa fa-plus third"></i></a>
+        </div>
 	  </div>
 	   
 	   <div class="col-md-6 mb-3" style="display: none;">
@@ -870,6 +890,9 @@ i.fa.fa-plus.category-one {
 				<option value="{{$value->id}}" data-price="{{$value->price}}">{{$value->productname}}</option>
 			@endforeach
 			</select>
+			<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+	          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-products1" class="" id="hidequoteservice2"><i class="fa fa-plus next-two"></i></a>
+	        </div>
 		</div>
 	   
 	   <div class="col-md-6 mb-3" style="display: none;">
@@ -1417,6 +1440,135 @@ i.fa.fa-plus.category-one {
   </div>
 </div>
 <!-- Modal -->
+
+<!-- product Modal -->
+<div class="modal fade" id="add-products" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box overflow-hidden">
+     <form class="form-material m-t-40 form-valide" id="productform" method="post" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+        <div class="add-customer-modal d-flex justify-content-between align-items-center">
+	     	<h5>Add a new Product/Part</h5>
+	    	<button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
+	    </div>
+
+     <input type="hidden" name="cid" id="cid" value="">
+  <div class="row customer-form" id="product-box-tabs">
+    <div class="col-md-12 mb-3">
+     <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" required="">
+    </div>
+    
+    <div class="col-md-6 mb-3">
+     <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
+    
+     
+     </div>
+     <div class="col-md-6 mb-3">
+    
+     <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="">
+     
+     </div>
+     
+     <div class="col-md-6 mb-3">
+    	<input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" required="">
+     </div>
+
+     <div class="col-md-6 mb-3">
+	   <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit">
+	 </div>
+
+     <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="$ Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+     </div>
+
+      <div class="col-lg-12 mb-3">
+    <textarea class="form-control height-180" name="description" id="description" required="" placeholder="Description"></textarea>
+    </div>
+      <div class="col-md-12">
+      <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
+      <input type="file" class="dropify" name="image" id="image" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+     </div>
+     
+     <div class="row mt-3">
+     <div class="col-lg-6 mb-3">
+      <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+      <button class="btn btn-add btn-block" type="submit">Complete</button>
+     </div>
+     </div>
+    </div>
+    </div>
+ </form>
+  </div>
+</div>
+</div>
+<!-- end product modal -->
+
+<!-- product1 Modal -->
+<div class="modal fade" id="add-products1" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box overflow-hidden">
+     <form class="form-material m-t-40 form-valide" id="productform1" method="post" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+        <div class="add-customer-modal d-flex justify-content-between align-items-center">
+	     	<h5>Add a new Product/Part</h5>
+	    	<button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
+	    </div>
+   <div class="row customer-form" id="product-box-tabs">
+    <div class="col-md-12 mb-3">
+     <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" required="">
+    </div>
+    
+    <div class="col-md-6 mb-3">
+     <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
+    
+     
+     </div>
+     <div class="col-md-6 mb-3">
+    
+     <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="">
+     
+     </div>
+     
+     <div class="col-md-12 mb-3">
+    	<input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" required="">
+     </div>
+     
+     <div class="col-md-6 mb-3">
+	   <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit">
+	 </div>
+     
+     <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="$ Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+     </div>
+
+      <div class="col-lg-12 mb-3">
+    <textarea class="form-control height-180" name="description" id="description" required="" placeholder="Description"></textarea>
+    </div>
+      <div class="col-md-12">
+      <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
+      <input type="file" class="dropify" name="image" id="image" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+     </div>
+     
+     <div class="row mt-3">
+     <div class="col-lg-6 mb-3">
+      <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+      <button class="btn btn-add btn-block" type="submit">Complete</button>
+     </div>
+     </div>
+    </div>
+    </div>
+ </form>
+  </div>
+</div>
+</div>
+<!-- end product1 modal -->
+
 <div class="modal fade" id="add-services1" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box overflow-hidden">
@@ -1568,7 +1720,7 @@ $('#serviceform').on('submit', function(event) {
             cache: false,
             processData: false,
             success:function(data) {
-              console.log(data);
+              //console.log(data);
 			  swal("Done!", "Service Created Successfully!", "success");
               $("#add-services").modal('hide');
               $("#servicename").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");
@@ -1590,7 +1742,7 @@ $('#serviceform').on('submit', function(event) {
             cache: false,
             processData: false,
             success:function(data) {
-              console.log(data);
+              // console.log(data);
 			  swal("Done!", "Service Created Successfully!", "success");
               $("#add-services1").modal('hide');
               $(".service").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");
@@ -1600,6 +1752,49 @@ $('#serviceform').on('submit', function(event) {
         })
   });
 
+  $('#productform').on('submit', function(event) {
+	      event.preventDefault();
+	      var url = "{{url('company/inventory/create')}}";
+	       $.ajax({
+	            url:url,
+	            data: new FormData(this),
+	            method: 'POST',
+	            dataType: 'JSON',
+	            contentType: false,
+	            cache: false,
+	            processData: false,
+	            success:function(data) {
+	            	//console.log(data);
+				  swal("Done!", "Product Created Successfully!", "success");
+	              $("#add-products").modal('hide');
+	              $("#productname").append("<option value="+data.id+" data-price="+data.price+">"+data.productname+"</option>");
+	              $("#productname").selectpicker('refresh');
+              	  $("#add-tickets").show();
+	            }
+	        })
+	  });
+
+	$('#productform1').on('submit', function(event) {
+	      event.preventDefault();
+	      var url = "{{url('company/inventory/create')}}";
+	       $.ajax({
+	            url:url,
+	            data: new FormData(this),
+	            method: 'POST',
+	            dataType: 'JSON',
+	            contentType: false,
+	            cache: false,
+	            processData: false,
+	            success:function(data) {
+				  swal("Done!", "Product Created Successfully!", "success");
+	              $("#add-products1").modal('hide');
+	              $("#productnamet1").append("<option value="+data.id+" data-price="+data.price+">"+data.productname+"</option>");
+	              $("#productnamet1").selectpicker('refresh');
+              	  $("#add-tickets1").show();
+	            }
+	        })
+	  });
+	
   $(document).on('click','.emailinvoice',function(e) {
    var id = $(this).data('id');
    var email = $(this).data('email');
