@@ -2084,12 +2084,12 @@ class SchedulerController extends Controller
         );
 
         $fcmFields = array(
-            'to' => $puser->device_token,
+            'registration_ids' => [$puser->device_token],
             'priority' => 'high',
             'notification' => $fcmMsg,
             'data' => $fcmMsg,
         );
-
+        
         $headers = array(
         'Authorization: key=' . $fcmApiKey,
         'Content-Type: application/json',
@@ -2103,7 +2103,7 @@ class SchedulerController extends Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmFields));
         $result = curl_exec($ch);
-
+        dd($result);
         if ($result === false) {
 
         }
