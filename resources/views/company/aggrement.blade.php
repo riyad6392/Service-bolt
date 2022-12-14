@@ -58,16 +58,19 @@ form {
        <h3 style="font-weight: bold;">Hello, {{Auth::user()->firstname}}  {{Auth::user()->lastname}}!</h3>
        <span style="color: #B0B7C3;">{{ date('l (F d, Y)') }}</span>
      </div>
+     <iframe id="agreement" class="agreement" data-ifields-id="agreement" src="https://cdn.cardknox.com/ifields/2.14.2211.1101/agreement.htm"></iframe>
      </div>
+
+     
+
     </div>
-    <iframe id="agreement" class="agreement" data-ifields-id="agreement" src="https://cdn.cardknox.com/ifields/2.6.2006.0102/agreement.htm"></iframe>
+    
      <!-- <iframe id="agreement" class="agreement" data-ifields-id="agreement" src="https://cdn.cardknox.com/ifields/2.14.2211.1101/ifield-sample.htm?agreement"></iframe> -->
     
 </div>
 @endsection
 @section('script')
-    <script src="https://cdn.cardknox.com/ifields/2.6.2006.0102/ifields.min.js"></script>
-
+    <script src="https://cdn.cardknox.com/ifields/2.14.2211.1101/ifields.min.js"></script>
 <script type="text/javascript">
 
 function handleAgreementResponse(response) {
@@ -81,6 +84,7 @@ function handleAgreementResponse(response) {
     } else {
         msg = response.token;
     }
+    console.log(msg);
     setTimeout(() => {alert(msg)}, 10);
 }
 
