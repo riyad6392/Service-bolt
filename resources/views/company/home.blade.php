@@ -126,15 +126,15 @@
         <div class="col-6">
           <div class="clsoo text-truncate">
             @if(!empty($goodproduct[0]))
-              <h5>{{$goodproduct[0]}}</h5>
+              <h5><a href="{{route('company.inventory')}}" target="_blank" style="color:#000;text-decoration:none;">{{$goodproduct[0]}}</a></h5>
               <p class="mb-2">{{ date('l d, H:i a', time()) }}</p>
             @endif
             @if(!empty($lowproduct[0]))
-              <h5>{{$lowproduct[0]}}</h5>
+              <h5><a href="{{route('company.inventory')}}" target="_blank" style="color:#000;text-decoration:none;">{{$lowproduct[0]}}</a></h5>
               <p class="mb-2">{{ date('l d, H:i a', time()) }}</p>
             @endif
             @if(!empty($restockproduct[0]))
-              <h5>{{$restockproduct[0]}}</h5>
+              <h5><a href="{{route('company.inventory')}}" target="_blank" style="color:#000;text-decoration:none;">{{$restockproduct[0]}}</a></h5>
               <p class="mb-2"> {{ date('l d, H:i a', time()) }}</p>
             @endif
           </div>

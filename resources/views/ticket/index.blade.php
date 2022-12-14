@@ -1981,7 +1981,7 @@ $('#serviceform').on('submit', function(event) {
             success:function(data) {
             	
               $("#add-address").modal('hide');
-              $("#address1").append("<option value="+data.address+">"+data.address+"</option>");
+              $("#address1").append("<option value="+data.address+" selected>"+data.address+"</option>");
               $("#add-tickets").show();
             }
         })
@@ -2006,7 +2006,7 @@ $('#serviceform').on('submit', function(event) {
             success:function(data) {
             	
               $("#add-address2").modal('hide');
-              $("#address2").append("<option value="+data.address+">"+data.address+"</option>");
+              $("#address2").append("<option value="+data.address+" selected>"+data.address+"</option>");
                $("#add-tickets1").show();
             }
         })

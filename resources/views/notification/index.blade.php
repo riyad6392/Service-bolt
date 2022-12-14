@@ -48,7 +48,7 @@
             @foreach($notificationlist as $key => $value)
             <tr>
               <td style="display: none;">{{$value->id}}</td>
-              <td>#{{$value->ticketid}}</td>
+              <td><a class="btn w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$value->ticketid}}">#{{$value->ticketid}}</a></td>
               <td style="white-space:break-spaces;width:300px!important">{{$value->message}}</td>
               <td>{{$value->created_at}}</td>
               <td><a class="btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->id}}">Delete</a></td>
@@ -63,6 +63,18 @@
      </div>
     </div>
   </div>
+
+  <!-- view tickets on popup -->
+   <div class="modal fade" id="view-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+        <div id="viewcompletedmodal"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end -->
   @endsection
 
 @section('script')
@@ -72,6 +84,23 @@
     $('#example').DataTable({
       "order": [[ 0, "desc" ]]
     });
+
+    $(document).on('click','#viewTickets',function(e) {
+       var id = $(this).data('id');
+       var dataString =  'id='+ id;
+       $.ajax({
+                url:'{{route('company.viewcompleteticketmodal')}}',
+                data: dataString,
+                method: 'post',
+                dataType: 'json',
+                refresh: true,
+                success:function(data) {
+                  console.log(data.html);
+                  $('#viewcompletedmodal').html(data.html);
+                }
+            })
+      });
+
 
   });
    $.ajaxSetup({
