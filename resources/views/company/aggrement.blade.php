@@ -7,11 +7,12 @@
 }
 
 iframe {
-  border: 0 solid black;
-  width: 600px;
-  height: 45px;
-  padding: 0px;
-  margin-bottom: 5px;
+    border: 0 solid black;
+    width: 1000px;
+    height: 225px;
+    padding: 0px;
+    margin-bottom: 5px;
+
 }
 
 input {
@@ -50,22 +51,25 @@ form {
   word-break: break-all;
   font-weight: 600;
 }
+
 </style>
 <div class="content">
     <div class="row">
       <div class="col-md-12">
         <div class="side-h3">
-       <h3 style="font-weight: bold;">Hello, {{Auth::user()->firstname}}  {{Auth::user()->lastname}}!</h3>
-       <span style="color: #B0B7C3;">{{ date('l (F d, Y)') }}</span>
+            <h3 style="font-weight: bold;">Hello, {{Auth::user()->firstname}}  {{Auth::user()->lastname}}!</h3>
+            <span style="color: #B0B7C3;">{{ date('l (F d, Y)') }}</span>
+        </div>
+        <iframe id="agreement" class="agreement" data-ifields-id="agreement" src="https://cdn.cardknox.com/ifields/2.14.2211.1101/agreement.htm"></iframe>
+            <br />
+        <input id="agreement-btn" type="button" value="Get Token" class="agreement" ></input>
      </div>
-     <iframe id="agreement" class="agreement" data-ifields-id="agreement" src="https://cdn.cardknox.com/ifields/2.14.2211.1101/agreement.htm"></iframe>
-     </div>
-
-     
-
-    </div>
     
-     <!-- <iframe id="agreement" class="agreement" data-ifields-id="agreement" src="https://cdn.cardknox.com/ifields/2.14.2211.1101/ifield-sample.htm?agreement"></iframe> -->
+    <div id="divAgr" class="hidden">
+        <label>Agreement Token: </label><label id="agr-token"></label>
+        <br/>
+        <br/>
+    </div>
     
 </div>
 @endsection
@@ -85,10 +89,15 @@ function handleAgreementResponse(response) {
         msg = response.token;
     }
     console.log(msg);
+    lbToken = document.getElementById("agr-token");
+                   
+    lbToken.innerHTML = msg;
+    showHide("divAgr", true);
     setTimeout(() => {alert(msg)}, 10);
 }
 
-document.addEventListener("DOMContentLoaded", function(event) {
+//document.addEventListener("DOMContentLoaded", function(event) {
+document.getElementById('agreement-btn').addEventListener('click', function(e) {
     if(typeof ckCustomerAgreement === 'undefined') {
         throw new ReferenceError("ckCustomerAgreement is not defined");
     }
