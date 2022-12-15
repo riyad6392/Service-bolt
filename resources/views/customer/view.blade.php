@@ -489,23 +489,22 @@ $(document).on('click','#createctickets',function(e) {
 $(document).on('click','#addnote',function(e) {
   var address = $("#saddress").val();
   if(address=="") {
-
     swal({
-              title: "Search address?",
-              text: "Can you please search address!",
-              type: "warning",
-              showCancelButton: false,
-              confirmButtonColor: "#DD6B55",
-              confirmButtonText: "ok",
-              closeOnConfirm: false,
-              closeOnCancel: false
-            },
-            function (isConfirm) {
-              if (isConfirm) {
-                  location.reload();
-                  }
-              }
-        )
+        title: "Search address?",
+        text: "Can you please search address!",
+        type: "warning",
+        showCancelButton: false,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "ok",
+        closeOnConfirm: false,
+        closeOnCancel: false
+      },
+      function (isConfirm) {
+        if (isConfirm) {
+          location.reload();
+        }
+      }
+    )
     }    
 });
  $(document).on('click','#editnote',function(e) {

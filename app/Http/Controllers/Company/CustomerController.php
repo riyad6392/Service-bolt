@@ -63,56 +63,63 @@ class CustomerController extends Controller
 
     public function create(Request $request)
     {
-        $auth_id = auth()->user()->id;
-            // $validate = Validator($request->all(), [
-            //     'image' => 'mimes:jpeg,png',
-            // ]);
-            // if ($validate->fails()) {
-            //     return redirect()->route('company.customercreate')->withInput($request->all())->withErrors($validate);
-            // }
-            $logofile = $request->file('image');
-            if (isset($logofile)) {
-               $new_file = $logofile;
-               $path = 'uploads/customer/';
-               $thumbnailpath = 'uploads/customer/thumbnail/';
-               $imageName = custom_fileupload1($new_file,$path,$thumbnailpath);
+      $auth_id = auth()->user()->id;
+      // $validate = Validator($request->all(), [
+      //     'image' => 'mimes:jpeg,png',
+      // ]);
+      // if ($validate->fails()) {
+      //     return redirect()->route('company.customercreate')->withInput($request->all())->withErrors($validate);
+      // }
+      $logofile = $request->file('image');
+      if (isset($logofile)) {
+       $new_file = $logofile;
+       $path = 'uploads/customer/';
+       $thumbnailpath = 'uploads/customer/thumbnail/';
+       $imageName = custom_fileupload1($new_file,$path,$thumbnailpath);
 
-               $data['image'] = $imageName; 
-            }
-                $data['userid'] = $auth_id;
-                $data['customername'] = $request->customername;
-                $data['phonenumber'] = $request->phonenumber;
-                $data['email'] = $request->email;
-                $data['companyname'] = $request->companyname;
-                if(isset($request->serviceid)) {
-                    $data['serviceid'] = implode(',', $request->serviceid);
-                } else {
-                    $data['serviceid'] = null;
-                }
-                if(isset($request->billingaddress)) {
-                  $data['billingaddress'] = $request->billingaddress;
-                } else {
-                  $data['billingaddress'] = null;
-                }
+       $data['image'] = $imageName; 
+      }
+          $data['userid'] = $auth_id;
+          $data['customername'] = $request->customername;
+          $data['phonenumber'] = $request->phonenumber;
+          $data['email'] = $request->email;
+          $data['companyname'] = $request->companyname;
+          if(isset($request->serviceid)) {
+              $data['serviceid'] = implode(',', $request->serviceid);
+          } else {
+              $data['serviceid'] = null;
+          }
 
-                if(isset($request->mailingaddress)) {
-                  $data['mailingaddress'] = $request->mailingaddress;
-                } else {
-                  $data['mailingaddress'] = null;
-                }
-            $cinfo = Customer::create($data);
+          if(isset($request->productid)) {
+              $data['productid'] = implode(',', $request->productid);
+          } else {
+              $data['productid'] = null;
+          }
 
-            $lastId = $cinfo->id;
+          if(isset($request->billingaddress)) {
+            $data['billingaddress'] = $request->billingaddress;
+          } else {
+            $data['billingaddress'] = null;
+          }
 
-            $cid = $lastId;
-            $data['authid'] = $auth_id;
-            $data['customerid'] = $cid;
-            $data['address'] = $request->address;
-            Address::create($data);
+          if(isset($request->mailingaddress)) {
+            $data['mailingaddress'] = $request->mailingaddress;
+          } else {
+            $data['mailingaddress'] = null;
+          }
+      $cinfo = Customer::create($data);
 
-            $request->session()->flash('success', 'Customer added successfully');
-            
-            return redirect()->route('company.customer');
+      $lastId = $cinfo->id;
+
+      $cid = $lastId;
+      $data['authid'] = $auth_id;
+      $data['customerid'] = $cid;
+      $data['address'] = $request->address;
+      Address::create($data);
+
+      $request->session()->flash('success', 'Customer added successfully');
+      
+      return redirect()->route('company.customer');
     }
     
     public function createcticket(Request $request)
@@ -848,7 +855,7 @@ class CustomerController extends Controller
       //$serviceids =  $customer[0]->serviceid;
      // $serviceids =explode(",", $customer[0]->serviceid);
       $serviceData = Service::where('userid',$auth_id)->orderBy('id','ASC')->get();
-   
+      $productData = Inventory::where('user_id',$auth_id)->orderBy('id','DESC')->get();
       if($customer[0]->image != null) {
         $userimage = url('uploads/customer/'.$customer[0]->image);
         } else {
@@ -910,6 +917,23 @@ class CustomerController extends Controller
               }
         $html .='</select>
           </div>
+
+          <div class="col-md-12 mb-3">
+          <label>Select Products</label>
+      <div class="d-flex align-items-center">
+        <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" style="height:auto;" data-placeholder="Select Products">';
+
+          foreach($productData as $key => $value) {
+            $productids =explode(",", $customer[0]->productid);
+            if(in_array($value->id, $productids)) {
+              $selectedp1 = "selected";
+            } else {
+              $selectedp1 = "";
+            }
+            $html .='<option value="'.$value->id.'" '.@$selectedp1.'>'.$value->productname.'</option>';
+          }
+        $html .='</select>
+          </div>
           <div class="col-md-12 mb-2">
             <label>Company Name</label>
 
@@ -945,6 +969,12 @@ class CustomerController extends Controller
         $customer->serviceid = implode(',', $request->serviceid);
       } else {
         $customer->serviceid = null;
+      }
+
+      if(isset($request->productid)) {
+        $customer->productid = implode(',', $request->productid);
+      } else {
+        $customer->productid = null;
       }
 
       if(isset($request->billingaddress)) {

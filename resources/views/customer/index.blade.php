@@ -352,6 +352,19 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
         </div>
      </div>
    </div>
+
+   <div class="col-md-11 mb-3">
+      <div class="d-flex align-items-center">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" data-placeholder="Select Products">
+          @foreach ($products as $product)
+            <option value="{{$product->id}}">{{$product->productname}}</option>
+          @endforeach
+        </select>
+        <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          <a class="add-person" href="#"  data-bs-toggle="modal" data-bs-target="#add-products" class="add-coustomar" id="hidequote"><i class="add-coustomar fa fa-plus"></i></a>
+        </div>
+     </div>
+   </div>
      
      <div class="col-md-12">
       <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
@@ -560,7 +573,70 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
     </div>
   </div>
 </div>
+<!-- product Modal -->
+<div class="modal fade" id="add-products" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box overflow-hidden">
+     <form class="form-material m-t-40 form-valide" id="productform" method="post" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+        <div class="add-customer-modal d-flex justify-content-between align-items-center">
+        <h5>Add a new Product/Part</h5>
+        <button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
+     <input type="hidden" name="cid" id="cid" value="">
+  <div class="row customer-form" id="product-box-tabs">
+    <div class="col-md-12 mb-3">
+     <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" required="">
+    </div>
+    
+    <div class="col-md-6 mb-3">
+     <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
+    
+     
+     </div>
+     <div class="col-md-6 mb-3">
+    
+     <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="">
+     
+     </div>
+     
+     <div class="col-md-6 mb-3">
+      <input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" required="">
+     </div>
+
+     <div class="col-md-6 mb-3">
+     <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit">
+   </div>
+
+     <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="$ Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+     </div>
+
+      <div class="col-lg-12 mb-3">
+    <textarea class="form-control height-180" name="description" id="description" required="" placeholder="Description"></textarea>
+    </div>
+      <div class="col-md-12">
+      <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
+      <input type="file" class="dropify" name="image" id="image" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+     </div>
+     
+     <div class="row mt-3">
+     <div class="col-lg-6 mb-3">
+      <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+      <button class="btn btn-add btn-block" type="submit">Complete</button>
+     </div>
+     </div>
+    </div>
+    </div>
+ </form>
+  </div>
+</div>
+</div>
+<!-- end product modal -->
 @endsection
 
 @section('script')
@@ -658,12 +734,33 @@ $(document).on('click','#service_list_dot',function(e) {
             success:function(data) {
               
               $("#add-services").modal('hide');
-              $("#serviceid").append("<option value="+data.id+">"+data.servicename+"</option>");
+              $("#serviceid").append("<option value="+data.id+" selected>"+data.servicename+"</option>");
               $("#serviceid").selectpicker('refresh');
               $("#add-customer").show();
             }
         })
   });
+
+  $('#productform').on('submit', function(event) {
+        event.preventDefault();
+        var url = "{{url('company/inventory/create')}}";
+         $.ajax({
+              url:url,
+              data: new FormData(this),
+              method: 'POST',
+              dataType: 'JSON',
+              contentType: false,
+              cache: false,
+              processData: false,
+              success:function(data) {
+                swal("Done!", "Product Created Successfully!", "success");
+                $("#add-products").modal('hide');
+                $("#productid").append("<option value="+data.id+" data-price="+data.price+" selected>"+data.productname+"</option>");
+                $("#productid").selectpicker('refresh');
+                $("#add-customer").show();
+              }
+          })
+    });
   
   $(document).on('click','#serviceform1',function(e) {
 
