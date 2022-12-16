@@ -110,7 +110,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		  	   <div class="user-descption align-items-center d-flex">
 				   <div class="user-img me-3">
 				   @if($personnel->image!=null)
-				   	<img src="{{url('uploads/personnel/thumbnail')}}/{{$personnel->image}}" alt="">
+				   	<img src="{{url('uploads/personnel/thumbnail')}}/{{$personnel->image}}" alt="" style="object-fit:none;">
 				   	@else
 				   	<img src="{{url('uploads/servicebolt-noimage.png')}}" alt="">
 				   @endif

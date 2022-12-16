@@ -178,7 +178,7 @@ class PersonnelController extends Controller
 
       $html ='<div class="card-body targetDiv" id="div1">
                 <div class="placeholder">
-                  <img src="'.$imagepath.'" alt="" style="object-fit: cover;">
+                  <img src="'.$imagepath.'" alt="" style="object-fit: contain;">
                 <h4 class="thomas-img">'.$PersonnelData[$datacount]->personnelname.'</h4>
                 </div>
                 <div>
@@ -227,7 +227,7 @@ class PersonnelController extends Controller
       $permissionarray1 =  explode(',',$PersonnelData[0]->ticketid);
       $html ='<div class="card-body targetDiv" id="div1">
                 <div class="placeholder">
-                  <img src="'.$imagepath.'" alt="" style="object-fit: cover;">
+                  <img src="'.$imagepath.'" alt="" style="object-fit: contain;">
                 <h4 class="thomas-img">'.$PersonnelData[0]->personnelname.'</h4>
                 </div>
                 <div>

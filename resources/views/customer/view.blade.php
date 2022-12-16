@@ -50,7 +50,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           @foreach($customerData as $key => $value)
           <div class="placeholder">
             @if($value->image!=null)
-            <img src="{{url('uploads/customer/')}}/{{$value->image}}" alt="" style="object-fit: cover;">
+            <img src="{{url('uploads/customer/')}}/{{$value->image}}" alt="" style="object-fit: contain;">
             @else 
               <img src="{{url('uploads/servicebolt-noimage.png')}}" alt="" style="object-fit: cover;">
             @endif
