@@ -2069,8 +2069,9 @@ class SchedulerController extends Controller
     public function sendFirebaseNotification($puser, $msgarray, $fcmData) 
     {
         $url = 'https://fcm.googleapis.com/fcm/send';
-
-        $fcmApiKey = "AAAAFX2ZqIc:APA91bHVgbAesQlMy8WmJygjLayYgk8yGNWf6Aec1IqTRmtM3Q6JZjp_FDrIDl09ySa1MQoN5YALzXkJ5qjpmVlYFUxTeI2mNRqkdJx4qB3xWO0aHPAOmaQxvkmBVwMdO9cWkNQJhbAu";
+        $admin = User::select('firebase')->where('role','superadmin')->first();
+        
+        $fcmApiKey = $admin->firebase;
 
         $fcmMsg = array(
             'title' => $msgarray['title'],
