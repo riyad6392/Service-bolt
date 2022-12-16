@@ -1227,7 +1227,6 @@ Save
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewinvoicemodal').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 3

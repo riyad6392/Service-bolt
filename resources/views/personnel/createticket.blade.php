@@ -87,7 +87,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 			   </div>
 
 			   <div class="col-md-6 mb-3">
-	        <select class="selectpicker1 form-control" name="productname[]" id="productname" required="" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Products">
+	        <select class="selectpicker1 form-control" name="productname[]" id="productname" 	multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Products">
 	        	@foreach($products as $key => $value)
 	        		<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->productname}}</option>
 	        	@endforeach

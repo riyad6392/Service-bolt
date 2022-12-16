@@ -657,7 +657,7 @@ class WorkerTicketController extends Controller
           <div class="col-md-12 mb-3">
           <label>Select Products</label>
       <div class="d-flex align-items-center">
-        <select class="form-control selectpicker" data-live-search="true" multiple="" data-placeholder="Select Products" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="productid[]" id="productid" style="height:auto;" required="">';
+        <select class="form-control selectpicker" data-live-search="true" multiple="" data-placeholder="Select Products" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="productid[]" id="productid" style="height:auto;">';
 
               foreach($productData as $key => $value) {
                 $productids =explode(",", $quote->product_id);
@@ -682,7 +682,7 @@ class WorkerTicketController extends Controller
           </div>
           </div><input type="hidden" name="id" id="id" value="'.$quote->id.'">';
           
-      if(in_array("Create Invoice for payment", $permissonarray)) {
+      if(in_array("Create Invoice for payment", $permissonarray) || in_array("Administrator", $permissonarray)) {
        $html .= '<div class="row"><div class="col-lg-6 mb-2">
             <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="sendinvoice">Send Invoice</button>
           </div>
@@ -690,7 +690,7 @@ class WorkerTicketController extends Controller
             <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="paynow">Pay Now</button>
           </div></div>';
       }
-      elseif(in_array("Generate PDF for invoice", $permissonarray)) {
+      elseif(in_array("Generate PDF for invoice", $permissonarray) || in_array("Administrator", $permissonarray)) {
        $html .= '<div class="row"><div class="col-lg-6 mb-2">
             <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="sendinvoice">Send Invoice</button>
           </div>
@@ -906,10 +906,12 @@ class WorkerTicketController extends Controller
         if(isset($request->productname)) {
           $productid = implode(',', $request->productname);
         }
+        $sum1 = 0;
+        $txvalue1 = 0;
         if($request->productname!="") {
           $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
-        $sum1 = 0;
-        $txvalue1 = 0;       
+        
+               
         foreach ($productdetails as $key => $value) {
           $pname[] = $value['productname'];
           if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
@@ -1193,8 +1195,13 @@ class WorkerTicketController extends Controller
         }
         $sum+= $txvalue;
       } 
-
-      $productid = implode(',', $request->productid);
+      $productname = "";
+      $productid = "";
+      $sum1 = "0";
+      if(isset($request->productid)) {
+        $productid = implode(',', $request->productid);
+      
+      //$productid = implode(',', $request->productid);
 
       $pdetails = Inventory::select('productname','price')->whereIn('id', $request->productid)->get();
       $sum1 = 0;
@@ -1210,9 +1217,11 @@ class WorkerTicketController extends Controller
         }
         $sum1+= $txvalue1;
       } 
+      $productname = implode(',', $pname);
+    }
 
       $servicename = implode(',', $sname);
-      $productname = implode(',', $pname);
+      
 
       $totaltax = $sum+$sum1;
       $totaltax = number_format($totaltax,2);
@@ -1223,7 +1232,7 @@ class WorkerTicketController extends Controller
       $data['serviceid'] = $serviceid;
       $data['servicename'] = $servicedetails[0]->servicename;
       $data['product_id'] = $productid;
-      $data['product_name'] = $pdetails[0]->productname;
+      $data['product_name'] = $productname;
       $data['personnelid'] = $quote->personnelid;
       $data['radiogroup'] = $request->radiogroup;
       $data['frequency'] = $request->frequency;
@@ -1295,26 +1304,71 @@ class WorkerTicketController extends Controller
     public function sendpayment(Request $request)
     {
       $quote = Quote::where('id', $request->tid)->first();
+     
+      if($request->method == "Credit Card") {
+      $id = DB::table('balancesheet')->insertGetId([
+          'userid' => $quote->userid,
+          'workerid' => $quote->personnelid,
+          'ticketid' => $request->tid,
+          'amount' => $request->amount,
+          'customername' => $quote->customername,
+          'paymentmethod' => $request->method,
+          'status' => "Completed"
+        ]);
+      
+      $quote->payment_status = "Completed";
+      $quote->price =  $request->amount;
+      $quote->payment_amount = $request->amount;
+      $quote->payment_mode = $request->method;
+      $quote->card_number = $request->card_number;
+      $quote->expiration_date = $request->expiration_date;
+      $quote->cvv = $request->cvv;
+      $quote->save();
+      $request->session()->flash('success', 'Payment has been successfully');
+      return redirect()->back();
+    }
+
+    if($request->method == "Check") {
       $id = DB::table('balancesheet')->insertGetId([
           'userid' => $quote->userid,
           'workerid' => $quote->personnelid,
           'ticketid' => $request->tid,
           'amount' => $request->payment_amount,
           'customername' => $quote->customername,
-          'paymentmethod' => $request->payment_mode,
+          'paymentmethod' => $request->method,
           'status' => "Completed"
         ]);
 
+      $quote->payment_status = "Completed";
+      $quote->price =  $request->payment_amount;
       $quote->payment_amount = $request->payment_amount;
-      $quote->payment_mode = $request->payment_mode;
-      
-      if(!empty($request->checknumber)){
-        $quote->checknumber = $request->checknumber;
-      }
-
+      $quote->payment_mode = $request->method;
+      $quote->checknumber = $request->checknumber;
       $quote->save();
       $request->session()->flash('success', 'Payment has been successfully');
       return redirect()->back();
     }
+
+    if($request->method == "Cash") {
+      $id = DB::table('balancesheet')->insertGetId([
+          'userid' => $quote->userid,
+          'workerid' => $quote->personnelid,
+          'ticketid' => $request->tid,
+          'amount' => $request->payment_amount,
+          'customername' => $quote->customername,
+          'paymentmethod' => $request->method,
+          'status' => "Completed"
+        ]);
+      
+      $quote->payment_status = "Completed";
+      $quote->price =  $request->payment_amount;
+      $quote->payment_amount = $request->payment_amount;
+      $quote->payment_mode = $request->method;
+      $quote->save();
+      $request->session()->flash('success', 'Payment has been successfully');
+      return redirect()->back();
+    }
+
+  }
   
 }

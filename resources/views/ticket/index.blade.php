@@ -1192,6 +1192,14 @@ i.fa.fa-plus.category-one {
   	<div class="col-md-12 mb-3">
       <input type="text" class="form-control" placeholder="Address" name="address" id="addressq1" required="">
     </div>
+
+    <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="Billing Address" name="billingaddress" id="billingaddress">
+    </div>
+
+    <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="Mailing Address" name="mailingaddress" id="mailingaddress">
+    </div>
      
      <div class="col-md-6 mb-3">
      
@@ -1217,12 +1225,19 @@ i.fa.fa-plus.category-one {
             <option value="{{$service->id}}">{{$service->servicename}}</option>
           @endforeach
         </select>
-        <div class="wrapper" style="display: none;">
-			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
- 			<div class="tooltip">If you are not seeing the services in dropdown then create some services in service section then select here.</div>
-		</div>
      </div>
    </div>
+
+   <div class="col-md-12 mb-3" style="display:none;">
+      <div class="d-flex align-items-center">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" data-placeholder="Select Products">
+          @foreach ($productData as $product)
+            <option value="{{$product->id}}">{{$product->productname}}</option>
+          @endforeach
+        </select>
+     </div>
+   </div>
+
    <div class="col-lg-12 mb-3">
       <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
       <div class="drop-zone">
@@ -1252,7 +1267,7 @@ i.fa.fa-plus.category-one {
 <div class="modal fade" id="add-customer2" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box  overflow-hidden">
-     <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.createcticket')}}" enctype="multipart/form-data">
+    <form class="form-material m-t-40  form-valide" method="post" id="createserviceticket1"  enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
 	  <div class="add-customer-modal d-flex justify-content-between align-items-center">
@@ -1270,6 +1285,14 @@ i.fa.fa-plus.category-one {
       <input type="text" class="form-control" placeholder="Address" name="address" id="addresst1" required="">
     </div>
      
+     <div class="col-md-12 mb-3">
+	  <input type="text" class="form-control" placeholder="Billing Address" name="billingaddress" id="billingaddress">
+	</div>
+
+	<div class="col-md-12 mb-3">
+	  <input type="text" class="form-control" placeholder="Mailing Address" name="mailingaddress" id="mailingaddress">
+	</div>
+
      <div class="col-md-6 mb-3">
      
      <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
@@ -1294,12 +1317,18 @@ i.fa.fa-plus.category-one {
             <option value="{{$service->id}}">{{$service->servicename}}</option>
           @endforeach
         </select>
-        <div class="wrapper" style="display: none;">
-			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
- 			<div class="tooltip">If you are not seeing the services in dropdown then create some services in service section then select here.</div>
-		</div>
      </div>
    </div>
+   <div class="col-md-12 mb-3" style="display:none;">
+  <div class="d-flex align-items-center">
+    <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" data-placeholder="Select Products">
+      @foreach ($productData as $product)
+        <option value="{{$product->id}}">{{$product->productname}}</option>
+      @endforeach
+    </select>
+ </div>
+</div>
+
    <div class="col-lg-12 mb-3">
       <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
       <div class="drop-zone">
@@ -1706,6 +1735,28 @@ $('#createserviceticket').on('submit', function(event) {
             }
         })
   });
+
+	$('#createserviceticket1').on('submit', function(event) {
+      event.preventDefault();
+      var url = "{{url('company/customer/createcticket')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+              console.log(data);
+			  swal("Done!", "Customer Created Successfully!", "success");
+              $("#add-customer2").modal('hide');
+              $("#customerid1").append("<option value="+data.id+">"+data.customername+"</option>");
+              //$("#customerid_service").selectpicker('refresh');
+              $("#add-tickets1").show();
+            }
+        })
+  	});
   
   
 $('#serviceform').on('submit', function(event) {

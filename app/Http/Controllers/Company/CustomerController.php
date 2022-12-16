@@ -144,6 +144,25 @@ class CustomerController extends Controller
           } else {
               $data['serviceid'] = null;
           } 
+
+          if(isset($request->productid)) {
+              $data['productid'] = implode(',', $request->productid);
+          } else {
+              $data['productid'] = null;
+          }
+
+          if(isset($request->billingaddress)) {
+            $data['billingaddress'] = $request->billingaddress;
+          } else {
+            $data['billingaddress'] = null;
+          }
+
+          if(isset($request->mailingaddress)) {
+            $data['mailingaddress'] = $request->mailingaddress;
+          } else {
+            $data['mailingaddress'] = null;
+          }
+          
       $cinfo = Customer::create($data);
 
       $lastId = $cinfo->id;

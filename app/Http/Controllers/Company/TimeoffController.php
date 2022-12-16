@@ -110,7 +110,7 @@ use Image;
 
         $from = $request->since;
         $to = $request->until;
-        $personnelUser = Personnel::select('*')->orderBy('id','DESC')->get();
+        $personnelUser = Personnel::select('*')->where('userid',$auth_id)->orderBy('id','DESC')->get();
         $currentdate = Carbon::now();
         $currentdate = date('Y-m-d', strtotime($currentdate));
     } else {
@@ -129,7 +129,7 @@ use Image;
 
       $from = $request->since;
       $to = $request->until;
-      $personnelUser = Personnel::select('*')->orderBy('id','DESC')->get();
+      $personnelUser = Personnel::select('*')->where('userid',$auth_id)->orderBy('id','DESC')->get();
       $currentdate = Carbon::now();
       $currentdate = date('Y-m-d', strtotime($currentdate));
     }

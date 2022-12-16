@@ -82,39 +82,45 @@
 	  
 	  
 	  </div>
+	   <form method="post" action="{{route('worker.sendpayment')}}">
+	   	@csrf
+	   	<input type="hidden" class="form-control form-control-2" name="method" id="method"  value="Credit Card" placeholder="">
+	   	<input type="hidden" class="form-control form-control-2" name="amount" required id="amount"  value="{{$totalprice}}" placeholder="">
+	   	<input type="hidden" value="{{$quoteData->id}}" name="tid">
       <div class="card admin-setting mb-3">
 	  <div class="card-body">
 	  <h5 class="mb-4">Credit Card Info</h5>
 	  <div class="mb-3">
 <label class="form-label">Credit Card Number</label>
-  <input type="text" class="border form-control form-control-2" placeholder="Credit Card Number">
+  <input type="text" class="border form-control form-control-2" placeholder="Credit Card Number" name="card_number" id="card_number" onkeypress="return checkDigit(event)" required>
 </div>
 
 <div class="row">
 <div class="col-md-6">
   <div class="mb-3">
 <label class="form-label">Expiration Date</label>
-  <input type="text" class="border form-control form-control-2" placeholder="Expiration Date">
+  <input type="text" class="border form-control form-control-2" name="expiration_date" placeholder="MMYY" required>
 </div>
 </div>
 
 <div class="col-md-6">
   <div class="mb-3">
 <label class="form-label">Security Code</label>
-  <input type="text" class="border form-control form-control-2" placeholder="Security Code">
+  <input type="text" class="border form-control form-control-2" name="cvv" placeholder="Security Code" required>
 </div>
 </div>
 
 </div>
 	  
 	  </div>
+	   	<div class="col-lg-12 text-center mt-3">
+				<button type="submit" class="btn btn-add w-100 fw-bold">Pay</button>
+			</div>
 	  </div>
+	
 	  
-	  
-	     <div class="col-lg-12 text-center mt-3">
-<button class="btn btn-add w-100 fw-bold">Pay</button>
-</div>
-	  
+	    
+	  </form>  
 	  
 	  
     </div>
@@ -143,6 +149,7 @@
 						</h2>
 						<form method="post" action="{{route('worker.sendpayment')}}">
 							@csrf
+							<input type="hidden" class="form-control form-control-2" name="method" id="method"  value="Cash">
 								<div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
 									<div class="accordion-body">
 									<div class="mb-3">
@@ -162,6 +169,7 @@
 
 							<form method="post" action="{{route('worker.sendpayment')}}">
 								@csrf
+								<input type="hidden" class="form-control form-control-2" name="method" id="method"  value="Check" placeholder="" >
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="flush-headingTwo">
 						  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
@@ -258,5 +266,37 @@ $('#tabs-nav li').click(function(){
   $(activeTab).fadeIn();
   return false;
 });
+
+function checkDigit(event) {
+    var code = (event.which) ? event.which : event.keyCode;
+
+    if ((code < 48 || code > 57) && (code > 31)) {
+        return false;
+    }
+
+    return true;
+}
+
+function cc_format(value) {
+  var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+  var matches = v.match(/\d{4,16}/g);
+  var match = matches && matches[0] || ''
+  var parts = []
+  for (i=0, len=match.length; i<len; i+=4) {
+    parts.push(match.substring(i, i+4))
+  }
+  if (parts.length) {
+    return parts.join(' ')
+  } else {
+    return value
+  }
+}
+
+onload = function() {
+  document.getElementById('card_number').oninput = function() {
+    this.value = cc_format(this.value)
+  }
+}
+
 </script>
 @endsection
