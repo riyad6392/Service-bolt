@@ -116,7 +116,7 @@
                       <label for="imageUpload"></label>
                     </div>
                     <div class="avatar-preview"> @if($workerData->image!=null)
-                      <div id="imagePreview" style="background-image: url('{{url('uploads/personnel/thumbnail/')}}/{{$workerData->image}}');"> </div> @else @php $dimage = url('/').'/uploads/servicebolt-noimage.png'; @endphp
+                      <div id="imagePreview" style="background-image: url('{{url('uploads/personnel/')}}/{{$workerData->image}}');"> </div> @else @php $dimage = url('/').'/uploads/servicebolt-noimage.png'; @endphp
                       <div id="imagePreview" style="background-image: url('{{$dimage}}');"> </div> @endif </div>
                     <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;width: 100px;">Approximate Image Size : 122 * 122</div>
                   </div>

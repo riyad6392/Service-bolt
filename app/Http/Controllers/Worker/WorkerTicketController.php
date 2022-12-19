@@ -1131,7 +1131,7 @@ class WorkerTicketController extends Controller
             <select class="form-select" name="frequency" id="frequency" required="">
               <option value="">Service Frequency</option>';
           foreach ($tenture as $key => $value) {
-            if(in_array($value->tenturename, $quotedetailsnew[0])) {
+                if($value->tenturename== $quotedetailsnew[0]['frequency']) {
                   $selectedsf = "selected";
                 } else {
                   $selectedsf = "";
@@ -1156,7 +1156,7 @@ class WorkerTicketController extends Controller
            </div>
            <div class="col-md-12 mb-3">
              <label>Description</label>
-             <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required>'.$quotedetails[0]->description.'</textarea>
+             <textarea class="form-control height-180" placeholder="Description" name="description" id="description" style="color:#000;" required>'.$quotedetails[0]->description.'</textarea>
            </div>';
 
           $html .= '<div class="col-lg-6 mb-2">

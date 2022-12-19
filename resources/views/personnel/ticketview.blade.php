@@ -1086,14 +1086,18 @@ Save
      
      </div>
      
-     <div class="col-md-12 mb-3">
+     <div class="col-md-6 mb-3">
     
      <input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" required="">
-     
+    </div>
+
+     <div class="col-md-6 mb-3">
+    
+     <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit">
      </div>
      
      <div class="col-md-12 mb-3">
-      <input type="text" class="form-control" placeholder="Price" name="price" id="price" required="">
+      <input type="text" class="form-control" placeholder="$ Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
      </div>
 
       <div class="col-lg-12 mb-3">
@@ -1169,7 +1173,9 @@ Save
 
 <script type="text/javascript">
   function refreshPage() {
-    window.location.reload();
+    //window.location.reload();
+    $("#add-tickets").show();
+    $("#add-services").hide();
   } 
   $('.dropify').dropify();
   $(document).ready(function() {

@@ -85,6 +85,7 @@ class WorkerAdminProductController extends Controller
                 $data['quantity'] = $request->quantity;
                 $data['pquantity'] = $request->pquantity;
                 $data['sku'] = $request->sku;
+                $data['unit'] = $request->unit;
                 $data['price'] = $request->price;
                 $data['category'] = $request->category;
                 $data['description'] = $request->description;
