@@ -1173,9 +1173,7 @@ Save
 
 <script type="text/javascript">
   function refreshPage() {
-    //window.location.reload();
-    $("#add-tickets").show();
-    $("#add-services").hide();
+    window.location.reload();
   } 
   $('.dropify').dropify();
   $(document).ready(function() {
