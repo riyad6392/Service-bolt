@@ -540,7 +540,7 @@
                               var contentString =
                               '<div class="user-box">' +
                               '<div>' +
-                              '<img class="mb-2" src="'+imgeurl+'" alt="" style="width:60px;height:60px;border-radius:100%">' +
+                              '<img class="mb-2" src="'+imgeurl+'" alt="" style="width:60px;border-radius:100%">' +
                               '<span style="font-weight:bold"> '+data.html[i][0]+'</span>' +
                               '<p style="margin:0px;font-size:12px;color:#;font-weight:bold;">Ticket #'+data.html[i][5]+'<span style="font-size:12px;color:black;"> '+data.html[i][6]+' </span></p>' +
                               "</div>" +
@@ -551,7 +551,7 @@
                               var contentString =
                               '<div class="user-box">' +
                               '<div>' +
-                              '<img class="mb-2" src="'+imgeurl+'" alt="" style="width:60px;height:60px;border-radius:100%">' +
+                              '<img class="mb-2" src="'+imgeurl+'" alt="" style="width:60px;border-radius:100%">' +
                               '<span style="font-weight:bold"> '+data.html[i][0]+'</span>' +
                               "</div>" +
                               "</div>";

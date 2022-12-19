@@ -1487,6 +1487,15 @@ i.fa.fa-plus.category-one {
     <div class="col-md-12 mb-3">
      <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" required="">
     </div>
+
+    <div class="col-md-12 mb-3">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+          @foreach ($services as $service)
+            <option value="{{$service->id}}">{{$service->servicename}}</option>
+          @endforeach
+        </select>
+          
+       </div>
     
     <div class="col-md-6 mb-3">
      <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
@@ -1550,6 +1559,15 @@ i.fa.fa-plus.category-one {
     <div class="col-md-12 mb-3">
      <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" required="">
     </div>
+
+    <div class="col-md-12 mb-3">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+          @foreach ($services as $service)
+            <option value="{{$service->id}}">{{$service->servicename}}</option>
+          @endforeach
+        </select>
+          
+       </div>
     
     <div class="col-md-6 mb-3">
      <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
