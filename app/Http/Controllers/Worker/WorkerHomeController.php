@@ -117,7 +117,7 @@ class WorkerHomeController extends Controller
 
         $completedticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"3")->where('givendate', $todaydate)->count();
         
-        $pendingticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',array('2','3'))->where('givendate', $todaydate)->count();
+        $pendingticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',array('2','3','4'))->where('givendate', $todaydate)->count();
         
         if($pendingticketcount!=0) {
         $dailyprogress = $completedticketcount/$pendingticketcount*100;
