@@ -21,6 +21,7 @@ use Redirect;
 use App\Models\PaymentSetting;
 use App\Models\Service;
 use App\Models\Inventory;
+use App\Models\AppNotification;
 
 class PersonnelController extends Controller
 {
@@ -911,6 +912,34 @@ class PersonnelController extends Controller
           ->update([ 
               "status"=>"Accepted"
         ]);
+
+        $workerinfo = Workertimeoff::select('workerid')->where('id',$ids[0])->first();
+
+        $username = auth()->user()->firstname.' '.auth()->user()->lastname;
+        
+        $appnotifiction = AppNotification::where('pid',$workerinfo->workerid)->get(); 
+
+        $notification = new AppNotification;
+        $notification->uid = auth()->user()->id;
+        $notification->pid = $workerinfo->workerid;
+        $notification->message =  "$username has accepted your leave request";
+        $notification->save();
+
+        $puser = Personnel::select('device_token')->where("id", $workerinfo->workerid)->first();
+        
+        $msgarray = array (
+          'title' => "$username has accepted your leave request",
+          'msg' => "$username has accepted your leave request",
+          'type' => 'leaveaccepted',
+        );
+
+        $fcmData = array(
+          'message' => $msgarray['msg'],
+          'body' => $msgarray['title'],
+        );
+
+          $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+
       echo "1";
     }
 
@@ -922,10 +951,37 @@ class PersonnelController extends Controller
       // $timeoff->status = "Rejected";
       // $timeoff->save();
       $update = Workertimeoff::whereIn('id',$ids)
-          ->update([ 
-              "status"=>"Rejected",
-              "reason"=>$request->reason
-        ]);
+        ->update([ 
+            "status"=>"Rejected",
+            "reason"=>$request->reason
+      ]);
+
+      $workerinfo = Workertimeoff::select('workerid')->where('id',$ids[0])->first();
+
+      $username = auth()->user()->firstname;
+      $appnotifiction = AppNotification::where('pid',$workerinfo->workerid)->get(); 
+
+      $notification = new AppNotification;
+      $notification->uid = auth()->user()->id;
+      $notification->pid = $workerinfo->workerid;
+      $notification->message =  "$username has rejected your leave request";
+      $notification->save();
+
+      $puser = Personnel::select('device_token')->where("id", $workerinfo->workerid)->first();
+      
+      $msgarray = array (
+        'title' => "$username has rejected your leave request",
+        'msg' => "$username has rejected your leave request",
+        'type' => 'leaverejected',
+      );
+
+      $fcmData = array(
+        'message' => $msgarray['msg'],
+        'body' => $msgarray['title'],
+      );
+
+        $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+
         if($update) {
           $request->session()->flash('success', 'Reason Updated successfully');
         return redirect()->route('company.timeoff');
@@ -1271,5 +1327,51 @@ class PersonnelController extends Controller
       // $paymentSetting = new PaymentSetting;
       // $paymentSetting->uid = $auth_id;
       return redirect()->back();
+    }
+
+    public function sendFirebaseNotification($puser, $msgarray, $fcmData) 
+    {
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $admin = User::select('firebase')->where('role','superadmin')->first();
+        
+        $fcmApiKey = $admin->firebase;
+
+        $fcmMsg = array(
+            'title' => $msgarray['title'],
+            'text' => $msgarray['msg'],
+            'type' => $msgarray['type'],
+            'vibrate' => 1,
+            "date_time" => date("Y-m-d H:i:s"),
+            'message' => $msgarray['msg'],
+            "badge"=>1,
+            "sound"=>"default"
+        );
+
+        $fcmFields = array(
+            'registration_ids' => [$puser->device_token],
+            'priority' => 'high',
+            'notification' => $fcmMsg,
+            'data' => $fcmMsg,
+        );
+
+        $headers = array(
+        'Authorization: key=' . $fcmApiKey,
+        'Content-Type: application/json',
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmFields));
+        $result = curl_exec($ch);
+       
+        if ($result === false) {
+
+        }
+        curl_close($ch);
+        return $result;
     }
 }
