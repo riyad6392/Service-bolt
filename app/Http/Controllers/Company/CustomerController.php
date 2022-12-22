@@ -58,7 +58,8 @@ class CustomerController extends Controller
         $serviceData = Service::where('userid',$auth_id)->orderBy('id','ASC')->get();
         $productData = Inventory::where('user_id',$auth_id)->orderBy('id','ASC')->get();
         $tenture = Tenture::where('status','Active')->get();   
-        return view('customer.index',compact('auth_id','services','customerData','products','customerAddress','fields','serviceData','productData','tenture'));
+        $adminchecklist = DB::table('checklist')->select('serviceid','checklistname')->where('userid',$auth_id)->groupBy('serviceid')->get();
+        return view('customer.index',compact('auth_id','services','customerData','products','customerAddress','fields','serviceData','productData','tenture','adminchecklist'));
     }
 
     public function create(Request $request)
@@ -115,6 +116,11 @@ class CustomerController extends Controller
       $data['authid'] = $auth_id;
       $data['customerid'] = $cid;
       $data['address'] = $request->address;
+      if(isset($request->adminck)) {
+        $data['checklistid'] = implode(',', $request->adminck);
+      } else {
+        $data['checklistid'] = null;
+      }
       Address::create($data);
 
       $request->session()->flash('success', 'Customer added successfully');
@@ -875,6 +881,7 @@ class CustomerController extends Controller
      // $serviceids =explode(",", $customer[0]->serviceid);
       $serviceData = Service::where('userid',$auth_id)->orderBy('id','ASC')->get();
       $productData = Inventory::where('user_id',$auth_id)->orderBy('id','DESC')->get();
+      
       if($customer[0]->image != null) {
         $userimage = url('uploads/customer/'.$customer[0]->image);
         } else {

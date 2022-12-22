@@ -358,6 +358,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <script type="text/javascript">
   
   $(document).ready(function() {
+    initAutocomplete();
+    
     $('#example').DataTable({
       "order": [[ 0, "desc" ]]
     });

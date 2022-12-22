@@ -309,6 +309,17 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
       <input type="text" class="form-control" placeholder="Address" name="address" id="address" required="">
     </div>
 
+    <div class="col-md-12 mb-2">
+      <div class="input_fields_wrap">
+        <select class="form-control selectpicker " multiple="" data-placeholder="Select Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">
+          @foreach($adminchecklist as $key =>$value1)
+            <option value="{{$value1->serviceid}}">{{$value1->checklistname}}</option>';
+          @endforeach
+
+       </select>
+      </div>
+    </div> 
+
     <div class="col-md-12 mb-3">
       <input type="text" class="form-control" placeholder="Billing Address" name="billingaddress" id="billingaddress">
     </div>
@@ -652,6 +663,7 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
 <script type="text/javascript">
 
 $(document).ready(function() {
+    $('.selectpicker').selectpicker();
     $(document).on('blur', '.email', function() {
         email = $(this).val();
         cid = $(this).data('id');
@@ -690,6 +702,7 @@ $(document).ready(function() {
 
   $('.dropify').dropify();
   $(document).ready(function() {
+    initAutocomplete();
     $('#example').DataTable({
       
       "order": [[ 0, "desc" ]]
