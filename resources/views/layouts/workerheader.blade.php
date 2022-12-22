@@ -496,7 +496,8 @@ if(strpos(Request::url(), 'myticket') !== false || strpos(Request::url(), 'compl
     <li><a class="dropdown-item" href="{{route('logout')}}">Logout</a></li>
    @else
     <li><a class="dropdown-item" href="{{route('worker.setting')}}">Setting</a></li>
-   	<li><a class="dropdown-item" href="{{route('workerlogout')}}">Logout</a></li>
+    <li><a class="dropdown-item" href="{{route('worker.changepassword')}}">Change Password</a></li>
+    <li><a class="dropdown-item" href="{{route('workerlogout')}}">Logout</a></li>
    @endif
   </ul>
 </div>

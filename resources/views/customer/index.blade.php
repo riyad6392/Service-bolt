@@ -831,6 +831,7 @@ $(document).on('click','#editCustomer',function(e) {
               $('.selectpicker').selectpicker({
                 size: 3
               });
+              initAutocomplete();
             }
         })
   });

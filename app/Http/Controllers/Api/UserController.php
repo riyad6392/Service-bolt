@@ -1074,7 +1074,7 @@ class UserController extends Controller
       $tdata1->invoiced = 1;
       $tdata1->save();
         
-      Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$request->description,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
+      Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->customernotes,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Invoice details!');
           //$message->from($app_email,$app_name);
@@ -1383,6 +1383,19 @@ class UserController extends Controller
           $data['notes'] = $notes;
           Workertimeoff::create($data);
         }
+
+        $workerinfo = DB::table('personnel')->select('personnelname')->where('id',$worker->workerid)->first();
+
+        $personnelname = $workerinfo->personnelname;
+
+        $ticketsub = "Leave requested by $personnelname";
+        $data1['uid'] = $worker->userid;
+        $data1['pid'] = $worker->workerid;
+        $data1['message'] = $ticketsub;
+
+        Notification::create($data1);
+        event(new MyEvent($ticketsub));
+
       }
         return response()->json(['status'=>1,'message'=>'PTO added successfully'],$this->successStatus); 
     }

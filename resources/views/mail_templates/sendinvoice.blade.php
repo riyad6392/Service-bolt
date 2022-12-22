@@ -215,8 +215,8 @@
     <tbody>
     <tr>
         <td style="vertical-align: top; padding: 12px;background-color: {{$color}};">
-         <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 20px;border-radius: 10px;">Invoice Note:
-            <br><span style="color: {{$txtcolor}};  font-size: 16px;">{{ @$description }}</span></p>
+         <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 20px;border-radius: 10px;">Tech Note:
+            <br><span style="color: {{$txtcolor}};  font-size: 16px;">{!! @$description !!}</span></p>
         </td>
         <td style="width: 50%; padding: 12px;background-color: {{$color}}; border-radius: 10px;">
             <h5 style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 22px; ">Total:<br><h1 style="color: {{$txtcolor}}; font-weight: bold; font-size: 22px;">${{ $totalprice }} </h1></h5>

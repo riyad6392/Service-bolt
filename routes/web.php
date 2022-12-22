@@ -31,6 +31,7 @@ use App\Http\Controllers\Worker\WorkerAdminTicketController;
 use App\Http\Controllers\Worker\WorkerAdminPersonnelController;
 
 use App\Http\Controllers\Worker\WorkerSettingController;
+use App\Http\Controllers\Worker\WorkerChangepasswordController;
 
 use App\Http\Controllers\Auth\ForgotController;
 
@@ -600,6 +601,10 @@ Route::any('/checklist/updatechecklist', [WorkerAdminChecklistController::class,
         Route::any('/billing/leftbarinvoice', [WorkerAdminBillingController::class, 'leftbarinvoice'])->name('leftbarinvoice');
 
         Route::any('/billing/sendbillinginvoice', [WorkerAdminBillingController::class, 'sendbillinginvoice'])->name('sendbillinginvoice');
+
+        //worker change Password
+        Route::get('/changepassword', [WorkerChangepasswordController::class, 'index'])->name('changepassword');
+        Route::any('/updatepassword', [WorkerChangepasswordController::class, 'update'])->name('updatepassword');
     //end  
     
 });

@@ -470,7 +470,8 @@ i.fa.fa-plus.category-one {
     font-size: 16px;
     border-radius: 15px;
     width: 114px!important;
-">Schedule +</a></td>
+">
+@if($ticket->ticket_status == 2)  Assigned @elseif($ticket->ticket_status == 1) Schedule + @elseif($ticket->ticket_status == 4) Picked @endif </a></td>
 	  <td><a class="btn btn-edit p-3 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$ticket->id}}">Edit</a>
 	  	<a href="javascript:void(0);" class="info_link1 btn btn-edit p-3 w-auto" dataval="{{$ticket->id}}">Delete</a>
 	  	<a class=" btn btn-edit p-3 w-auto emailinvoice" data-id="{{$ticket->id}}" data-email="{{$ticket->email}}" data-bs-toggle="modal" data-bs-target="#edit-address">Share</a>

@@ -521,7 +521,17 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" id="notification">
       @if(count($notifications)>0)
         @foreach($notifications as $notification)
-            <li class="notification-item"><a class="dropdown-item">{{$notification->message}}</a></li>
+            <li class="notification-item">
+              @if($notification->ticketid!="")
+              <a class="dropdown-item" href="{{url('company/quote/ticketdetail/')}}/{{$notification->ticketid}}">
+                {{$notification->message}}
+              </a>
+              @else
+              <a class="dropdown-item" href="{{url('company/timeoff')}}">
+                {{$notification->message}}
+              </a>
+              @endif
+            </li>
         @endforeach
         <p style="text-align:center;"><a class="add-btn-yellow w-75 p-1 mt-2" href="{{route('company.notification')}}">View All</a></p>
       @endif
@@ -656,6 +666,42 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
       autocomplete4.addListener('place_changed', function() {
            var place4 = autocomplete4.getPlace();
             autocomplete4.setComponentRestrictions(
+        {'country': ['us']});
+      });
+
+      var input5 = document.getElementById('billingaddress');
+      var autocomplete5 = new google.maps.places.Autocomplete(input5);
+        
+      autocomplete5.addListener('place_changed', function() {
+           var place5 = autocomplete5.getPlace();
+            autocomplete5.setComponentRestrictions(
+        {'country': ['us']});
+      });
+
+      var input6 = document.getElementById('mailingaddress');
+      var autocomplete6 = new google.maps.places.Autocomplete(input6);
+        
+      autocomplete6.addListener('place_changed', function() {
+           var place6 = autocomplete6.getPlace();
+            autocomplete6.setComponentRestrictions(
+        {'country': ['us']});
+      });
+
+      var input7 = document.getElementById('billingaddress1');
+      var autocomplete7 = new google.maps.places.Autocomplete(input7);
+        
+      autocomplete7.addListener('place_changed', function() {
+           var place7 = autocomplete7.getPlace();
+            autocomplete7.setComponentRestrictions(
+        {'country': ['us']});
+      });
+
+      var input8 = document.getElementById('mailingaddress1');
+      var autocomplete8 = new google.maps.places.Autocomplete(input8);
+        
+      autocomplete8.addListener('place_changed', function() {
+           var place8 = autocomplete8.getPlace();
+            autocomplete8.setComponentRestrictions(
         {'country': ['us']});
       });
     }
