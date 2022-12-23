@@ -784,6 +784,12 @@ class UserController extends Controller
                 }
                 }
                 $sum1+= $txvalue1;
+
+                  $productd = Inventory::where('id', $value['id'])->first();
+                  if(!empty($productd)) {
+                    $productd->quantity = (@$productd->quantity) - 1;
+                    $productd->save();
+                  }
             } 
             $productname = implode(',', $pname);
             $productname1 = $pdetails[0]->productname;

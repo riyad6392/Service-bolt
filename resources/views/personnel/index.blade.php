@@ -205,7 +205,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <div class="modal fade" id="add-personnel" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered ">
     <div class="modal-content customer-modal-box overflow-hidden">
-     <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.personnelcreate')}}" enctype="multipart/form-data">
+     <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.personnelcreate')}}" enctype="multipart/form-data" autocomplete="off">
         @csrf
       <div class="modal-body">
        <div class="add-customer-modal d-flex justify-content-between align-items-center">
@@ -233,16 +233,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	   <input type="text" class="form-control" placeholder="Phone Number" name="phone" id="phone" value="{{ old('phone') }}" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
 	   
 	   </div>
+    <div class="col-lg-6 mb-3" style="display:none;visibility: hidden;">
+      <input type="email" class="form-control form-control-2" placeholder="Email Id" value="" name="email">
+    </div>
 	   
 	   <div class="col-md-12 mb-3">
-	  	<input type="email" class="form-control" placeholder="Email" name="email" id="email" value="{{ old('email') }}" required="">
+	  	<input type="email" class="form-control" placeholder="Email" name="email" id="email" value="{{ old('email') }}" required="" autocomplete="off" autocomplete="off">
       @error('email')
         <div class="invalid-feedback" style="display: block;">{{ $message }}</div>
       @enderror
 	   </div>
 
+     <div class="col-lg-6 mb-3" style="display:none;visibility: hidden;">
+        <input type="password" class="form-control form-control-2" placeholder="" value="" name="wpassword" autocomplete="off">
+      </div>
+
 	   <div class="col-md-12 mb-3 position-relative">
-	  	<input type="password" class="form-control" placeholder="Password" name="wpassword" id="wpassword" value="{{ old('wpassword') }}" required=""><span id="toggle_pwd" class="fa fa-fw fa-eye field_icon" style="position: absolute;
+	  	<input type="password" class="form-control" placeholder="Password" name="wpassword" id="wpassword" value="{{ old('wpassword') }}" required="" autocomplete="off"><span id="toggle_pwd" class="fa fa-fw fa-eye field_icon" style="position: absolute;
     right: 4%;top:17px;"></span>
 	   </div>
 	   
@@ -363,6 +370,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     $('#example').DataTable({
       "order": [[ 0, "desc" ]]
     });
+     $('input').attr('autocomplete','off');
+     $("#email").prop("autocomplete", "off");
+
     $("#example tbody > tr:first-child").addClass('selectedrow');
     @if(isset($errors)&& $errors->has('email'))
      $("#add-personnel").modal('show');

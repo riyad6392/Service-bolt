@@ -70,7 +70,18 @@ class TicketController extends Controller
       } else {
         $quote->ticket_status = "1";
         $quote->save();
-        echo "1";  
+        echo "1";
+
+       if(!empty($quote->product_id)) {
+          $pidarray = explode(',', $quote->product_id);
+          foreach($pidarray as $key => $pid) {
+            $productd = Inventory::where('id', $pid)->first();
+            if($productd!=null) {
+              $productd->quantity = @$productd->quantity - 1;
+              $productd->save();  
+            }
+          }
+        }  
       }
     }
 
@@ -586,7 +597,7 @@ class TicketController extends Controller
           $sum1 = 0;
           if($request->productname!="") {
 
-              $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+              $productdetails = Inventory::select('id','productname','price')->whereIn('id', $request->productname)->get();
               
                      
               foreach ($productdetails as $key => $value) {
@@ -602,6 +613,11 @@ class TicketController extends Controller
               }
               $sum1+= $txvalue1;
 
+                $productd = Inventory::where('id', $value['id'])->first();
+                if(!empty($productd)) {
+                  $productd->quantity = (@$productd->quantity) - 1;
+                  $productd->save();
+                }
               }
               $productname = implode(',', $pname);
               $productname1 = $productdetails[0]->productname;

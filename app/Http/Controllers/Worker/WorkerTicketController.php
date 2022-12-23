@@ -139,18 +139,18 @@ class WorkerTicketController extends Controller
             $ticket1->ticket_status = 4;
             $ticket1->save();
          }
-          $pidarray = explode(',', $ticket->product_id);
+          //$pidarray = explode(',', $ticket->product_id);
 
-          if(!empty($ticket->product_id)) {
-            foreach($pidarray as $key => $pid) {
-              $productd = Inventory::where('id', $pid)->first();
-              if(!empty($productd)) {
-                $productd->quantity = (@$productd->quantity) - 1;
-                $productd->save();
-              }
+          // if(!empty($ticket->product_id)) {
+          //   foreach($pidarray as $key => $pid) {
+          //     $productd = Inventory::where('id', $pid)->first();
+          //     if(!empty($productd)) {
+          //       $productd->quantity = (@$productd->quantity) - 1;
+          //       $productd->save();
+          //     }
 
-            }
-          }
+          //   }
+          // }
           date_default_timezone_set('Asia/Kolkata');
           $currentDateTime=date('m/d/Y H:i:s');
           $date1=date('Y-m-d');
@@ -283,17 +283,17 @@ class WorkerTicketController extends Controller
             $ticket1->save();
           }
 
-        if(!empty($ticket->product_id)) {
-          $pidarray = explode(',', $ticket->product_id);
-          //dd($pidarray);
-          foreach($pidarray as $key => $pid) {
-            $productd = Inventory::where('id', $pid)->first();
-            if($productd!=null) {
-              $productd->quantity = @$productd->quantity - 1;
-              $productd->save();  
-            }
-          }
-        }
+        // if(!empty($ticket->product_id)) {
+        //   $pidarray = explode(',', $ticket->product_id);
+        //   //dd($pidarray);
+        //   foreach($pidarray as $key => $pid) {
+        //     $productd = Inventory::where('id', $pid)->first();
+        //     if($productd!=null) {
+        //       $productd->quantity = @$productd->quantity - 1;
+        //       $productd->save();  
+        //     }
+        //   }
+        // }
 
 
           date_default_timezone_set('Asia/Kolkata');
@@ -909,7 +909,7 @@ class WorkerTicketController extends Controller
         $sum1 = 0;
         $txvalue1 = 0;
         if($request->productname!="") {
-          $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+          $productdetails = Inventory::select('id','productname','price')->whereIn('id', $request->productname)->get();
         
                
         foreach ($productdetails as $key => $value) {
@@ -922,6 +922,12 @@ class WorkerTicketController extends Controller
         }
         }
         $sum1+= $txvalue1;
+
+          $productd = Inventory::where('id', $value['id'])->first();
+          if(!empty($productd)) {
+            $productd->quantity = (@$productd->quantity) - 1;
+            $productd->save();
+          }
         }
         $productname = $productdetails[0]->productname;
 

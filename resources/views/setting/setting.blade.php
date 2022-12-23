@@ -99,6 +99,17 @@ label.credit img {
 <label class="form-label">Email</label>
   <input type="email" class="form-control form-control-2" placeholder="Email Id" value="{{$userData->email}}" name="email" readonly="">
 </div>
+
+<div class="col-lg-6 mb-3">
+<label class="form-label">Email</label>
+  <input type="email" class="form-control form-control-2" placeholder="Email Id" value="" name="email">
+</div>
+
+<div class="col-lg-6 mb-3">
+<label class="form-label">password</label>
+  <input type="password" class="form-control form-control-2" placeholder="password" value="" name="password">
+</div>
+
 <h5 class="my-4">Manage Invoice Info</h5>
 <div class="col-lg-6 mb-3">
   <label>Invoice Header Color</label><br>

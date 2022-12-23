@@ -806,7 +806,7 @@ class SchedulerController extends Controller
         $sum1 = 0;
         $txvalue1 = 0;
         if($request->productname!="") {
-            $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productname)->get();
+            $productdetails = Inventory::select('id','productname','price')->whereIn('id', $request->productname)->get();
              
             foreach ($productdetails as $key => $value) {
                 $pname[] = $value['productname'];
@@ -818,6 +818,12 @@ class SchedulerController extends Controller
                     }
                 }
                 $sum1+= $txvalue1;
+
+                $productd = Inventory::where('id', $value['id'])->first();
+                if(!empty($productd)) {
+                  $productd->quantity = (@$productd->quantity) - 1;
+                  $productd->save();
+                }
             }
             $productname = implode(',', $pname);
             $productname1 = $productdetails[0]->productname;   

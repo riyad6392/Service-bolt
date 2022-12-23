@@ -38,8 +38,7 @@
           <thead>
             <tr>
               <th style="display: none;">Id</th>
-              <th>Ticket Id</th>
-              <th style="width:300px!important">Message</th>
+              <th>Message</th>
               <th>DateTime</th>
               <th>Action</th>
             </tr>
@@ -48,14 +47,13 @@
             @foreach($notificationlist as $key => $value)
             <tr>
               <td style="display: none;">{{$value->id}}</td>
-              <td>
-                @if($value->ticketid!="")
-                  <a class="btn w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$value->ticketid}}">#{{$value->ticketid}}</a>
-                @else
-                  ----
-                @endif
+              <td style="">
+                 @if($value->ticketid!="")
+                  <a class="btn w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$value->ticketid}}">{{$value->message}}</a>
+                 @else
+                  <a class="btn w-auto" href="{{url('company/timeoff')}}">{{$value->message}}</a>
+                 @endif
               </td>
-              <td style="white-space:break-spaces;width:300px!important">{{$value->message}}</td>
               <td>{{$value->created_at}}</td>
               <td><a class="btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->id}}">Delete</a></td>
             </tr>
