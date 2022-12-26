@@ -1483,6 +1483,40 @@ class SchedulerController extends Controller
       //$productid = implode(',', array_unique($pid));
              
       $servicename = implode(',', $sname); 
+      $quote = Quote::where('id', $request->quoteid)->get()->first();
+      
+      if($request->productname=="") {
+        $request->productname = array();
+      }
+      if($quote->product_id=="") {
+        $productids = array();
+      }
+
+      $productids = explode(',',$quote->product_id);
+
+      $removedataid = array_diff($productids,$request->productname);
+        if($removedataid!="") {
+          foreach($removedataid as $key => $value) {
+            $productd = Inventory::where('id', $value)->first();
+            if(!empty($productd)) {
+              $productd->quantity = (@$productd->quantity) + 1;
+              $productd->save();
+            }
+          }
+        }
+      if($request->productname!=null) {
+        $reqpids = $request->productname;
+        $plusdataids= array_diff($reqpids,$productids); 
+        if($plusdataids!="") {
+          foreach($plusdataids as $key => $value) {
+            $productd = Inventory::where('id', $value)->first();
+            if(!empty($productd)) {
+              $productd->quantity = (@$productd->quantity) - 1;
+              $productd->save();
+            }
+          }
+        }
+      }
 
       $productname = null;
 

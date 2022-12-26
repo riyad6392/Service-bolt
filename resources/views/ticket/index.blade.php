@@ -472,7 +472,7 @@ i.fa.fa-plus.category-one {
     width: 114px!important;
 ">
 @if($ticket->ticket_status == 2)  Assigned @elseif($ticket->ticket_status == 1) Schedule + @elseif($ticket->ticket_status == 4) Picked @endif </a></td>
-	  <td><a class="btn btn-edit p-3 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$ticket->id}}">Edit</a>
+	  <td><a class="btn btn-edit p-3 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$ticket->id}}" data-type="ticket">Edit</a>
 	  	<a href="javascript:void(0);" class="info_link1 btn btn-edit p-3 w-auto" dataval="{{$ticket->id}}">Delete</a>
 	  	<a class=" btn btn-edit p-3 w-auto emailinvoice" data-id="{{$ticket->id}}" data-email="{{$ticket->email}}" data-bs-toggle="modal" data-bs-target="#edit-address">Share</a>
 	  </td>
@@ -2303,7 +2303,12 @@ $('#serviceform').on('submit', function(event) {
  $(document).on('click','#editTickets',function(e) {
    $('.selectpicker2').selectpicker();
    var id = $(this).data('id');
-   var dataString =  'id='+ id;
+   
+   var type = $(this).data('type');
+   if(type==undefined) {
+   	var type = "quote";
+   }
+   var dataString =  'id='+ id+ '&type='+ type;
    $.ajax({
             url:'{{route('company.vieweditticketmodal')}}',
             data: dataString,

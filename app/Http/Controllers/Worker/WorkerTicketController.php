@@ -752,6 +752,40 @@ class WorkerTicketController extends Controller
         $sum+= $txvalue;
       }
       $servicename = implode(',', $sname);
+      
+      $quote = Quote::where('id', $request->id)->get()->first();
+      if($request->productid=="") {
+        $request->productid = array();
+      }
+      if($quote->product_id=="") {
+        $productids = array();
+      }
+
+      $productids = explode(',',$quote->product_id);
+
+      $removedataid = array_diff($productids,$request->productid);
+        if($removedataid!="") {
+          foreach($removedataid as $key => $value) {
+            $productd = Inventory::where('id', $value)->first();
+            if(!empty($productd)) {
+              $productd->quantity = (@$productd->quantity) + 1;
+              $productd->save();
+            }
+          }
+        }
+      if($request->productid!=null) {
+        $reqpids = $request->productid;
+        $plusdataids= array_diff($reqpids,$productids); 
+        if($plusdataids!="") {
+          foreach($plusdataids as $key => $value) {
+            $productd = Inventory::where('id', $value)->first();
+            if(!empty($productd)) {
+              $productd->quantity = (@$productd->quantity) - 1;
+              $productd->save();
+            }
+          }
+        }
+      }
 
       $productid = "";
       $productname = "";
@@ -781,6 +815,8 @@ class WorkerTicketController extends Controller
       $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
       
       $quote = Quote::where('id', $request->id)->get()->first();
+
+
 
       $company = User::where('id', $quote->userid)->get()->first();
       if($company->image!=null) {

@@ -875,12 +875,16 @@ class TicketController extends Controller
              <label>Description</label>
              <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required>'.$quotedetails[0]->description.'</textarea>
            </div>';
-
+           if($request->type == "ticket") {
+              $updatev="ticket";
+           } else {
+              $updatev="quote";
+           }
           $html .= '<div class="col-lg-6 mb-2">
             <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
           </div>
           <div class="col-lg-6">
-            <button type="submit" class="btn btn-add btn-block">Update</button>
+            <button type="submit" class="btn btn-add btn-block" name="type" value="'.$updatev.'">Update</button>
           </div>
         </div>';
         return json_encode(['html' =>$html]);
@@ -915,7 +919,44 @@ class TicketController extends Controller
 
       $sum1 = 0;
       $txvalue1 = 0;
+      $quote = Quote::where('id', $request->quoteid)->get()->first();
 
+    if($request->type=="ticket") 
+    {
+      if($request->productid=="") {
+        $request->productid = array();
+      }
+      if($quote->product_id=="") {
+        $productids = array();
+      }
+
+      $productids = explode(',',$quote->product_id);
+
+      $removedataid = array_diff($productids,$request->productid);
+        if($removedataid!="") {
+          foreach($removedataid as $key => $value) {
+            $productd = Inventory::where('id', $value)->first();
+            if(!empty($productd)) {
+              $productd->quantity = (@$productd->quantity) + 1;
+              $productd->save();
+            }
+          }
+        }
+      if($request->productid!=null) {
+        $reqpids = $request->productid;
+        $plusdataids= array_diff($reqpids,$productids); 
+        if($plusdataids!="") {
+          foreach($plusdataids as $key => $value) {
+            $productd = Inventory::where('id', $value)->first();
+            if(!empty($productd)) {
+              $productd->quantity = (@$productd->quantity) - 1;
+              $productd->save();
+            }
+          }
+        }
+      }
+    }
+      
       if($request->productid!="") {
         $productdetails = Inventory::select('productname','price')->whereIn('id', $request->productid)->get();
 
@@ -930,13 +971,13 @@ class TicketController extends Controller
             }
             $sum1+= $txvalue1;
         } 
-        $productname = $productdetails[0]->productname; 
+        $productname = @$productdetails[0]->productname; 
       }
       $totaltax = $sum+$sum1;
       $totaltax = number_format($totaltax,2);
       $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
 
-      $quote = Quote::where('id', $request->quoteid)->get()->first();
+      
       $quote->customerid =  $request->customerid;
 
       //$quote->serviceid = $request->serviceid;
