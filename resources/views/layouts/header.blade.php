@@ -21,9 +21,6 @@
 <!-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css"> -->
 
 <link rel='stylesheet' href="{{ asset('css/dropify.css')}}">
-<!-- <link rel="stylesheet" href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css"/> -->
-            <!-- <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.0/css/select.dataTables.min.css"/> -->
-           <!--  <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css"/> -->
 
 <style type="text/css">
 	.wrapper {color: #555;cursor: help;position: relative;text-align: center;-webkit-transform: translateZ(0); /* webkit flicker fix */-webkit-font-smoothing: antialiased; /* webkit text rendering fix */display: inline-block;}
@@ -583,19 +580,7 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.1/js/dataTables.bootstrap5.min.js"></script>
-<!-- for column visibility -->
-<!-- <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.colVis.min.js"></script> -->
 
-<!-- new bootstrap js -->
-
-        <!-- <script src="//cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
-        
-<script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.print.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.colVis.min.js"></script>
-        <script src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js"></script> -->
-        <!-- end js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.js"></script>
 
 <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
@@ -603,8 +588,8 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
 
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css'>
 <script src="{{ asset('js/jquery-ui.js')}}"></script>
-   <script src="{{ asset('js/add-field.js')}}"></script>
-   <script src="https://js.pusher.com/7.1/pusher.min.js"></script>
+<script src="{{ asset('js/add-field.js')}}"></script>
+<script src="https://js.pusher.com/7.1/pusher.min.js"></script>
 
    
 @yield('script')
@@ -710,16 +695,6 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
 </script>  
    
 <script>
-  // $(document).ready(function() {
-  //       $('#multiple-checkboxes').multiselect({
-  //         includeSelectAllOption: true,
-  //       });
-  //   });
-// $(".confirm").click(function() {
-//   swal("Successfully address", "Well done, you pressed a button", "success")
-// });
-
-
 $(document).ready(function () {
         var url = window.location;
         
