@@ -446,7 +446,6 @@ $(document).on('click','#createctickets',function(e) {
    var cid = $(this).data('id');
    var address = $(this).data('address');
    
-   // var dataString =  'id='+ id;
    $.ajax({
             url:'{{route('company.viewcustomerquotemodal')}}',
             data: {
@@ -457,12 +456,24 @@ $(document).on('click','#createctickets',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
+              //console.log(data.html);
               $('#viewcustomerquotemodaldata').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 3
               });
               $(".selectpickerc1").selectpicker();
+
+              var firstOpen = true;
+              var time;
+              $('#timePicker').datetimepicker({
+                useCurrent: false,
+                format: "hh:mm A"
+              }).on('dp.show', function() {
+                if(firstOpen) {
+                  time = moment().startOf('day');
+                  firstOpen = false;
+                }
+              });
             }
         })
   });
@@ -760,5 +771,14 @@ $(document).on('change','#productname',function(e) {
           }
       })
    });
+
+ function onlyNumberKey(evt) {
+   // Only ASCII character in that range allowed
+      var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+      if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+          return false;
+      return true;
+  }           
+      
 </script>
 @endsection

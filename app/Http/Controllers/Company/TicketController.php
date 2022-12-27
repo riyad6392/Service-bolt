@@ -170,7 +170,7 @@ class TicketController extends Controller
         $data['tax'] = $totaltax;
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
-        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyAdxg4WRi7r1VuRrbiPLiyWRttpxcH_9Ag'); 
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
         //print_r($output->results[0]->geometry->location->lat); die;
@@ -653,7 +653,7 @@ class TicketController extends Controller
 
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
-        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyAdxg4WRi7r1VuRrbiPLiyWRttpxcH_9Ag'); 
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
         if($output->results!=NULL) {
@@ -1018,7 +1018,7 @@ class TicketController extends Controller
       $quote->tax = $totaltax;
       $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
-      $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+      $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyAdxg4WRi7r1VuRrbiPLiyWRttpxcH_9Ag'); 
       $output = json_decode($geocodeFromAddr);
 
       if($output->results!=NULL) {
@@ -1285,7 +1285,7 @@ class TicketController extends Controller
     //dd($request->all());
     $formattedAddr = str_replace(' ','+',$request->address);
     //Send request and receive json data by address
-    $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+    $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyAdxg4WRi7r1VuRrbiPLiyWRttpxcH_9Ag'); 
     $output = json_decode($geocodeFromAddr);
     //Get latitude and longitute from json data
     if($output->results == NULL) {

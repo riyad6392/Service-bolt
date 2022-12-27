@@ -650,7 +650,7 @@ class WorkerAdminSchedulerController extends Controller
 
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
-        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyAdxg4WRi7r1VuRrbiPLiyWRttpxcH_9Ag'); 
         $output = json_decode($geocodeFromAddr);
         
         $latitude  = $output->results[0]->geometry->location->lat; 
@@ -1076,7 +1076,7 @@ class WorkerAdminSchedulerController extends Controller
 
       $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
-      $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+      $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyAdxg4WRi7r1VuRrbiPLiyWRttpxcH_9Ag'); 
       $output = json_decode($geocodeFromAddr);
       $latitude  = $output->results[0]->geometry->location->lat; 
       $longitude = $output->results[0]->geometry->location->lng;

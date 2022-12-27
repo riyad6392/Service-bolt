@@ -317,14 +317,25 @@ class CustomerController extends Controller
                 $html .='<option value="'.$value->id.'" data-price="'.$value->price.'">'.$value->productname.'</option>';
               }
         $html .='</select>
-      </div><div class="col-md-6 mb-3" style="display:none;">
-        <select class="form-select '.$wclass.'" name="personnelid" id="personnelid">
-        <option selected="" value="">Select a Personnel </option>';
+      </div><div class="col-md-12 mb-3" style="display:block;">
+        
+      <select class="form-control selectpickerc1" aria-label="Default select example" data-live-search="true" name="personnelid" id="personnelid" required data-placeholder="Select Personnel">';
               foreach($worker as $key => $value) {
                 $html .='<option value="'.$value->id.'">'.$value->personnelname.'</option>';
               }
         $html .='</select>
-      </div><div class="col-md-12 mb-3">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
+        <div>
+          <input type="time" class="form-control" onkeypress="return onlyNumberKey(event)" onkeydown="return /[a-z]/i.test(event.key)" onpaste="return false" name="giventime" required>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+     <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
+      <input type="date" class="form-control date" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;" required>
+     </div>
+      <div class="col-md-12 mb-3">
         <div class="align-items-center justify-content-lg-between d-flex services-list">
           <label class="container-checkbox">Per hour
             <input type="radio" id="test1" name="radiogroup" value="perhour" checked>
@@ -461,7 +472,7 @@ class CustomerController extends Controller
        
       $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
-        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyAdxg4WRi7r1VuRrbiPLiyWRttpxcH_9Ag'); 
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
         //print_r($output->results[0]->geometry->location->lat); die;
@@ -474,7 +485,51 @@ class CustomerController extends Controller
 
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
-        $data['ticket_status'] = 1;
+        $data['ticket_status'] = 2;
+        //for new feature
+          if($request->time == null || $request->time == "" || $request->time == 00 || $request->time == 0) {
+                $hours = 0;
+          } else {
+              $hours = preg_replace("/[^0-9]/", '', $request->time);    
+          }
+
+          if($request->minute == null || $request->minute == "" || $request->minute == 00 || $request->minute == 0) {
+              $minutes = 0;
+          } else {
+              $minutes = preg_replace("/[^0-9]/", '', $request->minute);    
+          }
+
+          //display the converted time
+          $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->giventime)));
+          $time = $request->giventime;
+          $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
+          $newdate = $request->date;
+
+          /*Get Dayclose time*/
+            $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+            $dayclosetime =$closingtime->closingtime;
+
+            $tstarttime = explode(':',$time);
+            $ticketstarttime = $tstarttime[0];
+            $ticketdifferncetime = $dayclosetime - $ticketstarttime;
+            // echo $ticketdifferncetime; die;
+            $givenenddate = $newdate;
+            if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
+                if($hours > $ticketdifferncetime) {
+                    $nextdaytime = $hours - $ticketdifferncetime; 
+                    //echo $nextdaytime; die;
+                    $givenenddate = $this->getenddatecalculation($newdate,$nextdaytime);
+                } else {
+                    $givenenddate = $newdate; 
+                }
+            }
+        $data['giventime'] = $time;
+        $data['givenendtime'] = $endtime;
+        $data['givendate'] = $date;
+        $data['givenstartdate'] = $request->date;
+        $data['givenenddate'] = $givenenddate;
+
+        //end new feature here
         //dd($data);
         $quotelastid = Quote::create($data);
         $quoteee = Quote::where('id', $quotelastid->id)->first();
@@ -499,6 +554,38 @@ class CustomerController extends Controller
       $request->session()->flash('success', 'Ticket added successfully');
       }
       return redirect()->route('company.quote');
+    }
+
+    public function getenddatecalculation($newdate,$nextdaytime) 
+    {
+        $auth_id = auth()->user()->id;
+        $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$auth_id)->first();
+
+        $fulldaytime = $closingtime->closingtime - $closingtime->openingtime;
+        
+        if($nextdaytime > $fulldaytime) {
+           $divisionvalue = $nextdaytime / $fulldaytime;
+
+           $dividev = explode('.',$divisionvalue);
+           $daycount = $dividev[0];
+           $dayhours = $dividev[1];
+
+            if($dayhours!="") {
+                $daycount = $daycount +1;
+            } else {
+                $daycount = $dividev[0];
+            }
+            $ddd = $daycount. 'day';
+
+            //day added as per calcuation wise
+            $givenenddate = date('Y-m-d', strtotime($newdate . ' +'.$ddd));
+            
+        }
+        else {
+            //day added as per calcuation wise
+            $givenenddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
+        }
+        return $givenenddate;
     }
 
     public function vieweditaddressmodal(Request $request)
