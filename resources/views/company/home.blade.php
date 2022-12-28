@@ -537,6 +537,17 @@
                                   var imgeurl = APP_URL+'/uploads/servicebolt-noimage.png';
                                 }
                             if(data.html[i][5]!=null) {
+                              if(data.html[i][8]==3) {
+                                var contentString =
+                              '<div class="user-box">' +
+                              '<div>' +
+                              '<img class="mb-2" src="'+imgeurl+'" alt="" style="width:60px;border-radius:100%">' +
+                              '<span style="font-weight:bold"> '+data.html[i][0]+'</span>' +
+                              "</div>" +
+                              "</div>";
+
+                                infowindow.setContent(contentString);
+                              } else {
                               var contentString =
                               '<div class="user-box">' +
                               '<div>' +
@@ -547,6 +558,7 @@
                               "</div>";
 
                                 infowindow.setContent(contentString);
+                              }
                             } else {
                               var contentString =
                               '<div class="user-box">' +
@@ -693,6 +705,17 @@ $('.livelocationupdate').click(function() {
                                   var imgeurl = APP_URL+'/uploads/servicebolt-noimage.png';
                                 }
                             if(data.html[i][5]!=null) {
+                              if(data.html[i][8]==3) { 
+                                var contentString =
+                              '<div class="user-box">' +
+                              '<div>' +
+                              '<img class="mb-2" src="'+imgeurl+'" alt="" style="width:60px;height:60px;border-radius:100%">' +
+                              '<span style="font-weight:bold"> '+data.html[i][0]+'</span>' +
+                              "</div>" +
+                              "</div>";
+
+                                infowindow.setContent(contentString);
+                              } else {
                               var contentString =
                               '<div class="user-box">' +
                               '<div>' +
@@ -703,6 +726,7 @@ $('.livelocationupdate').click(function() {
                               "</div>";
 
                                 infowindow.setContent(contentString);
+                              }
                             } else {
                               var contentString =
                               '<div class="user-box">' +
