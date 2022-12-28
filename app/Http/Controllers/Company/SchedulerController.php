@@ -1538,7 +1538,7 @@ class SchedulerController extends Controller
             $sum1+= $txvalue1;
         }
 
-        $productname = $productdetails[0]->productname; 
+        $productname = @$productdetails[0]->productname; 
      }   
     
     $totaltax = $sum+$sum1;
