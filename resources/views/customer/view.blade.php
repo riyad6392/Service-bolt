@@ -31,6 +31,26 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     height: 450px;
     overflow-y: auto;
 }
+
+i.fa.fa-plus.second {
+    position: absolute;
+    top: 222px;
+    right: 35px;
+    color: black;
+    background: yellow;
+    padding: 7px 9px;
+    border-radius: 100px;
+}
+
+i.fa.fa-plus.third {
+    position: absolute;
+    top: 284px;
+    right: 35px;
+    color: black;
+    background: yellow;
+    padding: 7px 9px;
+    border-radius: 100px;
+}
 </style>
 <div class="">
 <div class="content">
@@ -397,11 +417,191 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 </div>
 </div>
 
+<!-- Start services Modal -->
+<div class="modal fade" id="add-services" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box overflow-hidden">
+      <form class="form-material m-t-40 form-valide" id="serviceform" method="post" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+    <div class="add-customer-modal d-flex justify-content-between align-items-center">
+     <h5>Add a new Service</h5>
+     <button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+    @php
+      $productData = App\Models\Inventory::where('user_id',auth()->user()->id)->orderBy('id','desc')->get();
+      if(count($productData)>0) {
+          $pname= "";
+      } else {
+          $pname= "active-focus";
+      }
+    @endphp
+        <div class="row customer-form" id="product-box-tabs">
+          <div class="col-md-12 mb-2">
+            <input type="text" class="form-control" placeholder="Service Name" name="servicename" id="servicename" required="">
+          </div>
+          <div class="col-md-12 mb-2 position-relative">
+            <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
+  <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="d-flex align-items-center">
+            <select class="selectpicker form-control me-2 {{$pname}}" multiple aria-label="Default select example" data-placeholder="Select Products" data-live-search="true" name="defaultproduct[]" id="defaultproduct" >
+              <!-- <option selected="" value="">Select Product</option> -->
+              @foreach($productData as $product)
+                <option value="{{$product->id}}">{{$product->productname}}</option>
+              @endforeach
+            </select>
+           <div class="wrapper" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <div class="tooltip">If you are not seeing the products in dropdown then add it in inventory section then select here.</div>
+          </div>
+          </div>
+        </div>
+          <div class="col-md-12 mb-2">
+            <div class="align-items-center justify-content-lg-between d-flex services-list">
+              <p>
+                <input type="radio" id="test1" name="radiogroup" value="perhour" class="radiogrp" checked>
+                <label for="test1">Per Hour</label>
+              </p>
+              <p>
+                <input type="radio" id="test2" name="radiogroup" value="flatrate" class="radiogrp">
+                <label for="test2">Flate Rate</label>
+              </p>
+              <p>
+                <input type="radio" id="test3" name="radiogroup" value="recurring" class="radiogrp">
+                <label for="test3">Recurring</label>
+              </p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <select class="form-select" name="frequency" id="frequency10" required="">
+              <option selected="" value="">Service Frequency</option>
+        @php $tenture = App\Models\Tenture::where('status','Active')->get(); @endphp
+              @foreach($tenture as $key=>$value)
+                <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label>Default Time (hh:mm)</label><br>
+            <div class="timepicker timepicker1" style="display:inline-block;">
+              <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <label>Choose Color</label><br>
+            <span class="color-picker">
+              <label for="colorPicker">
+                <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
+              </label>
+            </span>
+          </div>
+          <div class="col-md-12">
+            <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
+              <input type="file" class="dropify" name="image" id="image"data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+          </div>
+          <div class="row mt-3">
+          <div class="col-lg-6 mb-2">
+            <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+
+          </div>
+          <div class="col-lg-6">
+            <button type="submit" class="btn btn-add btn-block">Add a Service</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+
+<!-- product Modal -->
+<div class="modal fade" id="add-products" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box overflow-hidden">
+     <form class="form-material m-t-40 form-valide" id="productform" method="post" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+        <div class="add-customer-modal d-flex justify-content-between align-items-center">
+        <h5>Add a new Product/Part</h5>
+        <button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      @php
+        $services = App\Models\Service::where('userid',auth()->user()->id)->orderBy('id','desc')->get();
+      @endphp
+     <input type="hidden" name="cid" id="cid" value="">
+  <div class="row customer-form" id="product-box-tabs">
+    <div class="col-md-12 mb-3">
+     <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" required="">
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+          @foreach ($services as $service)
+            <option value="{{$service->id}}">{{$service->servicename}}</option>
+          @endforeach
+        </select>
+          
+       </div>
+    
+    <div class="col-md-6 mb-3">
+     <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
+    
+     
+     </div>
+     <div class="col-md-6 mb-3">
+    
+     <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="">
+     
+     </div>
+     
+     <div class="col-md-6 mb-3">
+      <input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" required="">
+     </div>
+
+     <div class="col-md-6 mb-3">
+     <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit">
+   </div>
+
+     <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="$ Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+     </div>
+
+      <div class="col-lg-12 mb-3">
+    <textarea class="form-control height-180" name="description" id="description" required="" placeholder="Description"></textarea>
+    </div>
+      <div class="col-md-12">
+      <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
+      <input type="file" class="dropify" name="image" id="image" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+     </div>
+     
+     <div class="row mt-3">
+     <div class="col-lg-6 mb-3">
+      <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+      <button class="btn btn-add btn-block" type="submit">Complete</button>
+     </div>
+     </div>
+    </div>
+    </div>
+ </form>
+  </div>
+</div>
+</div>
+<!-- end product modal -->
+
 @endsection
 
 @section('script')
   <script>
-$(document).ready(function() {
+
+  $('.dropify').dropify();
+  $(document).ready(function() {
     // $('#example').DataTable({
     //   "order": [[ 0, "desc" ]]
     // });
@@ -778,7 +978,51 @@ $(document).on('change','#productname',function(e) {
       if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
           return false;
       return true;
-  }           
+  }
+
+  $('#serviceform').on('submit', function(event) {
+      event.preventDefault();
+      var url = "{{url('company/services/create')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+              //console.log(data);
+        swal("Done!", "Service Created Successfully!", "success");
+              $("#add-services").modal('hide');
+              $("#servicename").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");
+              $("#servicename").selectpicker('refresh');
+              $("#create-ctickets").show();
+            }
+        })
+  }); 
+
+  $('#productform').on('submit', function(event) {
+    event.preventDefault();
+    var url = "{{url('company/inventory/create')}}";
+     $.ajax({
+          url:url,
+          data: new FormData(this),
+          method: 'POST',
+          dataType: 'JSON',
+          contentType: false,
+          cache: false,
+          processData: false,
+          success:function(data) {
+            //console.log(data);
+      swal("Done!", "Product Created Successfully!", "success");
+            $("#add-products").modal('hide');
+            $("#productname").append("<option value="+data.id+" data-price="+data.price+">"+data.productname+"</option>");
+            $("#productname").selectpicker('refresh');
+              $("#add-tickets").show();
+          }
+      })
+  });          
       
 </script>
 @endsection

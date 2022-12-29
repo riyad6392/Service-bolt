@@ -304,20 +304,28 @@ class CustomerController extends Controller
           </div>
       </div>
     </div>
-    <div class="col-md-12 mb-3">
+    <div class="col-md-11 mb-2">
         <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="servicename[]" id="servicename" style="height:auto;" required="">';
               foreach($services as $key => $value) {
                 $html .='<option value="'.$value->id.'" data-hour="'.$value->time.'" data-min="'.$value->minute.'">'.$value->servicename.'</option>';
               }
         $html .='</select>
+        <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus second"></i></a>
+        </div>
       </div>
-      <div class="col-md-12 mb-3">
+      <div class="col-md-11 mb-2">
         <select class="form-control selectpickerc1" multiple aria-label="Default select example" data-live-search="true" name="productname[]" id="productname" style="height:auto;" data-placeholder="Select Products">';
               foreach($productData as $key => $value) {
                 $html .='<option value="'.$value->id.'" data-price="'.$value->price.'">'.$value->productname.'</option>';
               }
         $html .='</select>
-      </div><div class="col-md-12 mb-3" style="display:block;">
+        <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-products" class="" id="hidequoteproduct"><i class="fa fa-plus third"></i></a>
+        </div>
+      </div>
+
+      <div class="col-md-12 mb-3" style="display:block;">
         
       <select class="form-control selectpickerc1" aria-label="Default select example" data-live-search="true" name="personnelid" id="personnelid" required data-placeholder="Select Personnel">';
               foreach($worker as $key => $value) {
