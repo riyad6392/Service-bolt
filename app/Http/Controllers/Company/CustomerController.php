@@ -551,9 +551,9 @@ class CustomerController extends Controller
       if($request->share =='share') {
           $request->session()->flash('success', 'Ticket share successfully');
         } else {
-      $request->session()->flash('success', 'Ticket added successfully');
+      $request->session()->flash('success', 'Ticket scheduled successfully');
       }
-      return redirect()->route('company.quote');
+      return redirect()->route('company.scheduler');
     }
 
     public function getenddatecalculation($newdate,$nextdaytime) 

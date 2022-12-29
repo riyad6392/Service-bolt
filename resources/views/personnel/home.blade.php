@@ -214,7 +214,7 @@
               $gtime = explode(":",$value->giventime);
               $gtimeampm = explode(" ",$gtime[1]);
 
-              $giventime = $gtime[0].':00'.' '.$gtimeampm[1];
+              $giventime = @$gtime[0].':00'.' '.@$gtimeampm[1];
             
               if($giventime == $settimes) {
                 @endphp

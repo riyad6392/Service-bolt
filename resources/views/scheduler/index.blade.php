@@ -504,6 +504,15 @@ body::-webkit-scrollbar-thumb:hover {
                             
                                     <p style="margin: 0; font-weight: 500;color: #000;">Tickets to Assign</p>
                                 </div>
+                                @if(Session::has('success'))
+
+                                  <div class="alert alert-success" id="selector">
+
+                                      {{Session::get('success')}}
+
+                                  </div>
+
+                              @endif
                             </div>
                             
                             @if($userData->openingtime!="")
@@ -910,19 +919,15 @@ body::-webkit-scrollbar-thumb:hover {
 <script type="">
     $(document).ready(function () {
         
-        
-        // $(document).on('change', 'select.selectpicker1',function() {
-            
-        //     gethours1();
-        //     getprice1();
-        //     getfrequency1();
-        // });
         $('html, body').animate({
             scrollTop: $('#srcoll-here').offset().top
         }, 'slow');
        
         setTimeout(function() {
             $(".fc-scroller").addClass("heierts");
+        },1000);
+        setTimeout(function() {
+            $("#selector").hide();
         },1000);
     });
     

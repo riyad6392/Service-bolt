@@ -515,7 +515,8 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
     <div class="position-absolute not-bell" id="blink">
    <span class="blinking"></span>
 </div>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" id="notification">
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      <span id="notification"></span>
       @if(count($notifications)>0)
         @foreach($notifications as $notification)
             <li class="notification-item">
