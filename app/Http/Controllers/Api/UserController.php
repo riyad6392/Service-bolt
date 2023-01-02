@@ -238,8 +238,19 @@ class UserController extends Controller
                                     WHEN quote.parentid = "0" THEN quote.id 
                                     ELSE quote.parentid 
                                     END) AS id'))->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
-                
-        return response()->json(['status'=>1,'message'=>'success','todayticket'=>$todayservicecall,'customerData'=>$customerData,'scheduleData'=>$scheduleData],$this->successStatus);
+        
+        $completedticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"3")->where('givendate', $todaydate)->count();
+        
+        $pendingticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',array('2','3','4'))->where('givendate', $todaydate)->count();
+
+        if($pendingticketcount!=0) {
+            $dailyprogress = $completedticketcount/$pendingticketcount*100;
+            $dailyprogress =  round($dailyprogress,2);
+        } else {
+            $dailyprogress = 0;
+        }
+
+        return response()->json(['status'=>1,'message'=>'success','todayticket'=>$todayservicecall,'customerData'=>$customerData,'scheduleData'=>$scheduleData,'dailyprogress'=>$dailyprogress],$this->successStatus);
     }
 
     public function myticketData(Request $request) {
