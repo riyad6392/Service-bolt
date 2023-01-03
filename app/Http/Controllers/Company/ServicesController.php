@@ -77,6 +77,8 @@ class ServicesController extends Controller
           $data['userid'] = $auth_id;
           $data['servicename'] = $request->servicename;
           $data['price'] = $request->price;
+          // $data['preferred'] = $request->preferred;
+          // $data['overtime'] = $request->overtime;
           //$data['productid'] = $request->defaultproduct;
           $data['type'] = $request->radiogroup;
           $data['frequency'] = $request->frequency;
@@ -185,41 +187,10 @@ class ServicesController extends Controller
         if($services[0]['type'] =='flatrate') {
             $checked2 = "checked";
         }
-
-        // if($services[0]->frequency =='One Time') {
-        //     $selectedfo = "selected";
-        // }
-
-        // if($services[0]->frequency =='Weekly') {
-        //     $selectedf = "selected";
-        // }
-        // if($services[0]->frequency =='Be weekly') {
-        //     $selectedf1 = "selected";
-        // }
-        // if($services[0]->frequency =='Monthly') {
-        //     $selectedf2 = "selected";
-        // }
-        // if($services[0]['time'] =='15 Minutes') {
-        //     $selectedt1 = "selected";
-        // }
-        // if($services[0]->time =='30 Minutes') {
-        //     $selectedt2 = "selected";
-        // }
-        // if($services[0]->time =='45 Minutes') {
-        //     $selectedt3 = "selected";
-        // }
-        // if($services[0]->time =='1 Hours') {
-        //     $selectedt4 = "selected";
-        // }
+        
        $time =  explode(" ", $services[0]['time']);
        $minute =  explode(" ", $services[0]['minute']); 
-        // $cheklist =explode (",", $services[0]->checklist); 
-        // if(in_array('point1', $cheklist)) {
-        //     $checkeds = "checked";
-        // }
-        // if(in_array('point2', $cheklist)) {
-        //     $checkeds1 = "checked";
-        // }
+       
        $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
                   <h5>Edit Service</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -251,11 +222,6 @@ class ServicesController extends Controller
                   $selectedp = "";
                  }
 
-                 /* if($value->id == $services[0]['productid']) {
-                    $selectedp = "selected";
-                  } else {
-                    $selectedp = "";
-                }*/
                 $html .='<option value="'.$value->id.'" '.@$selectedp.'>'.$value->productname.'</option>';
               }
         $html .='</select>
@@ -355,6 +321,8 @@ class ServicesController extends Controller
             $service = Service::where('id', $request->serviceid)->get()->first();
             $service->servicename = $request->servicename;
             $service->price = $request->price;
+            // $service->preferred = $request->preferred;
+            // $service->overtime = $request->overtime;
             //$service->productid = $request->defaultproduct;
             if(isset($request->defaultproduct)) {
              $service->productid = implode(',', $request->defaultproduct);
@@ -650,7 +618,7 @@ class ServicesController extends Controller
       
       $formattedAddr = str_replace(' ','+',$request->address);
       //Send request and receive json data by address
-      $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyAdxg4WRi7r1VuRrbiPLiyWRttpxcH_9Ag'); 
+      $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
       $output = json_decode($geocodeFromAddr);
       //Get latitude and longitute from json data
       //print_r($output->results[0]->geometry->location->lat); die;

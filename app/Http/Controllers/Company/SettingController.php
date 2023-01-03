@@ -74,7 +74,7 @@ class SettingController extends Controller
         $user->closingtime = $request->closingtime;
         $user->company_address = $request->address;
         $formattedAddr = str_replace(' ','+',$request->address);
-        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyAdxg4WRi7r1VuRrbiPLiyWRttpxcH_9Ag'); 
+        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
         if($output->results!=NULL) {

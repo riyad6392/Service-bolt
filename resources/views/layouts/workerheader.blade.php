@@ -535,7 +535,7 @@ if(strpos(Request::url(), 'myticket') !== false || strpos(Request::url(), 'compl
    <script src="{{ asset('js/add-field.js')}}"></script>
    
 @yield('script')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdxg4WRi7r1VuRrbiPLiyWRttpxcH_9Ag&callback=initAutocomplete&libraries=places"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places"
       async
     ></script>
 <script>
