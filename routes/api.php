@@ -29,6 +29,7 @@ Route::post('/verification_code', [App\Http\Controllers\Api\UserController::clas
 Route::post('/reset_password', [App\Http\Controllers\Api\UserController::class, 'reset_password'])->name('reset_password');
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+	Route::get('/workerlogout', [App\Http\Controllers\Api\UserController::class, 'workerlogout'])->name('workerlogout');
 	Route::get('/profileDetails', [App\Http\Controllers\Api\UserController::class, 'getprofile']);
 	Route::post('/updateprofile', [App\Http\Controllers\Api\UserController::class, 'updateprofile']);
 	Route::get('/dashboard', [App\Http\Controllers\Api\UserController::class, 'dashboardDetails']);

@@ -292,12 +292,13 @@ class AuthController extends Controller
     }
 
     public function workerlogout() {
-      //$workerid = auth()->user()->workerid;
+      $workerid = auth()->user()->workerid;
+      //echo $workerid; die;
       // DB::enableQuerylog();
-      //   DB::table('personnel')->where('id','=',$workerid)
-      //     ->update([ 
-      //         "checkstatus"=>"offline"
-      //   ]);
+        DB::table('personnel')->where('id','=',$workerid)
+          ->update([ 
+              "checkstatus"=>"offline"
+        ]);
       Auth::logout();
 
       return redirect('personnel/login');

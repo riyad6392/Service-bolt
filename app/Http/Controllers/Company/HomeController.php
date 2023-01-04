@@ -184,25 +184,27 @@ class HomeController extends Controller
       $users = DB::table('users')->where('role','worker')->where('userid',$auth_id)->get();
         $workerids = array();
         foreach ($users as $user) {
-            if (Cache::has('user-is-online-' . $user->id)) {
-                $workerids[] = $user->workerid;
+            $workerids[] = $user->workerid;
+
+           //  if (Cache::has('user-is-online-' . $user->id)) {
+           //      $workerids[] = $user->workerid;
                 
-                DB::table('personnel')->where('id','=',$user->workerid)
-                  ->update([ 
-                      "checkstatus"=>"online"
-                ]);
-            } else {
-                $workerids[] = $user->workerid;
-                DB::table('personnel')->where('id','=',$user->workerid)
-                  ->update([ 
-                      "checkstatus"=>"offline"
-                ]);
-           }
+           //      DB::table('personnel')->where('id','=',$user->workerid)
+           //        ->update([ 
+           //            "checkstatus"=>"online"
+           //      ]);
+           //  } else {
+           //      $workerids[] = $user->workerid;
+           //      DB::table('personnel')->where('id','=',$user->workerid)
+           //        ->update([ 
+           //            "checkstatus"=>"offline"
+           //      ]);
+           // }
         } 
-    DB::enableQuerylog();
+    //DB::enableQuerylog();
     //$scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->whereIn('ticket_status',array('2','3','4'))->groupBy('quote.personnelid')->orderBy('quote.id','desc')->get();
 
-    $scheduleData = DB::table('personnel')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->leftJoin('quote', 'quote.personnelid', '=', 'personnel.id')->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->groupBy('quote.id')->orderBy('quote.updated_at','asc')->get();
+    $scheduleData = DB::table('personnel')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->leftJoin('quote', 'quote.personnelid', '=', 'personnel.id')->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->groupBy('quote.id')->orderBy('quote.updated_at','desc')->get();
 
 
     //dd(DB::getQueryLog());

@@ -97,7 +97,12 @@ class UserController extends Controller
                       ->update([ 
                           "device_token"=>"$device_token"
                     ]);
-                }   
+                }
+
+                DB::table('personnel')->where('id','=',$user->workerid)
+                      ->update([ 
+                          "checkstatus"=>"online"
+                ]);   
             return response()->json(['status'=>1,'message'=>__('You are successfully logged in.'),'token'=>$token,'data'=>$data1],$this->successStatus); 
         } 
         else{ 
@@ -107,6 +112,18 @@ class UserController extends Controller
 
     public function loginerror() {
         return response()->json(['status'=>0,'message'=>'Unauthenticated'],$this->errorresultStatus);   
+    }
+
+     public function workerlogout() {
+        $workerid = auth()->user()->workerid;
+        DB::table('personnel')->where('id','=',$workerid)
+          ->update([ 
+              "checkstatus"=>"offline"
+        ]);
+          Auth::user()->tokens()->delete();
+      //Auth::logout();
+
+      return response()->json(['status'=>1,'message'=>__('You are successfully logged out.')],$this->successStatus); 
     }
 
     public function getprofile(Request $request) {

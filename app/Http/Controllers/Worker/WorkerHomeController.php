@@ -36,6 +36,7 @@ class WorkerHomeController extends Controller
         $auth_id = auth()->user()->id;
         if(auth()->user()->role == 'worker') {
             $auth_id = auth()->user()->id;
+
         } else {
            return redirect()->back();
         }
@@ -53,6 +54,11 @@ class WorkerHomeController extends Controller
 
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
 
+        DB::table('personnel')->where('id','=',$worker->workerid)
+                  ->update([ 
+                      "checkstatus"=>"online"
+                ]);
+                  
         $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
         $workername = DB::table('personnel')->select('personnelname','ticketid')->where('id',$worker->workerid)->first();
 
