@@ -1980,7 +1980,12 @@ $('#serviceform').on('submit', function(event) {
      displayDatePickerIfBrowserDoesNotSupportDateType();
   });
 
+  $(".etc").on('click', function(event) {
+   displayDatePickerIfBrowserDoesNotSupportDateType();
+});
+
   	function displayDatePickerIfBrowserDoesNotSupportDateType() {
+  		alert('aaa');
 	  var datePicker = document.querySelector('.etc');
 	  if (datePicker && datePicker.type !== 'date') {
 	    $('.etc').datepicker();

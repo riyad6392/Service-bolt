@@ -795,6 +795,17 @@ $(document).on('click','#addnote',function(e) {
         })
  });
 
+  $(document).on('click','.etc',function(e) {
+    displayDatePickerIfBrowserDoesNotSupportDateType();
+  });
+
+  function displayDatePickerIfBrowserDoesNotSupportDateType() {
+    var datePicker = document.querySelector('.etc');
+    if (datePicker && datePicker.type !== 'date') {
+      $('.etc').datepicker();
+    }
+  }
+
  $(document).on('click','.viewinvoice',function(e) {
    var id = $(this).data('id');
   var duedate = $(this).data('duedate');
