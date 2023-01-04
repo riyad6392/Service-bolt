@@ -1977,7 +1977,16 @@ $('#serviceform').on('submit', function(event) {
      $('#example').DataTable( {
         "order": [[ 0, "desc" ]]
     } );
+     displayDatePickerIfBrowserDoesNotSupportDateType();
   });
+
+  	function displayDatePickerIfBrowserDoesNotSupportDateType() {
+	  var datePicker = document.querySelector('.etc');
+	  if (datePicker && datePicker.type !== 'date') {
+	    $('.etc').datepicker();
+	  }
+	}
+
   $(document).ready(function() {
   	 $('#example1').DataTable( {
         "order": [[ 0, "desc" ]]

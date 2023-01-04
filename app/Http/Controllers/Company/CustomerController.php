@@ -341,7 +341,7 @@ class CustomerController extends Controller
       </div>
       <div class="col-md-6 mb-3">
      <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
-      <input type="date" class="form-control date" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;" required>
+      <input type="date" class="form-control etc" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;" required>
      </div>
       <div class="col-md-12 mb-3">
         <div class="align-items-center justify-content-lg-between d-flex services-list">

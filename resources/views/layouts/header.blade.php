@@ -712,8 +712,18 @@ $(document).ready(function () {
    $("body").toggleClass('leftside-none');
    
   });
-    $("#blink").removeClass("not-bell");  
+    $("#blink").removeClass("not-bell"); 
+
+     displayDatePickerIfBrowserDoesNotSupportDateType();
+
 });
+
+  function displayDatePickerIfBrowserDoesNotSupportDateType() {
+    var datePicker = document.querySelector('.etc');
+    if (datePicker && datePicker.type !== 'date') {
+      $('.etc').datepicker();
+    }
+  }
 
 $(document).ready(function() {
   var buttonAdd = $("#add-button");
