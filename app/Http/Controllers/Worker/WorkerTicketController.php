@@ -677,8 +677,14 @@ class WorkerTicketController extends Controller
           </div>
           </div><div class="col-md-12 mb-2">
             <div class="form-group">
-            <label>Notes</label>
+            <label>Description</label>
             <input type="text" class="form-control" placeholder="Notes" name="description" id="description" value="'.$quote->description.'">
+          </div>
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+            <label>Personnel Notes</label>
+            <input type="text" class="form-control" placeholder="Notes" name="customernotes" id="customernotes" value="'.strip_tags($quote->customernotes).'" readonly>
           </div>
           </div><input type="hidden" name="id" id="id" value="'.$quote->id.'">';
           
@@ -791,11 +797,10 @@ class WorkerTicketController extends Controller
       $productname = "";
       $sum1 = 0;
       $txvalue1 = 0;
-      if($request->productid!="") {
+      if(count($request->productid)>0) {
         $productid = implode(',', $request->productid);
 
         $pdetails = Inventory::select('productname','id','price')->whereIn('id', $request->productid)->get();
-      
           foreach ($pdetails as $key => $value) {
             $pname[] = $value['productname'];
             if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
