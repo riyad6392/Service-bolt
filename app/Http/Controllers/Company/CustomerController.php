@@ -333,10 +333,10 @@ class CustomerController extends Controller
               }
         $html .='</select>
       </div>
-      <div class="col-md-6 mb-3">
+      <div class="form-group col-md-6 mb-3">
         <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
-        <div>
-          <input type="time" class="form-control time" onkeypress="return onlyNumberKey(event)" onkeydown="return /[a-z]/i.test(event.key)" onpaste="return false" name="giventime" required>
+        <div class="input-group date" id="timePicker">
+          <input type="time" class="form-control time time-pickable timePicker" onkeypress="return onlyNumberKey(event)" onkeydown="return /[a-z]/i.test(event.key)" onpaste="return false" name="giventime" id="time" placeholder="Time" required><span class="input-group-addon" style="display:none;"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
         </div>
       </div>
       <div class="col-md-6 mb-3">

@@ -1658,5 +1658,15 @@ $(document).on('change','#productname',function(e) {
       })
 });
 
+$(document).on('click','.etc',function(e) {
+    displayDatePickerIfBrowserDoesNotSupportDateType();
+  });
+
+  function displayDatePickerIfBrowserDoesNotSupportDateType() {
+    var datePicker = document.querySelector('.etc');
+    if (datePicker && datePicker.type !== 'date') {
+      $('#datePicker').datepicker();
+    }
+  }
  </script>
 @endsection

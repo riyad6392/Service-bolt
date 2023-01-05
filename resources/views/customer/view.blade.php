@@ -802,20 +802,23 @@ $(document).on('click','#addnote',function(e) {
   function displayDatePickerIfBrowserDoesNotSupportDateType() {
     var datePicker = document.querySelector('.etc');
     if (datePicker && datePicker.type !== 'date') {
-      $('.etc').datepicker();
+      $('#datePicker').datepicker();
     }
   }
 
-  $(document).on('click','.time',function(e) {
+  $(document).on('click','#time',function(e) {
     displayTimePickerIfBrowserDoesNotSupportDateType();
   });
 
   function displayTimePickerIfBrowserDoesNotSupportDateType() {
-    var timePicker = document.querySelector('.time');
-    if (timePicker && timePicker.type !== 'time') {
-      $('.time').timepicker();
-    }
+    var timePicker = document.querySelector('#time');
+    if(timePicker && timePicker.type !== 'time') {
+
+      $('#time').datetimepicker({
+        format: 'hh:mm A'
+      });
   }
+}
 
  $(document).on('click','.viewinvoice',function(e) {
    var id = $(this).data('id');

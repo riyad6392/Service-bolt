@@ -1985,7 +1985,6 @@ $('#serviceform').on('submit', function(event) {
 });
 
   	function displayDatePickerIfBrowserDoesNotSupportDateType() {
-  		alert('aaa');
 	  var datePicker = document.querySelector('.etc');
 	  if (datePicker && datePicker.type !== 'date') {
 	    $('.etc').datepicker();
