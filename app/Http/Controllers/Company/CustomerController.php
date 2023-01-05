@@ -336,7 +336,7 @@ class CustomerController extends Controller
       <div class="col-md-6 mb-3">
         <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
         <div>
-          <input type="time" class="form-control" onkeypress="return onlyNumberKey(event)" onkeydown="return /[a-z]/i.test(event.key)" onpaste="return false" name="giventime" required>
+          <input type="time" class="form-control time" onkeypress="return onlyNumberKey(event)" onkeydown="return /[a-z]/i.test(event.key)" onpaste="return false" name="giventime" required>
         </div>
       </div>
       <div class="col-md-6 mb-3">

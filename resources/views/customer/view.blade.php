@@ -806,6 +806,17 @@ $(document).on('click','#addnote',function(e) {
     }
   }
 
+  $(document).on('click','.time',function(e) {
+    displayTimePickerIfBrowserDoesNotSupportDateType();
+  });
+
+  function displayTimePickerIfBrowserDoesNotSupportDateType() {
+    var timePicker = document.querySelector('.time');
+    if (timePicker && timePicker.type !== 'time') {
+      $('.time').timepicker();
+    }
+  }
+
  $(document).on('click','.viewinvoice',function(e) {
    var id = $(this).data('id');
   var duedate = $(this).data('duedate');
