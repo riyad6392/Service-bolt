@@ -32,12 +32,12 @@
     <table style="width:100%; ">
         <tbody>
             <tr>
-                  <td style="position: relative;left: 16% !important;font-size: 21px;text-align:center;color:{{$txtcolor}};"> INVOICE</td>  
+                  <td style="position: relative;left: 10% !important;font-size: 21px;text-align:center;color:{{$txtcolor}};"> <h1 style="color: {{$txtcolor}};margin: 0;"><img src="{{$cimage}}" style="width: 100px;"></h1></td>  
             </tr>
             <tr>
             
                 <td style=" width: 78%;">
-                    <h1 style="color: {{$txtcolor}};margin: 0;"><img src="{{$cimage}}" style="width: 100px;"></h1>
+                    INVOICE
                 </td>
                 <td style="vertical-align: top; padding: 1px 0px;">
                    
