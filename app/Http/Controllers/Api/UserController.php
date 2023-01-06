@@ -1034,6 +1034,7 @@ class UserController extends Controller
       $serviceid = $request->serviceid;
       $servicedetails = Service::select('servicename','productid','price')->whereIn('id', array($request->serviceid))->get();
       $sum = 0; 
+      
       foreach ($servicedetails as $key => $value) {
         $pid[] = $value['productid'];
         $sname[] = $value['servicename'];
@@ -1048,6 +1049,39 @@ class UserController extends Controller
           $sum+= $txvalue;
       }
        $servicename = implode(',', $sname);
+
+    /*for logic product reduced*/
+    $quote = Quote::where('id', $request->id)->get()->first();
+    
+    if($quote->product_id=="") {
+        $productids = array();
+    }
+
+    $productids = explode(',',$quote->product_id);
+      $removedataid = array_diff($productids,array($request->productid));
+        if($removedataid!="") {
+          foreach($removedataid as $key => $value) {
+            $productd = Inventory::where('id', $value)->first();
+            if(!empty($productd)) {
+              $productd->quantity = (@$productd->quantity) + 1;
+              $productd->save();
+            }
+          }
+        }
+      if($request->productid!="") {
+        $reqpids = $request->productid;
+        $plusdataids= array_diff(array($reqpids),$productids); 
+        if($plusdataids!="") {
+          foreach($plusdataids as $key => $value) {
+            $productd = Inventory::where('id', $value)->first();
+            if(!empty($productd)) {
+              $productd->quantity = (@$productd->quantity) - 1;
+              $productd->save();
+            }
+          }
+        }
+      }
+
 
         $productid = "";
         $productname = "";
