@@ -363,7 +363,14 @@ class CustomerController extends Controller
         <option value="06:30 pm">06:30 pm</option>
         <option value="07:00 pm">07:00 pm</option>
         <option value="07:30 pm">07:30 pm</option>
-        
+        <option value="08:00 pm">08:00 pm</option>
+        <option value="08:30 pm">08:30 pm</option>
+        <option value="09:00 pm">09:00 pm</option>
+        <option value="09:30 pm">09:30 pm</option>
+        <option value="10:00 pm">10:00 pm</option>
+        <option value="10:30 pm">10:30 pm</option>
+        <option value="11:00 pm">11:00 pm</option>
+        <option value="11:30 pm">11:30 pm</option>
         <option value="12:00 am">12:00 am</option>
         <option value="12:30 am">12:30 am</option>
         <option value="01:00 am">01:00 am</option>
