@@ -54,10 +54,10 @@ class WorkerHomeController extends Controller
 
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
 
-        DB::table('personnel')->where('id','=',$worker->workerid)
-                  ->update([ 
-                      "checkstatus"=>"online"
-                ]);
+        // DB::table('personnel')->where('id','=',$worker->workerid)
+        //           ->update([ 
+        //               "checkstatus"=>"online"
+        //         ]);
                   
         $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
         $workername = DB::table('personnel')->select('personnelname','ticketid')->where('id',$worker->workerid)->first();
