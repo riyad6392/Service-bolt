@@ -1058,8 +1058,9 @@ class UserController extends Controller
     }
 
     $productids = explode(',',$quote->product_id);
-      $removedataid = array_diff($productids,array($request->productid));
-        if($removedataid!="") {
+    $pids = explode(',',$request->productid);
+      $removedataid = array_diff($productids,$pids);
+        if(!empty($removedataid)) {
           foreach($removedataid as $key => $value) {
             $productd = Inventory::where('id', $value)->first();
             if(!empty($productd)) {
@@ -1069,8 +1070,7 @@ class UserController extends Controller
           }
         }
       if($request->productid!="") {
-        $reqpids = $request->productid;
-        $plusdataids= array_diff(array($reqpids),$productids); 
+        $plusdataids= array_diff($pids,$productids); 
         if($plusdataids!="") {
           foreach($plusdataids as $key => $value) {
             $productd = Inventory::where('id', $value)->first();
