@@ -67,9 +67,10 @@ class UserController extends Controller
             }
             return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
-
+        
         if(Auth::attempt(['email' => request('email'), 'password' => request('password'), 'role' => 'worker'])){ 
             $user = Auth::user(); 
+
             $token =  auth()->user()->createToken('API Token')->plainTextToken;
             
             //$user->createToken('MyApp')->accessToken; 
@@ -102,7 +103,15 @@ class UserController extends Controller
                 DB::table('personnel')->where('id','=',$user->workerid)
                       ->update([ 
                           "checkstatus"=>"online"
-                ]);   
+                ]);
+            
+            //logic for other device id token expired         
+            $ptoken = DB::table('personal_access_tokens')->where('tokenable_id',Auth::user()->id)->orderBy('id','desc')->get();
+                    
+            if(count($ptoken) > 1) {
+              DB::table('personal_access_tokens')->where('token', $ptoken[1]->token)->delete();  
+            }
+            //end
             return response()->json(['status'=>1,'message'=>__('You are successfully logged in.'),'token'=>$token,'data'=>$data1],$this->successStatus); 
         } 
         else{ 
