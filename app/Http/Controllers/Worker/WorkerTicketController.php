@@ -134,11 +134,15 @@ class WorkerTicketController extends Controller
           $ticket->ticket_status = 4;
           $ticket->save();
 
-          $ticket1 = Quote::where('parentid', $request->ticketid)->first();
-          if($ticket1!=null || $ticket1!="") {
-            $ticket1->ticket_status = 4;
-            $ticket1->save();
-         }
+          $ticket1 = Quote::where('parentid', $request->ticketid)->get();
+          if(count($ticket1)>0) {
+            foreach($ticket1 as $key => $value) {
+              DB::table('quote')->where('parentid','=',$value->parentid)
+              ->update([ 
+                  "ticket_status"=>4,
+              ]);    
+            }
+          }
           //$pidarray = explode(',', $ticket->product_id);
 
           // if(!empty($ticket->product_id)) {
@@ -193,10 +197,14 @@ class WorkerTicketController extends Controller
             $ticket->ticket_status = 3;
             $ticket->save();
             
-            $ticket1 = Quote::where('parentid', $request->ticketid)->first();
-            if($ticket1!=null || $ticket1!="") {
-              $ticket1->ticket_status = 3;
-              $ticket1->save();
+            $ticket1 = Quote::where('parentid', $request->ticketid)->get();
+            if(count($ticket1)>0) {
+              foreach($ticket1 as $key => $value){
+                DB::table('quote')->where('parentid','=',$value->parentid)
+                ->update([ 
+                    "ticket_status"=>3,
+                ]);    
+              }
             }
 
             date_default_timezone_set('Asia/Kolkata');
@@ -248,10 +256,14 @@ class WorkerTicketController extends Controller
           $ticket->ticket_status = 4;
           $ticket->save();
 
-          $ticket1 = Quote::where('parentid', $request->ticketid)->get()->first();
-          if($ticket1!=null || $ticket1!="") {
-            $ticket1->ticket_status = 4;
-            $ticket1->save();
+          $ticket1 = Quote::where('parentid', $request->ticketid)->get();
+          if(count($ticket1)>0) {
+            foreach($ticket1 as $key => $value){
+              DB::table('quote')->where('parentid','=',$value->parentid)
+              ->update([ 
+                  "ticket_status"=>4,
+              ]);    
+            }
           }
 
           $request->session()->flash('success', 'Ticket Unclose successfully');
@@ -276,11 +288,15 @@ class WorkerTicketController extends Controller
           $ticket->ticket_status = 4;
           $ticket->save();
 
-          $ticket1 = Quote::where('parentid', $request->ticketid)->get()->first();
+          $ticket1 = Quote::where('parentid', $request->ticketid)->get();
           //new logic
-          if($ticket1!=null || $ticket1!="") {
-            $ticket1->ticket_status = 4;
-            $ticket1->save();
+          if(count($ticket1)>0) {
+            foreach($ticket1 as $key => $value) {
+              DB::table('quote')->where('parentid','=',$value->parentid)
+              ->update([ 
+                  "ticket_status"=>4,
+              ]);    
+            }
           }
 
         // if(!empty($ticket->product_id)) {
@@ -340,30 +356,26 @@ class WorkerTicketController extends Controller
             
             $ticket->ticket_status = 3;
             $ticket->ticketdate = date('Y-m-d');
-            if($request->pointckbox) {
-              $cheklist =implode(",", $request->pointckbox);
-              $ticket->checklist =  $cheklist;
-            } else {
-              $ticket->checklist = null;
-            }
-          
             $ticket->save();
 
             
 
-            $ticket1 = Quote::where('parentid', $request->ticketid)->get()->first();
-            if($ticket1!=null || $ticket1!="") {
-            $ticket1->ticket_status = 3;
-            $ticket1->ticketdate = date('Y-m-d');
-            if($request->pointckbox) {
-              $cheklist =implode(",", $request->pointckbox);
-              $ticket1->checklist =  $cheklist;
-            } else {
-              $ticket1->checklist = null;
+            $ticket1 = Quote::where('parentid', $request->ticketid)->get();
+              if($request->pointckbox) {
+                  $cheklist =implode(",", $request->pointckbox);
+              } else {
+                $cheklist = null;
+              }
+            if(count($ticket1)>0) {
+              foreach($ticket1 as $key => $value) {
+                DB::table('quote')->where('parentid','=',$value->parentid)
+                ->update([ 
+                      "ticket_status"=>3,
+                      "ticketdate"=>date('Y-m-d'),
+                      "checklist"=>$cheklist,
+                ]);    
+              }
             }
-          
-            $ticket1->save();
-          }
 
 
             date_default_timezone_set('Asia/Kolkata');
@@ -416,10 +428,14 @@ class WorkerTicketController extends Controller
           $ticket->ticket_status = 4;
           $ticket->save();
 
-          $ticket1 = Quote::where('parentid', $request->ticketid)->get()->first();
-          if($ticket1!=null || $ticket1!="") {
-            $ticket1->ticket_status = 4;
-            $ticket1->save();
+          $ticket1 = Quote::where('parentid', $request->ticketid)->get();
+          if(count($ticket1)>0) {
+            foreach($ticket1 as $key => $value){
+              DB::table('quote')->where('parentid','=',$value->parentid)
+              ->update([ 
+                  "ticket_status"=>4,
+              ]);    
+            }
           }
           $request->session()->flash('success', 'Ticket Unclose successfully');
           return redirect()->back();
