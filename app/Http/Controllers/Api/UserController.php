@@ -1895,6 +1895,36 @@ class UserController extends Controller
         }
 
         $quote = Quote::where('id', $request->ticketid)->first();
+
+        if($quote->product_id=="") {
+            $productids = array();
+        }
+
+    $productids = explode(',',$quote->product_id);
+    $pids = explode(',',$request->productidnew);
+      $removedataid = array_diff($productids,$pids);
+        if(!empty($removedataid)) {
+          foreach($removedataid as $key => $value) {
+            $productd = Inventory::where('id', $value)->first();
+            if(!empty($productd)) {
+              $productd->quantity = (@$productd->quantity) + 1;
+              $productd->save();
+            }
+          }
+        }
+      if($request->productidnew!="") {
+        $plusdataids= array_diff($pids,$productids); 
+        if($plusdataids!="") {
+          foreach($plusdataids as $key => $value) {
+            $productd = Inventory::where('id', $value)->first();
+            if(!empty($productd)) {
+              $productd->quantity = (@$productd->quantity) - 1;
+              $productd->save();
+            }
+          }
+        }
+      }
+
         $quote->payment_amount = $request->payment_amount;
         $quote->payment_mode = $request->payment_mode;
           
@@ -1902,9 +1932,9 @@ class UserController extends Controller
             $quote->checknumber = $request->checknumber;
         }
         $quote->tickettotal = $request->ticketprice;
-        $quote->serviceid = $request->serviceid;
-        $quote->product_id = $request->productid;
-        
+        $quote->serviceid = $request->serviceidnew;
+        $quote->product_id = $request->productidnew;
+
 
         $quote->save();
 
