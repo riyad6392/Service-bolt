@@ -582,7 +582,7 @@ class SchedulerController extends Controller
 
     public function sortdata(Request $request)
     {
-        $defaultitme = DB::table('quote')->select('time','minute')->where('id',$request->quoteid)->first();
+        $defaultitme = DB::table('quote')->select('time','minute','ticket_status')->where('id',$request->quoteid)->first();
         
         if($defaultitme->time == null || $defaultitme->time == "" || $defaultitme->time == 00 || $defaultitme->time == 0) {
             $hours = 0;
@@ -650,19 +650,24 @@ class SchedulerController extends Controller
 
         $appnotifiction = AppNotification::where('pid',$workerid)->where('ticketid',$quoteid)->get(); 
         //if(count($appnotifiction)==0) {
+            if($defaultitme->ticket_status == "1") {
+                $message = "A new ticket #" .$quoteid. " has been assigned";
+            } else {
+                $message = "Ticket #" .$quoteid. " scheduled time has changed";
+            }
 
             $notification = new AppNotification;
             $notification->uid = $auth_id;
             $notification->pid = $workerid;
             $notification->ticketid = $quoteid;
-            $notification->message =  "A new ticket #" .$quoteid. " has been assigned";
+            $notification->message =  $message;
             $notification->save();
 
             $puser = Personnel::select('device_token')->where("id", $workerid)->first();
 
             $msgarray = array (
-                'title' => "Ticket #" .$quoteid. " scheduled time has changed",
-                'msg' => "Ticket #" .$quoteid. " scheduled time has changed",
+                'title' => $message,
+                'msg' => $message,
                 'type' => 'ticketassign',
             );
 

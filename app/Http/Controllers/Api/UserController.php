@@ -1902,6 +1902,9 @@ class UserController extends Controller
             $quote->checknumber = $request->checknumber;
         }
         $quote->tickettotal = $request->ticketprice;
+        $quote->serviceid = $request->serviceid;
+        $quote->product_id = $request->productid;
+        
 
         $quote->save();
 
