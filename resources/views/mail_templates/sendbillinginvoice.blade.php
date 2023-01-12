@@ -219,7 +219,7 @@
     <tbody>
      <tr>
         <td style="vertical-align: top;padding: 0px 12px; border-radius: 10px;background-color: {{$color}};">
-         <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 20px;">Tech Note:
+         <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 20px;">Note:
             <br><span style="color: {{$txtcolor}};  font-size: 16px;">@if(@$invoicenote){!!@$invoicenote!!}@else --- @endif</span></p>
         </td>
         <td style="width: 50%;padding: 0px 12px;background-color: {{$color}}; border-radius: 10px;">
