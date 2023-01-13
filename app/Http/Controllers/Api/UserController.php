@@ -1926,6 +1926,7 @@ class UserController extends Controller
       }
 
         $quote->payment_amount = $request->payment_amount;
+        $quote->price = $request->payment_amount;
         $quote->payment_mode = $request->payment_mode;
           
         if(!empty($request->checknumber)) {

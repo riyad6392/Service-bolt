@@ -32,7 +32,9 @@
     <table style="width:100%; ">
         <tbody>
             <tr>
-                  <td style="position: relative;left: 10% !important;font-size: 21px;text-align:center;color:{{$txtcolor}};"> <h1 style="color: {{$txtcolor}};margin: 0;"><img src="{{$cimage}}" style="width: 100px;"></h1></td>  
+                <td style="position: relative;left: 18% !important;font-size: 21px;text-align:center !important; display: block; top:15px;color:{{$txtcolor}};">
+                    <h1 style="color: {{$txtcolor}};margin: 0;"><img src="{{$cimage}}" style="width: 100px;"></h1>
+                </td> 
             </tr>
             <tr>
             
@@ -42,6 +44,12 @@
                 <td style="vertical-align: top; padding: 1px 0px;">
                    
                     <h4 style="color: #fff; margin:0;">
+                    <p style="margin: 0; padding:0; color:#605252;"><span>{{$companyname}}</span>
+                    </p>
+
+                    <p style="margin:3px 0; padding:0; color:#605252;">
+                        <span>{{$phone}}</span>
+                    </p>
                     <p style="margin: 0px 0px;color:{{$txtcolor}};">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
                     </h4>
                 </td>
@@ -58,20 +66,20 @@
     <td style="vertical-align: top; width: 70%; padding: 12px">
         <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Bill to:</p>
             <span style="color: black; font-weight: bold;">Name - </span>{{$customername}} <br>
-            <span style="color: black; font-weight: bold;">Company Name -</span>{{$companyname}}
+            <!-- <span style="color: black; font-weight: bold;">Company Name -</span>{{$companyname}}
         
         <br><span style="color: black; font-weight: bold;">Phone Number -</span>{{$phone}}
-        <br><span style="color: black; font-weight: bold;">Email -</span>{{$email}}
+        <br><span style="color: black; font-weight: bold;">Email -</span>{{$email}} -->
         <br><span style="color: black; font-weight: bold;">Service Address -</span>{{$address}}
     </td>
     <td style="vertical-align: top; padding: 17px">
-        <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Invoice:<br>
+        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice:<br>
             <span style="color: black; font-weight: bold;">#{{ $invoiceId }} </span>
         </p>
-        <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Date:<br>
+        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Date:<br>
             <span style="color: black; font-weight: bold;">{{date('m-d-Y', strtotime($date))}} </span>
         </p>
-        <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Invoice due date:<br>
+        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice due date:<br>
             <span style="color: black; font-weight: bold;">
             @if($duedate!="")
                 {{date('m-d-Y', strtotime($duedate))}}

@@ -243,7 +243,15 @@ i.fa.fa-plus.true-condition {
           </div>
           <div class="col-md-12 mb-2 position-relative">
             <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
-  <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+  <input type="text" class="form-control" placeholder="Service Regular Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+          </div>
+          <div class="col-md-12 mb-2 position-relative">
+            <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
+  <input type="text" class="form-control" placeholder="Service Preferred Price" name="preferred" id="preferred" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+          </div>
+          <div class="col-md-12 mb-2 position-relative">
+            <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
+  <input type="text" class="form-control" placeholder="Service Overtime Price" name="overtime" id="overtime" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
           </div>
           <div class="col-md-12 mb-2">
             <div class="d-flex align-items-center">
