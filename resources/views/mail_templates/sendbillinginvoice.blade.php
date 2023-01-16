@@ -231,7 +231,9 @@
             <br><span style="color: {{$txtcolor}};  font-size: 16px;">@if(@$invoicenote){!!@$invoicenote!!}@else --- @endif</span></p>
         </td>
         <td style="width: 50%;padding: 0px 12px;background-color: {{$color}}; border-radius: 10px;">
-            <h5 style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 22px; ">Total:<br><h1 style="color: {{$txtcolor}}; font-weight: bold; font-size: 22px;">${{ $totalprice }} </h1></h5>
+            <h5 style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 20px; ">Subtotal: -</h5>
+            <h5 style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 20px; ">Sales Tax: -</h5>
+            <h5 style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 20px; ">Total: ${{ $totalprice }}</h5>
 
         </td>
         </tr>

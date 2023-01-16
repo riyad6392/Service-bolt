@@ -615,12 +615,15 @@ class WorkerTicketController extends Controller
     {
        $json = array();
        $auth_id = auth()->user()->id;
+       $personnelid = auth()->user()->workerid;
        $quote = Quote::where('id', $request->id)->first();
        $customer = Customer::where('id', $quote->customerid)->get();
 
        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
        $sid = explode(',',$customer[0]->serviceid);
        $serviceData = Service::where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
+
+       $getprimary = $quote->primaryname;
 
        //$serviceData = Service::whereIn('id',$sid)->orderBy('id','ASC')->get();
        
@@ -703,22 +706,37 @@ class WorkerTicketController extends Controller
             <input type="text" class="form-control" placeholder="Notes" name="customernotes" id="customernotes" value="'.strip_tags($quote->customernotes).'" readonly>
           </div>
           </div><input type="hidden" name="id" id="id" value="'.$quote->id.'">';
-          
-      if(in_array("Create Invoice for payment", $permissonarray) || in_array("Administrator", $permissonarray)) {
-       $html .= '<div class="row"><div class="col-lg-6 mb-2">
-            <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="sendinvoice">Send Invoice</button>
-          </div>
+      $html .= '<div class="row">
           <div class="col-lg-6">
-            <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="paynow">Pay Now</button>
-          </div></div>';
-      }
-      elseif(in_array("Generate PDF for invoice", $permissonarray) || in_array("Administrator", $permissonarray)) {
-       $html .= '<div class="row"><div class="col-lg-6 mb-2">
-            <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="sendinvoice">Send Invoice</button>
+            <span class="btn btn-cancel btn-block" data-bs-dismiss="modal" style="height:42px;">Cancel</span>
+          </div>
+          <div class="col-lg-6 mb-2">
+            <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;height:42px;" name="type" value="save">Save</button>
           </div>
           </div>';
+      if($getprimary == $personnelid) {
+        if(in_array("Create Invoice for payment", $permissonarray) || in_array("Administrator", $permissonarray)) {
+         $html .= '<div class="row"><div class="col-lg-6 mb-2">
+              <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="sendinvoice">Send Invoice</button>
+            </div>
+            <div class="col-lg-6">
+              <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="paynow">Pay Now</button>
+            </div></div>';
         }
-      
+        elseif(in_array("Generate PDF for invoice", $permissonarray) || in_array("Administrator", $permissonarray)) {
+         $html .= '<div class="row"><div class="col-lg-6 mb-2">
+              <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="sendinvoice">Send Invoice</button>
+            </div>
+            </div>';
+          }
+      } else {
+        $html .= '<div class="row"><div class="col-lg-6 mb-2">
+              <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;pointer-events: none;background:#fee2002e;" name="type" value="sendinvoice">Send Invoice</button>
+            </div>
+            <div class="col-lg-6">
+              <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;pointer-events: none;background:#fee2002e;" name="type" value="paynow">Pay Now</button>
+            </div></div>';
+      }
         $html .= '</div>';
         return json_encode(['html' =>$html]);
         die;
@@ -861,6 +879,10 @@ class WorkerTicketController extends Controller
       if($request->type=="paynow") {
         $paynowurl = url('personnel/myticket/paynow/').'/'.$request->id;
         return redirect($paynowurl);
+      }
+      if($request->type=="save") {
+        $request->session()->flash('success', 'Invoice has been Save successfully');
+        return redirect()->back();
       }
       if($request->type=="sendinvoice") {
         if($customer->email!=null) {

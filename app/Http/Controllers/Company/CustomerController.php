@@ -514,6 +514,8 @@ class CustomerController extends Controller
       $data['personnelid'] = $request->personnelid;
       $data['radiogroup'] = $request->radiogroup;
       $data['frequency'] = $request->frequency;
+      $data['primaryname'] = $request->personnelid;
+
       if($request->time!=null || $request->time!=0) {
           $data['time'] = $request->time.' Hours';
         }

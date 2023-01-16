@@ -46,15 +46,26 @@ class BillingController extends Controller
         } else {
            return redirect()->back();
         }
-      
-      $totalbillingData = DB::table('quote')
-        ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname', DB::raw('sum(price) as totalprice'),DB::raw('sum(tickettotal) as tickettotalprice'),'quote.id',DB::raw('COUNT(quote.id) as totalticket'))
+      DB::enableQueryLog();
+      // $totalbillingData = DB::table('quote')
+      //   ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname', DB::raw('sum(price) as totalprice'),DB::raw('sum(tickettotal) as tickettotalprice'),'quote.id',DB::raw('COUNT(quote.id) as totalticket'))
+      //   ->join('customer', 'customer.id', '=', 'quote.customerid')
+      //   ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
+      //   ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.givenstartdate','!=',null)->orderBy('quote.id','desc')
+      //   ->groupBy(DB::raw('date') )
+      //   ->get();
+
+       //dd(DB::getQueryLog());
+
+        $totalbillingData = DB::table('quote')
+        ->select(DB::raw('givenstartdate as date'),'quote.id','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
         ->join('customer', 'customer.id', '=', 'quote.customerid')
         ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
         ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.givenstartdate','!=',null)
-        ->groupBy(DB::raw('date') )
+        ->groupBy(DB::raw('date'))
         ->get();
-       //dd($totalbillingData);
+        //dd($totalbillingData);
+       //dd(DB::getQueryLog());
         
         $billingData = DB::table('quote')
         ->select('quote.id','quote.serviceid','quote.price','quote.givendate','customer.customername','quote.payment_status','quote.personnelid','personnel.personnelname','services.servicename')
@@ -150,8 +161,8 @@ class BillingController extends Controller
         }
          $sdate = strtotime($date);
          $datef = date('l - F d, Y',$sdate);
-         
-        $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.serviceid','quote.product_id','quote.price','quote.tickettotal','quote.givendate','quote.etc','quote.payment_status','quote.personnelid','quote.tax', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->whereBetween('quote.givenstartdate', [$date, $todate]);
+         DB::enableQueryLog();
+        $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.serviceid','quote.product_id','quote.price','quote.tickettotal','quote.givendate','quote.etc','quote.payment_status','quote.personnelid','quote.primaryname','quote.tax', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['3','5','4'])->whereBetween('quote.givenstartdate', [$date, $todate]);
 
         if(isset($request->pid)) {
             $pid = $request->pid;
