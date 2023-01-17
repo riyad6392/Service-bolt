@@ -634,20 +634,20 @@ class SchedulerController extends Controller
             }
             
         $quoteprimarydata= Quote::select('primaryname')->where('id',$quoteid)->first();
-        
-        if($quoteprimarydata->primaryname==null) {
+        $datainfo = Quote::select('parentid')->where('parentid',$quoteid)->get();
+        if($quoteprimarydata->primaryname==null || count($datainfo)==0) {
             DB::table('quote')->where('id','=',$quoteid)
           ->update([ 
               "ticket_status"=>"$tstatus","giventime"=>"$time","givenendtime"=>"$endtime","givendate"=>"$date","givenstartdate"=>"$request->date","givenenddate"=>"$givenenddate","personnelid"=>"$workerid","primaryname"=>"$workerid","created_at"=>"$created_at"
           ]);
         } else {
 
-        DB::table('quote')->where('id','=',$quoteid)
+        DB::table('quote')->where('id','=',$quoteid)->orWhere('parentid','=',$quoteid)
           ->update([ 
-              "ticket_status"=>"$tstatus","giventime"=>"$time","givenendtime"=>"$endtime","givendate"=>"$date","givenstartdate"=>"$request->date","givenenddate"=>"$givenenddate","personnelid"=>"$workerid","created_at"=>"$created_at"
+              "ticket_status"=>"$tstatus","giventime"=>"$time","givenendtime"=>"$endtime","givendate"=>"$date","givenstartdate"=>"$request->date","givenenddate"=>"$givenenddate","created_at"=>"$created_at"
           ]);
       }
-
+//,"personnelid"=>"$workerid"
         $appnotifiction = AppNotification::where('pid',$workerid)->where('ticketid',$quoteid)->get(); 
         //if(count($appnotifiction)==0) {
             if($defaultitme->ticket_status == "1") {
@@ -1242,8 +1242,14 @@ class SchedulerController extends Controller
     {
 
       $quote = Quote::where('id', $request->quoteid)->first();
-      $quote->primaryname =$request->primaryname;
-      $quote->save();
+      
+       DB::table('quote')->where('id','=',$request->quoteid)->orWhere('parentid','=',$request->quoteid)
+          ->update([ 
+              "primaryname"=>"$request->primaryname"
+          ]);
+
+      // $quote->primaryname =$request->primaryname;
+      // $quote->save();
       if(isset($request->personnelid)) {
       foreach ($request->personnelid as $pid) {
         $data['userid'] =  $quote->userid;
