@@ -9,7 +9,7 @@
 <div class="banner" style="background: #fff;width: 112%;border-radius: 4px;height: auto;border: 0px solid #a4a0a0;">
 <div>
     @php
-        $usrcolor = App\Models\User::select('color','company_address','footercontent','txtcolor')->where('id',$quoteuserid)->first();
+        $usrcolor = App\Models\User::select('color','companyname','company_address','phone','footercontent','txtcolor')->where('id',$quoteuserid)->first();
         if($usrcolor->color!=""){
             $color = $usrcolor->color;
         } else {
@@ -32,7 +32,9 @@
     <table style="width:100%">
         <tbody>
             <tr>
-                <td style="position: relative;left: 16% !important;font-size: 21px;text-align:center;color:{{$txtcolor}};"> <h1 style="color: {{$txtcolor}};"><img src="{{$cimage}}" style="width: 100px;"></h1></td>  
+                <td style="position: relative;left: 18% !important;font-size: 21px;text-align:center !important; display: block; top:15px;color:{{$txtcolor}};">
+                    <h1 style="color: {{$txtcolor}};margin: 0;"><img src="{{$cimage}}" style="width: 100px;"></h1>
+                </td> 
             </tr>
             <tr>
                 <td style=" width: 78%;">
@@ -40,6 +42,12 @@
                 </td>
                 <td style="vertical-align: top; padding: 1px 0px;">
                     <h4 style="color: #fff">
+                    <p style="margin: 0; padding:0; color:#605252;"><span>{{$usrcolor->companyname}}</span>
+                    </p>
+
+                    <p style="margin:3px 0; padding:0; color:#605252;">
+                        <span>{{$usrcolor->phone}}</span>
+                    </p>
                     <p style="margin: 0px 0px;color:{{$txtcolor}};">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
                     </h4>
                 </td>
@@ -54,18 +62,23 @@
  <tbody>
  <tr>
     <td style="vertical-align: top; width: 70%; padding: 12px">
-        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Bill to:</p>
-            <span style="color: black; font-weight: bold;">Name - </span>{{$customername}} <br>
-            <span style="color: black; font-weight: bold;">Company Name -</span>{{$companyname}}
+        <p style="margin: 0px 0 5px 0;color: #000; font-size: 16px; ">Bill to:</p>
+            <span style="color: black; font-weight: bold;">Name - </span>{{$customername}} 
+            <!-- <span style="color: black; font-weight: bold;">Company Name -</span>{{$companyname}}
         
-        <br><span style="color: black; font-weight: bold;">Phone Number -</span>{{$phone}}
-        <br><span style="color: black; font-weight: bold;">Email -</span>{{$email}}
-        <br><span style="color: black; font-weight: bold;">Service Address -</span>{{$address}}
+        <br><span style="color: black; font-weight: bold;">Phone Number -</span>{{$phone}} -->
+        <!-- <br><span style="color: black; font-weight: bold;">Email -</span>{{$email}} -->
+        <br><span style="color: black; font-weight: bold;">Billing Address -</span>
+        @if(isset($billingaddress) && $billingaddress!="")
+            {{$billingaddress}}
+        @else
+            {{$address}}
+        @endif
     </td>
     <td style="vertical-align: top; padding: 17px">
-        <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Invoice:<br><span style="color: black; font-weight: bold;">#{{ $invoiceId }} </span></p>
-        <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Date:<br><span style="color: black; font-weight: bold;">{{date('m-d-Y', strtotime($date))}} </span></p>
-        <p style="margin: 0px 0 0px 0;color: #ccc; font-size: 16px; ">Invoice due date:<br><span style="color: black; font-weight: bold;">
+        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice:<br><span style="color: black; font-weight: bold;">#{{ $invoiceId }} </span></p>
+        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Date:<br><span style="color: black; font-weight: bold;">{{date('m-d-Y', strtotime($date))}} </span></p>
+        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice due date:<br><span style="color: black; font-weight: bold;">
             @if($duedate!="")
                 {{date('m-d-Y', strtotime($duedate))}}
             @else
@@ -101,6 +114,8 @@
         ->where('id', $worker->userid)->first();
 
       $sum = 0;
+      $price1=0;
+      $tax1=0;
       foreach ($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
         $txvalue = 0;
@@ -113,6 +128,8 @@
             }
         }
         $sum+= $value['price'] + $txvalue;
+        $price1+= $value['price'];
+        $tax1+= $txvalue;
        }
        
       $pidarray = explode(',', $productid);
@@ -120,6 +137,8 @@
       App\Models\Inventory::select('productname','id','price','description')
     ->whereIn('id', $pidarray)->get();
       $sum1 = 0;
+      $price2=0;
+      $tax2=0;
       $txtpercentage1 = 0;
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
@@ -135,12 +154,22 @@
         }
 
         $sum1+= $value['price'] + $txvalue1;
-
+        $price2+= $value['price'];
+        $tax2+= $txvalue1;
       } 
 
       $totalprice = $sum+$sum1;
       $totalprice = number_format($totalprice,2);
       $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
+
+      $subtotalprice = $price1+$price2;
+      $subtotalprice = number_format($subtotalprice,2);
+      $subtotalprice = preg_replace('/[^\d.]/', '', $subtotalprice);
+
+      $taxprice = $tax1+$tax2;
+      $taxprice = number_format($taxprice,2);
+      $taxprice = preg_replace('/[^\d.]/', '', $taxprice);
+
       $i=0;
       $txtpercentage = 0;
         @endphp
@@ -219,7 +248,9 @@
             <br><span style="color: {{$txtcolor}};  font-size: 16px;">{!! @$description !!}</span></p>
         </td>
         <td style="width: 50%; padding: 12px;background-color: {{$color}}; border-radius: 10px;">
-            <h5 style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 22px; ">Total:<br><h1 style="color: {{$txtcolor}}; font-weight: bold; font-size: 22px;">${{ $totalprice }} </h1></h5>
+            <p style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px;">Subtotal: {{$subtotalprice}}</p>
+            <p style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Sales Tax: {{$taxprice}}</p>
+            <p style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 20px; ">Total: ${{ $totalprice }} </p>
 
         </td>
     </tr>

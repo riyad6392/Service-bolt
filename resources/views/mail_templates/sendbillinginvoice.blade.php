@@ -11,7 +11,7 @@
 <div class="banner" style="background: #fff;width: 100%;border-radius: 0px;height: auto;border: 0px solid #a4a0a0;;">
 <div>
     @php
-        $usrcolor = App\Models\User::select('color','company_address','footercontent','txtcolor')->where('id',auth()->user()->id)->first();
+        $usrcolor = App\Models\User::select('color','companyname','company_address','phone','footercontent','txtcolor')->where('id',auth()->user()->id)->first();
         if($usrcolor->color!=""){
             $color = $usrcolor->color;
         } else {
@@ -44,11 +44,11 @@
                 <td style="vertical-align: top; padding: 1px 0px;">
                    
                     <h4 style="color: #fff; margin:0;">
-                    <p style="margin: 0; padding:0; color:#605252;"><span>{{$companyname}}</span>
+                    <p style="margin: 0; padding:0; color:#605252;"><span>{{$usrcolor->companyname}}</span>
                     </p>
 
                     <p style="margin:3px 0; padding:0; color:#605252;">
-                        <span>{{$phone}}</span>
+                        <span>{{$usrcolor->phone}}</span>
                     </p>
                     <p style="margin: 0px 0px;color:{{$txtcolor}};">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
                     </h4>
@@ -64,13 +64,18 @@
  <tbody>
  <tr>
     <td style="vertical-align: top; width: 70%; padding: 12px">
-        <p style="margin: 0px 0 5px 0;color: #ccc; font-size: 16px; ">Bill to:</p>
-            <span style="color: black; font-weight: bold;">Name - </span>{{$customername}} <br>
+        <p style="margin: 0px 0 5px 0;color: #000; font-size: 16px; ">Bill to:</p>
+            <span style="color: black; font-weight: bold;">Name - </span>{{$customername}} 
             <!-- <span style="color: black; font-weight: bold;">Company Name -</span>{{$companyname}}
         
         <br><span style="color: black; font-weight: bold;">Phone Number -</span>{{$phone}}
         <br><span style="color: black; font-weight: bold;">Email -</span>{{$email}} -->
-        <br><span style="color: black; font-weight: bold;">Service Address -</span>{{$address}}
+        <br><span style="color: black; font-weight: bold;">Billing Address -</span>
+        @if(isset($billingaddress) && $billingaddress!="")
+            {{$billingaddress}}
+        @else
+            {{$address}}
+        @endif
     </td>
     <td style="vertical-align: top; padding: 17px">
         <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice:<br>
@@ -115,6 +120,8 @@
     ->where('id', auth()->user()->id)->first();
 
       $sum = 0;
+      $price1=0;
+      $tax1=0;
       foreach ($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
         $txvalue = 0;
@@ -127,6 +134,9 @@
         }
 
         $sum+= $value['price'] + $txvalue;
+        $price1+= $value['price'];
+        $tax1+= $txvalue;
+
       }
 
      
@@ -135,6 +145,8 @@
     ->whereIn('id', $productid)->get();
 
       $sum1 = 0;
+      $price2=0;
+      $tax2=0;
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
         $txvalue1 = 0;
@@ -146,11 +158,22 @@
             }
         }
         $sum1+= $value['price'] + $txvalue1;
+        $price2+= $value['price'];
+        $tax2+= $txvalue1;
       } 
 
       $totalprice = $sum+$sum1;
       $totalprice = number_format($totalprice,2);
       $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
+
+      $subtotalprice = $price1+$price2;
+      $subtotalprice = number_format($subtotalprice,2);
+      $subtotalprice = preg_replace('/[^\d.]/', '', $subtotalprice);
+
+      $taxprice = $tax1+$tax2;
+      $taxprice = number_format($taxprice,2);
+      $taxprice = preg_replace('/[^\d.]/', '', $taxprice);
+
       $i=0;
         @endphp
     @foreach($servicedetails as $key => $value)
@@ -231,10 +254,9 @@
             <br><span style="color: {{$txtcolor}};  font-size: 16px;">@if(@$invoicenote){!!@$invoicenote!!}@else --- @endif</span></p>
         </td>
         <td style="width: 50%;padding: 0px 12px;background-color: {{$color}}; border-radius: 10px;">
-            <h5 style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 20px; ">Subtotal: -</h5>
-            <h5 style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 20px; ">Sales Tax: -</h5>
-            <h5 style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 20px; ">Total: ${{ $totalprice }}</h5>
-
+            <p style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Subtotal: {{$subtotalprice}}</p>
+            <p style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Sales Tax: {{$taxprice}}</p>
+            <p style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 20px; ">Total: ${{ $totalprice }}</p>
         </td>
         </tr>
     </tbody>
