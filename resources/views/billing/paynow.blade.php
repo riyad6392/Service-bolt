@@ -54,7 +54,7 @@
   </ul> <!-- END tabs-nav -->
   @endif
   @if($paymentpaid==1)
-  	<p>TicketId: #{{$quoteData->id}} </p>
+  	<p>TicketId: #{{$ticketIDnumber}} </p>
   	<p>Customer Name: {{$quoteData->customername}}</p>
   	<p>Payment Mode: {{$quoteData->payment_mode}}</p>
   	@if($quoteData->checknumber!="")
@@ -72,7 +72,7 @@
 	  </div>
 	  @else
   <div id="tabs-content" class="p-3">
-  <p>TicketId: #{{$ticketID}} </p>
+  <p>TicketId: #{{$ticketIDnumber}} </p>
   	<p>Customer Name: {{$customername}}</p>
     <div id="tab1" class="tab-content">
     	<div class="card card-pay mb-3">

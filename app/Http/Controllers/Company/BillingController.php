@@ -129,6 +129,11 @@ class BillingController extends Controller
 
    
     $quoteData = DB::table('quote')->select('*')->where('id',$ticketID)->first();
+    if($quoteData->parentid!=0) {
+      $ticketIDnumber = $quoteData->parentid;
+    } else {
+      $ticketIDnumber = $ticketID;
+    }
     //dd($quoteData);
     if($quoteData->payment_status !=""){
       $paymentpaid = "1";
@@ -141,7 +146,7 @@ class BillingController extends Controller
     }
   
     
-      return view('billing.paynow',compact('ticketID','quoteData','paymentpaid','customerid','customername','customer','price','servicename','productname','tax')); 
+      return view('billing.paynow',compact('ticketID','quoteData','paymentpaid','customerid','customername','customer','price','servicename','productname','tax','ticketIDnumber')); 
     }
 
     
