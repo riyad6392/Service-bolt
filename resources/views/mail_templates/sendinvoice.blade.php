@@ -32,16 +32,17 @@
     <table style="width:100%">
         <tbody>
             <tr>
-                <td style="position: relative;left: 18% !important;font-size: 21px;text-align:center !important; display: block; top:15px;color:{{$txtcolor}};">
-                    <h1 style="color: {{$txtcolor}};margin: 0;"><img src="{{$cimage}}" style="width: 100px;"></h1>
-                </td> 
-            </tr>
-            <tr>
-                <td style=" width: 78%;">
+                <td style=" width: %;">
                     INVOICE
                 </td>
-                <td style="vertical-align: top; padding: 1px 0px;">
-                    <h4 style="color: #fff">
+
+                   <td style="position: relative; left: 0% !important;font-size: 21px;text-align:center !important; display: block; top:6px;color:{{$txtcolor}};">
+                    <h1 style="color: {{$txtcolor}};margin: 0;"><img src="{{$cimage}}" style="width: 100px;"></h1>
+                </td> 
+
+                <td style="vertical-align: middle; padding: 1px 0px; width:30%">
+                   
+                    <h4 style="color: #fff; margin:0;">
                     <p style="margin: 0; padding:0; color:#605252;"><span>{{$usrcolor->companyname}}</span>
                     </p>
 
@@ -247,12 +248,11 @@
          <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 20px;border-radius: 10px;">Note:
             <br><span style="color: {{$txtcolor}};  font-size: 16px;">{!! @$description !!}</span></p>
         </td>
-        <td style="width: 50%; padding: 12px;background-color: {{$color}}; border-radius: 10px;">
-            <p style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px;">Subtotal: {{$subtotalprice}}</p>
-            <p style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Sales Tax: {{$taxprice}}</p>
-            <p style="margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 20px; ">Total: ${{ $totalprice }} </p>
-
-        </td>
+        <td style="width: 34%;padding: 0px 12px;background-color: {{$color}}; border-radius: 10px;">
+    <p style="border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Subtotal: {{$subtotalprice}}</p>
+    <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Sales Tax: {{$taxprice}}</p>
+    <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 20px; ">Total: ${{ $totalprice }}</p>
+        </td> 
     </tr>
     </tbody>
 </table>

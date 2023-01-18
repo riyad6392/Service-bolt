@@ -876,6 +876,10 @@ class SchedulerController extends Controller
         $data['ticket_status'] = 1;
         
        $quotelastid = Quote::create($data);
+       $quoteee = Quote::where('id', $quotelastid->id)->first();
+       $randomid = rand(100,199);
+       $quoteee->invoiceid = $randomid.''.$quotelastid->id;
+      $quoteee->save();
     if($customer->email!=null) {   
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
@@ -1284,6 +1288,7 @@ class SchedulerController extends Controller
         $data['payment_mode'] = $quote->payment_mode;
         $data['checknumber'] = $quote->checknumber;
         $data['payment_amount'] = $quote->payment_amount;
+        $data['invoiceid'] = $quote->invoiceid;
 
 
         Quote::create($data);

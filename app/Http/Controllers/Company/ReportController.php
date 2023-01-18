@@ -50,14 +50,14 @@ class ReportController extends Controller
             $personnelid = [];
             $tickedatadetails = "";
 
-            $personeldata = Personnel::select('personnel.id','quote.primaryname')->join('quote','quote.primaryname','=','personnel.id')->where('ticket_status','3')->whereIn('personnel.id',$pdata)->groupBy('primaryname')->get()->pluck('primaryname')->toArray();
+            $personeldata = Personnel::select('personnel.id','quote.primaryname')->join('quote','quote.primaryname','=','personnel.id')->where('ticket_status','3')->whereIn('personnel.id',$pdata)->whereColumn('quote.personnelid','quote.primaryname')->groupBy('primaryname')->get()->pluck('primaryname')->toArray();
 
             if($request->since!=null && $request->until!=null) {
-                @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('quote.personnelid',$personeldata)->where('quote.ticket_status',3)->whereBetween('quote.ticketdate', [$request->since, $request->until])->groupBy('quote.personnelid')->get();    
+                @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('quote.personnelid',$personeldata)->where('quote.ticket_status',3)->whereColumn('quote.personnelid','quote.primaryname')->whereBetween('quote.ticketdate', [$request->since, $request->until])->groupBy('quote.personnelid')->get();    
             } else {
-                @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('quote.personnelid',$personeldata)->where('quote.ticket_status',3)->groupBy('quote.personnelid')->get();
+                @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('quote.personnelid',$personeldata)->where('quote.ticket_status',3)->whereColumn('quote.personnelid','quote.primaryname')->groupBy('quote.personnelid')->get();
             }
-            @$tickedatadetails = Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('quote.personnelid',$personeldata)->where('quote.ticket_status',3)->get();
+            @$tickedatadetails = Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('quote.personnelid',$personeldata)->whereColumn('quote.personnelid','quote.primaryname')->where('quote.ticket_status',3)->get();
 
  
             foreach($tickedata as $key=>$value) {
@@ -74,18 +74,18 @@ class ReportController extends Controller
             } else {
                 $personnelid = @$request->pid;
             }
-            $tickerdatas = Quote::select('primaryname')->where('personnelid',$personnelid)->where('ticket_status','3')->get();  
+            $tickerdatas = Quote::select('primaryname')->where('personnelid',$personnelid)->whereColumn('personnelid','primaryname')->where('ticket_status','3')->get();  
             if(count($tickerdatas)>=1) { 
                 foreach($tickerdatas as $key => $value) {
                 if($value->primaryname == $personnelid) {
 
                 if($request->since!=null && $request->until!=null) {
-                    @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->where('quote.ticket_status',3)->whereBetween('quote.ticketdate', [$request->since, $request->until])->groupBy('quote.personnelid')->get();
+                    @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->whereColumn('quote.personnelid','quote.primaryname')->where('quote.ticket_status',3)->whereBetween('quote.ticketdate', [$request->since, $request->until])->groupBy('quote.personnelid')->get();
                 } else {
-                    @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->where('quote.ticket_status',3)->groupBy('quote.personnelid')->get();
+                    @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->whereColumn('quote.personnelid','quote.primaryname')->where('quote.ticket_status',3)->groupBy('quote.personnelid')->get();
                 }
                 
-                @$tickedatadetails = Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->where('quote.ticket_status',3)->get();
+                @$tickedatadetails = Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->whereColumn('quote.personnelid','quote.primaryname')->where('quote.ticket_status',3)->get();
 
                 @$percentall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','percent')->get();
 

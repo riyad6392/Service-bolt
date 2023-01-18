@@ -464,9 +464,9 @@ Service Report</div>
                             <tbody>
                                 @php
                                     if($from!=null && $to!=null) {
-                                        @$tickedatadetailsdata = \App\Models\Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$value->personnelid)->where('quote.ticket_status',3)->whereBetween('quote.ticketdate', [$from, $to])->get();
+                                        @$tickedatadetailsdata = \App\Models\Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$value->personnelid)->where('quote.ticket_status',3)->whereColumn('quote.personnelid','quote.primaryname')->whereBetween('quote.ticketdate', [$from, $to])->get();
                                     } else {
-                                        @$tickedatadetailsdata = \App\Models\Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$value->personnelid)->where('quote.ticket_status',3)->get();
+                                        @$tickedatadetailsdata = \App\Models\Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$value->personnelid)->whereColumn('quote.personnelid','quote.primaryname')->where('quote.ticket_status',3)->get();
                                     }
                                 @endphp
                                 @foreach($tickedatadetailsdata as $key=>$value)

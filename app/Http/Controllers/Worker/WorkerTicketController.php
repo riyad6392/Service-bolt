@@ -446,13 +446,13 @@ class WorkerTicketController extends Controller
           $ticket = Quote::where('id', $request->ticketid)->first();
           if($request->pointckbox) {
             $cheklist =implode(",", $request->pointckbox);
-            $ticket->checklist =  $cheklist;
+            $checklist =  $cheklist;
           } else {
-            $ticket->checklist = null;
+            $checklist = null;
           }
 
           if($request->cnotes) {
-            $ticket->customernotes =  $request->cnotes;
+            $customernotes =  $request->cnotes;
           }
         //for image upload
         $files=array();
@@ -494,9 +494,14 @@ class WorkerTicketController extends Controller
           }
           
           $newimagestring = implode(',',$files);
-          $ticket->imagelist = $newimagestring;
+          // $ticket->imagelist = $newimagestring;
         
-          $ticket->save();
+          // $ticket->save();
+          DB::table('quote')->where('id','=',$request->ticketid)->orWhere('parentid','=',$request->ticketid)
+          ->update([ 
+              "checklist"=>"$checklist","customernotes"=>"$customernotes","imagelist"=>"$newimagestring"
+          ]);
+
           $request->session()->flash('success', 'Updated successfully');
           return redirect()->back();
         }
@@ -777,6 +782,7 @@ class WorkerTicketController extends Controller
       $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', $worker->userid)->first();
 
       $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->serviceid)->get();
+      $servicenames = $servicedetails[0]->servicename;
       $sum = 0;
       foreach($servicedetails as $key => $value) {
         $pid[] = $value['productid'];
@@ -794,6 +800,7 @@ class WorkerTicketController extends Controller
       $servicename = implode(',', $sname);
       
       $quote = Quote::where('id', $request->id)->get()->first();
+
       if($request->productid=="") {
         $request->productid = array();
       }
@@ -855,7 +862,7 @@ class WorkerTicketController extends Controller
       
       $quote = Quote::where('id', $request->id)->get()->first();
 
-
+      $pids = rtrim($productid, ',');
 
       $company = User::where('id', $quote->userid)->get()->first();
       if($company->image!=null) {
@@ -865,17 +872,23 @@ class WorkerTicketController extends Controller
       }
       $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
       if($request->description) {
-        $quote->description =  $request->description;
+        $description =  $request->description;
       } else {
-        $quote->description = null;
+        $description = null;
       }
-      $quote->serviceid = $serviceid;
-      $quote->servicename = $servicedetails[0]->servicename;
-      $quote->product_id = rtrim($productid, ',');
-      $quote->price = $request->price;
-      $quote->tickettotal = $request->ticketprice;
-      $quote->tax = $totaltax;
-      $quote->save();
+
+      DB::table('quote')->where('id','=',$request->id)->orWhere('parentid','=',$request->id)
+          ->update([ 
+              "description"=>"$description","serviceid"=>"$serviceid","servicename"=>"$servicenames","product_id"=>"$pids","price"=>"$request->price","tickettotal"=>"$request->ticketprice","tax"=>"$totaltax"
+      ]);
+
+      // $quote->serviceid = $serviceid;
+      // $quote->servicename = $servicedetails[0]->servicename;
+      // $quote->product_id = rtrim($productid, ',');
+      // $quote->price = $request->price;
+      // $quote->tickettotal = $request->ticketprice;
+      // $quote->tax = $totaltax;
+      // $quote->save();
       if($request->type=="paynow") {
         $paynowurl = url('personnel/myticket/paynow/').'/'.$request->id;
         return redirect($paynowurl);
@@ -886,9 +899,14 @@ class WorkerTicketController extends Controller
       }
       if($request->type=="sendinvoice") {
         if($customer->email!=null) {
-          $tdata1 = Quote::where('id', $request->id)->get()->first();
-          $tdata1->invoiced = 1;
-          $tdata1->save();
+          // $tdata1 = Quote::where('id', $request->id)->get()->first();
+          // $tdata1->invoiced = 1;
+          // $tdata1->save();
+          DB::table('quote')->where('id','=',$request->id)->orWhere('parentid','=',$request->id)
+          ->update([ 
+              "invoiced"=>1
+          ]);
+
           $app_name = 'ServiceBolt';
           $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
           $email = $customer->email;
@@ -1387,71 +1405,73 @@ class WorkerTicketController extends Controller
 
     public function sendpayment(Request $request)
     {
-      $quote = Quote::where('id', $request->tid)->first();
-     
+      $quote = Quote::where('id', $request->tid)->orWhere('parentid',$request->tid)->get();
+      if(count($quote)>0) {
+        foreach($quote as $key => $value) {
+          if($value->primaryname == $value->personnelid) {
+             $personnelid = $value->personnelid;
+             $userid = $value->userid;
+             $customername = $value->customername;
+
+          }
+        }
       if($request->method == "Credit Card") {
       $id = DB::table('balancesheet')->insertGetId([
-          'userid' => $quote->userid,
-          'workerid' => $quote->personnelid,
+          'userid' => $userid,
+          'workerid' => $personnelid,
           'ticketid' => $request->tid,
           'amount' => $request->amount,
-          'customername' => $quote->customername,
+          'customername' => $customername,
           'paymentmethod' => $request->method,
           'status' => "Completed"
         ]);
       
-      $quote->payment_status = "Completed";
-      $quote->price =  $request->amount;
-      $quote->payment_amount = $request->amount;
-      $quote->payment_mode = $request->method;
-      $quote->card_number = $request->card_number;
-      $quote->expiration_date = $request->expiration_date;
-      $quote->cvv = $request->cvv;
-      $quote->save();
+      DB::table('quote')->where('id','=',$request->tid)->orWhere('parentid','=',$request->tid)
+          ->update([ 
+              "payment_status"=>"Completed","price"=>"$request->amount","payment_amount"=>"$request->amount","payment_mode"=>"$request->method","card_number"=>"$request->card_number","expiration_date"=>"$request->expiration_date","cvv"=>"$request->cvv"
+          ]);
       $request->session()->flash('success', 'Payment has been successfully');
       return redirect()->back();
     }
 
     if($request->method == "Check") {
       $id = DB::table('balancesheet')->insertGetId([
-          'userid' => $quote->userid,
-          'workerid' => $quote->personnelid,
+         'userid' => $userid,
+          'workerid' => $personnelid,
           'ticketid' => $request->tid,
           'amount' => $request->payment_amount,
-          'customername' => $quote->customername,
+          'customername' => $customername,
           'paymentmethod' => $request->method,
           'status' => "Completed"
         ]);
 
-      $quote->payment_status = "Completed";
-      $quote->price =  $request->payment_amount;
-      $quote->payment_amount = $request->payment_amount;
-      $quote->payment_mode = $request->method;
-      $quote->checknumber = $request->checknumber;
-      $quote->save();
+      DB::table('quote')->where('id','=',$request->tid)->orWhere('parentid','=',$request->tid)
+          ->update([ 
+              "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->method","checknumber"=>"$request->checknumber"
+          ]);
       $request->session()->flash('success', 'Payment has been successfully');
       return redirect()->back();
     }
 
     if($request->method == "Cash") {
       $id = DB::table('balancesheet')->insertGetId([
-          'userid' => $quote->userid,
-          'workerid' => $quote->personnelid,
+          'userid' => $userid,
+          'workerid' => $personnelid,
           'ticketid' => $request->tid,
           'amount' => $request->payment_amount,
-          'customername' => $quote->customername,
+          'customername' => $customername,
           'paymentmethod' => $request->method,
           'status' => "Completed"
         ]);
       
-      $quote->payment_status = "Completed";
-      $quote->price =  $request->payment_amount;
-      $quote->payment_amount = $request->payment_amount;
-      $quote->payment_mode = $request->method;
-      $quote->save();
+      DB::table('quote')->where('id','=',$request->tid)->orWhere('parentid','=',$request->tid)
+          ->update([ 
+              "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->method"
+          ]);
       $request->session()->flash('success', 'Payment has been successfully');
       return redirect()->back();
     }
+  }
 
   }
   

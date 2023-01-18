@@ -115,6 +115,11 @@
       @endphp
       @foreach($totalbillingData as $key=>$value)
       @php
+        if($value->parentid!=0) {
+          $ids= $value->parentid;
+        } else {
+          $ids = $value->id;
+        }
         if($value->payment_status!="" || $value->payment_mode!="") {
           $pstatus = "Paid";
         } 
@@ -127,7 +132,7 @@
       @endphp
 
         <tr class="" target="{{$i}}" data-id="{{$value->id}}">
-          <td>#{{$value->id}}</td>
+          <td>#{{$ids}}</td>
           <td><a class="btn add-btn-yellow w-100 viewinvoice" data-id="{{$value->id}}" data-duedate="{{$value->duedate}}" data-invoicenote="{{$value->invoicenote}}" data-bs-toggle="modal" data-bs-target="#view-invoice">#{{$value->invoiceid}}</a></td>
           <td>{{date('m-d-Y', strtotime($value->date))}}</td>
           <td>{{$value->customername}}</td>

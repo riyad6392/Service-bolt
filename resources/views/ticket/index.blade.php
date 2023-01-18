@@ -124,6 +124,9 @@ i.fa.fa-plus.category-one {
     border-radius: 100px;
 }
 
+select#servicename {
+    height: 150px;
+}
 
 </style>
 

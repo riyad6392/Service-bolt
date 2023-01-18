@@ -991,10 +991,10 @@ class BillingController extends Controller
         }
       
       $totalbillingData = DB::table('quote')
-        ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname','quote.id','quote.price','quote.payment_status','quote.payment_mode','quote.invoiceid','quote.invoiced','quote.duedate','quote.invoicenote')
+        ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname','quote.id','quote.price','quote.payment_status','quote.payment_mode','quote.invoiceid','quote.invoiced','quote.duedate','quote.invoicenote','quote.personnelid','quote.primaryname','quote.parentid')
         ->join('customer', 'customer.id', '=', 'quote.customerid')
         ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
-        ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['2','3','4','5'])->where('quote.givenstartdate','!=',null);
+        ->where('quote.userid',$auth_id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['2','3','4','5'])->where('quote.givenstartdate','!=',null);
         if(isset($request->pid)) {
             $pid = $request->pid;
             $totalbillingData->where('quote.personnelid',$pid);
@@ -1034,6 +1034,11 @@ class BillingController extends Controller
             fputcsv($file, $columns);
 
               foreach ($totalbillingData as $key =>$value) {
+                 if($value->parentid!=0) {
+                  $ids= $value->parentid;
+                } else {
+                  $ids = $value->id;
+                }
                 if($value->payment_status!="" || $value->payment_mode!="") {
                   $pstatus = "Paid";
                 } 
@@ -1044,7 +1049,7 @@ class BillingController extends Controller
                   $pstatus = "Pending";
                 }
                 $newdate  = date("M, d Y", strtotime($value->date));
-                fputcsv($file, array($value->id, $newdate, $value->customername, $value->personnelname,$value->price, $pstatus));
+                fputcsv($file, array($ids, $newdate, $value->customername, $value->personnelname,$value->price, $pstatus));
               }
 
               fclose($file);
