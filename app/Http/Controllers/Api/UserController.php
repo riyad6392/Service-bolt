@@ -1130,17 +1130,17 @@ class UserController extends Controller
       }
       $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
       if($request->description) {
-        $quote->description =  $request->description;
+        $description =  $request->description;
       } else {
-        $quote->description = null;
+        $description = null;
       }
-      $quote->serviceid = $serviceid;
-      $quote->servicename = $servicedetails[0]->servicename;
-      $quote->product_id = $productid;
-      $quote->price = $request->price;
-      $quote->tickettotal = $request->ticketprice;
-      $quote->tax = $totaltax;
-      $quote->save();
+      $servicenames = $servicedetails[0]->servicename;
+
+       DB::table('quote')->where('id','=',$request->id)->orWhere('parentid','=',$request->id)
+          ->update([ 
+              "description"=>"$description","serviceid"=>"$serviceid","servicename"=>"$servicenames","product_id"=>"$productid","price"=>"$request->price","tickettotal"=>"$request->ticketprice","tax"=>"$totaltax"
+      ]);
+
     if($customer->email!=null) {  
       $app_name = 'ServiceBolt';
       $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
