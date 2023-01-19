@@ -203,6 +203,8 @@ class BillingController extends Controller
         $auth_id = auth()->user()->id;
         $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.customerid','quote.price','quote.tickettotal','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.invoicenote','quote.personnelid','quote.primaryname','quote.ticket_status','quote.duedate','quote.tax', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['3','4','5'])->whereBetween('quote.givenstartdate', [$date, $todate]);
 
+
+
         if($request->pid!="") {
             $pids = $request->pid;
             $billingData->where('quote.personnelid',$pids);
@@ -229,6 +231,10 @@ class BillingController extends Controller
 
       }
 
+      $billingdatapinfo = Quote::select('personnelid')->where('id',$ids)->orWhere('parentid',$ids)->get()->pluck('personnelid')->toArray();
+            $pinfo =  Personnel::select(DB::raw("(GROUP_CONCAT(personnel.personnelname SEPARATOR ',')) as `personnelname`"))->whereIn('personnel.id',$billingdatapinfo)->get();
+            $pname = $pinfo[0]->personnelname;
+            
       if($billingData[$datacount]->invoiceid!=null) {
         $invoiceid = '#'.$billingData[$datacount]->invoiceid;
       } else {
@@ -303,7 +309,7 @@ class BillingController extends Controller
                   </div>
                   <div class="mb-4">
                     <p class="number-1">Personnel</p>
-                    <h6 class="heading-h6">'.$billingData[$datacount]->personnelname.'</h6>
+                    <h6 class="heading-h6">'.$pname.'</h6>
                   </div><div class="mb-4">
                     <p class="number-1">Payment Status</p>
                     <h6 class="heading-h6">'.$pstatus1.'</h6>
@@ -320,6 +326,16 @@ class BillingController extends Controller
         </div>';
       } else {
         $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.customerid','quote.price','quote.tickettotal','quote.givendate','quote.payment_status','quote.payment_mode','quote.ticket_status','quote.invoiceid','quote.personnelid','quote.duedate','quote.invoicenote','quote.tax','quote.primaryname', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
+
+        $ids = $billingData[0]->id;
+        if(!empty($billingData[0]->parentid))
+        {
+          $ids=$billingData[0]->parentid;
+        }
+
+        $billingdatapinfo = Quote::select('personnelid')->where('id',$ids)->orWhere('parentid',$ids)->get()->pluck('personnelid')->toArray();
+            $pinfo =  Personnel::select(DB::raw("(GROUP_CONCAT(personnel.personnelname SEPARATOR ',')) as `personnelname`"))->whereIn('personnel.id',$billingdatapinfo)->get();
+            $pname = $pinfo[0]->personnelname;
         if($billingData[0]->tickettotal==null || $billingData[0]->tickettotal=="" || $billingData[0]->tickettotal == "0") {
             $newprice = $billingData[0]->price;
         } else {
@@ -412,7 +428,7 @@ class BillingController extends Controller
                   </div>
                   <div class="mb-4">
                     <p class="number-1">Personnel</p>
-                    <h6 class="heading-h6">'.$billingData[0]->personnelname.'</h6>
+                    <h6 class="heading-h6">'.$pname.'</h6>
                   </div>
                   <div class="mb-4">
                     <p class="number-1">Payment Status</p>
