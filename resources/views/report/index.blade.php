@@ -302,7 +302,7 @@ Service Report</div>
    <div class="side-h3">
     <select class="form-select puser" name="pid" id="pid" required="">
        <option value="All"> All </option>
-       @foreach($pdata as $key => $value)
+       @foreach($pdata1 as $key => $value)
             <option value="{{$value->id}}" @if(@$personnelid ==  $value->id) selected @endif> {{$value->personnelname}}</option>
             @endforeach
     </select>
@@ -471,7 +471,7 @@ Service Report</div>
                                 @endphp
                                 @foreach($tickedatadetailsdata as $key=>$value)
                                     @php
-                                      $ids=$value->id;
+                                        $ids=$value->id;
                                         if(!empty($value->parentid))
                                         {
                                             $ids=$value->parentid;

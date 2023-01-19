@@ -38,20 +38,21 @@ class ReportController extends Controller
            return redirect()->back();
         }
         
-        @$pdata = Personnel::where('userid',$auth_id)->get();
+       @$pdata1 = Personnel::where('userid',$auth_id)->get();
         $percentall = array();
         $amountall = array();
         $comisiondataamount = array();
         $comisiondatapercent = array();
        ;
-
-        if($request->pid == 'All') {
+        @$pdata = PaymentSetting::where('uid',$auth_id)->groupBy('pid')->get()->pluck('pid')->toArray();
+        
+        if(empty($request->all()) || $request->pid == 'All') {
             $tickedata = [];
             $personnelid = [];
             $tickedatadetails = "";
 
             $personeldata = Personnel::select('personnel.id','quote.primaryname')->join('quote','quote.primaryname','=','personnel.id')->where('ticket_status','3')->whereIn('personnel.id',$pdata)->whereColumn('quote.personnelid','quote.primaryname')->groupBy('primaryname')->get()->pluck('primaryname')->toArray();
-
+            //dd($personeldata);
             if($request->since!=null && $request->until!=null) {
                 @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('quote.personnelid',$personeldata)->where('quote.ticket_status',3)->whereColumn('quote.personnelid','quote.primaryname')->whereBetween('quote.ticketdate', [$request->since, $request->until])->groupBy('quote.personnelid')->get();    
             } else {
@@ -68,13 +69,17 @@ class ReportController extends Controller
              
              @$comisiondataamount = json_decode($amountall[$key]->contentcommission);
             }
+
         } else {
-            if($request->pid==null) {
-                $personnelid = @$pdata[0]->id;
-            } else {
-                $personnelid = @$request->pid;
-            }
+            $personnelid = @$request->pid;
             $tickerdatas = Quote::select('primaryname')->where('personnelid',$personnelid)->whereColumn('personnelid','primaryname')->where('ticket_status','3')->get();  
+
+            @$percentall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','percent')->get();
+
+            @$amountall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','amount')->get();
+            if(count($amountall)!=0 || count($percentall)!=0) {
+
+
             if(count($tickerdatas)>=1) { 
                 foreach($tickerdatas as $key => $value) {
                 if($value->primaryname == $personnelid) {
@@ -103,12 +108,16 @@ class ReportController extends Controller
           $tickedata = array();
             $tickedatadetails = "";  
         }
+        } else {
+            $tickedata = array();
+            $tickedatadetails = "";  
+        }
       }
 
         $currentdate = Carbon::now();
         $currentdate = date('Y-m-d', strtotime($currentdate));
         @$from = $request->since;
         @$to = $request->until;
-        return view('report.index',compact('auth_id','pdata','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to'));
+        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to'));
     }
 }
