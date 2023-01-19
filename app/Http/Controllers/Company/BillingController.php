@@ -58,7 +58,7 @@ class BillingController extends Controller
        //dd(DB::getQueryLog());
 
         $totalbillingData = DB::table('quote')
-        ->select(DB::raw('givenstartdate as date'),'quote.id','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
+        ->select(DB::raw('givenstartdate as date'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
         ->join('customer', 'customer.id', '=', 'quote.customerid')
         ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
         ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.givenstartdate','!=',null)

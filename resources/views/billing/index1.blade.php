@@ -74,6 +74,8 @@
      <table id="example" class="table no-wrap table-new table-list align-items-center">
     <thead>
     <tr>
+    <th style="display:none;"></th>
+
     <th>Date</th>
     <th>No. of tickets</th>
         <th>Ticket Total</th>
@@ -94,6 +96,7 @@
         }
       @endphp
       <tr class="" target="{{$i}}" data-id="{{$value->id}}">
+        <td style="display:none;">{{$value->date}}</td>
         <td>{{date('m-d-Y', strtotime($value->date))}}</td>
         <td>{{$value->totalticket}}</td>
         <td>{{number_format((float)$newprice, 2, '.', '')}}</td>

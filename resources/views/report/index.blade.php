@@ -287,13 +287,25 @@ Service Report</div>
       @csrf
 
   <div class="row">
+    @php
+    if($from!=null) {
+        $from = $from;
+    }  else {
+        $from = "";
+    }
+    if($to!=null) {
+        $to = $to;
+    }  else {
+        $to = "";
+    }
+    @endphp
     <div class="col-md-3" style="padding:7px;">
      <label style="visibility:hidden;">Select Date Range</label>
-     <input type="date" id="since" name="since" value="" class="form-control date1">
+     <input type="date" id="since" name="since" value="{{$from}}" class="form-control date1">
    </div>
    <div class="col-md-3" style="padding:7px;">
      <label style="visibility:hidden;">To Date</label>
-     <input type="date" id="until" name="until" value="" class="form-control date2">
+     <input type="date" id="until" name="until" value="{{$to}}" class="form-control date2">
    </div>
    
 
