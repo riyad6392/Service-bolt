@@ -93,6 +93,8 @@
 	  </div>
 	  <form method="put" action="{{ url('company/billing/update') }}" enctype="multipart/form-data">
 	  	<input type="hidden" name="ticketid" id="ticketid" value="{{$ticketID}}">
+	  	<input type="hidden" name="ticketIDnumber" id="ticketIDnumber" value="{{$ticketIDnumber}}">
+	  	<input type="hidden" name="personnelid" id="personnelid" value="{{$personnelid}}">
    <input type="hidden" name="customername" id="customername" value="{{$customername}}">
    <input type="hidden" name="customerid" id="customerid" value="{{$customerid}}">
    @csrf
@@ -162,6 +164,8 @@
 						</h2>
 						<form method="put" action="{{ url('company/billing/update') }}" enctype="multipart/form-data">
 						<input type="hidden" name="ticketid" id="ticketid" value="{{$ticketID}}">
+						<input type="hidden" name="ticketIDnumber" id="ticketIDnumber" value="{{$ticketIDnumber}}">
+						<input type="hidden" name="personnelid" id="personnelid" value="{{$personnelid}}">
                   <input type="hidden" name="customername" id="customername" value="{{$customername}}">
                   <input type="hidden" name="customerid" id="customerid" value="{{$customerid}}">
 							@csrf 
@@ -189,6 +193,8 @@
 						</h2>
 						<form method="put" action="{{ url('company/billing/update') }}" enctype="multipart/form-data">
 						<input type="hidden" name="ticketid" id="ticketid" value="{{$ticketID}}">
+						<input type="hidden" name="ticketIDnumber" id="ticketIDnumber" value="{{$ticketIDnumber}}">
+						<input type="hidden" name="personnelid" id="personnelid" value="{{$personnelid}}">
                   <input type="hidden" name="customername" id="customername" value="{{$customername}}">
                   <input type="hidden" name="customerid" id="customerid" value="{{$customerid}}">
 							@csrf 

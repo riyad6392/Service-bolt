@@ -35,7 +35,7 @@ class WorkerBalancesheetController extends Controller
          return redirect()->back();
       }
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
-     $balancesheet = Balancesheet::where('userid', $worker->userid)->orWhere('workerid', $worker->workerid)->get();
+     $balancesheet = Balancesheet::where('userid', $worker->userid)->where('workerid', $worker->workerid)->orderBy('id','DESC')->get();
      return view('personnel.balancesheet',compact('auth_id','balancesheet'));
     }
 

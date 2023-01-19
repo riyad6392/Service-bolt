@@ -97,7 +97,12 @@ class BillingController extends Controller
       if( $request->customername) {
       Session::put('customername',$request->customername);
       }
+      if($request->personnelid) {
+        Session::put('personnelid',$request->personnelid);
+      }
       $ticketID = Session::get('ticketid');
+      $personnelid = Session::get('personnelid');
+
       $customer = Customer::select('id','customername')->where('id',$request->customerid)->first();
       //dd($request->all());
       //$ticketID = $request->ticketid;
@@ -146,7 +151,7 @@ class BillingController extends Controller
     }
   
     
-      return view('billing.paynow',compact('ticketID','quoteData','paymentpaid','customerid','customername','customer','price','servicename','productname','tax','ticketIDnumber')); 
+      return view('billing.paynow',compact('ticketID','quoteData','paymentpaid','customerid','customername','customer','price','servicename','productname','tax','ticketIDnumber','personnelid')); 
     }
 
     
@@ -487,24 +492,17 @@ class BillingController extends Controller
             $id = DB::table('balancesheet')->insertGetId([
               'userid' => $auth_id,
               'workerid' => $request->personnelid,
-              'ticketid' => $request->ticketid,
+              'ticketid' => $request->ticketIDnumber,
               'amount' => $request->amount,
               'customername' => $request->customername,
               'paymentmethod' => $request->method,
               'status' => "Completed"
             ]);
-            $tdata = Quote::where('id', $request->ticketid)->get()->first();
-            $tdata->payment_status = "Completed";
-            $tdata->price =  $request->amount;
-            $tdata->payment_mode = $request->method;
-            $tdata->checknumber = $request->check_no;
-            $tdata->card_number = $request->card_number;
-            $tdata->expiration_date = $request->expiration_date;
-            $tdata->cvv = $request->cvv;
-
-            //$tdata->invoiceid = $id;
-            $tdata->save();
-            $request->session()->flash('success', 'Payment Completed Successfully');
+            DB::table('quote')->where('id','=',$request->ticketIDnumber)->orWhere('parentid','=',$request->ticketIDnumber)
+          ->update([ 
+              "payment_status"=>"Completed","price"=>"$request->amount","payment_amount"=>"$request->amount","payment_mode"=>"$request->method","checknumber"=>"$request->check_no","card_number"=>"$request->card_number","expiration_date"=>"$request->expiration_date","cvv"=>"$request->cvv"
+          ]);
+          $request->session()->flash('success', 'Payment Completed Successfully');
             return redirect()->back();
           // } else {
           //   $request->session()->flash('error', $finalresult->xError);
@@ -545,24 +543,19 @@ class BillingController extends Controller
             $id = DB::table('balancesheet')->insertGetId([
               'userid' => $auth_id,
               'workerid' => $request->personnelid,
-              'ticketid' => $request->ticketid,
+              'ticketid' => $request->ticketIDnumber,
               'amount' => $request->amount,
               'customername' => $request->customername,
               'paymentmethod' => $request->method,
               'status' => "Completed"
             ]);
-            $tdata = Quote::where('id', $request->ticketid)->get()->first();
-            $tdata->payment_status = "Completed";
-            $tdata->price =  $request->amount;
-            $tdata->payment_mode = $request->method;
-            $tdata->checknumber = $request->check_no;
-            $tdata->card_number = $request->card_number;
-            $tdata->expiration_date = $request->expiration_date;
-            $tdata->cvv = $request->cvv;
 
-            //$tdata->invoiceid = $id;
-            $tdata->save();
-            $request->session()->flash('success', 'Payment Completed Successfully');
+            DB::table('quote')->where('id','=',$request->ticketIDnumber)->orWhere('parentid','=',$request->ticketIDnumber)
+          ->update([ 
+              "payment_status"=>"Completed","price"=>"$request->amount","payment_amount"=>"$request->amount","payment_mode"=>"$request->method","checknumber"=>"$request->check_no","card_number"=>"$request->card_number","expiration_date"=>"$request->expiration_date","cvv"=>"$request->cvv"
+          ]);
+
+           $request->session()->flash('success', 'Payment Completed Successfully');
             return redirect()->back();
           // } else {
           //   $request->session()->flash('error', $finalresult->xError);
@@ -574,23 +567,18 @@ class BillingController extends Controller
         $id = DB::table('balancesheet')->insertGetId([
               'userid' => $auth_id,
               'workerid' => $request->personnelid,
-              'ticketid' => $request->ticketid,
+              'ticketid' => $request->ticketIDnumber,
               'amount' => $request->amount,
               'customername' => $request->customername,
               'paymentmethod' => $request->method,
               'status' => "Completed"
             ]);
-            $tdata = Quote::where('id', $request->ticketid)->get()->first();
-            $tdata->payment_status = "Completed";
-            $tdata->price =  $request->amount;
-            $tdata->payment_mode = $request->method;
-            $tdata->checknumber = $request->check_no;
-            $tdata->card_number = $request->card_number;
-            $tdata->expiration_date = $request->expiration_date;
-            $tdata->cvv = $request->cvv;
 
-            //$tdata->invoiceid = $id;
-            $tdata->save();
+          DB::table('quote')->where('id','=',$request->ticketIDnumber)->orWhere('parentid','=',$request->ticketIDnumber)
+          ->update([ 
+              "payment_status"=>"Completed","price"=>"$request->amount","payment_amount"=>"$request->amount","payment_mode"=>"$request->method"
+          ]);
+
             $request->session()->flash('success', 'Payment Completed Successfully');
             return redirect()->back();
       }
