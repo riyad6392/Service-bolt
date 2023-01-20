@@ -70,7 +70,7 @@ class ReportController extends Controller
              @$comisiondataamount = json_decode($amountall[$key]->contentcommission);
             }
 
-            if(count($amountall)==0 || count($percentall)==0) {
+            if(count($amountall)==0 && count($percentall)==0) {
                 $tickedata = array();
                 $tickedatadetails = "";
             }

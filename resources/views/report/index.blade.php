@@ -563,6 +563,17 @@ Service Report</div>
                                                 
                                             } else {
 
+                                                 foreach($servicedata as $key1=>$value1) {
+                                                  $sname[] = $value1->servicename;
+                                                   $servname = implode(',',$sname);
+                                                }
+                                                if($pexplode_id!=0) {
+                                                foreach($pdata as $key2=>$value2) {
+                                                   @$pname[] = @$value2->productname;
+                                                   $productname = implode(',',$pname);
+                                                 }
+                                                }
+
                                         $flatvalue = $amountall[0]->allspvalue;
 
                                         $flatv = $flatvalue*count($explode_id); 
