@@ -74,7 +74,7 @@ class ReportController extends Controller
                 $tickedata = array();
                 $tickedatadetails = "";
             }
-
+           
         } else {
             $personnelid = @$request->pid;
             $tickerdatas = Quote::select('primaryname')->where('personnelid',$personnelid)->whereColumn('personnelid','primaryname')->where('ticket_status','3')->get();  

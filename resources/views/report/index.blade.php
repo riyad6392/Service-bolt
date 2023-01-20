@@ -344,8 +344,6 @@ Service Report</div>
                <th colspan="" style="font-weight:400;font-size:15px;">Action</th>
            </tr>
      </thead>
-     
-   
         @foreach($tickedata as $key => $value)
             <tbody class="tbody-1">
                 @php
@@ -401,12 +399,12 @@ Service Report</div>
                             $flatvalue = $amountall[0]->allspvalue;
 
                             $flatv = $flatvalue*count($explode_id);
-                            if($pexplode_id!=0){
+
+                            if($value->product_id!=null || $value->product_id!="") {
                                 $pvalue = $flatvalue *count($pexplode_id);
                             } else {
                                 $pvalue = 0;
                             }
-                           
                             $ttlflat = $flatv+$pvalue;
 
                         }
