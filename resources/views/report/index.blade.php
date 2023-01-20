@@ -346,20 +346,24 @@ Service Report</div>
      </thead>
      
    
-                     
-                       @foreach($tickedata as $key => $value)
+        @foreach($tickedata as $key => $value)
             <tbody class="tbody-1">
                 @php
                   $ttlflat = 0;
                   $ptamounttotal = 0;
                   $explode_id = explode(',', $value->serviceid);
-                  
+                  $pexplode_id = 0;
                   $servicedata = App\Models\Service::select('servicename','price')
                     ->whereIn('services.id',$explode_id)->get();
-
-                  $pexplode_id = explode(',', $value->product_id);
-                  $pdata = App\Models\Inventory::select('id','price')
+                    if($value->product_id!=null || $value->product_id!="") {
+                        $pexplode_id = explode(',', $value->product_id);
+                    }
+                  if($pexplode_id!=0) {
+                    $pdata = App\Models\Inventory::select('id','price')
                     ->whereIn('products.id',$pexplode_id)->get();
+                  }
+                  
+
                      $ttlflat=0;
                      
                      $ttlflat2 = 0;
@@ -380,22 +384,31 @@ Service Report</div>
                             } 
                             
                             $ttlflat1 = 0;
-                            foreach($pexplode_id as $servicekey =>$servicevalue) {
-                                foreach($comisiondataamount->product as $key=>$sitem1)
-                                {
-                                    if($sitem1->id==$servicevalue && $sitem1->price!=0)
+                            if($pexplode_id!=0) {
+                                foreach($pexplode_id as $servicekey =>$servicevalue) {
+                                    foreach($comisiondataamount->product as $key=>$sitem1)
                                     {
-                                               //echo  $servicevalue."==={$sitem1->id} price==".  $sitem1->price."<br>";
-                                        $ttlflat1 += $sitem1->price;
-                                    }
-                                }  
-                            }  
+                                        if($sitem1->id==$servicevalue && $sitem1->price!=0)
+                                        {
+                                                   //echo  $servicevalue."==={$sitem1->id} price==".  $sitem1->price."<br>";
+                                            $ttlflat1 += $sitem1->price;
+                                        }
+                                    }  
+                                } 
+                            } 
                              $ttlflat =$ttlflat1+$ttlflat2;
                         } else {
                             $flatvalue = $amountall[0]->allspvalue;
+
                             $flatv = $flatvalue*count($explode_id);
-                            $pvalue = $flatvalue *count($pexplode_id);
+                            if($pexplode_id!=0){
+                                $pvalue = $flatvalue *count($pexplode_id);
+                            } else {
+                                $pvalue = 0;
+                            }
+                           
                             $ttlflat = $flatv+$pvalue;
+
                         }
                     }
 
@@ -417,8 +430,8 @@ Service Report</div>
                                   }
                                 }
                             } 
-                          
-                          foreach($pexplode_id as $key=>$pid) {
+                          if($pexplode_id!=0) { 
+                            foreach($pexplode_id as $key=>$pid) {
                                 foreach($comisiondatapercent->product as $key=>$sitem)
                                 {
                                   if($sitem->id==$pid && $sitem->price!=0)
@@ -428,7 +441,8 @@ Service Report</div>
                                     @$ptamount1 += @$pdata->price*@$sitem->price/100;               
                                   }
                                 }
-                          }
+                            }
+                         }
                         } else {
                             foreach($explode_id as $key=>$serviceid) {
                                 $servicedata = App\Models\Service::select('servicename','price')
@@ -436,10 +450,13 @@ Service Report</div>
                                 $ptamount += $servicedata->price*$percentall[0]->allspvalue/100;               
                              }   
                             $ptamount1 = 0;
-                            foreach($pexplode_id as $key=>$pid) {
-                                $pdata = App\Models\Inventory::select('id','price')->where('products.id',$pid)->first();
-                                @$ptamount1 += @$pdata->price*@$percentall[0]->allspvalue/100;               
+                            if($pexplode_id!=0) {
+                                foreach($pexplode_id as $key=>$pid) {
+                                    $pdata = App\Models\Inventory::select('id','price')->where('products.id',$pid)->first();
+                                    @$ptamount1 += @$pdata->price*@$percentall[0]->allspvalue/100;               
+                                } 
                             }
+                           
                         }  
                         $ptamounttotal =$ptamount+$ptamount1;
                     }
@@ -489,13 +506,17 @@ Service Report</div>
                                             $ids=$value->parentid;
 
                                         }
-                                      $explode_id = explode(',', $value->serviceid);
-                                      $servicedata = App\Models\Service::select('servicename','price')
+                        $explode_id = explode(',', $value->serviceid);
+                        $servicedata = App\Models\Service::select('servicename','price')
                                         ->whereIn('services.id',$explode_id)->get();
-
-                                      $pexplode_id = explode(',', $value->product_id);
-                                      $pdata = App\Models\Inventory::select('id','price','productname')
-                                        ->whereIn('products.id',$pexplode_id)->get();
+                        $pexplode_id = 0;
+                        $productname = "--";
+                        if($value->product_id!=null || $value->product_id!="") {   
+                          $pexplode_id = explode(',', $value->product_id);
+                           $pdata = App\Models\Inventory::select('id','price','productname')
+                            ->whereIn('products.id',$pexplode_id)->get();
+                        }
+                                     
                                         $ttlflat = 0;
                                         $ptamounttotal = 0;
                                         if(count($amountall)>0) {
@@ -505,13 +526,15 @@ Service Report</div>
                                                   $sname[] = $value1->servicename;
                                                    $servname = implode(',',$sname);
                                                 }
-
+                                                if($pexplode_id!=0) {
                                                 foreach($pdata as $key2=>$value2) {
                                                    @$pname[] = @$value2->productname;
                                                    $productname = implode(',',$pname);
                                                  }
+                                                }
 
                                                 $ttlflat1 = 0;
+
                                                 foreach($explode_id as $servicekey =>$servicevalue) {
                                                     foreach($comisiondataamount->service as $key=>$sitem)
                                                     {
@@ -522,7 +545,9 @@ Service Report</div>
                                                         }
                                                     }
                                                 }
+
                                                 $ttlflat2 = 0;
+                                            if($pexplode_id!=0) {
                                                 foreach($pexplode_id as $servicekey =>$servicevalue) {
                                                     foreach($comisiondataamount->product as $key=>$sitem1)
                                                     {
@@ -533,17 +558,23 @@ Service Report</div>
                                                         }
                                                     }
                                                 }
+                                            }
                                                 $ttlflat = $ttlflat1 +$ttlflat2;
                                                 
                                             } else {
-                                                $flatvalue = $amountall[0]->allspvalue;
 
-                                                $flatv = $flatvalue*count($explode_id); 
-                                                $pvalue  =  $flatvalue*count($pexplode_id);
-                                                
-                                                $ttlflat = $flatv+$pvalue;
-                                            }
+                                        $flatvalue = $amountall[0]->allspvalue;
+
+                                        $flatv = $flatvalue*count($explode_id); 
+                                        if($pexplode_id!=0) {
+                                            $pvalue  =  $flatvalue*count($pexplode_id);
+                                        } else {
+                                            $pvalue = 0;  
                                         }
+                                        
+                                        $ttlflat = $flatv+$pvalue;
+                                    }
+                                }
 
                                         if(count($percentall)>0) {
                                          $ptamount = 0;
@@ -564,15 +595,17 @@ Service Report</div>
                                                   }
                                                 }
                                             }
-                                            foreach($pexplode_id as $key=>$pid) {
-                                                foreach($comisiondatapercent->product as $key=>$sitem)
-                                                {
-                                                  if($sitem->id==$pid && $sitem->price!=0)
-                                                  {
-                                                    $pdata = App\Models\Inventory::select('id','price')->where('products.id',$sitem->id)->first();
-                                                    
-                                                    @$ptamount1 += @$pdata->price*@$sitem->price/100;               
-                                                  }
+                                            if($pexplode_id!=0) {
+                                                foreach($pexplode_id as $key=>$pid) {
+                                                    foreach($comisiondatapercent->product as $key=>$sitem)
+                                                    {
+                                                      if($sitem->id==$pid && $sitem->price!=0)
+                                                      {
+                                                        $pdata = App\Models\Inventory::select('id','price')->where('products.id',$sitem->id)->first();
+                                                        
+                                                        @$ptamount1 += @$pdata->price*@$sitem->price/100;               
+                                                      }
+                                                    }
                                                 }
                                             }
                                          } else {
@@ -582,13 +615,14 @@ Service Report</div>
                                            $sname[] = $value1->servicename;
                                            $servname = implode(',',$sname);
                                          }
-                                         
+                                        if($pexplode_id!=0) { 
                                          foreach($pdata as $key2=>$value2) {
 
                                            @$ptamount1 += @$value2->price*@$percentall[0]->allspvalue/100;
                                            @$pname[] = @$value2->productname;
                                            $productname = implode(',',$pname);
                                          }
+                                       }
                                      }
                                          $ptamounttotal =$ptamount+$ptamount1;
                                          

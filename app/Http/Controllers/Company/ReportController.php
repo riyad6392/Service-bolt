@@ -70,6 +70,11 @@ class ReportController extends Controller
              @$comisiondataamount = json_decode($amountall[$key]->contentcommission);
             }
 
+            if(count($amountall)==0 || count($percentall)==0) {
+                $tickedata = array();
+                $tickedatadetails = "";
+            }
+
         } else {
             $personnelid = @$request->pid;
             $tickerdatas = Quote::select('primaryname')->where('personnelid',$personnelid)->whereColumn('personnelid','primaryname')->where('ticket_status','3')->get();  
