@@ -854,6 +854,8 @@ class WorkerTicketController extends Controller
               $sum1+= $txvalue1;
           } 
           $productname = implode(',', $pname);
+      } else {
+        $productid = null;
       }
 
       $totaltax = $sum+$sum1;
@@ -862,7 +864,8 @@ class WorkerTicketController extends Controller
       
       $quote = Quote::where('id', $request->id)->get()->first();
 
-      $pids = rtrim($productid, ',');
+      //$pids = rtrim($productid, ',');
+      $pids = $productid;
 
       $company = User::where('id', $quote->userid)->get()->first();
       if($company->image!=null) {

@@ -1925,19 +1925,33 @@ class UserController extends Controller
         }
       }
 
-        $quote->payment_amount = $request->payment_amount;
-        $quote->price = $request->payment_amount;
-        $quote->payment_mode = $request->payment_mode;
-          
-        if(!empty($request->checknumber)) {
-            $quote->checknumber = $request->checknumber;
+
+      $quote1 = Quote::where('id', $request->ticketid)->orWhere('parentid',$request->ticketid)->get();
+
+        foreach($quote1 as $key => $value) {
+          if($value->primaryname == $value->personnelid) {
+             $personnelid = $value->personnelid;
+             $userid = $value->userid;
+             $customername = $value->customername;
+
+          }
         }
-        $quote->tickettotal = $request->ticketprice;
-        $quote->serviceid = $request->serviceidnew;
-        $quote->product_id = $request->productidnew;
+        if(count($quote1)>0) {
+            $id = DB::table('balancesheet')->insertGetId([
+                  'userid' => $userid,
+                  'workerid' => $personnelid,
+                  'ticketid' => $request->ticketid,
+                  'amount' => $request->payment_amount,
+                  'customername' => $customername,
+                  'paymentmethod' => $request->payment_mode,
+                  'status' => "Completed"
+                ]);
 
-
-        $quote->save();
+            DB::table('quote')->where('id','=',$request->ticketid)->orWhere('parentid','=',$request->ticketid)
+              ->update([ 
+                  "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->payment_mode","checknumber"=>"$request->checknumber","tickettotal"=>"$request->ticketprice","serviceid"=>"$request->serviceidnew","product_id"=>"$request->productidnew"
+            ]);
+        }
 
         return response()->json(['status'=>1,'message'=>'Payment has been successfully'],$this->successStatus);  
     }
