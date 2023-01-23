@@ -2762,14 +2762,12 @@ $(document).on('change','#productnamet1',function(e) {
 $(document).on('change','#personnelid',function(e) {
     var pvalue = $(this).val();
     if(pvalue=="") {
-    	alert('a');
      $(".time").hide();
      $(".date").hide();
      $("#timedefault").attr('required',false);
      $("#date").attr('required',false);
     } else {
-    	alert('bbb');
-      $(".time").show();
+     $(".time").show();
      $(".date").show();
      $("#timedefault").attr('required',true);
      $("#date").attr('required',true);
