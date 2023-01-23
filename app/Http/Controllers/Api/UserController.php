@@ -322,6 +322,7 @@ class UserController extends Controller
     public function myticketDetail(Request $request) {
         $main_array =array();
         $user = Auth::user();
+        $personnelid = Auth::user()->workerid;
         $validator = Validator::make(request()->all(), [
             'ticketId' => 'required'
         ]);
@@ -348,7 +349,7 @@ class UserController extends Controller
 
         $checklistData = DB::table('checklist')->select('id','checklist')->whereIn('serviceid',$serviceidarrays)->get();
 
-        $quoteData = DB::table('quote')->select('quote.id','quote.tax','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.givenstartdate','quote.givenenddate','quote.time','quote.minute','quote.description','quote.product_id','quote.serviceid','quote.imagelist', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist','quote.price')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
+        $quoteData = DB::table('quote')->select('quote.id','quote.primaryname','quote.tax','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.givenstartdate','quote.givenenddate','quote.time','quote.minute','quote.description','quote.product_id','quote.serviceid','quote.imagelist', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist','quote.price')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
         
         if($quoteData) {
             $serviceidarray = explode(',', $quoteData->serviceid);
@@ -421,6 +422,8 @@ class UserController extends Controller
             }
             array_push($main_array, [
                    'id'=>$quoteData->id,
+                   'personnelid'=>$personnelid,
+                   'primaryid'=>$quoteData->primaryname,
                    'price'=>$quoteData->price,
                    'tax'=>$quoteData->tax,
                    'addressid'=>$addressinfo->id,
@@ -1140,24 +1143,27 @@ class UserController extends Controller
           ->update([ 
               "description"=>"$description","serviceid"=>"$serviceid","servicename"=>"$servicenames","product_id"=>"$productid","price"=>"$request->price","tickettotal"=>"$request->ticketprice","tax"=>"$totaltax"
       ]);
-
+   if($request->type=="save") {
+        return response()->json(['status'=>1,'message'=>'Invoice has been save successfully'],$this->successStatus); 
+   } else {
     if($customer->email!=null) {  
-      $app_name = 'ServiceBolt';
-      $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
-      $email = $customer->email;
-      $user_exist = Customer::where('email', $email)->first();
+          $app_name = 'ServiceBolt';
+          $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
+          $email = $customer->email;
+          $user_exist = Customer::where('email', $email)->first();
 
-      $tdata1 = Quote::where('id', $request->id)->get()->first();
-      $tdata1->invoiced = 1;
-      $tdata1->save();
-        
-      Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->customernotes,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
-          $message->to($user_exist->email)
-          ->subject('Invoice details!');
-          //$message->from($app_email,$app_name);
-        });
-    }
-      return response()->json(['status'=>1,'message'=>'Invoice has been send successfully'],$this->successStatus); 
+          $tdata1 = Quote::where('id', $request->id)->get()->first();
+          $tdata1->invoiced = 1;
+          $tdata1->save();
+            
+          Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->customernotes,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
+              $message->to($user_exist->email)
+              ->subject('Invoice details!');
+              //$message->from($app_email,$app_name);
+            });
+        }
+          return response()->json(['status'=>1,'message'=>'Invoice has been send successfully'],$this->successStatus); 
+        }
     }
 
     public function allproducData(Request $request) {
