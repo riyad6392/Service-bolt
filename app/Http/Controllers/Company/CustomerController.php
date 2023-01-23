@@ -328,17 +328,17 @@ class CustomerController extends Controller
         </div>
       </div>
 
-      <div class="col-md-12 mb-3" style="display:block;">
-        
-      <select class="form-control selectpickerc1" aria-label="Default select example" data-live-search="true" name="personnelid" id="personnelid" required data-placeholder="Select Personnel">';
-              foreach($worker as $key => $value) {
+      <div class="col-md-12 mb-3">
+        <select class="form-select" name="personnelid" id="personnelid">
+          <option selected="" value="">Select Personnel</option>';
+         foreach($worker as $key => $value) {
                 $html .='<option value="'.$value->id.'">'.$value->personnelname.'</option>';
               }
-        $html .='</select>
+            $html .='</select>
       </div>
-      <div class="form-group col-md-6 mb-3">
+      <div class="form-group col-md-6 mb-3 time" style="display:none;">
         <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
-        <select class="form-control selectpicker" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="time" style="height:auto;" required="">
+        <select class="form-control selectpicker" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="time" style="height:auto;">
         <option value="08:00 am">08:00 am</option>
         <option value="08:30 am">08:30 am</option>
         <option value="09:00 am">09:00 am</option>
@@ -388,9 +388,9 @@ class CustomerController extends Controller
         <option value="07:00 am">07:00 am</option>
         <option value="07:30 am">07:30 am</option>';
       $html .='</select></div>
-      <div class="col-md-6 mb-3">
+      <div class="col-md-6 mb-3 date" style="display:none;">
      <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
-      <input type="date" class="form-control etc" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;" required>
+      <input type="date" class="form-control etc" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;">
      </div>
       <div class="col-md-12 mb-3">
         <div class="align-items-center justify-content-lg-between d-flex services-list">
@@ -544,7 +544,7 @@ class CustomerController extends Controller
 
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
-        $data['ticket_status'] = 2;
+        
         //for new feature
           if($request->time == null || $request->time == "" || $request->time == 00 || $request->time == 0) {
                 $hours = 0;
@@ -557,13 +557,15 @@ class CustomerController extends Controller
           } else {
               $minutes = preg_replace("/[^0-9]/", '', $request->minute);    
           }
-
+      if($request->personnelid!="") {
           //display the converted time
           $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->giventime)));
           $time = $request->giventime;
-          $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
-          $newdate = $request->date;
+         
+            $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
+            $newdate = $request->date;
 
+          
           /*Get Dayclose time*/
             $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
             $dayclosetime =$closingtime->closingtime;
@@ -587,7 +589,10 @@ class CustomerController extends Controller
         $data['givendate'] = $date;
         $data['givenstartdate'] = $request->date;
         $data['givenenddate'] = $givenenddate;
-
+        $data['ticket_status'] = 2;
+      } else {
+        $data['ticket_status'] = 1;
+      }
         //end new feature here
         //dd($data);
         $quotelastid = Quote::create($data);
@@ -609,10 +614,15 @@ class CustomerController extends Controller
     }
       if($request->share =='share') {
           $request->session()->flash('success', 'Ticket share successfully');
-        } else {
-      $request->session()->flash('success', 'Ticket scheduled successfully');
+          return redirect()->route('company.quote'); 
       }
-      return redirect()->route('company.scheduler');
+      if($request->date!="") {
+          $request->session()->flash('success', 'Ticket scheduled successfully');
+          return redirect()->route('company.scheduler');
+      } else {
+          $request->session()->flash('success', 'Ticket created successfully');
+          return redirect()->route('company.quote');  
+      }
     }
 
     public function getenddatecalculation($newdate,$nextdaytime) 

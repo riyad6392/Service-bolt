@@ -670,8 +670,57 @@ class TicketController extends Controller
 
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
+        
+        //for new feature
+          if($request->time == null || $request->time == "" || $request->time == 00 || $request->time == 0) {
+                $hours = 0;
+          } else {
+              $hours = preg_replace("/[^0-9]/", '', $request->time);    
+          }
+
+          if($request->minute == null || $request->minute == "" || $request->minute == 00 || $request->minute == 0) {
+              $minutes = 0;
+          } else {
+              $minutes = preg_replace("/[^0-9]/", '', $request->minute);    
+          }
+      if($request->personnelid!="") {
+          //display the converted time
+          $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->giventime)));
+          $time = $request->giventime;
+         
+            $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
+            $newdate = $request->date;
+
+          
+          /*Get Dayclose time*/
+            $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+            $dayclosetime =$closingtime->closingtime;
+
+            $tstarttime = explode(':',$time);
+            $ticketstarttime = $tstarttime[0];
+            $ticketdifferncetime = $dayclosetime - $ticketstarttime;
+            // echo $ticketdifferncetime; die;
+            $givenenddate = $newdate;
+            if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
+                if($hours > $ticketdifferncetime) {
+                    $nextdaytime = $hours - $ticketdifferncetime; 
+                    //echo $nextdaytime; die;
+                    $givenenddate = $this->getenddatecalculation($newdate,$nextdaytime);
+                } else {
+                    $givenenddate = $newdate; 
+                }
+            }
+        $data['giventime'] = $time;
+        $data['givenendtime'] = $endtime;
+        $data['givendate'] = $date;
+        $data['givenstartdate'] = $request->date;
+        $data['givenenddate'] = $givenenddate;
+        $data['ticket_status'] = 2;
+      } else {
         $data['ticket_status'] = 1;
-        //dd($data);
+      }
+        //end new feature here
+
       $quotelastid = Quote::create($data);
       $quoteee = Quote::where('id', $quotelastid->id)->first();
       $randomid = rand(100,199);
@@ -696,6 +745,38 @@ class TicketController extends Controller
           $request->session()->flash('success', 'Ticket added successfully');  
         }
         return redirect()->route('company.quote');
+    }
+
+    public function getenddatecalculation($newdate,$nextdaytime) 
+    {
+        $auth_id = auth()->user()->id;
+        $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$auth_id)->first();
+
+        $fulldaytime = $closingtime->closingtime - $closingtime->openingtime;
+        
+        if($nextdaytime > $fulldaytime) {
+           $divisionvalue = $nextdaytime / $fulldaytime;
+
+           $dividev = explode('.',$divisionvalue);
+           $daycount = $dividev[0];
+           $dayhours = $dividev[1];
+
+            if($dayhours!="") {
+                $daycount = $daycount +1;
+            } else {
+                $daycount = $dividev[0];
+            }
+            $ddd = $daycount. 'day';
+
+            //day added as per calcuation wise
+            $givenenddate = date('Y-m-d', strtotime($newdate . ' +'.$ddd));
+            
+        }
+        else {
+            //day added as per calcuation wise
+            $givenenddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
+        }
+        return $givenenddate;
     }
 
     public function vieweditticketmodal(Request $request)

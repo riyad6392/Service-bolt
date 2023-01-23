@@ -1048,6 +1048,19 @@ $(document).on('change','#productname',function(e) {
           }
       })
   });          
-      
+  $(document).on('change','#personnelid',function(e) {
+    var pvalue = $(this).val();
+    if(pvalue=="") {
+     $(".time").hide();
+     $(".date").hide();
+     $("#time").attr('required',false);
+     $("#date").attr('required',false);
+    } else {
+      $(".time").show();
+     $(".date").show();
+     $("#time").attr('required',true);
+     $("#date").attr('required',true);
+    }
+  });
 </script>
 @endsection

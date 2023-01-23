@@ -898,16 +898,73 @@ select#servicename {
 	          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-products1" class="" id="hidequoteservice2"><i class="fa fa-plus next-two"></i></a>
 	        </div>
 		</div>
-	   
-	   <div class="col-md-6 mb-3" style="display: none;">
-	  	<select class="form-select {{$wname}}" name="personnelid" id="personnelid">
-			<option selected="" value="">Select a Personnel </option>
-			@foreach($worker as $key => $value)
-				<option value="{{$value->id}}">{{$value->personnelname}}</option>
-			@endforeach
-		</select>
-	   </div>
-		
+
+	    <div class="col-md-12 mb-3">
+        <select class="form-select" name="personnelid" id="personnelid">
+          <option selected="" value="">Select Personnel</option>
+          @foreach($worker as $key => $value) {
+            <option value="{{$value->id}}">{{$value->personnelname}}</option>
+           @endforeach
+        </select>
+      </div>
+
+    <div class="form-group col-md-6 mb-3 time" style="display:none;">
+        <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
+        <select class="form-control selectpicker" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="timedefault" style="height:auto;">
+	        <option value="08:00 am">08:00 am</option>
+	        <option value="08:30 am">08:30 am</option>
+	        <option value="09:00 am">09:00 am</option>
+	        <option value="09:30 am">09:30 am</option>
+	        <option value="10:00 am">10:00 am</option>
+	        <option value="10:30 am">10:30 am</option>
+	        <option value="11:00 am">11:00 am</option>
+	        <option value="11:30 am">11:30 am</option>
+	        <option value="12:00 pm">12:00 pm</option>
+	        <option value="12:30 pm">12:30 pm</option>
+	        <option value="01:00 pm">01:00 pm</option>
+	        <option value="01:30 pm">01:30 pm</option>
+	        <option value="02:00 pm">02:00 pm</option>
+	        <option value="02:30 pm">02:30 pm</option>
+	        <option value="03:00 pm">03:00 pm</option>
+	        <option value="03:30 pm">03:30 pm</option>
+	        <option value="04:00 pm">04:00 pm</option>
+	        <option value="04:30 pm">04:30 pm</option>
+	        <option value="05:00 pm">05:00 pm</option>
+	        <option value="05:30 pm">05:30 pm</option>
+	        <option value="06:00 pm">06:00 pm</option>
+	        <option value="06:30 pm">06:30 pm</option>
+	        <option value="07:00 pm">07:00 pm</option>
+	        <option value="07:30 pm">07:30 pm</option>
+	        <option value="08:00 pm">08:00 pm</option>
+	        <option value="08:30 pm">08:30 pm</option>
+	        <option value="09:00 pm">09:00 pm</option>
+	        <option value="09:30 pm">09:30 pm</option>
+	        <option value="10:00 pm">10:00 pm</option>
+	        <option value="10:30 pm">10:30 pm</option>
+	        <option value="11:00 pm">11:00 pm</option>
+	        <option value="11:30 pm">11:30 pm</option>
+	        <option value="12:00 am">12:00 am</option>
+	        <option value="12:30 am">12:30 am</option>
+	        <option value="01:00 am">01:00 am</option>
+	        <option value="01:30 am">01:30 am</option>
+	        <option value="02:00 am">02:00 am</option>
+	        <option value="02:30 am">02:30 am</option>
+	        <option value="03:00 am">03:00 am</option>
+	        <option value="03:30 am">03:30 am</option>
+	        <option value="04:00 am">04:00 am</option>
+	        <option value="04:30 am">04:30 am</option>
+	        <option value="05:00 am">05:00 am</option>
+	        <option value="05:30 am">05:30 am</option>
+	        <option value="06:00 am">06:00 am</option>
+	        <option value="06:30 am">06:30 am</option>
+	        <option value="07:00 am">07:00 am</option>
+	        <option value="07:30 am">07:30 am</option>
+    	</select>
+	</div>
+		<div class="col-md-6 mb-3 date" style="display:none;">
+	     <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
+	      <input type="date" class="form-control etc" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;">
+	     </div>
 		<div class="col-md-12 mb-3">
 		   <div class="align-items-center justify-content-lg-between d-flex services-list">
 		  	<label class="container-checkbox">Per hour
@@ -2701,5 +2758,22 @@ $(document).on('change','#productnamet1',function(e) {
           }
       })
 });
+
+$(document).on('change','#personnelid',function(e) {
+    var pvalue = $(this).val();
+    if(pvalue=="") {
+    	alert('a');
+     $(".time").hide();
+     $(".date").hide();
+     $("#timedefault").attr('required',false);
+     $("#date").attr('required',false);
+    } else {
+    	alert('bbb');
+      $(".time").show();
+     $(".date").show();
+     $("#timedefault").attr('required',true);
+     $("#date").attr('required',true);
+    }
+  });
 </script>
 @endsection
