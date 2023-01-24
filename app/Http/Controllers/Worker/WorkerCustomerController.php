@@ -62,7 +62,17 @@ class WorkerCustomerController extends Controller
       @$workersdata = Personnel::where('id',$worker->workerid)->first();
       @$permissonarray = explode(',',$workersdata->ticketid);
     if(in_array("View All Customers", $permissonarray)) {
-      $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get(); 
+      $cdata = DB::table('quote')->select('customerid')->where('personnelid',$worker->workerid)->groupBy('customerid')->get();
+      //dd($cdata);
+      if(count($cdata)>0) {
+        foreach($cdata as $key=>$value) {
+          $cids[] = $value->customerid;
+        }
+        
+        $customerData = DB::table('customer')->where('userid',$worker->userid)->whereIn('id',$cids)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();   
+      } else {
+        $customerData = array();
+      }
     } else {
      //  $pdata = Quote::select('customerid')->where('personnelid',$worker->workerid)->get();
      //  $cids =  array();
@@ -114,11 +124,27 @@ class WorkerCustomerController extends Controller
       $worker = DB::table('users')->select('workerid','userid')->where('id',$auth_id)->first();
       $customerData = Customer::where('id',$id)->get(); 
       $customerAddress = Address::where('customerid',$id)->get();
+      //dd($customerAddress);
+      // $customerAddress= array();
+      // $cdata = DB::table('quote')->select('customerid','address')->where('customerid',$id)->where('personnelid',$worker->workerid)->where('userid',$worker->userid)->groupBy('address')->get();
+      //       foreach($cdata as $key=>$value) {
+      //         $customerAddress[] = Address::select('id')->where('authid',$worker->userid)->where('customerid',$id)->where('address',$value->address)->first();
+      //       }
+      //     foreach($customerAddress as $key=>$value) {
+      //      $cidss[] =  $value->id;
+      //     }
+      //     $customerAddress = Address::whereIn('id',$cidss)->orWhere('authid',$auth_id)->get();
+       
+      @$workersdata = Personnel::where('id',$worker->workerid)->first();
+      @$permissonarray = explode(',',$workersdata->ticketid);
+    if(in_array("See Previous Tickets", $permissonarray)) {
       $recentTicket = Quote::where('customerid',$id)->where('personnelid','!=',null)->where('parentid','=',"")->orderBy('id','DESC')->get();
-
+    } else {
+      $recentTicket = array();
+    }
       $adminchecklist = DB::table('checklist')->select('serviceid','checklistname')->where('userid',$worker->userid)->groupBy('serviceid')->get();
 
-      return view('personnel.customerview',compact('customerData','customerAddress','recentTicket','adminchecklist'));
+      return view('personnel.customerview',compact('customerData','customerAddress','recentTicket','adminchecklist','permissonarray'));
     }
 
     public function deleteAddress(Request $request)
@@ -167,7 +193,13 @@ class WorkerCustomerController extends Controller
   {
       $targetid =  $request->targetid;
       $customerid = $request->customerid;
-      
+      @$workersdata = Personnel::where('id',auth()->user()->workerid)->first();
+      @$permissonarray = explode(',',$workersdata->ticketid);
+      if(in_array("See Price of Previous Tickets", $permissonarray)) { 
+        $sclass = "display:block";
+      } else {
+        $sclass = "display:none";
+      }
       $json = array();
       if($targetid == 0) {
         $auth_id = auth()->user()->id;
@@ -220,7 +252,7 @@ class WorkerCustomerController extends Controller
             <strong><label>Default Time: &nbsp;</label></strong>'.$quoteData[$datacount]->time.' '.$quoteData[$datacount]->minute.'
             
           </div>
-          <div class="col-md-12 mb-3">
+          <div class="col-md-12 mb-3" style="'.$sclass.'">
             <strong><label>Price:&nbsp;</label></strong>'.$quoteData[$datacount]->price.'
           </div>
          
@@ -278,7 +310,7 @@ class WorkerCustomerController extends Controller
             <strong><label>Default Time: &nbsp;</label></strong>'.$quoteData->time.' '.$quoteData->minute.'
             
           </div>
-          <div class="col-md-12 mb-3">
+          <div class="col-md-12 mb-3" style="'.$sclass.'">
             <strong><label>Price:&nbsp;</label></strong>'.$quoteData->price.'
           </div>
          

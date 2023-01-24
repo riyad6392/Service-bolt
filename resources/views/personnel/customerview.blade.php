@@ -199,7 +199,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <thead>
     <tr>
     <th>Ticket number</th>
+    @if(in_array("See Price of Previous Tickets", $permissonarray))
     <th>Price</th>
+    @endif
     <th>Service Name</th>
     <th>Action</th>
     
@@ -217,7 +219,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       @endphp
     <tr target="{{$i}}">
     <td>#{{$ticket->id}}</td>
-    <td>{{$ticket->price}}</td>
+    @if(in_array("See Price of Previous Tickets", $permissonarray))
+      <td>{{$ticket->price}}</td>
+    @endif
     <td>@php
       $i=0;
     @endphp
@@ -388,6 +392,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   </div>
 </div>
 </div>
+@if(count($recentTicket)>0)
+<input type="hidden" name="permissonarray" id="permissonarray" value="1">
+@else
+<input type="hidden" name="permissonarray" id="permissonarray" value="0">
+@endif
 @endsection
 
 @section('script')
@@ -499,22 +508,25 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             }
         })
     });
-    var customerid1 = $("#customerid").val();
-    $.ajax({
-            url:"{{url('personnel/customer/leftbarticketdata')}}",
-            data: {
-              targetid: 0,
-              customerid1: customerid1 
-            },
-            method: 'post',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-              console.log(data.html);
-              $('#viewleftservicemodal').html(data.html);
-            }
-        })
- });
+      var permissonarray = $("#permissonarray").val();
+      if(permissonarray>0) {
+        var customerid1 = $("#customerid").val();
+        $.ajax({
+                url:"{{url('personnel/customer/leftbarticketdata')}}",
+                data: {
+                  targetid: 0,
+                  customerid1: customerid1 
+                },
+                method: 'post',
+                dataType: 'json',
+                refresh: true,
+                success:function(data) {
+                  console.log(data.html);
+                  $('#viewleftservicemodal').html(data.html);
+                }
+            })
+        }
+      });
 
   $('table tr').each(function(a,b) {
     $(b).click(function() {

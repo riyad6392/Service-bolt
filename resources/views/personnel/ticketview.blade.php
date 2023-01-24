@@ -921,6 +921,7 @@ Save
      
      <div class="col-md-12">
        <!-- Completed ticket section start -->
+@if(in_array("See Previous Tickets", $permissonarray))       
 <div class="card mb-3 h-auto">
 <div class="card-body">
   <div class="row align-items-center mb-3">
@@ -934,7 +935,9 @@ Save
     <tr>
     <th>Ticket number</th>
     <th>Frequency</th>
+    @if(in_array("See Price of Previous Tickets", $permissonarray))
     <th>Price</th>
+    @endif
     <th>Service Name</th>
     </tr>
     </thead>
@@ -946,7 +949,9 @@ Save
     <tr>
     <td><a href="{{url('personnel/myticket/view/')}}/{{$ticket->id}}">#{{$ticket->id}}</a></td>
     <td>{{$ticket->frequency}}</td>
+    @if(in_array("See Price of Previous Tickets", $permissonarray))
     <td>${{$ticket->price}}</td>
+    @endif
     <td>{{$ticket->servicename}}</td>
     </tr>
       @php
@@ -958,6 +963,7 @@ Save
    </div>
 </div>
 </div>
+@endif
 <!-- Completed ticket end -->
 
 <!-- start service modal -->

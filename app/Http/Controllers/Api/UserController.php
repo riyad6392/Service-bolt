@@ -459,9 +459,19 @@ class UserController extends Controller
 
            // $productname = implode(',', $pname);
 
+           @$workersdata = Personnel::where('id',$personnelid)->first();
+           @$permissonarray = explode(',',$workersdata->ticketid);
+           if(in_array("See Previous Tickets", $permissonarray)) {     
             $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->whereIn('quote.ticket_status',array('3'))->get();
-
-            return response()->json(['status'=>1,'message'=>'success','data'=>$main_array,'totalprice'=>$totalprice,'checklistData'=>$checklistData,'priviousTicketData'=>$prequoteData],$this->successStatus);
+            } else {
+              $prequoteData = array();  
+            }
+            if(in_array("See Price of Previous Tickets", $permissonarray)) {
+              $pricevisible = 1;
+            } else {
+              $pricevisible = 0;
+            }
+            return response()->json(['status'=>1,'message'=>'success','data'=>$main_array,'totalprice'=>$totalprice,'checklistData'=>$checklistData,'priviousTicketData'=>$prequoteData,'pricevisible'=>$pricevisible],$this->successStatus);
         } else {
             return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
@@ -532,10 +542,19 @@ class UserController extends Controller
       @$permissonarray = explode(',',$workersdata->ticketid);
       //dd($permissonarray);
       if(in_array("View All Customers", $permissonarray)) {
-        $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+        $cdata = DB::table('quote')->select('customerid')->where('personnelid',$worker->workerid)->groupBy('customerid')->get();
+        if(count($cdata)>0) {
+        foreach($cdata as $key=>$value) {
+          $cids[] = $value->customerid;
+        }
+        
+        $customerData = DB::table('customer')->where('userid',$worker->userid)->whereIn('id',$cids)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();   
+      } else {
+        $customerData = array();
+      }
       } else {
         $customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get();
-        }
+    }
 
      $tenture = Tenture::select('tenturename')->where('status','Active')->get();  
 
@@ -596,10 +615,22 @@ class UserController extends Controller
         }
 
         $customerAddress = Address::where('customerid',$customerid)->get();
-        $recentTicket = Quote::where('customerid',$customerid)->where('personnelid','!=',null)->where('parentid','=',"")->where('givendate','!=',null)->orderBy('id','DESC')->get();
 
-        if ($customerData) {
-                return response()->json(['status'=>1,'message'=>'success','customerData'=>$data1,'connectedAddress'=>$customerAddress,'recentTickets'=>$recentTicket],$this->successStatus);
+        @$workersdata = Personnel::where('id',$user->workerid)->first();
+        @$permissonarray = explode(',',$workersdata->ticketid);
+        if(in_array("See Previous Tickets", $permissonarray)) {
+            $recentTicket = Quote::where('customerid',$customerid)->where('personnelid','!=',null)->where('parentid','=',"")->where('givendate','!=',null)->orderBy('id','DESC')->get();
+        } else {
+          $recentTicket = array();
+        }
+
+        if(in_array("See Price of Previous Tickets", $permissonarray)) {
+          $pricevisible = 1;
+        } else {
+          $pricevisible = 0;
+        }
+        if($customerData) {
+                return response()->json(['status'=>1,'message'=>'success','customerData'=>$data1,'connectedAddress'=>$customerAddress,'recentTickets'=>$recentTicket,'pricevisible'=>$pricevisible],$this->successStatus);
         } else {
             return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }

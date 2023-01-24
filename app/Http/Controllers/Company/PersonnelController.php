@@ -332,6 +332,8 @@ class PersonnelController extends Controller
                 '6'=>"Add Customer",
                 '4'=>"Edit Customer",
                 '3'=>"View All Customers",
+                '10'=>"See Previous Tickets",
+                '11'=>"See Price of Previous Tickets",
                 '8'=>"Add Service",
                 '9'=>"Add Product",
                 '1'=>"Create Invoice for payment",
