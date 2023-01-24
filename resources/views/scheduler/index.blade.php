@@ -1493,6 +1493,10 @@ body::-webkit-scrollbar-thumb:hover {
     });
 
     $(document).ready(function() {
+    h = "1";
+    realmin = "00";
+    $("#time").val(h);
+    $("#minute").val(realmin);   
     $('#customerid1').on('change', function() {
       var customerid = this.value;
       $("#address_scheduler").html('');
@@ -1620,7 +1624,7 @@ body::-webkit-scrollbar-thumb:hover {
 
     $(document).on('change','#servicename',function(e) {
     
-    gethours1();
+    //gethours1();
     getfrequency1();
     var serviceid = $('#servicename').val();
     var productid = $('#productname').val(); 

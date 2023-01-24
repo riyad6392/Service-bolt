@@ -416,8 +416,8 @@ class CustomerController extends Controller
             $html .='</select>
       </div><div class="col-md-6 mb-2">
             <div class="timepicker timepicker1" style="display:inline-block;">
-           <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+           <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" value="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" value="00" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
             </div></div><div class="col-md-12 mb-3 position-relative">
             <i class="fa fa-dollar" style="position: absolute;top: 17px;left: 27px;"></i>
     <input type="text" class="form-control" placeholder="Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) ||  

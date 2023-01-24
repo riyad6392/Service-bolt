@@ -297,8 +297,8 @@ i.fa.fa-plus.true-condition {
           <div class="col-md-6 mb-2">
             <label>Default Service Time</label><br>
             <div class="timepicker timepicker1" style="display:inline-block;">
-              <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+              <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
             </div>
           </div>
           <div class="col-md-12 mb-2">
@@ -538,6 +538,10 @@ i.fa.fa-plus.true-condition {
       "order": [[ 0, "desc" ]]
     });
     $("#example tbody > tr:first-child").addClass('selectedrow');
+      h = "1";
+      realmin = "00";
+    $("#time").val(h);
+    $("#minute").val(realmin);
   });
    $.ajaxSetup({
       headers: {

@@ -531,7 +531,7 @@ select#servicename {
 			  	$payment_status = "Pending";
 			  }
 			  if($ticket->payment_mode!=null) {
-			  	$paid_status = 'By '.$ticket->payment_mode;
+			  	$paid_status = $ticket->payment_mode;
 			  } else {
 			  	$paid_status = "--";
 			  }
@@ -2270,8 +2270,14 @@ $('#serviceform').on('submit', function(event) {
 
 		 
   	$(document).ready(function() {
-	   
-		
+	   	h = "1";
+	   	realmin = "00";
+		$("#time").val(h);
+		$("#minute").val(realmin);
+
+		$("#time1").val(h);
+		$("#minute1").val(realmin);
+
 		// $('select.selectpicker').on('change', function() {
 		// 	gethours();
 		// 	getprice();
@@ -2595,7 +2601,7 @@ function gethours() {
 
 $(document).on('change','#servicename',function(e) {
 	
-	gethours();
+	//gethours();
 	getfrequency();
 	var serviceid = $('#servicename').val();
 	var productid = $('#productname').val(); 
@@ -2718,7 +2724,7 @@ $(document).on('change','#productid',function(e) {
 
 	$(document).on('change','#servicenamet1',function(e) {
 	
-	gethours1();
+	//gethours1();
 	getfrequency1();
 	var serviceid = $('#servicenamet1').val();
     var productid = $('#productnamet1').val(); 

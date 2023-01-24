@@ -710,7 +710,7 @@ Map / Directions</a>
 
 <div class="card-body">
 <div class="card-content">
-<h5 class="mb-4 text-center">Ticket Details</h5>
+<h5 class="mb-4 text-center">Ticket Details @if($quoteData->primaryname == $quoteData->personnelid) (Primary) @endif</h5>
 <h4 class="mb-3">{{$quoteData->customername}}</h4>
 <div class="text-lead mb-3">
   <p>{{$quoteData->address}}</p>

@@ -978,7 +978,7 @@ $(document).on('change','#productname',function(e) {
 });
 
  $(document).on('change','#servicename',function(e) {
-    gethours();
+    //gethours();
     var serviceid = $('#servicename').val();
     var productid = $('#productname').val(); 
     var qid = "";
