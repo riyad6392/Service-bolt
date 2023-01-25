@@ -123,18 +123,23 @@ class WorkerCustomerController extends Controller
 
       $worker = DB::table('users')->select('workerid','userid')->where('id',$auth_id)->first();
       $customerData = Customer::where('id',$id)->get(); 
-      $customerAddress = Address::where('customerid',$id)->get();
-      //dd($customerAddress);
-      // $customerAddress= array();
-      // $cdata = DB::table('quote')->select('customerid','address')->where('customerid',$id)->where('personnelid',$worker->workerid)->where('userid',$worker->userid)->groupBy('address')->get();
-      //       foreach($cdata as $key=>$value) {
-      //         $customerAddress[] = Address::select('id')->where('authid',$worker->userid)->where('customerid',$id)->where('address',$value->address)->first();
-      //       }
-      //     foreach($customerAddress as $key=>$value) {
-      //      $cidss[] =  $value->id;
-      //     }
-      //     $customerAddress = Address::whereIn('id',$cidss)->orWhere('authid',$auth_id)->get();
-       
+      //$customerAddress = Address::where('customerid',$id)->get();
+      
+      $customerAddress = array();
+      $cdata = DB::table('quote')->select('customerid','address')->where('customerid',$id)->where('personnelid',$worker->workerid)->where('userid',$worker->userid)->groupBy('address')->get();
+            foreach($cdata as $key=>$value) {
+              $customerAddress[] = Address::select('id')->where('authid',$worker->userid)->where('customerid',$id)->where('address',$value->address)->first();
+            }
+          $cidss = array();
+          foreach($customerAddress as $key=>$value) {
+           $cidss[] =  $value->id;
+          }
+          $customerAddress = Address::whereIn('id',$cidss)->where('customerid',$id)->get()->toArray();
+
+          $cadd = Address::where('authid',$auth_id)->where('customerid',$id)->get()->toArray();
+          
+         $customerAddress  = array_merge($customerAddress,$cadd);
+       //dd($customerAddress);
       @$workersdata = Personnel::where('id',$worker->workerid)->first();
       @$permissonarray = explode(',',$workersdata->ticketid);
     if(in_array("See Previous Tickets", $permissonarray)) {

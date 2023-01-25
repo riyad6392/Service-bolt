@@ -329,6 +329,7 @@ class PersonnelController extends Controller
               $permission = array (
                 '7'=>"Administrator",
                 '5'=>"Create Ticket",
+                '12'=>"Unclose Ticket",
                 '6'=>"Add Customer",
                 '4'=>"Edit Customer",
                 '3'=>"View All Customers",

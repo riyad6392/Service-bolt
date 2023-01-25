@@ -80,6 +80,14 @@ class WorkerTicketController extends Controller
     {
        $json = array();
        $auth_id = auth()->user()->id;
+
+       @$workersdata = Personnel::where('id',auth()->user()->workerid)->first();
+       @$permissonarray = explode(',',$workersdata->ticketid);
+        if(in_array("Unclose Ticket", $permissonarray)) {
+            $sclass="";
+        } else {
+            $sclass="pointer-events: none;background:#fee2002e";
+        }
        $ticketid = $request->id;
        $ticketData = DB::table('quote')->select('address','time','ticket_status')->where('id',$ticketid)->first();
        $sdata = Schedulerhours::where('ticketid', $ticketid)->get()->first();
@@ -99,7 +107,7 @@ class WorkerTicketController extends Controller
       if($ticketData->ticket_status=="3") {
         $html .='<button type="submit" class="btn add-btn-yellow w-100 mb-4" name="completed" value="completed" style="pointer-events:none;">Completed</button>';
 
-        $html .='<button type="submit" class="btn add-btn-yellow w-100 mb-4" name="unclose" value="unclose" style="">UnClose</button>';
+        $html .='<button type="submit" class="btn add-btn-yellow w-100 mb-4" name="unclose" value="unclose" style="'.$sclass.'">UnClose</button>';
       }
 
       

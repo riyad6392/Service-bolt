@@ -282,7 +282,13 @@ class UserController extends Controller
     public function myticketData(Request $request) {
         $user = Auth::user();
         $auth_id = $user->id;
-
+        @$workersdata = Personnel::where('id',$user->workerid)->first();
+        @$permissonarray = explode(',',$workersdata->ticketid);
+        if(in_array("Unclose Ticket", $permissonarray)) {
+          $reopen = 1;
+        } else {
+          $reopen = 0;
+        }
         $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first(); 
         //$ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('2','4'))->get();
         
@@ -294,7 +300,7 @@ class UserController extends Controller
                 END) AS id'))->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',array('2','4'))->get();
 
         if ($ticketdata) {
-                return response()->json(['status'=>1,'message'=>'success','data'=>$ticketdata],$this->successStatus);
+                return response()->json(['status'=>1,'message'=>'success','data'=>$ticketdata,'reopenticket'=>$reopen],$this->successStatus);
         } else {
             return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
@@ -471,7 +477,12 @@ class UserController extends Controller
             } else {
               $pricevisible = 0;
             }
-            return response()->json(['status'=>1,'message'=>'success','data'=>$main_array,'totalprice'=>$totalprice,'checklistData'=>$checklistData,'priviousTicketData'=>$prequoteData,'pricevisible'=>$pricevisible],$this->successStatus);
+            if(in_array("Unclose Ticket", $permissonarray)) {
+              $reopen = 1;
+            } else {
+              $reopen = 0;
+            }
+            return response()->json(['status'=>1,'message'=>'success','data'=>$main_array,'totalprice'=>$totalprice,'checklistData'=>$checklistData,'priviousTicketData'=>$prequoteData,'pricevisible'=>$pricevisible,'reopenticket'=>$reopen],$this->successStatus);
         } else {
             return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
@@ -614,7 +625,22 @@ class UserController extends Controller
             $data1['updated_at']= $value->updated_at;    
         }
 
-        $customerAddress = Address::where('customerid',$customerid)->get();
+        //$customerAddress = Address::where('customerid',$customerid)->get();
+
+        $customerAddress = array();
+        $cdata = DB::table('quote')->select('customerid','address')->where('customerid',$customerid)->where('personnelid',$user->workerid)->where('userid',$user->userid)->groupBy('address')->get();
+            foreach($cdata as $key=>$value) {
+              $customerAddress[] = Address::select('id')->where('authid',$user->userid)->where('customerid',$customerid)->where('address',$value->address)->first();
+            }
+          $cidss = array();
+          foreach($customerAddress as $key=>$value) {
+           $cidss[] =  $value->id;
+          }
+          $customerAddress = Address::whereIn('id',$cidss)->where('customerid',$customerid)->get()->toArray();
+
+          $cadd = Address::where('authid',$auth_id)->where('customerid',$customerid)->get()->toArray();
+          
+         $customerAddress  = array_merge($customerAddress,$cadd);
 
         @$workersdata = Personnel::where('id',$user->workerid)->first();
         @$permissonarray = explode(',',$workersdata->ticketid);

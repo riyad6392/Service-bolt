@@ -676,8 +676,15 @@ Map / Directions</a>
    <div class="col-lg-6 pick_btn">
        <button type="submit" class="btn add-btn-yellow mb-4 w-100" name="completed" value="completed" style="pointer-events:none;">Completed</button>
      </div>
+    @php
+    if(in_array("Unclose Ticket", $permissonarray)) {
+        $sclass="";
+    } else {
+        $sclass="pointer-events: none;background:#fee2002e";
+    }
+    @endphp
       <div class="col-lg-6">
-       <button type="submit" class="btn add-btn-yellow mb-4 w-100" name="unclose" value="unclose" style="">Unclose</button>
+       <button type="submit" class="btn add-btn-yellow mb-4 w-100" name="unclose" value="unclose" style="{{$sclass}}">Unclose</button>
      </div>
   </div>
   @endif
