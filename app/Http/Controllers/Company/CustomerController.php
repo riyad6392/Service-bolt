@@ -590,7 +590,7 @@ class CustomerController extends Controller
         $data['givenstartdate'] = $request->date;
         $data['givenenddate'] = $givenenddate;
         $data['ticket_status'] = 2;
-      } else {
+       } else {
         $data['ticket_status'] = 1;
       }
         //end new feature here

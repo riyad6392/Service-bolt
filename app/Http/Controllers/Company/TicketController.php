@@ -716,6 +716,7 @@ class TicketController extends Controller
         $data['givenstartdate'] = $request->date;
         $data['givenenddate'] = $givenenddate;
         $data['ticket_status'] = 2;
+        $data['primaryname'] = $request->personnelid;
       } else {
         $data['ticket_status'] = 1;
       }

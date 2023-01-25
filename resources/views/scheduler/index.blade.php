@@ -759,14 +759,72 @@ body::-webkit-scrollbar-thumb:hover {
             </select>
       </div>
      
-     <div class="col-md-6 mb-3" style="display: none;">
-      <select class="form-select" name="personnelid" id="personnelid">
-      <option selected="" value="">Select a Personnel </option>
-      @foreach($worker as $key => $value)
-        <option value="{{$value->id}}">{{$value->personnelname}}</option>
-      @endforeach
-    </select>
-     </div>
+     <div class="col-md-12 mb-3">
+        <select class="form-select" name="personnelid" id="personnelid">
+          <option selected="" value="">Select Personnel</option>
+          @foreach($worker as $key => $value) {
+            <option value="{{$value->id}}">{{$value->personnelname}}</option>
+           @endforeach
+        </select>
+      </div>
+
+      <div class="form-group col-md-6 mb-3 timeschedule" style="display:none;">
+        <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
+        <select class="form-control selectpickertime" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="time" style="height:auto;">
+            <option value="08:00 am">08:00 am</option>
+            <option value="08:30 am">08:30 am</option>
+            <option value="09:00 am">09:00 am</option>
+            <option value="09:30 am">09:30 am</option>
+            <option value="10:00 am">10:00 am</option>
+            <option value="10:30 am">10:30 am</option>
+            <option value="11:00 am">11:00 am</option>
+            <option value="11:30 am">11:30 am</option>
+            <option value="12:00 pm">12:00 pm</option>
+            <option value="12:30 pm">12:30 pm</option>
+            <option value="01:00 pm">01:00 pm</option>
+            <option value="01:30 pm">01:30 pm</option>
+            <option value="02:00 pm">02:00 pm</option>
+            <option value="02:30 pm">02:30 pm</option>
+            <option value="03:00 pm">03:00 pm</option>
+            <option value="03:30 pm">03:30 pm</option>
+            <option value="04:00 pm">04:00 pm</option>
+            <option value="04:30 pm">04:30 pm</option>
+            <option value="05:00 pm">05:00 pm</option>
+            <option value="05:30 pm">05:30 pm</option>
+            <option value="06:00 pm">06:00 pm</option>
+            <option value="06:30 pm">06:30 pm</option>
+            <option value="07:00 pm">07:00 pm</option>
+            <option value="07:30 pm">07:30 pm</option>
+            <option value="08:00 pm">08:00 pm</option>
+            <option value="08:30 pm">08:30 pm</option>
+            <option value="09:00 pm">09:00 pm</option>
+            <option value="09:30 pm">09:30 pm</option>
+            <option value="10:00 pm">10:00 pm</option>
+            <option value="10:30 pm">10:30 pm</option>
+            <option value="11:00 pm">11:00 pm</option>
+            <option value="11:30 pm">11:30 pm</option>
+            <option value="12:00 am">12:00 am</option>
+            <option value="12:30 am">12:30 am</option>
+            <option value="01:00 am">01:00 am</option>
+            <option value="01:30 am">01:30 am</option>
+            <option value="02:00 am">02:00 am</option>
+            <option value="02:30 am">02:30 am</option>
+            <option value="03:00 am">03:00 am</option>
+            <option value="03:30 am">03:30 am</option>
+            <option value="04:00 am">04:00 am</option>
+            <option value="04:30 am">04:30 am</option>
+            <option value="05:00 am">05:00 am</option>
+            <option value="05:30 am">05:30 am</option>
+            <option value="06:00 am">06:00 am</option>
+            <option value="06:30 am">06:30 am</option>
+            <option value="07:00 am">07:00 am</option>
+            <option value="07:30 am">07:30 am</option>
+        </select>
+    </div>
+        <div class="col-md-6 mb-3 date" style="display:none;">
+         <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
+          <input type="date" class="form-control etc" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;">
+         </div>
     
     <div class="col-md-12 mb-3">
        <div class="align-items-center justify-content-lg-between d-flex services-list">
@@ -797,8 +855,8 @@ body::-webkit-scrollbar-thumb:hover {
      <div class="col-md-6 mb-2">
      <label>Default Service Time</label><br>
             <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
-            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div>
         </div>
 
@@ -918,6 +976,10 @@ body::-webkit-scrollbar-thumb:hover {
 
 <script type="">
     $(document).ready(function () {
+        var h=1;
+        var m=0;
+        $("#time1").val(h);
+        $("#minute1").val(m);
         
         $('html, body').animate({
             scrollTop: $('#srcoll-here').offset().top
@@ -929,6 +991,9 @@ body::-webkit-scrollbar-thumb:hover {
         setTimeout(function() {
             $("#selector").hide();
         },1000);
+
+        $('.selectpickertime').selectpicker();
+
     });
     
     $(document).on("click",'.fc-time-grid-event',function() {
@@ -1031,46 +1096,6 @@ body::-webkit-scrollbar-thumb:hover {
         
         
     });
-
-
-
-  // $('#calendar').fullCalendar({
-
-  //   displayEventTime: false,
-  //   timeFormat: 'H(:mm)',
-
-  //   header: {
-  //     left: 'prev,next today',
-  //     center: 'title',
-  //     right: 'month,agendaWeek,agendaDay'
-  //   },
-
-  //   allDayDefault: false,
-  //   editable: true,
-  //   droppable: true,
-
-  //   eventRender: function(event, el) {
-
-  //     el.find('.fc-content').html("<i class='fa fa-camera-retro fa-3x'></i>");
-
-  //   },
-  //   events: [{
-  //     title: 'event1',
-  //     start: '2022-09-19 08:00:00'
-  //   }, {
-  //     title: 'event2',
-  //     start: '2022-09-18 08:00:00',
-  //   }, {
-  //     title: 'event3',
-  //     start: '2022-09-20 08:00:00',
-  //   }, {
-  //     title: 'event3',
-  //     start: '2022-09-19 12:50:00',
-  //   }, {
-  //     title: 'event3',
-  //     start: '2017-02-01 13:50:00',
-  //   }, ]
-  // });
 
     $('#calendar').fullCalendar({
             header: {
@@ -1672,5 +1697,20 @@ $(document).on('click','.etc',function(e) {
       $('#datePicker').datepicker();
     }
   }
+
+  $(document).on('change','#personnelid',function(e) {
+    var pvalue = $(this).val();
+    if(pvalue=="") {
+     $(".timeschedule").hide();
+     $(".date").hide();
+     $("#time").attr('required',false);
+     $("#date").attr('required',false);
+    } else {
+      $(".timeschedule").show();
+     $(".date").show();
+     $("#time").attr('required',true);
+     $("#date").attr('required',true);
+    }
+  });
  </script>
 @endsection

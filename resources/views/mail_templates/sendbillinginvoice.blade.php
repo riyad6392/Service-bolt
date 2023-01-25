@@ -42,15 +42,16 @@
 
                 <td style="vertical-align: middle; padding: 1px 0px; width:30%">
                    
-                    <h4 style="color: #fff; margin:0;">
+                    <span style="color: #fff; margin:0;">
                     <p style="margin: 0; padding:0; color:#605252;"><span>{{$usrcolor->companyname}}</span>
                     </p>
+
+                    <p style="margin: 0px 0px;color:#605252;">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
 
                     <p style="margin:3px 0; padding:0; color:#605252;">
                         <span>{{$usrcolor->phone}}</span>
                     </p>
-                    <p style="margin: 0px 0px;color:{{$txtcolor}};">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
-                    </h4>
+                    </span>
                 </td>
             </tr>
 
@@ -68,12 +69,12 @@
  <tr>
     <td style="vertical-align: top; width: 70%; padding: 12px">
         <p style="margin: 0px 0 5px 0;color: #000; font-size: 16px; ">Bill to:</p>
-            <span style="color: black; font-weight: bold;">Name - </span>{{$customername}} 
+            <span style="color: black; font-weight: bold;"></span>{{$customername}} 
             <!-- <span style="color: black; font-weight: bold;">Company Name -</span>{{$companyname}}
         
         <br><span style="color: black; font-weight: bold;">Phone Number -</span>{{$phone}}
         <br><span style="color: black; font-weight: bold;">Email -</span>{{$email}} -->
-        <br><span style="color: black; font-weight: bold;">Billing Address -</span>
+        <br><span style="color: black; font-weight: bold;"></span>
         @if(isset($billingaddress) && $billingaddress!="")
             {{$billingaddress}}
         @else
@@ -82,13 +83,13 @@
     </td>
     <td style="vertical-align: top; padding: 17px">
         <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice:<br>
-            <span style="color: black; font-weight: bold;">#{{ $invoiceId }} </span>
+            <span style="color: black;">#{{ $invoiceId }} </span>
         </p>
         <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Date:<br>
-            <span style="color: black; font-weight: bold;">{{date('m-d-Y', strtotime($date))}} </span>
+            <span style="color: black;">{{date('m-d-Y', strtotime($date))}} </span>
         </p>
         <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice due date:<br>
-            <span style="color: black; font-weight: bold;">
+            <span style="color: black;">
             @if($duedate!="")
                 {{date('m-d-Y', strtotime($duedate))}}
             @else
@@ -253,13 +254,13 @@
     <tbody>
      <tr>
         <td style="vertical-align: top;padding: 0px 12px; border-radius: 10px;background-color: {{$color}};">
-         <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 20px;">Note:
+         <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 18px;">Note:
             <br><span style="color: {{$txtcolor}};  font-size: 16px;">@if(@$invoicenote){!!@$invoicenote!!}@else --- @endif</span></p>
         </td>
         <td style="width: 34%;padding: 0px 12px;background-color: {{$color}}; border-radius: 10px;">
-    <p style="border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Subtotal: {{$subtotalprice}}</p>
-    <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Sales Tax: {{$taxprice}}</p>
-    <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 20px; ">Total: ${{ $totalprice }}</p>
+    <p style="border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">Subtotal: {{$subtotalprice}}</p>
+    <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">Sales Tax: {{$taxprice}}</p>
+    <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Total: ${{ $totalprice }}</p>
         </td> 
         </tr>
     </tbody>
@@ -269,8 +270,8 @@
         <tbody>
          <tr>
           <td style="text-align: center; ">
-            <img src="{{$cdimage}}" style="max-width: 100px;" >
-         <p style="color: #000; font-size: 16px;
+            <!-- <img src="{{$cdimage}}" style="max-width: 100px;" > -->
+         <p style="color: #000; font-size: 14px;
         ">{{$footercontent}}</p>
         </td>
         </tr>

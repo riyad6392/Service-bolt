@@ -60,7 +60,7 @@ class SchedulerController extends Controller
 
         $customer = Customer::where('userid',$auth_id)->orderBy('id','DESC')->get();
         $services = Service::where('userid', $auth_id)->get();
-        $worker = Personnel::where('userid', $auth_id)->offset(0)->limit(6)->get();
+        $worker = Personnel::where('userid', $auth_id)->get();
         $workercount = Personnel::where('userid', $auth_id)->get();
         $wcount = count($workercount);
         $productData = Inventory::where('user_id',$auth_id)->orderBy('id','ASC')->get();
@@ -873,7 +873,58 @@ class SchedulerController extends Controller
 
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
+        //$data['ticket_status'] = 1;
+
+        //for new feature
+          if($request->time == null || $request->time == "" || $request->time == 00 || $request->time == 0) {
+                $hours = 0;
+          } else {
+              $hours = preg_replace("/[^0-9]/", '', $request->time);    
+          }
+
+          if($request->minute == null || $request->minute == "" || $request->minute == 00 || $request->minute == 0) {
+              $minutes = 0;
+          } else {
+              $minutes = preg_replace("/[^0-9]/", '', $request->minute);    
+          }
+      if($request->personnelid!="") {
+          //display the converted time
+          $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->giventime)));
+          $time = $request->giventime;
+         
+            $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
+            $newdate = $request->date;
+
+          
+          /*Get Dayclose time*/
+            $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+            $dayclosetime =$closingtime->closingtime;
+
+            $tstarttime = explode(':',$time);
+            $ticketstarttime = $tstarttime[0];
+            $ticketdifferncetime = $dayclosetime - $ticketstarttime;
+            // echo $ticketdifferncetime; die;
+            $givenenddate = $newdate;
+            if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
+                if($hours > $ticketdifferncetime) {
+                    $nextdaytime = $hours - $ticketdifferncetime; 
+                    //echo $nextdaytime; die;
+                    $givenenddate = $this->getenddatecalculation($newdate,$nextdaytime);
+                } else {
+                    $givenenddate = $newdate; 
+                }
+            }
+        $data['giventime'] = $time;
+        $data['givenendtime'] = $endtime;
+        $data['givendate'] = $date;
+        $data['givenstartdate'] = $request->date;
+        $data['givenenddate'] = $givenenddate;
+        $data['ticket_status'] = 2;
+        $data['primaryname'] = $request->personnelid;
+      } else {
         $data['ticket_status'] = 1;
+      }
+        //end new feature here
         
        $quotelastid = Quote::create($data);
        $quoteee = Quote::where('id', $quotelastid->id)->first();

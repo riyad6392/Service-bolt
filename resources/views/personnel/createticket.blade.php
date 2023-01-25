@@ -291,6 +291,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <script type="text/javascript">
   $(document).ready(function() {
     $('#example').DataTable();
+    h=1;
+    realmin=0;
+    $("#time").val(h);
+    $("#minute").val(realmin);
   });
    $.ajaxSetup({
       headers: {
@@ -333,7 +337,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		}
 
 	   	$(document).on('change','#servicename',function(e) {
-				gethours();
+				//gethours();
 				getfrequency();
 				var serviceid = $('#servicename').val();
 				var productid = $('#productname').val(); 
