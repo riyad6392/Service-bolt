@@ -714,10 +714,9 @@ Map / Directions</a>
 @endphp
   {{$quoteData->givendate}} - {{$quoteData->giventime}}</span>
 </div>
-
 <div class="card-body">
 <div class="card-content">
-<h5 class="mb-4 text-center">Ticket Details @if($quoteData->primaryname == $quoteData->personnelid) (Primary) @endif</h5>
+<h5 class="mb-4 text-center">Ticket Details @if($quoteData->primaryname == $pworkerid) (Primary) @endif</h5>
 <h4 class="mb-3">{{$quoteData->customername}}</h4>
 <div class="text-lead mb-3">
   <p>{{$quoteData->address}}</p>
@@ -740,12 +739,30 @@ Map / Directions</a>
         <p>Time: {{$quoteData->time}} {{$quoteData->minute}}</p>
       </div>
     </div>
-    <div class="col-md-6">
-      <div>
-        <p>Price: ${{$quoteData->price}}</p>
-      </div>
-    </div>
+     @if($quoteData->payment_mode!="")
+        @if(!in_array("See Price of Previous Tickets", $permissonarray))
+            <div class="col-md-6">
+              
+            </div>
+        @endif
+    @endif
+    @if($quoteData->payment_mode!="")
+        @if(in_array("See Price of Previous Tickets", $permissonarray))
+            <div class="col-md-6">
+              <div>
+                <p>Price: ${{$quoteData->price}}</p>
+              </div>
+            </div>
+        @endif
+    @endif
     
+    @if($quoteData->payment_mode=="")
+       <div class="col-md-6">
+              <div>
+                <p>Price: ${{$quoteData->price}}</p>
+              </div>
+            </div>     
+    @endif
     <div class="col-md-6">
       <div>
 <p>{{$servicename}}</p></div></div>
@@ -811,8 +828,15 @@ Map / Directions</a>
 <!-- <div class="col-lg-6 mb-3">
 <a href="javascript:void(0)" class="btn btn-personnal w-100" onClick="setFocus()">Customer Notes</a>
 </div> -->
+@php
+    if($quoteData->payment_mode!="") {
+        $sclass = "pointer-events: none;background:#fee2002e";
+    } else {
+        $sclass = "";
+    }
+@endphp
 <div class="col-lg-12 mb-3">
-<a class="btn add-btn-yellow w-100" data-bs-toggle="modal" data-bs-target="#add-tickets" id="editTickets" data-id="{{$quoteData->id}}" data-price="{{$quoteData->price}}">Create Invoice</a>
+<a class="btn add-btn-yellow w-100" data-bs-toggle="modal" data-bs-target="#add-tickets" id="editTickets" data-id="{{$quoteData->id}}" data-price="{{$quoteData->price}}" style="{{$sclass}}">Create Invoice</a>
 </div>
 </div>
 </div>

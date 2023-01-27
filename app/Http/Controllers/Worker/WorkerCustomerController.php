@@ -132,7 +132,7 @@ class WorkerCustomerController extends Controller
             }
           $cidss = array();
           foreach($customerAddress as $key=>$value) {
-           $cidss[] =  $value->id;
+           $cidss[] =  @$value->id;
           }
           $customerAddress = Address::whereIn('id',$cidss)->where('customerid',$id)->get()->toArray();
 

@@ -518,7 +518,7 @@ class WorkerTicketController extends Controller
 
     public function view(Request $request ,$id) {
       $auth_id = auth()->user()->id;
-     
+      $pworkerid= auth()->user()->workerid;
       if(auth()->user()->role == 'worker') {
           $auth_id = auth()->user()->id;
       } else {
@@ -593,7 +593,7 @@ class WorkerTicketController extends Controller
           }
         }
         
-        return view('personnel.ticketview',compact('quoteData','checklistData','sdata','prequoteData','servicename','productname','totalprice','productData','tenture','cid','ckinfo','permissonarray'));
+        return view('personnel.ticketview',compact('quoteData','checklistData','sdata','prequoteData','servicename','productname','totalprice','productData','tenture','cid','ckinfo','permissonarray','pworkerid'));
     }
 
     public function viewmap(Request $request ,$id) {
@@ -731,6 +731,7 @@ class WorkerTicketController extends Controller
           </div>';
       if($getprimary == $personnelid) {
         if(in_array("Create Invoice for payment", $permissonarray) || in_array("Administrator", $permissonarray)) {
+          
          $html .= '<div class="row"><div class="col-lg-6 mb-2">
               <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="sendinvoice">Send Invoice</button>
             </div>
