@@ -492,7 +492,13 @@ class UserController extends Controller
     public function myserviceData(Request $request) {
         $user = Auth::user();
         $auth_id = $user->id;
-
+        @$workersdata = Personnel::where('id',$user->workerid)->first();
+        @$permissonarray = explode(',',$workersdata->ticketid);
+        if(in_array("Add Service", $permissonarray)) {
+          $opentab = 1;
+        } else {
+          $opentab = 0;
+        }
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
         $servicedetails = DB::table('services')->select('services.id','services.userid','services.servicename','services.price','services.time as hours','services.minute')->where('userid',$worker->userid)->orderBy('services.id','desc')->get();
         // $serviceids = DB::table('quote')->select('serviceid','customerid')->where('personnelid',$worker->workerid)->get();
@@ -508,7 +514,7 @@ class UserController extends Controller
         // $servicedetails = DB::table('quote')->whereIn('serviceid',$serviceidss)->whereIn('customerid',$customerids)->orderBy('id','DESC')->get();
 
         if ($servicedetails) {
-                return response()->json(['status'=>1,'message'=>'success','data'=>$servicedetails],$this->successStatus);
+                return response()->json(['status'=>1,'message'=>'success','data'=>$servicedetails,'opentab'=>$opentab],$this->successStatus);
         } else {
             return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
@@ -516,6 +522,14 @@ class UserController extends Controller
     public function myproductData(Request $request) {
         $user = Auth::user();
         $auth_id = $user->id;
+        
+        @$workersdata = Personnel::where('id',$user->workerid)->first();
+        @$permissonarray = explode(',',$workersdata->ticketid);
+        if(in_array("Add Product", $permissonarray)) {
+          $opentab = 1;
+        } else {
+          $opentab = 0;
+        }
 
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
         
@@ -530,7 +544,7 @@ class UserController extends Controller
         
 
         if ($productdata) {
-                return response()->json(['status'=>1,'message'=>'success','data'=>$productdata],$this->successStatus);
+                return response()->json(['status'=>1,'message'=>'success','data'=>$productdata,'opentab'=>$opentab],$this->successStatus);
         } else {
             return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
         }
