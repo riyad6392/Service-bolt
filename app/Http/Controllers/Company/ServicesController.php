@@ -184,7 +184,7 @@ class ServicesController extends Controller
         if($services[0]['type'] =='recurring') {
             $checked3 = "checked";
         }
-        if($services[0]['type'] =='flatrate') {
+        if($services[0]['type'] =='flatrate' || $services[0]['type'] =='Flatrate') {
             $checked2 = "checked";
         }
         
