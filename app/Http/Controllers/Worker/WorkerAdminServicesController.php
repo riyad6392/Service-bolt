@@ -49,7 +49,7 @@ class WorkerAdminServicesController extends Controller
 
       $serviceData = Service::where('userid',$worker->userid)->where('workerid',$worker->workerid)->orderBy('id','ASC')->get();
 
-      $productData = Inventory::where('user_id',$worker->userid)->where('workerid',$worker->workerid)->orderBy('id','ASC')->get();
+      $productData = Inventory::where('user_id',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
         $table="services";
         $fields = DB::getSchemaBuilder()->getColumnListing($table);
         $tenture = Tenture::where('status','Active')->get();
@@ -120,7 +120,7 @@ class WorkerAdminServicesController extends Controller
 
       $services = Service::where('id',$request->id)->orderBy('id','ASC')->get();
       $servicesnew = Service::where('id',$request->id)->orderBy('id','ASC')->get()->toArray();
-      $productData = Inventory::where('user_id',$worker->userid)->where('workerid',$worker->workerid)->orderBy('id','ASC')->get();
+      $productData = Inventory::where('user_id',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
        $checklistData = DB::table('checklist')->select('*')->where('serviceid',$request->id)->get();
        $tenture = Tenture::where('status','Active')->get();
        if($services[0]['image'] != null) {
@@ -331,7 +331,7 @@ class WorkerAdminServicesController extends Controller
         $imagepath = url('/').'/uploads/servicebolt-noimage.png';
       }
       $html ='<div class="product-card targetDiv" id="div1">
-              <img src="'.$imagepath.'" alt="" style="height: 190px;object-fit: cover;">
+              <img src="'.$imagepath.'" alt="" style="height: 200px;">
               <h2>'.$services[$datacount]->servicename.'</h2>
               <div class="product-info-list">
                 <div class="mb-4">
@@ -355,7 +355,7 @@ class WorkerAdminServicesController extends Controller
       }
         
       $html ='<div class="product-card targetDiv" id="div1">
-              <img src="'.$imagepath.'" alt="" style="height: 190px;object-fit: cover;">
+              <img src="'.$imagepath.'" alt="" style="height: 200px;">
               <h2>'.$services[0]->servicename.'</h2>
               <div class="product-info-list">
                 <div class="mb-4">

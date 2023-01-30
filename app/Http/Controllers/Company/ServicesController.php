@@ -386,7 +386,7 @@ class ServicesController extends Controller
         $imagepath = url('/').'/uploads/servicebolt-noimage.png';
       }
       $html ='<div class="product-card targetDiv" id="div1">
-              <img src="'.$imagepath.'" alt="">
+              <img src="'.$imagepath.'" class="img-fluid">
               <h2>'.$services[$datacount]->servicename.'</h2>
               <div class="product-info-list">
                 <div class="mb-4">
@@ -414,7 +414,7 @@ class ServicesController extends Controller
       }
         
       $html ='<div class="product-card targetDiv" id="div1">
-              <img src="'.$imagepath.'" alt="">
+              <img src="'.$imagepath.'" class="img-fluid">
               <h2>'.$services[0]->servicename.'</h2>
               <div class="product-info-list">
                 <div class="mb-4">

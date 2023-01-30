@@ -1058,8 +1058,8 @@ Save
           <div class="col-md-6 mb-2">
             <label>Default Time (hh:mm)</label><br>
             <div class="timepicker timepicker1" style="display:inline-block;">
-            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div></div>
           <div class="col-md-12">
             <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
@@ -5000,6 +5000,8 @@ Save
         if ($input.length) {
             $input.fileinput();
         }
+        $("#time").val('1');
+        $("#minute").val('0');
     });
 }));
 $(".upload-btn").click(function() {

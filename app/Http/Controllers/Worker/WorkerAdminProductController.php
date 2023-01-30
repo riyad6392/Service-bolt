@@ -42,7 +42,7 @@ class WorkerAdminProductController extends Controller
 
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
       
-        $serviceData = Service::where('userid',$worker->userid)->where('workerid',$worker->workerid)->get();
+        $serviceData = Service::where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
         $inventoryData = Inventory::where('user_id',$worker->userid)->where('workerid',$worker->workerid)->get();
         $countdata = count($inventoryData);
         $datacount = $countdata-1;
@@ -107,7 +107,7 @@ class WorkerAdminProductController extends Controller
        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
 
        $inventory = Inventory::where('id', $request->id)->get();
-       $services = Service::where('userid',$worker->userid)->where('workerid',$worker->workerid)->get();
+       $services = Service::where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
        if($inventory[0]->image != null) {
           $userimage = url('uploads/inventory/'.$inventory[0]->image);
         } else {
@@ -163,9 +163,13 @@ class WorkerAdminProductController extends Controller
       <label>Preferred Quantity</label>
       <input type="text" class="form-control" placeholder="Preferred Quantity" value="'.$inventory[0]->pquantity.'" name="pquantity" id="pquantity" required>
      </div>
-     <div class="col-md-12 mb-3">
+     <div class="col-md-6 mb-3">
       <label>SKU</label>
      <input type="text" class="form-control" placeholder="SKU #" value="'.$inventory[0]->sku.'" name="sku" id="sku" required>
+     </div>
+     <div class="col-md-6 mb-3">
+      <label>Unit</label>
+     <input type="text" class="form-control" placeholder="Unit" value="'.$inventory[0]->unit.'" name="Unit" id="Unit">
      </div>
      <div class="col-md-12 mb-3">
       <label>Price</label>
@@ -223,6 +227,7 @@ class WorkerAdminProductController extends Controller
           $inventory->quantity = $request->quantity;
           $inventory->pquantity = $request->pquantity;
           $inventory->sku = $request->sku;
+          $inventory->unit = $request->unit;
           $inventory->price = $request->price;
           $inventory->category = $request->category;
           $inventory->description = $request->description;
@@ -262,7 +267,7 @@ class WorkerAdminProductController extends Controller
           $imagepath = url('/').'/uploads/servicebolt-noimage.png';
        }
       $html ='<div class="product-card targetDiv" id="div1">
-              <img src="'.$imagepath.'" alt="">
+              <img src="'.$imagepath.'" alt="" style="height:200px;">
               <h2>'.$inventory[$datacount]->productname.'</h2>
               <div class="product-info-list">
                 <div class="mb-4">
@@ -286,7 +291,7 @@ class WorkerAdminProductController extends Controller
           $imagepath = url('/').'/uploads/servicebolt-noimage.png';
         }
       $html ='<div class="product-card targetDiv" id="div1">
-              <img src="'.$imagepath.'" alt="">
+              <img src="'.$imagepath.'" alt="" style="height:200px;">
               <h2>'.$inventory[0]->productname.'</h2>
               <div class="product-info-list">
                 <div class="mb-4">

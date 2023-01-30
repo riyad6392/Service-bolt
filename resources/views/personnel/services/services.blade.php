@@ -261,8 +261,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             </select> -->
             <label>Default Time (hh:mm)</label><br>
             <div class="timepicker timepicker1" style="display:inline-block;">
-            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div></div>
           <div class="col-md-12 mb-2">
             <label>Choose Color</label><br>
@@ -390,6 +390,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       "order": [[ 0, "desc" ]]
     });
     $("#example tbody > tr:first-child").addClass('selectedrow');
+    $("#time").val('1');
+    $("#minute").val('0');
   });
    $.ajaxSetup({
       headers: {
