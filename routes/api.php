@@ -54,6 +54,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::post('/createticket', [App\Http\Controllers\Api\UserController::class, 'createticket'])->name('createticket');
 
 	Route::get('/servicedata', [App\Http\Controllers\Api\UserController::class, 'servicedata'])->name('servicedata');
+	
+	Route::post('/addservice', [App\Http\Controllers\Api\UserController::class, 'addservice'])->name('addservice');
+	Route::post('/addproduct', [App\Http\Controllers\Api\UserController::class, 'addproduct'])->name('addproduct');
+
 
 	Route::post('/addcustomer', [App\Http\Controllers\Api\UserController::class, 'addcustomer'])->name('addcustomer');
 

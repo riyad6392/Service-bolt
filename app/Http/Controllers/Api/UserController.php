@@ -2198,4 +2198,76 @@ class UserController extends Controller
         return response()->json(['status'=>1,'data'=>$html],$this->successStatus);
     }
 
+    public function addservice(Request $request) {
+      $auth_id = auth()->user()->id;
+      $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+      
+      $data['userid'] = $worker->userid;
+      $data['workerid'] = $worker->workerid;
+      $data['servicename'] = $request->servicename;
+      $data['price'] = $request->price;
+      if($request->productid) {
+          $data['productid'] = $request->productid;
+      }
+      $data['type'] = $request->radiogroup;
+      $data['frequency'] = $request->frequency;
+      if($request->hour!=null || $request->hour!=0) {
+        $data['time'] = $request->hour.' Hours';
+      }
+      if($request->minute!=null || $request->minute!=0) {
+        $data['minute'] = $request->minute.' Minutes';;
+      }
+
+      $data['color'] = $request->color;
+      $data['description'] = $request->description;
+
+      $img = $request->image;
+      if (!empty($img)) {    
+        $image_parts = explode(";base64,", $img);
+        $value = base64_decode($image_parts[1]);
+        $imageName = time()  . '.png';
+
+        $path = 'uploads/services/'.$imageName;
+       
+        file_put_contents($path, $value);
+        $data['image'] = $imageName;
+      } 
+
+      Service::create($data);
+      return response()->json(['status'=>1,'message'=>'Service Created Successfully'],$this->successStatus);    
+    }
+
+    public function addproduct(Request $request) {
+      $auth_id = auth()->user()->id;
+      $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+      
+      $data['user_id'] = $worker->userid;
+      $data['workerid'] = $worker->workerid;
+      $data['productname'] = $request->productname;
+      if($request->serviceid) {
+          $data['serviceid'] = $request->serviceid;
+      }
+      $data['quantity'] = $request->quantity;
+      $data['pquantity'] = $request->pquantity;
+      $data['sku'] = $request->sku;
+      $data['unit'] = $request->unit;
+      $data['price'] = $request->price;
+      $data['description'] = $request->description;
+     
+      $img = $request->image;
+      if (!empty($img)) {    
+        $image_parts = explode(";base64,", $img);
+        $value = base64_decode($image_parts[1]);
+        $imageName = time()  . '.png';
+
+        $path = 'uploads/inventory/'.$imageName;
+       
+        file_put_contents($path, $value);
+        $data['image'] = $imageName;
+      } 
+
+      Inventory::create($data);
+      return response()->json(['status'=>1,'message'=>'Product Created Successfully'],$this->successStatus);    
+    }
+
 }
