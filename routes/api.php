@@ -113,5 +113,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	
 	Route::post('/setnotes', [App\Http\Controllers\Api\UserController::class, 'setnotes'])->name('setnotes');
 	Route::post('/setnotesview', [App\Http\Controllers\Api\UserController::class, 'setnotesview'])->name('setnotesview');
-
+	Route::post('/category', [App\Http\Controllers\Api\UserController::class, 'category'])->name('category');
 });

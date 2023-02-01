@@ -2267,6 +2267,7 @@ class UserController extends Controller
       $data['unit'] = $request->unit;
       $data['price'] = $request->price;
       $data['description'] = $request->description;
+      $data['category'] = $request->category;
      
       $img = $request->image;
       if (!empty($img)) {    
@@ -2282,6 +2283,13 @@ class UserController extends Controller
 
       Inventory::create($data);
       return response()->json(['status'=>1,'message'=>'Product Created Successfully'],$this->successStatus);    
+    }
+
+    public function category(Request $request) 
+    {
+      $userid = auth()->user()->userid;
+      $categoryList = DB::table('category')->select('id','category_name')->where('userid', $userid)->orderBy('id','DESC')->get();
+      return response()->json(['status'=>1,'message'=>'Success','data'=>$categoryList],$this->successStatus);
     }
 
 }
