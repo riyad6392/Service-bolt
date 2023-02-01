@@ -500,7 +500,7 @@ class UserController extends Controller
           $opentab = 0;
         }
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
-        $servicedetails = DB::table('services')->select('services.id','services.userid','services.servicename','services.price','services.time as hours','services.minute')->where('userid',$worker->userid)->orderBy('services.id','desc')->get();
+        $servicedetails = DB::table('services')->select('services.id','services.userid','services.servicename','services.price','services.time as hours','services.minute','services.description')->where('userid',$worker->userid)->orderBy('services.id','desc')->get();
         // $serviceids = DB::table('quote')->select('serviceid','customerid')->where('personnelid',$worker->workerid)->get();
 
         //   foreach($serviceids as $key => $value) {
