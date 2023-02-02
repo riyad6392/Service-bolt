@@ -252,17 +252,17 @@
     <table style="width: 100%;background:#f8f6f6;border-radius: 10px;
     margin: 0px;">
     <tbody>
-     <tr>
+    <tr>
         <td style="vertical-align: top;padding: 0px 12px; border-radius: 10px;background-color: {{$color}};">
          <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 18px;">Note:
             <br><span style="color: {{$txtcolor}};  font-size: 16px;">@if(@$invoicenote){!!@$invoicenote!!}@else --- @endif</span></p>
         </td>
         <td style="width: 34%;padding: 0px 12px;background-color: {{$color}}; border-radius: 10px;">
-    <p style="border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">Subtotal: {{$subtotalprice}}</p>
-    <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">Sales Tax: {{$taxprice}}</p>
-    <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Total: ${{ $totalprice }}</p>
+        <p style="border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">Subtotal: {{$subtotalprice}}</p>
+        <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">Sales Tax: {{$taxprice}}</p>
+        <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Total: ${{ $totalprice }}</p>
         </td> 
-        </tr>
+    </tr>
     </tbody>
 </table>
     <table style="width: 96%;

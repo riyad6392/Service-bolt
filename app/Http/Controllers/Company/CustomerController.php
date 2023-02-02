@@ -274,14 +274,32 @@ class CustomerController extends Controller
        $worker = Personnel::where('userid', $auth_id)->get();
        $tenture = Tenture::where('status','Active')->get();
        $productData = Inventory::where('user_id', $auth_id)->get();
+
+       $userData = User::select('openingtime','closingtime')->where('id',$auth_id)->first();
+       if($userData->openingtime<$userData->closingtime) {
+          $mintime = $userData->openingtime;
+          $maxtime = $userData->closingtime; 
+       } else {
+           $maxtime = $userData->openingtime;
+           $mintime = $userData->closingtime;
+       }
+
+       $mintime = date('h a', strtotime($mintime.':00'));
+       $maxtime = date('h a', strtotime($maxtime.':00'));
+
+      $inc   = 30 * 60;
+      $start = (strtotime($mintime));
+      $end   = (strtotime($maxtime)); 
+
+       
+
        if(count($worker)>0) {
         $wclass = "";
        } else {
         $wclass = "active-focus";
        }
 
-      $userData = User::select('openingtime','closingtime')->where('id',$auth_id)->first();
-
+      
       $html ='<div class="add-customer-modal">
                 <h5>Create New Ticket</h5>
                </div>';
@@ -338,55 +356,12 @@ class CustomerController extends Controller
       </div>
       <div class="form-group col-md-6 mb-3 time" style="display:none;">
         <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
-        <select class="form-control selectpicker" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="time" style="height:auto;">
-        <option value="08:00 am">08:00 am</option>
-        <option value="08:30 am">08:30 am</option>
-        <option value="09:00 am">09:00 am</option>
-        <option value="09:30 am">09:30 am</option>
-        <option value="10:00 am">10:00 am</option>
-        <option value="10:30 am">10:30 am</option>
-        <option value="11:00 am">11:00 am</option>
-        <option value="11:30 am">11:30 am</option>
-        <option value="12:00 pm">12:00 pm</option>
-        <option value="12:30 pm">12:30 pm</option>
-        <option value="01:00 pm">01:00 pm</option>
-        <option value="01:30 pm">01:30 pm</option>
-        <option value="02:00 pm">02:00 pm</option>
-        <option value="02:30 pm">02:30 pm</option>
-        <option value="03:00 pm">03:00 pm</option>
-        <option value="03:30 pm">03:30 pm</option>
-        <option value="04:00 pm">04:00 pm</option>
-        <option value="04:30 pm">04:30 pm</option>
-        <option value="05:00 pm">05:00 pm</option>
-        <option value="05:30 pm">05:30 pm</option>
-        <option value="06:00 pm">06:00 pm</option>
-        <option value="06:30 pm">06:30 pm</option>
-        <option value="07:00 pm">07:00 pm</option>
-        <option value="07:30 pm">07:30 pm</option>
-        <option value="08:00 pm">08:00 pm</option>
-        <option value="08:30 pm">08:30 pm</option>
-        <option value="09:00 pm">09:00 pm</option>
-        <option value="09:30 pm">09:30 pm</option>
-        <option value="10:00 pm">10:00 pm</option>
-        <option value="10:30 pm">10:30 pm</option>
-        <option value="11:00 pm">11:00 pm</option>
-        <option value="11:30 pm">11:30 pm</option>
-        <option value="12:00 am">12:00 am</option>
-        <option value="12:30 am">12:30 am</option>
-        <option value="01:00 am">01:00 am</option>
-        <option value="01:30 am">01:30 am</option>
-        <option value="02:00 am">02:00 am</option>
-        <option value="02:30 am">02:30 am</option>
-        <option value="03:00 am">03:00 am</option>
-        <option value="03:30 am">03:30 am</option>
-        <option value="04:00 am">04:00 am</option>
-        <option value="04:30 am">04:30 am</option>
-        <option value="05:00 am">05:00 am</option>
-        <option value="05:30 am">05:30 am</option>
-        <option value="06:00 am">06:00 am</option>
-        <option value="06:30 am">06:30 am</option>
-        <option value="07:00 am">07:00 am</option>
-        <option value="07:30 am">07:30 am</option>';
+        <select class="form-control selectpicker" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="time" style="height:auto;">';
+        for( $i = $start; $i <= $end; $i += $inc)
+        {
+          $range = date( 'g:i A', $i);
+          $html .='<option value="'.$range.'">'.$range.'</option>';
+        }
       $html .='</select></div>
       <div class="col-md-6 mb-3 date" style="display:none;">
      <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
@@ -515,13 +490,22 @@ class CustomerController extends Controller
       $data['radiogroup'] = $request->radiogroup;
       $data['frequency'] = $request->frequency;
       $data['primaryname'] = $request->personnelid;
-
+      //$fhours = 0;
       if($request->time!=null || $request->time!=0) {
           $data['time'] = $request->time.' Hours';
+          //$fhours = $request->time * 60;
         }
+        //$shours = 0;
         if($request->minute!=null || $request->minute!=0) {
-          $data['minute'] = $request->minute.' Minutes';;
+          $data['minute'] = $request->minute.' Minutes';
+          //$shours = $request->minute;
         }
+        // $totalsecond =$fhours + $shours;
+        // $persvalue = $request->price/60;
+        // $totalvalue = $persvalue*$totalsecond;
+        // if($request->radiogroup == "perhour") {
+        //    $data['price'] = $totalvalue;
+        // } else {
       $data['price'] = $request->price;
       $data['etc'] = $request->etc;
       $data['description'] = $request->description;
@@ -1301,11 +1285,11 @@ class CustomerController extends Controller
       $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
       $givendate = $tdata->givendate;
       if($request->invoicetype == "viewinvoice") {
-        return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]); 
+        return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode]); 
       }
 
       if($request->invoicetype == "downloadinvoice") {
-        $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
+        $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode]);
           return $pdf->download($tdata->id .'_invoice.pdf');
       }
 
@@ -1320,9 +1304,9 @@ class CustomerController extends Controller
           $tdata1->save();
           $user_exist = Customer::where('email', $cinfo->email)->first();
 
-            $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
+            $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode]);
 
-            Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate], function($message) use ($user_exist,$app_name,$app_email,$pdf) {
+            Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode], function($message) use ($user_exist,$app_name,$app_email,$pdf) {
             $message->to($user_exist->email);
             $message->subject('Invoice PDF!');
             //$message->from($app_email,$app_name);
