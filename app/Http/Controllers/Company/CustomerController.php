@@ -276,17 +276,22 @@ class CustomerController extends Controller
        $productData = Inventory::where('user_id', $auth_id)->get();
 
        $userData = User::select('openingtime','closingtime')->where('id',$auth_id)->first();
-       if($userData->openingtime<$userData->closingtime) {
-          $mintime = $userData->openingtime;
-          $maxtime = $userData->closingtime; 
+      if($userData->openingtime!="" || $userData->openingtime!=null) {
+           if($userData->openingtime<$userData->closingtime) {
+            $mintime = $userData->openingtime;
+            $maxtime = $userData->closingtime; 
+         } else {
+             $maxtime = $userData->openingtime;
+             $mintime = $userData->closingtime;
+         }
+
+          $mintime = date('h a', strtotime($mintime.':00'));
+          $maxtime = date('h a', strtotime($maxtime.':00'));
        } else {
-           $maxtime = $userData->openingtime;
-           $mintime = $userData->closingtime;
-       }
-
-       $mintime = date('h a', strtotime($mintime.':00'));
-       $maxtime = date('h a', strtotime($maxtime.':00'));
-
+          $mintime= "12 am";
+          $maxtime= "11 pm";
+      }
+      
       $inc   = 30 * 60;
       $start = (strtotime($mintime));
       $end   = (strtotime($maxtime)); 
