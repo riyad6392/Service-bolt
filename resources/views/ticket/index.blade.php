@@ -722,15 +722,15 @@ select#servicename {
 		<div class="col-md-12 mb-3">
 		   <div class="align-items-center justify-content-lg-between d-flex services-list">
 		  	<label class="container-checkbox">Per hour
-			  <input type="radio" id="test1" name="radiogroup" value="perhour" checked>
+			  <input type="radio" id="test1" name="radiogroup" value="perhour" class="radiogroup" checked>
 			  <span class="checkmark"></span>
 			</label>
 			<label class="container-checkbox">Flate rate
-			  <input type="radio" id="test2" name="radiogroup" value="flatrate">
+			  <input type="radio" id="test2" name="radiogroup" value="flatrate" class="radiogroup">
 			  <span class="checkmark"></span>
 			</label>
 			<label class="container-checkbox">Reccuring
-			  <input type="radio" id="test3" name="radiogroup" value="recurring">
+			  <input type="radio" id="test3" name="radiogroup" value="recurring" class="radiogroup">
 			  <span class="checkmark"></span>
 			</label>
 		  </div>
@@ -751,14 +751,15 @@ select#servicename {
 	    <div class="col-md-6 mb-2">
 		<label>Default Service Time</label><br>
             <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
-            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            <input type="text" class="hh N popfields" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N popfields" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div>
         </div>
 
 	   <div class="col-md-12 mb-3 position-relative">
 		<i class="fa fa-dollar" style="position: absolute;margin: 18px;"></i>
 	   	<input type="text" class="form-control" placeholder="Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+	   		<input type="hidden" name="hiddenprice" id="hiddenprice">
 	   </div>
 	   
 	   <div class="col-md-12 mb-3">
@@ -907,59 +908,36 @@ select#servicename {
            @endforeach
         </select>
       </div>
+     @php
+     	if($userData->openingtime!="" || $userData->openingtime!=null) {
+           if($userData->openingtime<$userData->closingtime) {
+            	$mintime = $userData->openingtime;
+            	$maxtime = $userData->closingtime; 
+	         } else {
+	            $maxtime = $userData->openingtime;
+	            $mintime = $userData->closingtime;
+	         }
 
+	          $mintime = date('h a', strtotime($mintime.':00'));
+	          $maxtime = date('h a', strtotime($maxtime.':00'));
+	    } else {
+	          $mintime= "12 am";
+	          $maxtime= "11 pm";
+	    }
+	    $inc   = 30 * 60;
+        $start = (strtotime($mintime));
+        $end   = (strtotime($maxtime)); 
+     @endphp
     <div class="form-group col-md-6 mb-3 time" style="display:none;">
         <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
         <select class="form-control selectpicker" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="timedefault" style="height:auto;">
-	        <option value="08:00 am">08:00 am</option>
-	        <option value="08:30 am">08:30 am</option>
-	        <option value="09:00 am">09:00 am</option>
-	        <option value="09:30 am">09:30 am</option>
-	        <option value="10:00 am">10:00 am</option>
-	        <option value="10:30 am">10:30 am</option>
-	        <option value="11:00 am">11:00 am</option>
-	        <option value="11:30 am">11:30 am</option>
-	        <option value="12:00 pm">12:00 pm</option>
-	        <option value="12:30 pm">12:30 pm</option>
-	        <option value="01:00 pm">01:00 pm</option>
-	        <option value="01:30 pm">01:30 pm</option>
-	        <option value="02:00 pm">02:00 pm</option>
-	        <option value="02:30 pm">02:30 pm</option>
-	        <option value="03:00 pm">03:00 pm</option>
-	        <option value="03:30 pm">03:30 pm</option>
-	        <option value="04:00 pm">04:00 pm</option>
-	        <option value="04:30 pm">04:30 pm</option>
-	        <option value="05:00 pm">05:00 pm</option>
-	        <option value="05:30 pm">05:30 pm</option>
-	        <option value="06:00 pm">06:00 pm</option>
-	        <option value="06:30 pm">06:30 pm</option>
-	        <option value="07:00 pm">07:00 pm</option>
-	        <option value="07:30 pm">07:30 pm</option>
-	        <option value="08:00 pm">08:00 pm</option>
-	        <option value="08:30 pm">08:30 pm</option>
-	        <option value="09:00 pm">09:00 pm</option>
-	        <option value="09:30 pm">09:30 pm</option>
-	        <option value="10:00 pm">10:00 pm</option>
-	        <option value="10:30 pm">10:30 pm</option>
-	        <option value="11:00 pm">11:00 pm</option>
-	        <option value="11:30 pm">11:30 pm</option>
-	        <option value="12:00 am">12:00 am</option>
-	        <option value="12:30 am">12:30 am</option>
-	        <option value="01:00 am">01:00 am</option>
-	        <option value="01:30 am">01:30 am</option>
-	        <option value="02:00 am">02:00 am</option>
-	        <option value="02:30 am">02:30 am</option>
-	        <option value="03:00 am">03:00 am</option>
-	        <option value="03:30 am">03:30 am</option>
-	        <option value="04:00 am">04:00 am</option>
-	        <option value="04:30 am">04:30 am</option>
-	        <option value="05:00 am">05:00 am</option>
-	        <option value="05:30 am">05:30 am</option>
-	        <option value="06:00 am">06:00 am</option>
-	        <option value="06:30 am">06:30 am</option>
-	        <option value="07:00 am">07:00 am</option>
-	        <option value="07:30 am">07:30 am</option>
-    	</select>
+        	@for( $i = $start; $i <= $end; $i += $inc)
+        		@php
+        			$range = date( 'g:i A', $i);
+        		@endphp
+        		<option value="{{$range}}">{{$range}}</option>
+        	@endfor
+	    </select>
 	</div>
 		<div class="col-md-6 mb-3 date" style="display:none;">
 	     <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
@@ -968,15 +946,15 @@ select#servicename {
 		<div class="col-md-12 mb-3">
 		   <div class="align-items-center justify-content-lg-between d-flex services-list">
 		  	<label class="container-checkbox">Per hour
-			  <input type="radio" id="test1" name="radiogroup" value="perhour" checked>
+			  <input type="radio" id="test1" name="radiogroup" class="radiogroup1" value="perhour" checked>
 			  <span class="checkmark"></span>
 			</label>
 			<label class="container-checkbox">Flate rate
-			  <input type="radio" id="test2" name="radiogroup" value="flatrate">
+			  <input type="radio" id="test2" name="radiogroup" class="radiogroup1" value="flatrate">
 			  <span class="checkmark"></span>
 			</label>
 			<label class="container-checkbox">Reccuring
-			  <input type="radio" id="test3" name="radiogroup" value="recurring">
+			  <input type="radio" id="test3" name="radiogroup" class="radiogroup1" value="recurring">
 			  <span class="checkmark"></span>
 			</label>
 		  </div>
@@ -994,8 +972,8 @@ select#servicename {
 	   <div class="col-md-6 mb-2">
 	   <label>Default Service Time</label><br>
             <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
-            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            <input type="text" class="hh N popfields1" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N popfields1" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div>
         </div>
 
@@ -1003,6 +981,7 @@ select#servicename {
 	   	<i class="fa fa-dollar" style="position: absolute;
     margin: 18px;"></i>
 	   	<input type="text" class="form-control" placeholder="Price" name="price" id="price1" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+	   		<input type="hidden" name="hiddenprice" id="hiddenprice1">
 	   </div>
 	   
 	   <div class="col-md-12 mb-3">
@@ -1033,7 +1012,7 @@ select#servicename {
 
 
 <!----------------------Update form------------>
-<div class="modal fade" id="edit-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+<div class="modal fade" id="edit-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
       <div class="modal-body">
@@ -2395,12 +2374,15 @@ $('#serviceform').on('submit', function(event) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
+              //console.log(data.html);
               $('#viewmodaldata1').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 3
               });
               $(".selectpickerp1").selectpicker();
+              var hiddenprice = $("#priceticketedit").val();
+              $("#edithiddenprice").val(hiddenprice);
+
             }
         })
   });
@@ -2616,8 +2598,9 @@ $(document).on('change','#servicename',function(e) {
           success:function(data) {
             //console.log(data.totalprice);
             $('#price').val(data.totalprice);
+            $('#hiddenprice').val(data.totalprice);
             $('#ticketprice').val(data.totalprice);
-           }
+          }
       })
 
 
@@ -2637,6 +2620,7 @@ $(document).on('change','#productname',function(e) {
           success:function(data) {
             //console.log(data.totalprice);
             $('#price').val(data.totalprice);
+            $('#hiddenprice').val(data.totalprice);
             $('#ticketprice').val(data.totalprice);
 		  }
       })
@@ -2661,7 +2645,8 @@ $(document).on('change','#serviceid',function(e) {
             //console.log(data.totalprice);
             $('#priceticketedit').val(data.totalprice);
             $('#tickettotaledit').val(data.totalprice);
-           }
+            $('#edithiddenprice').val(data.totalprice);
+        }
       })
 
 
@@ -2682,7 +2667,8 @@ $(document).on('change','#productid',function(e) {
             //console.log(data.totalprice);
             $('#priceticketedit').val(data.totalprice);
             $('#tickettotaledit').val(data.totalprice);
-		  }
+            $('#edithiddenprice').val(data.totalprice);
+          }
       })
 });
 
@@ -2740,6 +2726,7 @@ $(document).on('change','#productid',function(e) {
             console.log(data.totalprice);
             $('#price1').val(data.totalprice);
             $('#ticketprice1').val(data.totalprice);
+            $('#hiddenprice1').val(data.totalprice);
            }
       })
 
@@ -2760,7 +2747,7 @@ $(document).on('change','#productnamet1',function(e) {
             console.log(data.totalprice);
             $('#price1').val(data.totalprice);
             $('#ticketprice1').val(data.totalprice);
-
+            $('#hiddenprice1').val(data.totalprice);
           }
       })
 });
@@ -2779,5 +2766,218 @@ $(document).on('change','#personnelid',function(e) {
      $("#date").attr('required',true);
     }
   });
+
+
+// $('.popfields').change(function() { 
+// 	var hiddenprice = $("#hiddenprice").val();
+// 	var hours = $("#time").val();
+// 	if(hours!="" || hours!=0 || hours != "00") {
+// 		var hours = $("#time").val();
+// 		var minutes = hours * 60;
+// 	} else {
+// 		var minutes = $("#time").val();
+// 	}
+// 	var fminute = minutes;
+// 	if($("#minute").val()!=""){
+// 	var secondmin = $("#minute").val();
+
+// 	} else {
+// 	var secondmin = 0;
+
+// 	}
+// 	var sum = parseInt(fminute) + parseInt(secondmin);
+// 	var price = $("#hiddenprice").val();
+// 	var persvalue = parseFloat(price/60);
+// 	var totoalvalue = parseFloat(persvalue*sum).toFixed(2);
+// 	var radiogroup = $('input[name="radiogroup"]:checked').val();
+// 	if(radiogroup == "perhour") {
+// 		$("#price").val(totoalvalue);
+// 	} else {
+// 		$("#price").val(hiddenprice);
+// 	}
+// });
+// $(".radiogroup").change(function() { 
+// 	var radiogroup = $('input[name="radiogroup"]:checked').val();
+// 	var hours = $("#time").val();
+// 	if(hours!="" || hours!=0 || hours != "00") {
+// 		var hours = $("#time").val();
+// 		var minutes = hours * 60;
+// 	} else {
+// 		var minutes = $("#time").val();
+// 	}
+// 	var fminute = minutes;
+// 	if($("#minute").val()!=""){
+// 	var secondmin = $("#minute").val();
+
+// 	} else {
+// 	var secondmin = 0;
+
+// 	}
+// 	var sum = parseInt(fminute) + parseInt(secondmin);
+// 	var price = $("#hiddenprice").val();
+// 	var persvalue = parseFloat(price/60);
+// 	var totoalvalue = parseFloat(persvalue*sum).toFixed(2);
+// 	if(radiogroup == "flatrate" || radiogroup == "recurring") {
+// 		var hiddenprice = $("#hiddenprice").val();
+// 		$("#price").val(hiddenprice);
+// 	} else {
+// 		$("#price").val(totoalvalue);
+// 	}
+// });
+
+// // for ticket create section start
+// 	$('.popfields1').change(function() { 
+// 	var hiddenprice = $("#hiddenprice1").val();
+// 	var hours = $("#time1").val();
+// 	if(hours!="" || hours!=0 || hours != "00") {
+// 		var hours = $("#time1").val();
+// 		var minutes = hours * 60;
+// 	} else {
+// 		var minutes = $("#time1").val();
+// 	}
+// 	var fminute = minutes;
+// 	if($("#minute1").val()!=""){
+// 	var secondmin = $("#minute1").val();
+
+// 	} else {
+// 	var secondmin = 0;
+
+// 	}
+// 	var sum = parseInt(fminute) + parseInt(secondmin);
+// 	var price = $("#hiddenprice1").val();
+// 	var persvalue = parseFloat(price/60);
+// 	var totoalvalue = parseFloat(persvalue*sum).toFixed(2);
+// 	var radiogroup = $('input[class="radiogroup1"]:checked').val();
+// 	if(radiogroup == "perhour") {
+// 		$("#price1").val(totoalvalue);
+// 	} else {
+// 		$("#price1").val(hiddenprice);
+// 	}
+// });
+// $(".radiogroup1").change(function() { 
+// 	var radiogroup = $('input[class="radiogroup1"]:checked').val();
+// 	var hours = $("#time1").val();
+// 	if(hours!="" || hours!=0 || hours != "00") {
+// 		var hours = $("#time1").val();
+// 		var minutes = hours * 60;
+// 	} else {
+// 		var minutes = $("#time1").val();
+// 	}
+// 	var fminute = minutes;
+// 	if($("#minute1").val()!="") {
+// 	var secondmin = $("#minute1").val();
+
+// 	} else {
+// 	var secondmin = 0;
+
+// 	}
+// 	var sum = parseInt(fminute) + parseInt(secondmin);
+// 	var price = $("#hiddenprice1").val();
+// 	var persvalue = parseFloat(price/60);
+// 	var totoalvalue = parseFloat(persvalue*sum).toFixed(2);
+// 	if(radiogroup == "flatrate" || radiogroup == "recurring") {
+// 		var hiddenprice = $("#hiddenprice1").val();
+// 		$("#price1").val(hiddenprice);
+// 	} else {
+// 		$("#price1").val(totoalvalue);
+// 	}
+// });
+// // ticket create section end
+
+// $(document).on('change','.popfieldsedit',function(e) {
+// 	var hiddenprice = $("#edithiddenprice").val();
+// 	var hours = $("#timeedit").val();
+// 	if(hours!="" || hours!=0 || hours != "00") {
+// 		var hours = $("#timeedit").val();
+// 		var minutes = hours * 60;
+// 	} else {
+// 		var minutes = $("#timeedit").val();
+// 	}
+// 	var fminute = minutes;
+// 	if($("#minuteedit").val()!=""){
+// 	var secondmin = $("#minuteedit").val();
+
+// 	} else {
+// 	var secondmin = 0;
+
+// 	}
+// 	var sum = parseInt(fminute) + parseInt(secondmin);
+// 	var price = $("#edithiddenprice").val();
+// 	var persvalue = parseFloat(price/60);
+// 	var totoalvalue = parseFloat(persvalue*sum).toFixed(2);
+// 	var radiogroup = $('input[class="radiogroupedit"]:checked').val();
+// 	if(radiogroup == "perhour") {
+// 		$("#priceticketedit").val(totoalvalue);
+// 	} else {
+// 		$("#priceticketedit").val(hiddenprice);
+// 	}
+// });
+
+// $(document).on('change','.radiogroupedit',function(e) {
+// 	var radiogroup = $('input[class="radiogroupedit"]:checked').val();
+// 	var hours = $("#timeedit").val();
+// 	if(hours!="" || hours!=0 || hours != "00") {
+// 		var hours = $("#timeedit").val();
+// 		var minutes = hours * 60;
+// 	} else {
+// 		var minutes = $("#timeedit").val();
+// 	}
+// 	var fminute = minutes;
+// 	if($("#minuteedit").val()!="") {
+// 	var secondmin = $("#minuteedit").val();
+
+// 	} else {
+// 	var secondmin = 0;
+
+// 	}
+// 	var sum = parseInt(fminute) + parseInt(secondmin);
+// 	var price = $("#edithiddenprice").val();
+// 	var persvalue = parseFloat(price/60);
+// 	var totoalvalue = parseFloat(persvalue*sum).toFixed(2);
+// 	if(radiogroup == "flatrate" || radiogroup == "recurring") {
+// 		var hiddenprice = $("#edithiddenprice").val();
+// 		$("#priceticketedit").val(hiddenprice);
+// 	} else {
+// 		$("#priceticketedit").val(totoalvalue);
+// 	}
+// });
+
+// $(document).on('click','#priceticketedit',function(e) {
+// 	var radiogroup = $('input[class="radiogroupedit"]:checked').val();
+// 	var hours = $("#timeedit").val();
+// 	if(hours!="" || hours!=0 || hours != "00") {
+// 		var hours = $("#timeedit").val();
+// 		var minutes = hours * 60;
+// 	} else {
+// 		var minutes = $("#timeedit").val();
+// 	}
+// 	var fminute = minutes;
+// 	if($("#minuteedit").val()!="") {
+// 	var secondmin = $("#minuteedit").val();
+
+// 	} else {
+// 	var secondmin = 0;
+
+// 	}
+// 	var sum = parseInt(fminute) + parseInt(secondmin);
+// 	var price = $("#edithiddenprice").val();
+// 	var persvalue = parseFloat(price/60);
+// 	var totoalvalue = parseFloat(persvalue*sum).toFixed(2);
+// 	if(radiogroup == "flatrate" || radiogroup == "recurring") {
+// 		var hiddenprice = $("#edithiddenprice").val();
+// 		$("#priceticketedit").val(hiddenprice);
+// 	} else {
+// 		$("#priceticketedit").val(totoalvalue);
+// 	}
+// });
+
+$(document).on('click','.btn-close',function(e) {
+	location.reload();
+});
+
+$(document).on('click','.btn-cancel',function(e) {
+	location.reload();
+});
+
 </script>
 @endsection

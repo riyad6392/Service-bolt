@@ -849,13 +849,24 @@ class SchedulerController extends Controller
         $data['personnelid'] = $request->personnelid;
         $data['radiogroup'] = $request->radiogroup;
         $data['frequency'] = $request->frequency;
+        //$fhours = 0;
         if($request->time!=null || $request->time!=0) {
           $data['time'] = $request->time.' Hours';
+          //$fhours = $request->time * 60;
         }
+        //$shours = 0;
         if($request->minute!=null || $request->minute!=0) {
-          $data['minute'] = $request->minute.' Minutes';;
+          $data['minute'] = $request->minute.' Minutes';
+          //$shours = $request->minute;
         }
-        $data['price'] = $request->price;
+        //$totalsecond =$fhours + $shours;
+       // $persvalue = $request->price/60;
+        //$totalvalue = $persvalue*$totalsecond;
+        // if($request->radiogroup == "perhour") {
+        //    $data['price'] = $totalvalue;
+        // } else {
+           $data['price'] = $request->price;
+       
         $data['etc'] = $request->etc;
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;

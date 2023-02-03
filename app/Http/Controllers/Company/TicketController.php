@@ -51,7 +51,7 @@ class TicketController extends Controller
         $customer = Customer::where('userid',$auth_id)->orderBy('id','DESC')->get();
         $services = Service::where('userid', $auth_id)->get();
         $services1 = Service::where('userid', $auth_id)->get();
-
+        $userData = User::select('openingtime','closingtime')->where('id',$auth_id)->first();
        	$worker = Personnel::where('userid', $auth_id)->get();
         $productData = Inventory::where('user_id',$auth_id)->get();
         $completedticketData = Quote::where('userid',$auth_id)->where('ticket_status','3')->where('quote.parentid', '=',"")->orderBy('id','DESC')->get();
@@ -60,7 +60,7 @@ class TicketController extends Controller
         $fields1 = DB::getSchemaBuilder()->getColumnListing($table);
         $tenture = Tenture::where('status','Active')->get();
         //dd($services);
-        return view('ticket.index',compact('auth_id','quoteData','ticketData','customer','services','services1','worker','productData','completedticketData','fields','fields1','tenture'));
+        return view('ticket.index',compact('auth_id','quoteData','ticketData','customer','services','services1','worker','productData','completedticketData','fields','fields1','tenture','userData'));
     }
 
     public function updateticket(Request $request) {
@@ -158,13 +158,22 @@ class TicketController extends Controller
         $data['personnelid'] = $request->personnelid;
 	      $data['radiogroup'] = $request->radiogroup;
 	      $data['frequency'] = $request->frequency;
+        //$fhours = 0;
 	      if($request->time!=null || $request->time!=0) {
           $data['time'] = $request->time.' Hours';
+          //$fhours = $request->time * 60;
         }
+        //$shours = 0;
         if($request->minute!=null || $request->minute!=0) {
-          $data['minute'] = $request->minute.' Minutes';;
+          $data['minute'] = $request->minute.' Minutes';
+          //$shours = $request->minute;
         }
-	      $data['price'] = $request->price;
+        //$totalsecond =$fhours + $shours;
+
+        // $persvalue = $request->price/60;
+        // $totalvalue = $persvalue*$totalsecond;
+        $data['price'] = $request->price;
+        
 	      $data['etc'] = $request->etc;
 	      $data['description'] = $request->description;
 	      $data['customername'] =  $customer->customername;
@@ -640,12 +649,19 @@ class TicketController extends Controller
         $data['personnelid'] = $request->personnelid;
         $data['radiogroup'] = $request->radiogroup;
         $data['frequency'] = $request->frequency;
+        //$fhours = 0;
         if($request->time!=null || $request->time!=0) {
           $data['time'] = $request->time.' Hours';
+          //$fhours = $request->time * 60;
         }
+        ///$shours = 0;
         if($request->minute!=null || $request->minute!=0) {
-          $data['minute'] = $request->minute.' Minutes';;
+          $data['minute'] = $request->minute.' Minutes';
+          //$shours = $request->minute;
         }
+        // $totalsecond =$fhours + $shours;
+        // $persvalue = $request->price/60;
+        // $totalvalue = $persvalue*$totalsecond;
         $data['price'] = $request->price;
         $data['etc'] = $request->etc;
         $data['description'] = $request->description;
@@ -913,15 +929,15 @@ class TicketController extends Controller
           <div class="col-md-12 mb-2">
             <div class="align-items-center justify-content-lg-between d-flex services-list">
                <p>
-                <input type="radio" id="test4" name="radiogroup" value="perhour" '.@$checked.'>
+                <input type="radio" id="test4" name="radiogroup" value="perhour" '.@$checked.' class="radiogroupedit">
                 <label for="test4">Per Hour</label>
               </p>
               <p>
-                <input type="radio" id="test5" name="radiogroup" value="flatrate" '.@$checked2.'>
+                <input type="radio" id="test5" name="radiogroup" value="flatrate" '.@$checked2.' class="radiogroupedit">
                 <label for="test5">Flate Rate</label>
               </p>
               <p>
-                <input type="radio" id="test6" name="radiogroup" value="recurring" '.@$checked3.'>
+                <input type="radio" id="test6" name="radiogroup" value="recurring" '.@$checked3.' class="radiogroupedit">
                 <label for="test6">Recurring</label>
               </p>
             </div>
@@ -942,15 +958,16 @@ class TicketController extends Controller
             $html .='</select>
           </div>
           <div class="col-md-6 mb-2">
-            <label>Default Time (hh:mm)</label><br>
+            <label>Default Service Time (hh:mm)</label><br>
             <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
-           <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" value="'.$time[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" value="'.$minute[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+           <input type="text" class="hh N popfieldsedit" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="timeedit" value="'.$time[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N popfieldsedit" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minuteedit" value="'.$minute[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
             </div></div>
           <div class="col-md-12 mb-3 position-relative">
             <label>Price</label>
 <i class="fa fa-dollar" style="position: absolute;top: 41px;left: 27px;"></i>
             <input type="text" class="form-control" placeholder="Price" name="price" id="priceticketedit" value="'.$quotedetails[0]->price.'" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+            <input type="hidden" name="edithiddenprice" id="edithiddenprice">
            </div>
            <div class="col-md-12 mb-3">
             <label style="position: relative;left: 0px;margin-bottom: 11px;">ETC</label>
@@ -1461,9 +1478,9 @@ class TicketController extends Controller
       if($cinfo->email!=null) {
         $user_exist = Customer::where('email', $cinfo->email)->first();
 
-          $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'invoicenote'=>$tdata->customernotes,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate]);
+          $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'invoicenote'=>$tdata->customernotes,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode]);
 
-          Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'invoicenote'=>$tdata->customernotes,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate], function($message) use ($user_exist,$app_name,$app_email,$pdf) {
+          Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'invoicenote'=>$tdata->customernotes,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode], function($message) use ($user_exist,$app_name,$app_email,$pdf) {
           $message->to($user_exist->email);
           $message->subject('Invoice Details!');
           //$message->from($app_email,$app_name);
