@@ -96,6 +96,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 	Route::get('/ptolist', [App\Http\Controllers\Api\UserController::class, 'ptolist'])->name('ptolist');
 
+	Route::post('/deleteptolist', [App\Http\Controllers\Api\UserController::class, 'deleteptolist'])->name('deleteptolist');
+
 	Route::post('/sethours', [App\Http\Controllers\Api\UserController::class, 'sethours'])->name('sethours');
 	Route::post('/timesheetview', [App\Http\Controllers\Api\UserController::class, 'timesheetview'])->name('timesheetview');
 	Route::post('/timesheetviewfilter', [App\Http\Controllers\Api\UserController::class, 'timesheetviewfilter'])->name('timesheetviewfilter');

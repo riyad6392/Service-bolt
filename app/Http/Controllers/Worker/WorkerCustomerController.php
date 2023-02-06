@@ -62,18 +62,18 @@ class WorkerCustomerController extends Controller
       @$workersdata = Personnel::where('id',$worker->workerid)->first();
       @$permissonarray = explode(',',$workersdata->ticketid);
     if(in_array("View All Customers", $permissonarray)) {
-      $cdata = DB::table('quote')->select('customerid')->where('personnelid',$worker->workerid)->groupBy('customerid')->get();
-      //dd($cdata);
-      if(count($cdata)>0) {
-        foreach($cdata as $key=>$value) {
-          $cids[] = $value->customerid;
-        }
-        
-        $customerData = DB::table('customer')->where('userid',$worker->userid)->whereIn('id',$cids)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();   
-      } else {
-        $customerData = array();
-      }
-    } else {
+      // $cdata = DB::table('quote')->select('customerid')->where('personnelid',$worker->workerid)->groupBy('customerid')->get();
+      // if(count($cdata)>0) {
+      //   foreach($cdata as $key=>$value) {
+      //     $cids[] = $value->customerid;
+      //   }
+      //   $customerData = DB::table('customer')->where('userid',$worker->userid)->whereIn('id',$cids)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();   
+      // } else {
+      //   $customerData = array();
+      // }
+      $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();   
+    } 
+    else {
      //  $pdata = Quote::select('customerid')->where('personnelid',$worker->workerid)->get();
      //  $cids =  array();
      // // if(count($pdata)>0){
@@ -81,11 +81,18 @@ class WorkerCustomerController extends Controller
      //    $cids[] = $value->customerid;
      //  }
     //}
-      $customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+      $cdata = DB::table('quote')->select('id','customerid','ticket_status')->where('personnelid',$worker->workerid)->where('ticket_status','!=',3)->groupBy('customerid')->get();
+      if(count($cdata)>0) {
+        foreach($cdata as $key=>$value) {
+          $cids[] = $value->customerid;
+        }
+        $customerData = DB::table('customer')->where('workerid',$worker->workerid)->orWhereIn('id',$cids)->orderBy('id','DESC')->get();   
+      } else {
+       $customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+      }
     }
-    //dd($customerData);
-      
-      $tenture = Tenture::where('status','Active')->get(); 
+    
+    $tenture = Tenture::where('status','Active')->get(); 
       //$customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get(); 
       return view('personnel.mycustomer',compact('auth_id','customerData','services','productData','tenture'));
     }

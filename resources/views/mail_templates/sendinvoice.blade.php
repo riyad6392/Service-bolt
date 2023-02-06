@@ -83,7 +83,7 @@
             @if($duedate!="")
                 {{date('m-d-Y', strtotime($duedate))}}
             @else
-                ---
+                Due on reciept
             @endif
          </span></p>
     </h4>

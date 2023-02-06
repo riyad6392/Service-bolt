@@ -568,18 +568,28 @@ class UserController extends Controller
       @$permissonarray = explode(',',$workersdata->ticketid);
       //dd($permissonarray);
       if(in_array("View All Customers", $permissonarray)) {
-        $cdata = DB::table('quote')->select('customerid')->where('personnelid',$worker->workerid)->groupBy('customerid')->get();
-        if(count($cdata)>0) {
-        foreach($cdata as $key=>$value) {
-          $cids[] = $value->customerid;
-        }
-        
-        $customerData = DB::table('customer')->where('userid',$worker->userid)->whereIn('id',$cids)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();   
-      } else {
-        $customerData = array();
-      }
-      } else {
-        $customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+        // $cdata = DB::table('quote')->select('customerid')->where('personnelid',$worker->workerid)->groupBy('customerid')->get();
+        // if(count($cdata)>0) {
+        //     foreach($cdata as $key=>$value) {
+        //       $cids[] = $value->customerid;
+        //     }
+        //         $customerData = DB::table('customer')->where('userid',$worker->userid)->whereIn('id',$cids)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();   
+        // } else {
+        //     $customerData = array();
+        // }
+      $customerData = DB::table('customer')->where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();   
+
+    } else {
+        //$customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+        $cdata = DB::table('quote')->select('id','customerid','ticket_status')->where('personnelid',$worker->workerid)->where('ticket_status','!=',3)->groupBy('customerid')->get();
+          if(count($cdata)>0) {
+            foreach($cdata as $key=>$value) {
+              $cids[] = $value->customerid;
+            }
+            $customerData = DB::table('customer')->where('workerid',$worker->workerid)->orWhereIn('id',$cids)->orderBy('id','DESC')->get();   
+          } else {
+           $customerData = DB::table('customer')->where('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+          }
     }
 
      $tenture = Tenture::select('tenturename')->where('status','Active')->get();  
@@ -1562,7 +1572,7 @@ class UserController extends Controller
         //$timeoff = DB::table('timeoff')->where('workerid',$worker->workerid)->orderBy('id','desc')->get();
 
         $timeoff = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('GROUP_CONCAT(timeoff.date1 ORDER BY timeoff.date1) AS selectdates'),DB::raw('COUNT(timeoff.id) as counttotal'))->where('timeoff.workerid',$worker->workerid)->groupBy('timeoff.created_at')->orderBy('id','desc')->get();
-
+//dd($timeoff);
         if(count($timeoff)>0) {
             foreach($timeoff as $key=>$value) {
                 if($value->reason==null) {
@@ -2290,6 +2300,26 @@ class UserController extends Controller
       $userid = auth()->user()->userid;
       $categoryList = DB::table('category')->select('id','category_name')->where('userid', $userid)->orderBy('id','DESC')->get();
       return response()->json(['status'=>1,'message'=>'Success','data'=>$categoryList],$this->successStatus);
+    }
+
+    public function deleteptolist(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'selectedDates' => 'required'
+        ]);
+        if ($validator->fails()) { 
+            $errors = $validator->errors()->toArray();
+            $msg_err = '';
+            if(isset($errors['id'])){
+                foreach($errors['id'] as $e){
+                    $msg_err .= $e;
+                }
+            }
+            return response()->json(['status'=>0,'message'=>'date required'],$this->successStatus);
+        }
+
+        $timeoff = Workertimeoff::whereIn('date1',$request->selectedDates)->where('workerid',auth()->user()->workerid)->delete();
+        return response()->json(['status'=>1,'message'=>'Success'],$this->successStatus);
     }
 
 }
