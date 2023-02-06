@@ -1530,7 +1530,9 @@ class UserController extends Controller
 
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('workerid','userid')->where('id',$auth_id)->first();
-
+        if($request->type=="edit") {
+          $timeoff = Workertimeoff::whereIn('id',$request->Ids)->where('workerid',auth()->user()->workerid)->delete();      
+        }
         if($request->date!="") {
         $dates = explode(',',$request->date);
         if($request->notes) {
@@ -1561,6 +1563,9 @@ class UserController extends Controller
         Notification::create($data1);
         event(new MyEvent($ticketsub));
 
+      }
+      if($request->type=="edit") {
+        return response()->json(['status'=>1,'message'=>'PTO Updated successfully'],$this->successStatus); 
       }
         return response()->json(['status'=>1,'message'=>'PTO added successfully'],$this->successStatus); 
     }
