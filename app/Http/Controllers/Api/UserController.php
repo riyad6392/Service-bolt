@@ -1591,12 +1591,16 @@ class UserController extends Controller
                 if($value->selectdates!="") {
                   $sdates = explode(',',$value->selectdates);  
                 }
+                if($value->ids!="") {
+                  $ids = explode(',',$value->ids);  
+                }
                 $data[] = array(
                     'created_at' => $value->created_at,
                 'date' => $value->date,
                 'date1' => $value->date1,
                 'id' => $value->id,
                 'selectedDates' => $sdates,
+                'Ids' => $ids,
                 'notes' => $value->notes,
                 'reason' => $value->reason,
                 'status' => $value->status,
@@ -2305,21 +2309,21 @@ class UserController extends Controller
     public function deleteptolist(Request $request)
     {
         $validator = Validator::make(request()->all(), [
-            'selectedDates' => 'required'
+            'Ids' => 'required'
         ]);
         if ($validator->fails()) { 
             $errors = $validator->errors()->toArray();
             $msg_err = '';
-            if(isset($errors['id'])){
-                foreach($errors['id'] as $e){
+            if(isset($errors['Ids'])){
+                foreach($errors['Ids'] as $e){
                     $msg_err .= $e;
                 }
             }
-            return response()->json(['status'=>0,'message'=>'date required'],$this->successStatus);
+            return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
 
-        $timeoff = Workertimeoff::whereIn('date1',$request->selectedDates)->where('workerid',auth()->user()->workerid)->delete();
-        return response()->json(['status'=>1,'message'=>'Success'],$this->successStatus);
+        $timeoff = Workertimeoff::whereIn('id',$request->Ids)->where('workerid',auth()->user()->workerid)->delete();
+        return response()->json(['status'=>1,'message'=>'Delete Success'],$this->successStatus);
     }
 
 }
