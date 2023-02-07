@@ -33,7 +33,9 @@
         <tbody>
             <tr>
                 <td style=" width: %;">
-                    INVOICE
+                    <p style="margin: 0px 0 0px 0;color: #605252; font-size: 16px; ">Date:<br>
+            <span style="color: #605252;">{{date('m-d-Y', strtotime($date))}} </span>
+        </p>
                 </td>
 
                    <td style="position: relative; left: 0% !important;font-size: 21px;text-align:center !important; display: block; top:6px;color:{{$txtcolor}};">
@@ -76,17 +78,23 @@
         <br><span style="color: black; font-weight: bold;">Email -</span>{{$email}} -->
         <br><span style="color: black; font-weight: bold;"></span>
         @if(isset($billingaddress) && $billingaddress!="")
-            {{$billingaddress}}
+        @php
+           $billaddress =preg_replace('/,/', '<br>',  $billingaddress, 1);
+        @endphp
+        {!!$billaddress!!}
         @else
-            {{$address}}
+        @php
+            $addressfinal =preg_replace('/,/', '<br>',  $address, 1);
+        @endphp
+        {!!$addressfinal!!}
         @endif
     </td>
     <td style="vertical-align: top; padding: 17px">
         <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice:<br>
             <span style="color: black;">#{{ $invoiceId }} </span>
         </p>
-        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Date:<br>
-            <span style="color: black;">{{date('m-d-Y', strtotime($date))}} </span>
+        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Service Address:<br>
+            <span style="color: black;">{{$address}} </span>
         </p>
         <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice due date:<br>
             <span style="color: black;">

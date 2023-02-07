@@ -90,6 +90,12 @@
                   @endphp
                   <span title="{{$reason}}">{{$value->status}}</span> @if($value->reason!="") ({{$value->reason}}) @endif
                 @endif</td>
+                <td>
+                  <!-- <a class="123 btn btn-edit reject-btn p-3 w-auto" data-bs-toggle="modal" data-bs-target="#date-list-edit" id="date_list_edit" data-id="{{$value->ids}}" data-dates="{{$value->selectdates}}" data-notes="{{$value->notes}}">Edit</a> -->
+                  @if($value->status==null)
+                    <a class="123 btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->ids}}" style="color:red;"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                  @endif
+                </td>
                 
               </tr>
             @endforeach
@@ -141,6 +147,20 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
        <div id="viewdatelistdata"></div>
+    </div>
+  </div>
+</div>
+
+ <!----------------------edit form------------>
+<div class="modal fade" id="date-list-edit" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+      <form method="post" action="{{ route('worker.customerupdate') }}" enctype="multipart/form-data">
+        @csrf
+        <div id="vieweditform"></div>
+      </form>
+      </div>
     </div>
   </div>
 </div>
@@ -233,6 +253,64 @@
         $('#viewdatelistdata').html(data.html);
       }
     })
+  });
+
+  $('html').on('click','#delete',function() {
+   var id = $(this).data('id');
+   var dataString =  'id='+ id;
+  swal({
+    title: "Are you sure!",
+    text: "Are you sure? you want to delete it!",
+    type: "error",
+    confirmButtonClass: "btn-danger",
+    confirmButtonText: "Yes!",
+    showCancelButton: true,
+},
+function() {
+$.ajax({
+        url:'{{route('company.deleterequest')}}',
+        data: dataString,
+        method: 'post',
+        dataType: 'json',
+        refresh: true,
+       success:function()
+       {
+        swal({
+           title: "Done!", 
+           text: "Deleted Successfully!", 
+           type: "success"
+        },
+        function() { 
+               location.reload();
+            }
+        );
+       }
+      })
+});
+  });
+
+$('html').on('click','#date_list_edit',function() {
+   var id = $(this).data('id');
+   var dates = $(this).data('dates');
+   var notes = $(this).data('notes');
+
+   
+   $.ajax({
+        url:"{{url('personnel/edittimeoff')}}",
+        data: {
+              id: id,
+              dates: dates,
+              notes: notes 
+
+            },
+        method: 'post',
+        dataType: 'json',
+        refresh: true,
+       success:function(data) {
+        console.log(data.html);
+        $('#vieweditform').html(data.html);
+      }
+      })
   });
 </script>
 @endsection

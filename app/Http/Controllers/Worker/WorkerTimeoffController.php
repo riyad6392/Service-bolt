@@ -43,7 +43,7 @@ class WorkerTimeoffController extends Controller
       $todaydate = date('l - F d, Y');
       //$timeoff = DB::table('timeoff')->where('workerid',$worker->workerid)->get();
 
-      $timeoff = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('COUNT(timeoff.id) as counttotal'))->where('timeoff.workerid',$worker->workerid)->groupBy('timeoff.created_at')->get();
+      $timeoff = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('GROUP_CONCAT(timeoff.date1 ORDER BY timeoff.date1) AS selectdates'),DB::raw('COUNT(timeoff.id) as counttotal'))->where('timeoff.workerid',$worker->workerid)->groupBy('timeoff.created_at')->orderBy('timeoff.id','desc')->get();
 
 
       $timeoff1 = DB::table('timeoff')->where('workerid',$worker->workerid)->where('date', $todaydate)->first();
@@ -90,5 +90,31 @@ class WorkerTimeoffController extends Controller
       }
       $request->session()->flash('success', 'PTO added successfully');
       return redirect()->back();
+    }
+
+    public function edittimeoff(Request $request)
+    {
+       $json = array();
+       $auth_id = auth()->user()->id;
+       $html ='<div class="add-customer-modal">
+                  <h5>PTO</h5>
+        <p>Choose multiple dates needed off</p>
+                </div>';
+       $html .='<div class="col-md-12">
+        <input type="text" id="datepicker2" name="datepicker2" placeholder="Choose Date" style="cursor: pointer;" class="mb-3 form-control" required></div>
+        <div id="datepicker2" class="mb-3"></div>
+      <div class="time-note mb-2">
+        <textarea class="form-control mb-4" placeholder="Notes" name="notes" id="notes" required>'.$request->notes.'</textarea>
+      </div>
+    <div class="row">
+      <div class="col-lg-6 mb-3">
+         <a href="#" class="btn btn-personnal w-100" data-bs-dismiss="modal">Cancel</a>
+      </div>
+      <div class="col-lg-6 mb-3">
+         <button class="btn btn-add btn-block">Submit Request</button>
+      </div>
+      </div>';
+        return json_encode(['html' =>$html]);
+        die;
     }
 }
