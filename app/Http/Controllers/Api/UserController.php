@@ -127,7 +127,7 @@ class UserController extends Controller
         $workerid = auth()->user()->workerid;
         DB::table('personnel')->where('id','=',$workerid)
           ->update([ 
-              "checkstatus"=>"offline"
+              "checkstatus"=>"offline","device_token"=>null
         ]);
           Auth::user()->tokens()->delete();
       //Auth::logout();

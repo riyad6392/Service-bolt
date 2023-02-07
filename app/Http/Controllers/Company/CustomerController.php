@@ -364,7 +364,7 @@ class CustomerController extends Controller
         <select class="form-control selectpicker" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="time" style="height:auto;">';
         for( $i = $start; $i <= $end; $i += $inc)
         {
-          $range = date( 'g:i a', $i);
+          $range = date( 'h:i a', $i);
           $html .='<option value="'.$range.'">'.$range.'</option>';
         }
       $html .='</select></div>

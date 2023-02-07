@@ -791,7 +791,7 @@ body::-webkit-scrollbar-thumb:hover {
         <select class="form-control selectpickertime" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="time" style="height:auto;">
             @for($i = $start; $i <= $end; $i += $inc)
                 @php
-                    $range = date( 'g:i a', $i);
+                    $range = date( 'h:i a', $i);
                 @endphp
                 <option value="{{$range}}">{{$range}}</option>
             @endfor

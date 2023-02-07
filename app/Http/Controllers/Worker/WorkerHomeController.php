@@ -78,27 +78,27 @@ class WorkerHomeController extends Controller
               {
                 $ticketid=$tickettimeg[0]->parentid;
               }
-              $notification = new AppNotification;
-              $notification->uid = $auth_id;
-              $notification->pid = $worker->workerid;
-              $notification->ticketid = $ticketid;
-              $notification->message =  "Your ticket #" .$ticketid. " have not picked it up yet";
-              $notification->save();
+              // $notification = new AppNotification;
+              // $notification->uid = $auth_id;
+              // $notification->pid = $worker->workerid;
+              // $notification->ticketid = $ticketid;
+              // $notification->message =  "Your ticket #" .$ticketid. " have not picked it up yet";
+              // $notification->save();
 
               $puser = Personnel::select('device_token')->where("id", $worker->workerid)->first();
 
-              $msgarray = array (
-                  'title' => 'Ticket have not picked it up yet',
-                  'msg' => "Your ticket #" .$ticketid. " have not picked it up yet",
-                  'type' => 'ticketnotpickedyet',
-              );
+              // $msgarray = array (
+              //     'title' => 'Ticket have not picked it up yet',
+              //     'msg' => "Your ticket #" .$ticketid. " have not picked it up yet",
+              //     'type' => 'ticketnotpickedyet',
+              // );
 
-              $fcmData = array(
-                  'message' => $msgarray['msg'],
-                  'body' => $msgarray['title'],
-              );
+              // $fcmData = array(
+              //     'message' => $msgarray['msg'],
+              //     'body' => $msgarray['title'],
+              // );
 
-              $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+              // $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
              
             }
             
