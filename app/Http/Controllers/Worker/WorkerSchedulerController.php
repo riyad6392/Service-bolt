@@ -112,7 +112,7 @@ if(count($serviceids)>0) {
               } else {
                 $givntime = "";
               }
-              if($giventime == $settimes) {
+              if($giventime == $settimes || ltrim($giventime, '0') == ltrim($settimes, '0')) {
                 $imagepath = url('/').'/uploads/customer/'.$value->image;
               $html .='<li class="inner yellow-slide" id="drop_'.$ticketid.'">
                         <div class="card">

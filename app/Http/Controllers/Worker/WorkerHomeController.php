@@ -199,7 +199,7 @@ class WorkerHomeController extends Controller
                 } else {
                 $givntime = "";
               }
-              if($giventime == $settimes) {
+              if($giventime == $settimes || ltrim($giventime, '0') == ltrim($settimes, '0')) {
                 $imagepath = url('/').'/uploads/customer/'.$value->image;
               $html .='<li class="inner yellow-slide" id="drop_'.$value->id.'">
                         <div class="card">

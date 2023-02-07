@@ -302,7 +302,7 @@
 
               $giventime = $gtime[0].':00'.' '.$gtimeampm[1];
             
-              if($giventime == $settimes) {
+              if($giventime == $settimes || ltrim($giventime, '0') == ltrim($settimes, '0')) {
                 @endphp
                 <li class="inner yellow-slide" id="drop_{{$ticketid}}">
         <div class="card">

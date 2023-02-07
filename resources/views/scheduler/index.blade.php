@@ -776,7 +776,6 @@ body::-webkit-scrollbar-thumb:hover {
                 $maxtime = $userData->openingtime;
                 $mintime = $userData->closingtime;
              }
-
               $mintime = date('h a', strtotime($mintime.':00'));
               $maxtime = date('h a', strtotime($maxtime.':00'));
         } else {
@@ -790,9 +789,9 @@ body::-webkit-scrollbar-thumb:hover {
       <div class="form-group col-md-6 mb-3 timeschedule" style="display:none;">
         <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
         <select class="form-control selectpickertime" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="time" style="height:auto;">
-            @for( $i = $start; $i <= $end; $i += $inc)
+            @for($i = $start; $i <= $end; $i += $inc)
                 @php
-                    $range = date( 'g:i A', $i);
+                    $range = date( 'g:i a', $i);
                 @endphp
                 <option value="{{$range}}">{{$range}}</option>
             @endfor

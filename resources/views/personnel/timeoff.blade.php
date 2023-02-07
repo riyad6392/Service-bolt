@@ -76,7 +76,7 @@
                 </td>
 
 
-                <td style="white-space:break-spaces;">{{$value->notes}}</td>
+                <td style="white-space:break-spaces;width:300px!important">{{Str::limit($value->notes, 60)}}</td>
                 <td>
                   @if($value->status==null)
                   Pending
@@ -90,6 +90,7 @@
                   @endphp
                   <span title="{{$reason}}">{{$value->status}}</span> @if($value->reason!="") ({{$value->reason}}) @endif
                 @endif</td>
+                
               </tr>
             @endforeach
           </tbody>
