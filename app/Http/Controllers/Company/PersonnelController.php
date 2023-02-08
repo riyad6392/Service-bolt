@@ -64,7 +64,7 @@ class PersonnelController extends Controller
     {
       
       $auth_id = auth()->user()->id;
-
+      $placekey = custom_userinfo($auth_id);
     	    $validate = Validator($request->all(), [
             'email' => [
                 'required',
@@ -109,7 +109,7 @@ class PersonnelController extends Controller
 
             $formattedAddr = str_replace(' ','+',$request->address);
             //Send request and receive json data by address
-            $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+            $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$placekey); 
             $output = json_decode($geocodeFromAddr);
             //Get latitude and longitute from json data
             //print_r($output->results[0]->geometry->location->lat); die;
@@ -446,9 +446,11 @@ class PersonnelController extends Controller
       //  $personnel->email = $request->email;
       // }
       $formattedAddr = str_replace(' ','+',$request->address);
+      $auth_id = auth()->user()->id;
+      $placekey = custom_userinfo($auth_id);
 
       //Send request and receive json data by address
-      $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+      $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$placekey); 
       $output = json_decode($geocodeFromAddr);
       //Get latitude and longitute from json data
       //print_r($output->results[0]->geometry->location->lat); die;
@@ -726,7 +728,9 @@ class PersonnelController extends Controller
       $personnel->address = $request->address;
       $formattedAddr = str_replace(' ','+',$request->address);
       //Send request and receive json data by address
-      $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+      $auth_id = auth()->user()->id;
+      $placekey = custom_userinfo($auth_id);
+      $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$placekey); 
       $output = json_decode($geocodeFromAddr);
       //Get latitude and longitute from json data
       //print_r($output->results[0]->geometry->location->lat); die;

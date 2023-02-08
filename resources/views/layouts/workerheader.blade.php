@@ -181,7 +181,8 @@ if(strpos(Request::url(), 'myticket') !== false || strpos(Request::url(), 'compl
 } else {
   $classmc = "";
 }
-
+$userinfo = App\Models\User::select('googleplace')->where('role','superadmin')->first();
+$googleplacekey = $userinfo->googleplace;
 @endphp
 <div class="sidebar pt-2">
 	<div class="sidebar-scroll">
@@ -535,7 +536,7 @@ if(strpos(Request::url(), 'myticket') !== false || strpos(Request::url(), 'compl
    <script src="{{ asset('js/add-field.js')}}"></script>
    
 @yield('script')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places"
+<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $googleplacekey; ?>&callback=initAutocomplete&libraries=places"
       async
     ></script>
 <script>

@@ -282,6 +282,8 @@ if(strpos(Request::url(), 'billing') !== false || strpos(Request::url(), 'manage
 
 $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest()->offset(0)->limit(5)->get();
 
+$userinfo = App\Models\User::select('googleplace')->where('role','superadmin')->first();
+$googleplacekey = $userinfo->googleplace;
 @endphp
 <div class="sidebar pt-2" id="siderbarpt2">
 	<div class="sidebar-scroll">
@@ -598,7 +600,7 @@ $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest(
 
    
 @yield('script')
- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc&callback=initAutocomplete&libraries=places" async></script>
+ <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $googleplacekey; ?>&callback=initAutocomplete&libraries=places" async></script>
  
  <!-- AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc -->
  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOi1ruL06YUktpnX-qRJlTtXxPL6RUzcg&callback=initAutocomplete&libraries=places" async></script> -->

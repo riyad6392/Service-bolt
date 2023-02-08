@@ -213,7 +213,9 @@ class UserController extends Controller
         $personnel->address = $request->address;
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
-        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+        $auth_id = Auth::user()->userid;
+        $placekey = custom_userinfo($auth_id);
+        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$placekey); 
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
         //print_r($output->results[0]->geometry->location->lat); die;
@@ -955,7 +957,9 @@ class UserController extends Controller
 
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
-        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key=AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc'); 
+        $auth_id = Auth::user()->userid;
+        $placekey = custom_userinfo($auth_id);
+        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$placekey); 
         $output = json_decode($geocodeFromAddr);
         $latitude  = $output->results[0]->geometry->location->lat; 
         $longitude = $output->results[0]->geometry->location->lng;
@@ -1261,9 +1265,11 @@ class UserController extends Controller
     }
 
     public function googleplacekey(Request $request) {
-        $googleplacekey = "AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc";
+        $auth_id = Auth::user()->userid;
+        $placekey = custom_userinfo($auth_id);
+        $googleplacekey = $placekey;
 
-    return response()->json(['status'=>1,'message'=>'Success','google_place_key'=>$googleplacekey],$this->successStatus);    
+        return response()->json(['status'=>1,'message'=>'Success','google_place_key'=>$googleplacekey],$this->successStatus);    
     }
 
     public function manuallogin(Request $request) {

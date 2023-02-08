@@ -1,4 +1,6 @@
 <?php
+    use App\Models\User;
+    
 	if ( ! function_exists('company_filter')) {
         function company_filter($val=null) {
             
@@ -134,6 +136,16 @@
             })->save($destinationPath1 . '/' . $input['imagename']);
 
             return $input['imagename'];
+        }
+    }
+
+    if (!function_exists('custom_userinfo')) 
+    {
+        function custom_userinfo($authid) 
+        {
+            $unerinfo = User::select('googleplace')->where('role','superadmin')->first();
+            
+            return $unerinfo->googleplace;
         }
     }
 ?>

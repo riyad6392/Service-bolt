@@ -49,7 +49,7 @@ class AdminsettingController extends Controller
       $setting->timezone = $request->timezone;
       $setting->featureprice = $request->featureprice;
       $setting->firebase = $request->firebase;
-
+      $setting->googleplace = $request->googleplace;
         if(!empty($request->smtppassword)) {
             $setting->host = $request->host;
             $setting->smtpusername = $request->smtpusername;
