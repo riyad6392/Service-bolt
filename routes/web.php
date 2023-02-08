@@ -432,6 +432,8 @@ Route::group([
     Route::get('/timeoff', [WorkerTimeoffController::class, 'index'])->name('timeoff');
     Route::any('/timeoffpto', [WorkerTimeoffController::class, 'timeoffpto'])->name('timeoffpto');
     Route::any('/edittimeoff', [WorkerTimeoffController::class, 'edittimeoff'])->name('edittimeoff');
+    Route::any('/updatetimeoff', [WorkerTimeoffController::class, 'updatetimeoff'])->name('updatetimeoff');
+
 
     //products module
     Route::get('/products', [WorkerProductController::class, 'index'])->name('products');

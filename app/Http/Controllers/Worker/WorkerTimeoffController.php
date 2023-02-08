@@ -101,8 +101,8 @@ class WorkerTimeoffController extends Controller
         <p>Choose multiple dates needed off</p>
                 </div>';
        $html .='<div class="col-md-12">
-        <input type="text" id="datepicker2" name="datepicker2" placeholder="Choose Date" style="cursor: pointer;" class="mb-3 form-control" required></div>
-        <div id="datepicker2" class="mb-3"></div>
+        <input type="text" id="datepicker3" name="datepicker3" placeholder="Choose Date" style="cursor: pointer;" class="mb-3 form-control" value="'.$request->dates.'" required></div><input type="hidden" name="ids" id="ids" value="'.$request->id.'">
+        <div id="datepicker3" class="mb-3"></div>
       <div class="time-note mb-2">
         <textarea class="form-control mb-4" placeholder="Notes" name="notes" id="notes" required>'.$request->notes.'</textarea>
       </div>
@@ -116,5 +116,27 @@ class WorkerTimeoffController extends Controller
       </div>';
         return json_encode(['html' =>$html]);
         die;
+    }
+
+    public function updatetimeoff(Request $request)
+    {
+      $ids = explode(",",$request->ids);
+      $timeoff = Workertimeoff::whereIn('id',$ids)->where('workerid',auth()->user()->workerid)->delete(); 
+
+      $dates = explode(',',$request->datepicker3);
+      $notes = $request->notes;
+      foreach($dates as $key => $value) {
+          $old_date_timestamp = strtotime($value);
+          $fulldate = date('l - F d, Y', $old_date_timestamp);   
+          $data['workerid'] = auth()->user()->workerid;
+          $data['userid'] = auth()->user()->userid;
+          $data['date'] = $fulldate;
+          $data['date1'] = $value;
+          $data['notes'] = $notes;
+          Workertimeoff::create($data);
+        }
+
+      $request->session()->flash('success', 'PTO updated successfully');
+      return redirect()->back();
     }
 }

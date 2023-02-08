@@ -91,8 +91,9 @@
                   <span title="{{$reason}}">{{$value->status}}</span> @if($value->reason!="") ({{$value->reason}}) @endif
                 @endif</td>
                 <td>
-                  <!-- <a class="123 btn btn-edit reject-btn p-3 w-auto" data-bs-toggle="modal" data-bs-target="#date-list-edit" id="date_list_edit" data-id="{{$value->ids}}" data-dates="{{$value->selectdates}}" data-notes="{{$value->notes}}">Edit</a> -->
                   @if($value->status==null)
+                    <a class="123 btn btn-edit reject-btn p-3 w-auto" data-bs-toggle="modal" data-bs-target="#date-list-edit" id="date_list_edit" data-id="{{$value->ids}}" data-dates="{{$value->selectdates}}" data-notes="{{$value->notes}}">Edit</a>
+                    
                     <a class="123 btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->ids}}" style="color:red;"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                   @endif
                 </td>
@@ -156,7 +157,7 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
       <div class="modal-body">
-      <form method="post" action="{{ route('worker.customerupdate') }}" enctype="multipart/form-data">
+      <form method="post" action="{{ route('worker.updatetimeoff') }}">
         @csrf
         <div id="vieweditform"></div>
       </form>
@@ -306,9 +307,16 @@ $('html').on('click','#date_list_edit',function() {
         method: 'post',
         dataType: 'json',
         refresh: true,
-       success:function(data) {
-        console.log(data.html);
+      success:function(data) {
         $('#vieweditform').html(data.html);
+          $("#datepicker3").datepicker({
+            format: 'yyyy-mm-dd',
+            inline: false,
+            lang: 'en',
+            //step: 5,
+            multidate: true,
+            closeOnDateSelect: true,
+          });
       }
       })
   });
