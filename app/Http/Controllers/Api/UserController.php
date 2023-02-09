@@ -541,7 +541,7 @@ class UserController extends Controller
        //    $product_ids[] = $value->product_id;
        // }
       
-        $productdata = DB::table('products')->select('products.id','products.productname','products.quantity','products.sku','products.price','products.description','products.category')->where('user_id',$worker->userid)->orderBy('products.id','desc')->get();
+        $productdata = DB::table('products')->select('products.id','products.productname','products.quantity','products.sku','products.price','products.description','products.category')->where('user_id',$worker->userid)->orderBy('products.id','asc')->get();
 
         
 

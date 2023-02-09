@@ -1421,73 +1421,174 @@ class WorkerTicketController extends Controller
 
     public function sendpayment(Request $request)
     {
+      $auth_id = auth()->user()->userid;
       $quote = Quote::where('id', $request->tid)->orWhere('parentid',$request->tid)->get();
-      if(count($quote)>0) {
-        foreach($quote as $key => $value) {
-          if($value->primaryname == $value->personnelid) {
-             $personnelid = $value->personnelid;
-             $userid = $value->userid;
-             $customername = $value->customername;
+          if(count($quote)>0) {
+            foreach($quote as $key => $value) {
+              if($value->primaryname == $value->personnelid) {
+                 $personnelid = $value->personnelid;
+                 $userid = $value->userid;
+                 $customername = $value->customername;
 
+              }
+            }
+          if($request->method == "Credit Card") {
+            if($auth_id == "68") {
+                $data = array(
+                  'xCardNum' => $request->card_number,
+                  'xExp' => $request->expiration_date,
+                  'xKey' => 'serviceboltdev63cf6781c560436fa9f052cafa45a5d',
+                  'xVersion' => '4.5.9',
+                  "xSoftwareName" => 'ServiceBolt',
+                  'xSoftwareVersion' => '1.0.0',
+                  "xCommand"=>'cc:sale',
+                  "xAmount"=>$request->amount,
+                  "xCVV" =>$request->cvv
+              );
+
+              $headers = array(
+                'Content-Type: application/json',
+              );
+
+              $ch = curl_init();
+              curl_setopt($ch, CURLOPT_URL, 'https://x1.cardknox.com/gatewayjson');
+              curl_setopt($ch, CURLOPT_POST, true);
+              curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+              curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+              curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+              $result = curl_exec($ch);
+              curl_close($ch);
+              $finalresult = json_decode($result);
+              if($finalresult->xStatus == "Approved") {
+                $id = DB::table('balancesheet')->insertGetId([
+                    'userid' => $userid,
+                    'workerid' => $personnelid,
+                    'ticketid' => $request->tid,
+                    'amount' => $request->amount,
+                    'customername' => $customername,
+                    'paymentmethod' => $request->method,
+                    'status' => "Completed"
+                  ]);
+                
+                DB::table('quote')->where('id','=',$request->tid)->orWhere('parentid','=',$request->tid)
+                    ->update([ 
+                        "payment_status"=>"Completed","price"=>"$request->amount","payment_amount"=>"$request->amount","payment_mode"=>"$request->method","card_number"=>"$request->card_number","expiration_date"=>"$request->expiration_date","cvv"=>"$request->cvv"
+                    ]);
+                $request->session()->flash('success', 'Payment has been successfully');
+                return redirect()->back();
+              } else {
+                $request->session()->flash('error', $finalresult->xError);
+                return redirect()->back();
+              }
+           } else {
+              $id = DB::table('balancesheet')->insertGetId([
+                    'userid' => $userid,
+                    'workerid' => $personnelid,
+                    'ticketid' => $request->tid,
+                    'amount' => $request->amount,
+                    'customername' => $customername,
+                    'paymentmethod' => $request->method,
+                    'status' => "Completed"
+                  ]);
+                
+                DB::table('quote')->where('id','=',$request->tid)->orWhere('parentid','=',$request->tid)
+                    ->update([ 
+                        "payment_status"=>"Completed","price"=>"$request->amount","payment_amount"=>"$request->amount","payment_mode"=>"$request->method","card_number"=>"$request->card_number","expiration_date"=>"$request->expiration_date","cvv"=>"$request->cvv"
+                    ]);
+                $request->session()->flash('success', 'Payment has been successfully');
+                return redirect()->back();
+           }
+        }
+        if($request->method == "Check") {
+          if($auth_id == "68") {
+            $data = array(
+            'xKey' => 'serviceboltdev63cf6781c560436fa9f052cafa45a5d',
+            'xVersion' => '4.5.9',
+            "xSoftwareName" => 'ServiceBolt',
+            'xSoftwareVersion' => '1.0.0',
+            "xCommand"=>'check:sale',
+            "xAmount"=>$request->payment_amount,
+            "xCustom01" =>$request->customername,
+            "xAccount" =>$request->checknumber,
+            "xAccountType" =>'Checking',
+            "xCurrency" =>'USD'
+          );
+
+            $headers = array(
+              'Content-Type: application/json',
+            );
+            $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, 'https://x1.cardknox.com/gatewayjson');
+          curl_setopt($ch, CURLOPT_POST, true);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+          $result = curl_exec($ch);
+          curl_close($ch);
+          $finalresult = json_decode($result);
+         
+          if($finalresult->xStatus == "Approved") {
+            $id = DB::table('balancesheet')->insertGetId([
+               'userid' => $userid,
+                'workerid' => $personnelid,
+                'ticketid' => $request->tid,
+                'amount' => $request->payment_amount,
+                'customername' => $customername,
+                'paymentmethod' => $request->method,
+                'status' => "Completed"
+              ]);
+
+              DB::table('quote')->where('id','=',$request->tid)->orWhere('parentid','=',$request->tid)
+                  ->update([ 
+                      "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->method","checknumber"=>"$request->checknumber"
+                  ]);
+              $request->session()->flash('success', 'Payment has been successfully');
+              return redirect()->back();
+            } else {
+              $request->session()->flash('error', $finalresult->xError);
+              return redirect()->back();
+            }
+          } else {
+             $id = DB::table('balancesheet')->insertGetId([
+               'userid' => $userid,
+                'workerid' => $personnelid,
+                'ticketid' => $request->tid,
+                'amount' => $request->payment_amount,
+                'customername' => $customername,
+                'paymentmethod' => $request->method,
+                'status' => "Completed"
+              ]);
+
+              DB::table('quote')->where('id','=',$request->tid)->orWhere('parentid','=',$request->tid)
+                  ->update([ 
+                      "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->method","checknumber"=>"$request->checknumber"
+                  ]);
+              $request->session()->flash('success', 'Payment has been successfully');
+              return redirect()->back();
           }
         }
-      if($request->method == "Credit Card") {
-      $id = DB::table('balancesheet')->insertGetId([
-          'userid' => $userid,
-          'workerid' => $personnelid,
-          'ticketid' => $request->tid,
-          'amount' => $request->amount,
-          'customername' => $customername,
-          'paymentmethod' => $request->method,
-          'status' => "Completed"
-        ]);
-      
-      DB::table('quote')->where('id','=',$request->tid)->orWhere('parentid','=',$request->tid)
-          ->update([ 
-              "payment_status"=>"Completed","price"=>"$request->amount","payment_amount"=>"$request->amount","payment_mode"=>"$request->method","card_number"=>"$request->card_number","expiration_date"=>"$request->expiration_date","cvv"=>"$request->cvv"
-          ]);
-      $request->session()->flash('success', 'Payment has been successfully');
-      return redirect()->back();
-    }
 
-    if($request->method == "Check") {
-      $id = DB::table('balancesheet')->insertGetId([
-         'userid' => $userid,
-          'workerid' => $personnelid,
-          'ticketid' => $request->tid,
-          'amount' => $request->payment_amount,
-          'customername' => $customername,
-          'paymentmethod' => $request->method,
-          'status' => "Completed"
-        ]);
-
-      DB::table('quote')->where('id','=',$request->tid)->orWhere('parentid','=',$request->tid)
-          ->update([ 
-              "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->method","checknumber"=>"$request->checknumber"
-          ]);
-      $request->session()->flash('success', 'Payment has been successfully');
-      return redirect()->back();
-    }
-
-    if($request->method == "Cash") {
-      $id = DB::table('balancesheet')->insertGetId([
-          'userid' => $userid,
-          'workerid' => $personnelid,
-          'ticketid' => $request->tid,
-          'amount' => $request->payment_amount,
-          'customername' => $customername,
-          'paymentmethod' => $request->method,
-          'status' => "Completed"
-        ]);
-      
-      DB::table('quote')->where('id','=',$request->tid)->orWhere('parentid','=',$request->tid)
-          ->update([ 
-              "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->method"
-          ]);
-      $request->session()->flash('success', 'Payment has been successfully');
-      return redirect()->back();
-    }
-  }
+        if($request->method == "Cash") {
+          $id = DB::table('balancesheet')->insertGetId([
+              'userid' => $userid,
+              'workerid' => $personnelid,
+              'ticketid' => $request->tid,
+              'amount' => $request->payment_amount,
+              'customername' => $customername,
+              'paymentmethod' => $request->method,
+              'status' => "Completed"
+            ]);
+          
+          DB::table('quote')->where('id','=',$request->tid)->orWhere('parentid','=',$request->tid)
+              ->update([ 
+                  "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->method"
+              ]);
+          $request->session()->flash('success', 'Payment has been successfully');
+          return redirect()->back();
+        }
+      }
 
   }
   

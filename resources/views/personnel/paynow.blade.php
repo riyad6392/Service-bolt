@@ -16,6 +16,11 @@
               </div>
 
           @endif
+          @if(Session::has('error'))
+						<div class="alert alert-danger" id="selector">
+							{{Session::get('error')}}
+						</div>
+				  @endif
      </p>
    @php
 	  	$totalprice = $quoteData->price + $quoteData->tax;
