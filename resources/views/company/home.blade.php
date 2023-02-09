@@ -763,7 +763,61 @@ function CustomMarker(latlng, map, imageSrc) {
 </script>
 
 <script>
+  var colorcount = $("#cservice").val();
+  if(colorcount==4) {
+    var first = {{$serviceinfo[0]->total}};
+    var first1 = "{{$serviceinfo[0]->servicename}}";
+    var two = {{$serviceinfo[1]->total}};
+    var two1 = "{{$serviceinfo[1]->servicename}}";
+    var three = {{$serviceinfo[2]->total}};
+    var three1 = "{{$serviceinfo[2]->servicename}}";
+    var four = {{$serviceinfo[3]->total}};
+    var four1 = "{{$serviceinfo[3]->servicename}}";
+  }
+  if(colorcount==3) {
+    var first = {{$serviceinfo[0]->total}};
+    var first1 = "{{$serviceinfo[0]->servicename}}";
+    var two = {{$serviceinfo[1]->total}};
+    var two1 = "{{$serviceinfo[1]->servicename}}";
+    var three = {{$serviceinfo[2]->total}};
+    var three1 = "{{$serviceinfo[2]->servicename}}";
+    var four = 0;
+    var four1 = 0;
+  }
+  if(colorcount==2) {
+    var first = {{$serviceinfo[0]->total}};
+    var first1 = "{{$serviceinfo[0]->servicename}}";
+    var two = {{$serviceinfo[1]->total}};
+    var two1 = "{{$serviceinfo[1]->servicename}}";
+    var three = 0;
+    var three1 = 0;
+    var four = 0;
+    var four1 = 0;
+  }
+  if(colorcount==1) {
+    var first = {{$serviceinfo[0]->total}};
+    var first1 = "{{$serviceinfo[0]->servicename}}";
+    var two = 0;
+    var two1 = 0;
+    var three = 0;
+    var three1 = 0;
+    var four = 0;
+    var four1 = 0;
+  }
+  if(colorcount==0) {
+    var first = 0;
+    var first1 = 0;
+    var two = 0;
+    var two1 = 0;
+    var three = 0;
+    var three1 = 0;
+    var four = 0;
+    var four1 = 0;
+  }
   window.onload = function () {
+    var colorcount = $("#cservice").val();
+    //alert(colorcount);
+
     CanvasJS.addColorSet("greenShades",
       [
       "{{@$serviceinfo[0]->color}}",
@@ -783,10 +837,11 @@ function CustomMarker(latlng, map, imageSrc) {
       toolTipContent: "{indexLabel} - {y} (#percent %)",
       legendText: "{indexLabel}",
       dataPoints: [
-        {  y: {{@$serviceinfo[0]->total}}, indexLabel: "{{@$serviceinfo[0]->servicename}}" },
-        {  y: {{@$serviceinfo[1]->total}}, indexLabel: "{{@$serviceinfo[1]->servicename}}" },
-        {  y: {{@$serviceinfo[2]->total}}, indexLabel: "{{@$serviceinfo[2]->servicename}}" },
-        {  y: {{@$serviceinfo[3]->total}}, indexLabel: "{{@$serviceinfo[3]->servicename}}"}
+        {  y: first, indexLabel: first1 },
+        {  y: two, indexLabel: two1 },
+        {  y: three, indexLabel: three1 },
+        {  y: four, indexLabel: four1 },
+
       ]
     }
     ]
