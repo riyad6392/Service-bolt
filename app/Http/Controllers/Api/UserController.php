@@ -2042,7 +2042,7 @@ class UserController extends Controller
         }
         if(count($quote1)>0) {
            if($request->payment_mode == "By Check") {
-            if($auth_id == "8") {
+            if($auth_id == "68") {
             $data = array(
             'xKey' => 'serviceboltdev63cf6781c560436fa9f052cafa45a5d',
             'xVersion' => '4.5.9',
