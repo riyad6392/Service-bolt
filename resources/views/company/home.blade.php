@@ -257,9 +257,9 @@
   
   <!-- Canvas for Chart in added footer -->
   <div class="position-relative">
-  <!-- <canvas id="canvas" height="147"></canvas> -->
+  <canvas id="canvas" height="147"></canvas>
  <!--  <div id="chart"></div> -->
- <div id="chartContainer" style="height: 280px; width: 100%;"></div>
+ <!-- <div id="chartContainer" style="height: 280px; width: 100%;"></div> -->
   <!-- <div class="watermark">No Record Found</div> -->
   </div>
 
@@ -764,90 +764,146 @@ function CustomMarker(latlng, map, imageSrc) {
 
 <script>
   var colorcount = $("#cservice").val();
-  if(colorcount==4) {
-    var first = {{$serviceinfo[0]->total}};
-    var first1 = "{{$serviceinfo[0]->servicename}}";
-    var two = {{$serviceinfo[1]->total}};
-    var two1 = "{{$serviceinfo[1]->servicename}}";
-    var three = {{$serviceinfo[2]->total}};
-    var three1 = "{{$serviceinfo[2]->servicename}}";
-    var four = {{$serviceinfo[3]->total}};
-    var four1 = "{{$serviceinfo[3]->servicename}}";
-  }
-  if(colorcount==3) {
-    var first = {{$serviceinfo[0]->total}};
-    var first1 = "{{$serviceinfo[0]->servicename}}";
-    var two = {{$serviceinfo[1]->total}};
-    var two1 = "{{$serviceinfo[1]->servicename}}";
-    var three = {{$serviceinfo[2]->total}};
-    var three1 = "{{$serviceinfo[2]->servicename}}";
-    var four = 0;
-    var four1 = 0;
-  }
-  if(colorcount==2) {
-    var first = {{$serviceinfo[0]->total}};
-    var first1 = "{{$serviceinfo[0]->servicename}}";
-    var two = {{$serviceinfo[1]->total}};
-    var two1 = "{{$serviceinfo[1]->servicename}}";
-    var three = 0;
-    var three1 = 0;
-    var four = 0;
-    var four1 = 0;
-  }
-  if(colorcount==1) {
-    var first = {{$serviceinfo[0]->total}};
-    var first1 = "{{$serviceinfo[0]->servicename}}";
-    var two = 0;
-    var two1 = 0;
-    var three = 0;
-    var three1 = 0;
-    var four = 0;
-    var four1 = 0;
-  }
-  if(colorcount==0) {
-    var first = 0;
-    var first1 = 0;
-    var two = 0;
-    var two1 = 0;
-    var three = 0;
-    var three1 = 0;
-    var four = 0;
-    var four1 = 0;
-  }
-  window.onload = function () {
-    var colorcount = $("#cservice").val();
-    //alert(colorcount);
+var canvas = document.getElementById("canvas");
 
-    CanvasJS.addColorSet("greenShades",
-      [
-      "{{@$serviceinfo[0]->color}}",
-      "{{@$serviceinfo[1]->color}}",
-      "{{@$serviceinfo[2]->color}}",
-      "{{@$serviceinfo[3]->color}}"               
-      ]);
-  var chart = new CanvasJS.Chart("chartContainer",
-  {
-    colorSet: "greenShades",
-    data: [
-    {       
-      type: "doughnut",
-      width: 400,
+var tooltipCanvas = document.getElementById("tooltip-canvas");
+for(var i=1; i<=colorcount; i++) {
+ if (i == "1") {
+  var gradientBlue = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
+  gradientBlue.addColorStop(0, '{{@$serviceinfo[0]->color}}');
+ }
 
-      //showInLegend: true,
-      toolTipContent: "{indexLabel} - {y} (#percent %)",
-      legendText: "{indexLabel}",
-      dataPoints: [
-        {  y: first, indexLabel: first1 },
-        {  y: two, indexLabel: two1 },
-        {  y: three, indexLabel: three1 },
-        {  y: four, indexLabel: four1 },
+ if (i == "2") {
+  var gradientRed = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
+  gradientRed.addColorStop(0, '{{@$serviceinfo[1]->color}}');
+ }
 
-      ]
-    }
-    ]
-  });
-  chart.render();
+ if (i == "3") {
+  var gradientGrey = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
+  gradientGrey.addColorStop(0, '{{@$serviceinfo[2]->color}}');
+ }
+ if (i == "4") {
+  var gradientGreen = canvas.getContext('2d').createLinearGradient(0, 0, 0, 150);
+  gradientGreen.addColorStop(0, '{{@$serviceinfo[3]->color}}');
+ }
 }
+
+
+
+window.arcSpacing = 0.15;
+window.segmentHovered = true;
+
+function textInCenter(value, label) {
+ var ctx = tooltipCanvas.getContext('2d');
+ ctx.clearRect(0, 0, tooltipCanvas.width, tooltipCanvas.height)
+ 
+ ctx.restore();
+  
+ // Draw value
+ ctx.fillStyle = '#333333';
+ ctx.font = '24px sans-serif';
+ ctx.textBaseline = 'middle';
+
+ // Define text position
+ var textPosition = {
+  x: Math.round((tooltipCanvas.width - ctx.measureText(value).width) / 2),
+  y: tooltipCanvas.height / 2,
+ };
+
+ ctx.fillText(value, textPosition.x, textPosition.y);
+
+ // Draw label
+ ctx.fillStyle = '#AAAAAA';
+ ctx.font = '8px sans-serif';
+
+ // Define text position
+ var labelTextPosition = {
+  x: Math.round((tooltipCanvas.width - ctx.measureText(label).width) / 2),
+  y: tooltipCanvas.height / 2,
+ };
+
+ ctx.fillText(label, labelTextPosition.x, labelTextPosition.y - 20);
+ ctx.save();
+}
+
+Chart.elements.Arc.prototype.draw = function() {
+ var ctx = this._chart.ctx;
+ var vm = this._view;
+ var sA = vm.startAngle;
+ var eA = vm.endAngle;
+
+ ctx.beginPath();
+ ctx.arc(vm.x, vm.y, vm.outerRadius, sA + window.arcSpacing, eA - window.arcSpacing);
+ ctx.strokeStyle = vm.backgroundColor;
+ ctx.lineWidth = vm.borderWidth;
+ ctx.lineCap = 'round';
+ ctx.stroke();
+ ctx.closePath();
+};
+
+var config = {
+  type: 'doughnut',
+  data: {
+    labels: ['{{@$serviceinfo[0]->servicename}}', '{{@$serviceinfo[1]->servicename}}', '{{@$serviceinfo[2]->servicename}}', '{{@$serviceinfo[3]->servicename}}'],
+    datasets: [
+     {
+       data: [{{@$serviceinfo[0]->total}}, {{@$serviceinfo[1]->total}}, {{@$serviceinfo[2]->total}}, {{@$serviceinfo[3]->total}}],
+       backgroundColor: [
+       gradientBlue,
+       gradientRed,
+       gradientGrey,
+       gradientGreen,
+       ],
+     }
+    ]
+  },
+  options: {
+    cutoutPercentage: 80,
+    elements: {
+    arc: {
+      borderWidth: 12,
+     },
+    },
+    legend: {
+    display: false,
+    },
+    animation: {
+    onComplete: function(animation) {
+      if (!window.segmentHovered) {
+       var value = this.config.data.datasets[0].data.reduce(function(a, b) { 
+        return a + b;
+       }, 0);
+       var label = 'T O T A L';
+
+       textInCenter(value, label);
+      }
+     },
+    },
+    tooltips: {
+     callbacks: {
+      title: function(tooltipItem, data) {
+       return data['labels'][tooltipItem[0]['index']];
+      },
+      label: function(tooltipItem, data) {
+       return data['datasets'][0]['data'][tooltipItem['index']];
+      },
+      afterLabel: function(tooltipItem, data) {
+       var dataset = data['datasets'][0];
+       var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+       return '(' + percent + '%)';
+      }
+     },
+     backgroundColor: '#FFF',
+     titleFontSize: 16,
+     titleFontColor: '#0066ff',
+     bodyFontColor: '#000',
+     bodyFontSize: 14,
+     displayColors: false
+    },
+  },
+};
+
+window.chart = new Chart(canvas, config);
 </script>
 @endsection
 
