@@ -1986,6 +1986,7 @@ class UserController extends Controller
     }
 
     public function paynow(Request $request) {
+        $auth_id = auth()->user()->userid;
         $validator = Validator::make($request->all(), [
             'ticketid' => 'required',
             'payment_mode' => 'required',
@@ -2040,6 +2041,35 @@ class UserController extends Controller
           }
         }
         if(count($quote1)>0) {
+           if($request->payment_mode == "By Check") {
+            if($auth_id == "8") {
+            $data = array(
+            'xKey' => 'serviceboltdev63cf6781c560436fa9f052cafa45a5d',
+            'xVersion' => '4.5.9',
+            "xSoftwareName" => 'ServiceBolt',
+            'xSoftwareVersion' => '1.0.0',
+            "xCommand"=>'check:sale',
+            "xAmount"=>$request->payment_amount,
+            "xCustom01" =>$customername,
+            "xAccount" =>$request->checknumber,
+            "xAccountType" =>'Checking',
+            "xCurrency" =>'USD'
+          );
+
+            $headers = array(
+              'Content-Type: application/json',
+            );
+            $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, 'https://x1.cardknox.com/gatewayjson');
+          curl_setopt($ch, CURLOPT_POST, true);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+          $result = curl_exec($ch);
+          curl_close($ch);
+          $finalresult = json_decode($result);
+          if($finalresult->xStatus == "Approved") {
             $id = DB::table('balancesheet')->insertGetId([
                   'userid' => $userid,
                   'workerid' => $personnelid,
@@ -2054,6 +2084,47 @@ class UserController extends Controller
               ->update([ 
                   "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->payment_mode","checknumber"=>"$request->checknumber","tickettotal"=>"$request->ticketprice","serviceid"=>"$request->serviceidnew","product_id"=>"$request->productidnew"
             ]);
+              return response()->json(['status'=>1,'message'=>'Payment has been successfully'],$this->successStatus);
+            } else {
+                return response()->json(['status'=>0,'message'=>$finalresult->xError],$this->errorStatus);
+            }
+           } else {
+             $id = DB::table('balancesheet')->insertGetId([
+                  'userid' => $userid,
+                  'workerid' => $personnelid,
+                  'ticketid' => $request->ticketid,
+                  'amount' => $request->payment_amount,
+                  'customername' => $customername,
+                  'paymentmethod' => $request->payment_mode,
+                  'status' => "Completed"
+                ]);
+
+            DB::table('quote')->where('id','=',$request->ticketid)->orWhere('parentid','=',$request->ticketid)
+              ->update([ 
+                  "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->payment_mode","checknumber"=>"$request->checknumber","tickettotal"=>"$request->ticketprice","serviceid"=>"$request->serviceidnew","product_id"=>"$request->productidnew"
+            ]);
+              return response()->json(['status'=>1,'message'=>'Payment has been successfully'],$this->successStatus);
+           }
+       }
+
+            if($request->payment_mode == "By Cash") {
+                $id = DB::table('balancesheet')->insertGetId([
+                  'userid' => $userid,
+                  'workerid' => $personnelid,
+                  'ticketid' => $request->ticketid,
+                  'amount' => $request->payment_amount,
+                  'customername' => $customername,
+                  'paymentmethod' => $request->payment_mode,
+                  'status' => "Completed"
+                ]);
+
+            DB::table('quote')->where('id','=',$request->ticketid)->orWhere('parentid','=',$request->ticketid)
+              ->update([ 
+                  "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->payment_mode","checknumber"=>"$request->checknumber","tickettotal"=>"$request->ticketprice","serviceid"=>"$request->serviceidnew","product_id"=>"$request->productidnew"
+            ]);
+              return response()->json(['status'=>1,'message'=>'Payment has been successfully'],$this->successStatus);
+            }
+           
         }
 
         return response()->json(['status'=>1,'message'=>'Payment has been successfully'],$this->successStatus);  
