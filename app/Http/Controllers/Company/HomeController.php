@@ -9,6 +9,7 @@ use DB;
 use Auth;
 use Cache;
 use App\Models\Inventory;
+use App\Models\Quote;
 use App\Events\SendLocation;
 
 class HomeController extends Controller
@@ -42,10 +43,213 @@ class HomeController extends Controller
         } else {
            return redirect()->back();
         }
+        $dateE = Carbon::now();
+        $currentdate = date('Y-m-d', strtotime($dateE));
+        // //start logic for cron jobs
+        //   $ticketData = Quote::select('quote.*','customer.email')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.parentid',0)->whereIn('quote.ticket_status',['1','2','3','4'])->where('quote.frequency', '!=',"One Time")->where('quote.flag',1)->orderBy('quote.id','DESC')->get();
+         
+        // foreach ($ticketData as $key => $value) {
+        //     if($value['frequency'] == "Monthly") {
+        //         if($value['count']==12){
+
+        //         } else {
+        //             $newTime = strtotime('30 days'. $value['created_at']);
+        //             $newDate = date('Y-m-d', $newTime);
+        //             if($newDate == $currentdate) {
+        //                $data['userid'] = $value['userid'];
+        //                $data['workerid'] = $value['workerid'];
+        //                $data['customerid'] = $value['customerid'];
+        //                $data['customername'] = $value['customername'];
+        //                $data['address'] = $value['address'];
+        //                $data['latitude'] = $value['latitude'];
+        //                $data['longitude'] = $value['longitude'];
+        //                $data['serviceid'] = $value['serviceid'];
+        //                $data['pricetype'] = $value['pricetype'];
+        //                $data['servicename'] = $value['servicename'];
+        //                $data['product_id'] = $value['product_id'];
+        //                $data['product_name'] = $value['product_name'];
+        //                $data['personnelid'] = $value['personnelid'];
+        //                $data['radiogroup'] = $value['radiogroup'];
+        //                $data['frequency'] = $value['frequency'];
+        //                $data['time'] = $value['time'];
+        //                $data['minute'] = $value['minute'];
+        //                $data['price'] = $value['price'];
+        //                $data['tax'] = "0.00";
+        //                $data['description'] = $value['description'];
+        //                $data['ticket_status'] = 1;
+        //                $data['checklist'] = $value['checklist'];
+        //                $data['customernotes'] = $value['customernotes'];
+        //                $data['count'] = $value['count']+1;
+        //                $quotedata = Quote::create($data);
+        //                 DB::table('quote')->where('id','=',$value['id'])
+        //                   ->update([ 
+        //                       "flag"=>"0"
+        //                 ]);
+        //             }  
+        //         }
+        //     }
+        //     if($value['frequency'] == "Bi-Monthly") {
+        //         $newTime = strtotime('60 days'. $value['created_at']);
+        //             $newDate = date('Y-m-d', $newTime);
+        //             if($newDate == $currentdate) {
+        //                 if($value['count']==6) {
+        //                 } else {
+        //                    $data['userid'] = $value['userid'];
+        //                    $data['workerid'] = $value['workerid'];
+        //                    $data['customerid'] = $value['customerid'];
+        //                    $data['customername'] = $value['customername'];
+        //                    $data['address'] = $value['address'];
+        //                    $data['latitude'] = $value['latitude'];
+        //                    $data['longitude'] = $value['longitude'];
+        //                    $data['serviceid'] = $value['serviceid'];
+        //                    $data['pricetype'] = $value['pricetype'];
+        //                    $data['servicename'] = $value['servicename'];
+        //                    $data['product_id'] = $value['product_id'];
+        //                    $data['product_name'] = $value['product_name'];
+        //                    $data['personnelid'] = $value['personnelid'];
+        //                    $data['radiogroup'] = $value['radiogroup'];
+        //                    $data['frequency'] = $value['frequency'];
+        //                    $data['time'] = $value['time'];
+        //                    $data['minute'] = $value['minute'];
+        //                    $data['price'] = $value['price'];
+        //                    $data['tax'] = "0.00";
+        //                    $data['description'] = $value['description'];
+        //                    $data['ticket_status'] = 1;
+        //                    $data['checklist'] = $value['checklist'];
+        //                    $data['customernotes'] = $value['customernotes'];
+        //                    $data['count'] = $value['count']+1;
+        //                    $quotedata = Quote::create($data);
+        //                     DB::table('quote')->where('id','=',$value['id'])
+        //                       ->update([ 
+        //                           "flag"=>"0"
+        //                     ]);
+        //                 }
+        //             }
+        //     }
+        //     if($value['frequency'] == "Weekly") {
+        //         $newTime = strtotime('7 days'. $value['created_at']);
+        //         $newDate = date('Y-m-d', $newTime);
+        //         if($newDate == $currentdate) {
+        //             if($value['count']==52) {
+
+        //             } else {
+        //                $data['userid'] = $value['userid'];
+        //                $data['workerid'] = $value['workerid'];
+        //                $data['customerid'] = $value['customerid'];
+        //                $data['customername'] = $value['customername'];
+        //                $data['address'] = $value['address'];
+        //                $data['latitude'] = $value['latitude'];
+        //                $data['longitude'] = $value['longitude'];
+        //                $data['serviceid'] = $value['serviceid'];
+        //                $data['pricetype'] = $value['pricetype'];
+        //                $data['servicename'] = $value['servicename'];
+        //                $data['product_id'] = $value['product_id'];
+        //                $data['product_name'] = $value['product_name'];
+        //                $data['personnelid'] = $value['personnelid'];
+        //                $data['radiogroup'] = $value['radiogroup'];
+        //                $data['frequency'] = $value['frequency'];
+        //                $data['time'] = $value['time'];
+        //                $data['minute'] = $value['minute'];
+        //                $data['price'] = $value['price'];
+        //                $data['tax'] = "0.00";
+        //                $data['description'] = $value['description'];
+        //                $data['ticket_status'] = 1;
+        //                $data['checklist'] = $value['checklist'];
+        //                $data['customernotes'] = $value['customernotes'];
+        //                $data['count'] = $value['count']+1;
+        //                $quotedata = Quote::create($data);
+        //                 DB::table('quote')->where('id','=',$value['id'])
+        //                   ->update([ 
+        //                       "flag"=>"0"
+        //                 ]); 
+        //             }
+        //         }
+        //     }
+        //     if($value['frequency'] == "Bi-Weekly") {
+        //         $newTime = strtotime('15 days'. $value['created_at']);
+        //             $newDate = date('Y-m-d', $newTime);
+        //             if($newDate == $currentdate) {
+        //                 if($value['count']==52) {
+
+        //                 } else {
+        //                $data['userid'] = $value['userid'];
+        //                $data['workerid'] = $value['workerid'];
+        //                $data['customerid'] = $value['customerid'];
+        //                $data['customername'] = $value['customername'];
+        //                $data['address'] = $value['address'];
+        //                $data['latitude'] = $value['latitude'];
+        //                $data['longitude'] = $value['longitude'];
+        //                $data['serviceid'] = $value['serviceid'];
+        //                $data['pricetype'] = $value['pricetype'];
+        //                $data['servicename'] = $value['servicename'];
+        //                $data['product_id'] = $value['product_id'];
+        //                $data['product_name'] = $value['product_name'];
+        //                $data['personnelid'] = $value['personnelid'];
+        //                $data['radiogroup'] = $value['radiogroup'];
+        //                $data['frequency'] = $value['frequency'];
+        //                $data['time'] = $value['time'];
+        //                $data['minute'] = $value['minute'];
+        //                $data['price'] = $value['price'];
+        //                $data['tax'] = "0.00";
+        //                $data['description'] = $value['description'];
+        //                $data['ticket_status'] = 1;
+        //                $data['checklist'] = $value['checklist'];
+        //                $data['customernotes'] = $value['customernotes'];
+        //                $data['count'] = $value['count']+1;
+        //                $quotedata = Quote::create($data);
+        //                 DB::table('quote')->where('id','=',$value['id'])
+        //                   ->update([ 
+        //                       "flag"=>"0"
+        //                 ]);
+        //             }
+        //         }
+        //     }
+        //     if($value['frequency'] == "Quarterly") {
+        //         $newTime = strtotime('90 days'. $value['created_at']);
+        //         $newDate = date('Y-m-d', $newTime);
+        //         if($newDate == $currentdate) {
+        //             if($value['count']==52) {
+
+        //             } else {
+        //                $data['userid'] = $value['userid'];
+        //                $data['workerid'] = $value['workerid'];
+        //                $data['customerid'] = $value['customerid'];
+        //                $data['customername'] = $value['customername'];
+        //                $data['address'] = $value['address'];
+        //                $data['latitude'] = $value['latitude'];
+        //                $data['longitude'] = $value['longitude'];
+        //                $data['serviceid'] = $value['serviceid'];
+        //                $data['pricetype'] = $value['pricetype'];
+        //                $data['servicename'] = $value['servicename'];
+        //                $data['product_id'] = $value['product_id'];
+        //                $data['product_name'] = $value['product_name'];
+        //                $data['personnelid'] = $value['personnelid'];
+        //                $data['radiogroup'] = $value['radiogroup'];
+        //                $data['frequency'] = $value['frequency'];
+        //                $data['time'] = $value['time'];
+        //                $data['minute'] = $value['minute'];
+        //                $data['price'] = $value['price'];
+        //                $data['tax'] = "0.00";
+        //                $data['description'] = $value['description'];
+        //                $data['ticket_status'] = 1;
+        //                $data['checklist'] = $value['checklist'];
+        //                $data['customernotes'] = $value['customernotes'];
+        //                $data['count'] = $value['count']+1;
+        //                $quotedata = Quote::create($data);
+        //                 DB::table('quote')->where('id','=',$value['id'])
+        //                   ->update([ 
+        //                       "flag"=>"0"
+        //                 ]);
+        //             }
+        //         }
+        //    }
+        // }
+        //end here
 
         $days = $request->get('f');
         $dateS = Carbon::now()->subDay($days);
         $dateE = Carbon::now();
+       // echo date('Y-m-d', strtotime($dateE)); die;
         $ticket = DB::table('quote')->where('userid',$auth_id)->where('parentid', '=',"")->where('ticket_status', '!=' ,'0')->where('ticket_status', '!=' ,'5')->limit('3')->orderBy('id','DESC')->get();
         
         $inventoryData = Inventory::where('user_id',$auth_id)->inRandomOrder()->get();
