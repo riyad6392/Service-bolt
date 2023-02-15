@@ -154,8 +154,8 @@ class WorkerServicesController extends Controller
           <div class="col-md-6 mb-2">
             <label>Default Time (hh:mm)</label><br>
             <div class="timepicker timepicker1" style="display:inline-block;">
-           <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" value="" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" value="" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+           <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" value="" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" value="" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
             </div></div>
           <div class="col-md-12 mb-3">
             <label>Price</label>

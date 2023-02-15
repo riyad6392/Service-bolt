@@ -447,7 +447,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             success:function(data) {
             	
               $("#add-address").modal('hide');
-              $("#address2").append("<option value="+data.address+">"+data.address+"</option>");
+              $("#address2").append("<option value="+data.address+" selected>"+data.address+"</option>");
             }
         })
 	})

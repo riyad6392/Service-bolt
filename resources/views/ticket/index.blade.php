@@ -2350,7 +2350,7 @@ $('#serviceform').on('submit', function(event) {
 				var realmin = m % 60;
     		var hours = Math.floor(m / 60);
     		h = h+hours;
-				console.log(h);
+				
 		    $("#time").val(h);
 				$("#minute").val(realmin);
 	    }

@@ -142,11 +142,15 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
+              //console.log(data.html);
               $('#viewmodaldata').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 3
               });
+              var h = 1;
+              var realmin = 0;
+              $("#time").val(h);
+              $("#minute").val(realmin);
             }
         })
     });
