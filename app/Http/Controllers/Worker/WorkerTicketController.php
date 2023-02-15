@@ -1422,6 +1422,7 @@ class WorkerTicketController extends Controller
     public function sendpayment(Request $request)
     {
       $auth_id = auth()->user()->userid;
+      $cinfo = Customer::select('id','customername','phonenumber','email','companyname','billingaddress')->where('id',$request->customerid)->first();
       $quote = Quote::where('id', $request->tid)->orWhere('parentid',$request->tid)->get();
           if(count($quote)>0) {
             foreach($quote as $key => $value) {
@@ -1443,7 +1444,12 @@ class WorkerTicketController extends Controller
                   'xSoftwareVersion' => '1.0.0',
                   "xCommand"=>'cc:sale',
                   "xAmount"=>$request->amount,
-                  "xCVV" =>$request->cvv
+                  "xCVV" =>$request->cvv,
+                  "xBillFirstName"=>$cinfo->customername,
+                  "xBillCompany"=>$cinfo->companyname,
+                  "xBillStreet"=>$cinfo->billingaddress,
+                  "xBillPhone"=>$cinfo->phonenumber,
+                  "xEmail"=>$cinfo->email
               );
 
               $headers = array(
@@ -1512,7 +1518,12 @@ class WorkerTicketController extends Controller
             "xCustom01" =>$request->customername,
             "xAccount" =>$request->checknumber,
             "xAccountType" =>'Checking',
-            "xCurrency" =>'USD'
+            "xCurrency" =>'USD',
+            "xBillFirstName"=>$cinfo->customername,
+            "xBillCompany"=>$cinfo->companyname,
+            "xBillStreet"=>$cinfo->billingaddress,
+            "xBillPhone"=>$cinfo->phonenumber,
+            "xEmail"=>$cinfo->email
           );
 
             $headers = array(

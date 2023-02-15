@@ -92,6 +92,7 @@
 	   	<input type="hidden" class="form-control form-control-2" name="method" id="method"  value="Credit Card" placeholder="">
 	   	<input type="hidden" class="form-control form-control-2" name="amount" required id="amount"  value="{{$totalprice}}" placeholder="">
 	   	<input type="hidden" value="{{$quoteData->id}}" name="tid">
+	   	<input type="hidden" value="{{$quoteData->customerid}}" name="customerid">
       <div class="card admin-setting mb-3">
 	  <div class="card-body">
 	  <h5 class="mb-4">Credit Card Info</h5>
@@ -155,6 +156,8 @@
 						<form method="post" action="{{route('worker.sendpayment')}}">
 							@csrf
 							<input type="hidden" class="form-control form-control-2" name="method" id="method"  value="Cash">
+	   					<input type="hidden" value="{{$quoteData->customerid}}" name="customerid">
+
 								<div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
 									<div class="accordion-body">
 									<div class="mb-3">
@@ -175,6 +178,8 @@
 							<form method="post" action="{{route('worker.sendpayment')}}">
 								@csrf
 								<input type="hidden" class="form-control form-control-2" name="method" id="method"  value="Check" placeholder="" >
+	   						<input type="hidden" value="{{$quoteData->customerid}}" name="customerid">
+
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="flush-headingTwo">
 						  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">

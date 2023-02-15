@@ -459,6 +459,7 @@ class BillingController extends Controller
     public function update(Request $request)
     {
       $auth_id = auth()->user()->id;
+      $cinfo = Customer::select('id','customername','phonenumber','email','companyname','billingaddress')->where('id',$request->customerid)->first();
       $url = 'https://x1.cardknox.com/gatewayjson';
       if($request->method == "Credit Card") {
         if($auth_id == "68") {
@@ -471,7 +472,13 @@ class BillingController extends Controller
               'xSoftwareVersion' => '1.0.0',
               "xCommand"=>'cc:sale',
               "xAmount"=>$request->amount,
-              "xCVV" =>$request->cvv
+              "xCVV" =>$request->cvv,
+              "xBillFirstName"=>$cinfo->customername,
+              "xBillCompany"=>$cinfo->companyname,
+              "xBillStreet"=>$cinfo->billingaddress,
+              "xBillPhone"=>$cinfo->phonenumber,
+              "xEmail"=>$cinfo->email,
+              "xCurrency"=> "USD"
           );
 
           $headers = array(
@@ -570,10 +577,14 @@ class BillingController extends Controller
           'xSoftwareVersion' => '1.0.0',
           "xCommand"=>'check:sale',
           "xAmount"=>$request->amount,
-          "xCustom01" =>$request->customername,
           "xAccount" =>$request->check_no,
           "xAccountType" =>'Checking',
-          "xCurrency" =>'USD'
+          "xCurrency" =>'USD',
+          "xBillFirstName"=>$cinfo->customername,
+          "xBillCompany"=>$cinfo->companyname,
+          "xBillStreet"=>$cinfo->billingaddress,
+          "xBillPhone"=>$cinfo->phonenumber,
+          "xEmail"=>$cinfo->email
         );
 
           $headers = array(

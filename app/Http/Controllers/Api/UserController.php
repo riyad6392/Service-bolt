@@ -2000,6 +2000,7 @@ class UserController extends Controller
 
         $quote = Quote::where('id', $request->ticketid)->first();
 
+        $cinfo = Customer::select('id','customername','phonenumber','email','companyname','billingaddress')->where('id',$quote->customerid)->first();
         if($quote->product_id=="") {
             $productids = array();
         }
@@ -2050,10 +2051,14 @@ class UserController extends Controller
             'xSoftwareVersion' => '1.0.0',
             "xCommand"=>'check:sale',
             "xAmount"=>$request->payment_amount,
-            "xCustom01" =>$customername,
             "xAccount" =>$request->checknumber,
             "xAccountType" =>'Checking',
-            "xCurrency" =>'USD'
+            "xCurrency" =>'USD',
+            "xBillFirstName"=>$cinfo->customername,
+            "xBillCompany"=>$cinfo->companyname,
+            "xBillStreet"=>$cinfo->billingaddress,
+            "xBillPhone"=>$cinfo->phonenumber,
+            "xEmail"=>$cinfo->email
           );
 
             $headers = array(
@@ -2118,7 +2123,12 @@ class UserController extends Controller
                   'xSoftwareVersion' => '1.0.0',
                   "xCommand"=>'cc:sale',
                   "xAmount"=>$request->payment_amount,
-                  "xCVV" =>$request->cvv
+                  "xCVV" =>$request->cvv,
+                  "xBillFirstName"=>$cinfo->customername,
+                  "xBillCompany"=>$cinfo->companyname,
+                  "xBillStreet"=>$cinfo->billingaddress,
+                  "xBillPhone"=>$cinfo->phonenumber,
+                  "xEmail"=>$cinfo->email
                 );
 
             $headers = array(
