@@ -549,7 +549,7 @@ $googleplacekey = $userinfo->googleplace;
         autocomplete.addListener('place_changed', function() {
             var place = autocomplete.getPlace();
             autocomplete.setComponentRestrictions(
-            {'country': ['us']});
+            {'country': ['us','in']});
         });
 
         var input1 = document.getElementById('address6');
@@ -557,7 +557,7 @@ $googleplacekey = $userinfo->googleplace;
         autocomplete1.addListener('place_changed', function() {
            var place1 = autocomplete1.getPlace();
             autocomplete1.setComponentRestrictions(
-        {'country': ['us']});
+        {'country': ['us','in']});
       });
 
       var input2 = document.getElementById('addressview');
@@ -566,7 +566,7 @@ $googleplacekey = $userinfo->googleplace;
        autocomplete2.addListener('place_changed', function() {
            var place2 = autocomplete2.getPlace();
             autocomplete2.setComponentRestrictions(
-        {'country': ['us']});
+        {'country': ['us','in']});
       });
     }
   $(document).ready(function() {

@@ -619,7 +619,7 @@ $googleplacekey = $userinfo->googleplace;
         autocomplete.addListener('place_changed', function() {
            var place = autocomplete.getPlace();
             autocomplete.setComponentRestrictions(
-        {'country': ['us']});
+        {'country': ['us','in']});
           $("#saddress").val($("#address").val());
        });
 
@@ -631,7 +631,7 @@ $googleplacekey = $userinfo->googleplace;
        autocomplete1.addListener('place_changed', function() {
            var place1 = autocomplete1.getPlace();
             autocomplete1.setComponentRestrictions(
-        {'country': ['us']});
+        {'country': ['us','in']});
       });
 
        var input2 = document.getElementById('address5');
@@ -642,7 +642,7 @@ $googleplacekey = $userinfo->googleplace;
        autocomplete2.addListener('place_changed', function() {
            var place2 = autocomplete2.getPlace();
             autocomplete2.setComponentRestrictions(
-        {'country': ['us']});
+        {'country': ['us','in']});
       });
 
        var input3 = document.getElementById('addressq1');
@@ -651,7 +651,7 @@ $googleplacekey = $userinfo->googleplace;
         autocomplete3.addListener('place_changed', function() {
            var place3 = autocomplete3.getPlace();
             autocomplete3.setComponentRestrictions(
-        {'country': ['us']});
+        {'country': ['us','in']});
       });
 
       var input4 = document.getElementById('addresst1');
@@ -660,7 +660,7 @@ $googleplacekey = $userinfo->googleplace;
       autocomplete4.addListener('place_changed', function() {
            var place4 = autocomplete4.getPlace();
             autocomplete4.setComponentRestrictions(
-        {'country': ['us']});
+        {'country': ['us','in']});
       });
 
       var input5 = document.getElementById('billingaddress');
@@ -669,7 +669,7 @@ $googleplacekey = $userinfo->googleplace;
       autocomplete5.addListener('place_changed', function() {
            var place5 = autocomplete5.getPlace();
             autocomplete5.setComponentRestrictions(
-        {'country': ['us']});
+        {'country': ['us','in']});
       });
 
       var input6 = document.getElementById('mailingaddress');
@@ -678,7 +678,7 @@ $googleplacekey = $userinfo->googleplace;
       autocomplete6.addListener('place_changed', function() {
            var place6 = autocomplete6.getPlace();
             autocomplete6.setComponentRestrictions(
-        {'country': ['us']});
+        {'country': ['us','in']});
       });
 
       var input7 = document.getElementById('billingaddress1');
@@ -687,7 +687,7 @@ $googleplacekey = $userinfo->googleplace;
       autocomplete7.addListener('place_changed', function() {
            var place7 = autocomplete7.getPlace();
             autocomplete7.setComponentRestrictions(
-        {'country': ['us']});
+        {'country': ['us','in']});
       });
 
       var input8 = document.getElementById('mailingaddress1');
@@ -696,7 +696,7 @@ $googleplacekey = $userinfo->googleplace;
       autocomplete8.addListener('place_changed', function() {
            var place8 = autocomplete8.getPlace();
             autocomplete8.setComponentRestrictions(
-        {'country': ['us']});
+        {'country': ['us','in']});
       });
     }
 </script>  
@@ -1008,6 +1008,7 @@ function initMap() {
     </script>
 
     <script type="text/javascript">
+        var userids = {{Auth::user()->id}};
         // Enable pusher logging - don't include this in production
         //Pusher.logToConsole = true;
 
@@ -1018,10 +1019,12 @@ function initMap() {
         var channel = pusher.subscribe('my-channel');
         
         channel.bind('my-event', function(data) {
-        
-        var newNotificationHtml = `<li><a class="dropdown-item" href="">${data.message}</a></li>`;
-        $("#notification").append(newNotificationHtml);
-        $("#blink").addClass("not-bell"); 
+        if(userids==data.message.uid) {
+          var newNotificationHtml = `<li><a class="dropdown-item" href="">${data.message.message}</a></li>`;
+          $("#notification").append(newNotificationHtml);
+
+          $("#blink").addClass("not-bell"); 
+        }
 
         });
     </script>

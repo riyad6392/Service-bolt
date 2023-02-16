@@ -330,7 +330,7 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
      
      <div class="col-md-6 mb-3">
      
-     <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
+     <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false" maxlength="12">
      
      </div>
      

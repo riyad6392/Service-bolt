@@ -757,7 +757,7 @@ class UserController extends Controller
             $data1['message'] = $ticketsub;
 
             Notification::create($data1);
-            event(new MyEvent($ticketsub));
+            event(new MyEvent($data1));
 
            return response()->json(['status'=>1,'message'=>'Ticket Completed successfully'],$this->successStatus);
         } else {
@@ -818,7 +818,7 @@ class UserController extends Controller
                   $data1['message'] = $ticketsub;
 
                   Notification::create($data1);
-                  event(new MyEvent($ticketsub));
+                  event(new MyEvent($data1));
 
                 return response()->json(['status'=>1,'message'=>'Ticket Pickup successfully'],$this->successStatus);
         } else {
@@ -1567,7 +1567,7 @@ class UserController extends Controller
         $data1['message'] = $ticketsub;
 
         Notification::create($data1);
-        event(new MyEvent($ticketsub));
+        event(new MyEvent($data1));
 
       }
       if($request->type=="edit") {

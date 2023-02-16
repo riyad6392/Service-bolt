@@ -77,8 +77,8 @@ class ServicesController extends Controller
           $data['userid'] = $auth_id;
           $data['servicename'] = $request->servicename;
           $data['price'] = $request->price;
-          $data['preferred'] = $request->preferred;
-          $data['overtime'] = $request->overtime;
+          // $data['preferred'] = $request->preferred;
+          // $data['overtime'] = $request->overtime;
           //$data['productid'] = $request->defaultproduct;
           $data['type'] = $request->radiogroup;
           $data['frequency'] = $request->frequency;
@@ -206,19 +206,7 @@ class ServicesController extends Controller
           <div class="col-md-12 mb-2 position-relative">
             <label>Service Default Price</label>
             <i class="fa fa-dollar" style="position: absolute;top: 40px;left: 27px;"></i>
-            <input type="text" class="form-control" placeholder="Service Regular Price" value="'.$services[0]['price'].'" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) ||  
-   event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required>
-          </div>
-           <div class="col-md-12 mb-2 position-relative">
-            <label>Service Preffered Price</label>
-            <i class="fa fa-dollar" style="position: absolute;top: 40px;left: 27px;"></i>
-            <input type="text" class="form-control" placeholder="Service Preferred Price" value="'.$services[0]['preferred'].'" name="preferred" id="preferred" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) ||  
-   event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required>
-          </div>
-           <div class="col-md-12 mb-2 position-relative">
-            <label>Service Overtime Price</label>
-            <i class="fa fa-dollar" style="position: absolute;top: 40px;left: 27px;"></i>
-            <input type="text" class="form-control" placeholder="Service Overtime Price" value="'.$services[0]['overtime'].'" name="overtime" id="overtime" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) ||  
+            <input type="text" class="form-control" placeholder="Service Default Price" value="'.$services[0]['price'].'" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) ||  
    event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required>
           </div>
           <div class="col-md-12 mb-2">
@@ -333,8 +321,8 @@ class ServicesController extends Controller
             $service = Service::where('id', $request->serviceid)->get()->first();
             $service->servicename = $request->servicename;
             $service->price = $request->price;
-            $service->preferred = $request->preferred;
-            $service->overtime = $request->overtime;
+            //$service->preferred = $request->preferred;
+            //$service->overtime = $request->overtime;
             //$service->productid = $request->defaultproduct;
             if(isset($request->defaultproduct)) {
              $service->productid = implode(',', $request->defaultproduct);

@@ -1070,7 +1070,7 @@ class CustomerController extends Controller
           <div class="col-md-12 mb-2">
             <label>Phone Number</label>
 
-            <input type="text" class="form-control" placeholder="Phone Number" value="'.$customer[0]->phonenumber.'" name="phonenumber" id="phonenumber" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false" required>
+            <input type="text" class="form-control" placeholder="Phone Number" value="'.$customer[0]->phonenumber.'" name="phonenumber" id="phonenumber" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false" maxlength="12" required>
           </div>
 
           <div class="col-md-12 mb-2">

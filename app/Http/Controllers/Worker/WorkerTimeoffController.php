@@ -85,7 +85,7 @@ class WorkerTimeoffController extends Controller
         $data1['message'] = $ticketsub;
 
         Notification::create($data1);
-        event(new MyEvent($ticketsub));  
+        event(new MyEvent($data1));  
 
       }
       $request->session()->flash('success', 'PTO added successfully');
