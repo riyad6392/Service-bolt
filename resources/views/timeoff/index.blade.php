@@ -328,7 +328,6 @@ tr.accepted-row:after {
       dataType: 'json',
       refresh: true,
       success:function(data) {
-        console.log(data.html);
         $('#viewmodaldatatimeoff').html(data.html);
         
       }
@@ -445,8 +444,6 @@ $('#datepicker2old').datepicker({
 	    dataType: 'json',
 	    refresh: true,
 	    success:function(data) {
-        //alert(data);
-	      console.log(data.html);
 	      $('#viewdatelistdata').html(data.html);
 	    }
 	})

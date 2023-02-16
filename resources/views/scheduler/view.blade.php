@@ -189,7 +189,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
                $("#spanid").html('<input type="text" value="'+fulldate+'" name="dateval" id="dateval" style="border:none;color:#B0B7C3;width:400px;">');
                $("#spanid1").html('Total Ticket Count : <input type="text" value="'+data.countsdata+'" name="countval" id="countval" style="pointer-events: none;position: absolute;top: -1px;background: green;color: #fff;border-radius:17px;padding: 0 8px;width: 25px;border: 0px;height: 25px;margin:0 10px;">');
 

@@ -20,6 +20,14 @@
     position: relative;
     width: 100%;
 }
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    /* margin-top: auto; */
+    font-size: 0.875em;
+    color: #dc3545;
+    margin: -15px 0px 12px;
+}
 
 input[type="date"]::-webkit-calendar-picker-indicator {
     background: transparent;
@@ -231,7 +239,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <p>14. <b>Links To Other Web Sites</b></p>
 <p>Our Service may contain links to third party web sites or services that are not owned or controlled by ServiceBolt.</p>
 <p>ServiceBolt has no control over, and assumes no responsibility for the content, privacy policies, or practices of any third party web sites or services. We do not warrant the offerings of any of these entities/individuals or their websites.</p>
-<p>For example, the outlined <a href="https://policymaker.io/terms-and-conditions/">Terms of Use</a> have been created using <a href="https://policymaker.io/">PolicyMaker.io</a>, a free web application for generating high-quality legal documents. PolicyMaker’s <a href="https://policymaker.io/terms-and-conditions/">Terms and Conditions generator</a> is an easy-to-use free tool for creating an excellent standard Terms of Service template for a website, blog, e-commerce store or app.</p>
 <p>YOU ACKNOWLEDGE AND AGREE THAT COMPANY SHALL NOT BE RESPONSIBLE OR LIABLE, DIRECTLY OR INDIRECTLY, FOR ANY DAMAGE OR LOSS CAUSED OR ALLEGED TO BE CAUSED BY OR IN CONNECTION WITH USE OF OR RELIANCE ON ANY SUCH CONTENT, GOODS OR SERVICES AVAILABLE ON OR THROUGH ANY SUCH THIRD PARTY WEB SITES OR SERVICES.</p>
 <p>WE STRONGLY ADVISE YOU TO READ THE TERMS OF SERVICE AND PRIVACY POLICIES OF ANY THIRD PARTY WEB SITES OR SERVICES THAT YOU VISIT.</p>
 <p>15. <b>Disclaimer Of Warranty</b></p>

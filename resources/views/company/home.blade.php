@@ -426,7 +426,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewcompletedmodal').html(data.html);
             }
         })
@@ -503,7 +502,6 @@
                               })(marker, i));
                             }
                     } else {
-                          //console.log("latlong",data);
                           var map = new google.maps.Map(document.getElementById('map'), {
                             zoom: 10,
                             center: new google.maps.LatLng(data.html[0][1], data.html[0][2]),
@@ -672,7 +670,6 @@ $('.livelocationupdate').click(function() {
                               })(marker, i));
                             }
                     } else {
-                          //console.log("latlong",data);
                           var map = new google.maps.Map(document.getElementById('map'), {
                             zoom: 10,
                             center: new google.maps.LatLng(data.html[0][1], data.html[0][2]),

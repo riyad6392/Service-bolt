@@ -178,7 +178,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       dataType: 'json',
       refresh: true,
       success:function(data) {
-        console.log(data.html);
         $('#viewinvoicemodaldata').html(data.html);
         
       }
@@ -243,7 +242,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewquotemodaldata').html(data.html);
             }
         })
@@ -398,7 +396,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         var realmin = m % 60;
         var hours = Math.floor(m / 60);
         h = h+hours;
-        console.log(h);
         $("#time").val(h);
         $("#minute").val(realmin);
       }
@@ -417,7 +414,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata1').html(data.html);
               $('.selectpicker2').selectpicker({
                 size: 3
@@ -479,7 +475,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewcompletedmodal').html(data.html);
             }
         })
@@ -508,13 +503,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           dataType: 'json',
           success: function (data) {
               $("#output").text(data);
-              console.log("SUCCESS : ", data);
               $("#btnSubmit").prop("disabled", false);
               location.reload();
           },
           error: function (e) {
               $("#output").text(e.responseText);
-              console.log("ERROR : ", e);
               $("#btnSubmit").prop("disabled", false);
           }
         });
@@ -542,13 +535,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           dataType: 'json',
           success: function (data) {
               $("#output").text(data);
-              console.log("SUCCESS : ", data);
               $("#btnSubmit1").prop("disabled", false);
               location.reload();
           },
           error: function (e) {
               $("#output").text(e.responseText);
-              console.log("ERROR : ", e);
               $("#btnSubmit1").prop("disabled", false);
           }
         });
@@ -567,8 +558,6 @@ $(document).on('click','.service_list_dot',function(e) {
       dataType: 'json',
       refresh: true,
       success:function(data) {
-
-        console.log(data.html);
         $('#viewservicelistdata').html(data.html);
       }
   })

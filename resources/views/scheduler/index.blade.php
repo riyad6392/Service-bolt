@@ -1190,9 +1190,7 @@ body::-webkit-scrollbar-thumb:hover {
                } 
 
                 element.find(".fa-edit").on('click', function() {
-                    //console.log(event.id);
                     $('#calendar').fullCalendar('editEvents',event._id);
-                    console.log('edit');
                 });
 
 
@@ -1224,11 +1222,10 @@ body::-webkit-scrollbar-thumb:hover {
             },
 
             eventClick: function (info) {
-                //console.log(info);
 
             },
             eventMouseover : function(data, event, view) {
-            //console.log(data);
+            
             },
 
             eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) { 
@@ -1259,10 +1256,7 @@ body::-webkit-scrollbar-thumb:hover {
                 var ticketid = eventid;
 
                 var workerid = event.resourceId;
-                // console.log(giventime);
-                // console.log('break');
-                // console.log(givenendtime);
-                // return false;
+                
                 form_data = new FormData();
                 form_data.append('quoteid',ticketid);
                 form_data.append('time',giventime);
@@ -1317,10 +1311,7 @@ body::-webkit-scrollbar-thumb:hover {
                 //var dd = date._d;
                
                 var date = moment(new Date(dd.toString().substr(0, 16)));
-                //var fulldate = date.format("dddd - MMMM DD, YYYY");
-                // console.log(date._i);
-                // return false;
-                //var fulldate = "{{$requestdate}}";
+                
                 var fulldate = moment(date._i).format('Y-MM-DD');
                 
                 
@@ -1483,7 +1474,6 @@ body::-webkit-scrollbar-thumb:hover {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#sviewmodaldata').html(data.html);
               $('.selectpicker1').selectpicker({
                 size: 5
@@ -1531,7 +1521,6 @@ body::-webkit-scrollbar-thumb:hover {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata1').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 5

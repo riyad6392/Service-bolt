@@ -400,12 +400,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 					$('#addressicon').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address" class=""><i class="fa fa-plus"></i></a></div>');
 
 					$('#customerid').val(customerid);
-					//$("#servicename").empty();
-					//console.log(result.serviceData);
-					// $.each(result.serviceData,function(key,value) {
-					// 	$("#servicename").append('<option value="'+value.id+'" data-hour="'+value.time+'" data-min="'+value.minute+'" data-price="'+value.price+'" data-frequency="'+value.frequency+'">'+value.servicename+'</option>');
-					// });
-					
 					$('.selectpicker').selectpicker('refresh');
 				}
 		});

@@ -301,7 +301,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -332,7 +331,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -398,7 +396,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.html);
               $('#allchecklist').html(data.html);
               $("#new-listupdate").modal('show')
             }
@@ -419,7 +416,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#vieweditaddressmodaldata').html(data.html);
             }
         })

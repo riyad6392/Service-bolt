@@ -112,7 +112,6 @@
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
           $('#viewusermodal').html(data.html);
         }
     })

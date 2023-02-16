@@ -1784,7 +1784,6 @@ $('#createserviceticket').on('submit', function(event) {
             cache: false,
             processData: false,
             success:function(data) {
-              console.log(data);
 			  swal("Done!", "Customer Created Successfully!", "success");
               $("#add-customer").modal('hide');
               $("#customerid").append("<option value="+data.id+">"+data.customername+"</option>");
@@ -1806,7 +1805,6 @@ $('#createserviceticket').on('submit', function(event) {
             cache: false,
             processData: false,
             success:function(data) {
-              console.log(data);
 			  swal("Done!", "Customer Created Successfully!", "success");
               $("#add-customer2").modal('hide');
               $("#customerid1").append("<option value="+data.id+">"+data.customername+"</option>");
@@ -1829,7 +1827,6 @@ $('#serviceform').on('submit', function(event) {
             cache: false,
             processData: false,
             success:function(data) {
-              //console.log(data);
 			  swal("Done!", "Service Created Successfully!", "success");
               $("#add-services").modal('hide');
               $("#servicename").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");
@@ -1851,7 +1848,6 @@ $('#serviceform').on('submit', function(event) {
             cache: false,
             processData: false,
             success:function(data) {
-              // console.log(data);
 			  swal("Done!", "Service Created Successfully!", "success");
               $("#add-services1").modal('hide');
               $(".service").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");
@@ -1873,7 +1869,6 @@ $('#serviceform').on('submit', function(event) {
 	            cache: false,
 	            processData: false,
 	            success:function(data) {
-	            	//console.log(data);
 				  swal("Done!", "Product Created Successfully!", "success");
 	              $("#add-products").modal('hide');
 	              $("#productname").append("<option value="+data.id+" data-price="+data.price+">"+data.productname+"</option>");
@@ -1917,7 +1912,6 @@ $('#serviceform').on('submit', function(event) {
       dataType: 'json',
       refresh: true,
       success:function(data) {
-        console.log(data.html);
         $('#viewinvoicemodaldata').html(data.html);
         
       }
@@ -2065,19 +2059,13 @@ $('#serviceform').on('submit', function(event) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-				console.log(data);
 				if(data.status=='success') {
 				$("#saveaddress").attr("disabled", true);
 				$(".find_msg").html(data.msg);
 				$('.find_msg').css('color','red');
 				$('.find_msg').css('display','block');
-				
-             // $("#add-address").modal('hide');
-              //$("#address1").append("<option value="+data.address+">"+data.address+"</option>");
-             // $("#add-tickets").show();
 				}
 				else {
-					//alert('fdgnk');
 					$("#saveaddress").attr("disabled", false);
 					$('.find_msg').css('display','none');
 				}
@@ -2197,7 +2185,6 @@ $('#serviceform').on('submit', function(event) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewquotemodaldata').html(data.html);
             }
         })
@@ -2374,7 +2361,6 @@ $('#serviceform').on('submit', function(event) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.html);
               $('#viewmodaldata1').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 3
@@ -2440,7 +2426,6 @@ $('#serviceform').on('submit', function(event) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewcompletedmodal').html(data.html);
             }
         })
@@ -2469,13 +2454,11 @@ $('#serviceform').on('submit', function(event) {
 	        dataType: 'json',
 	        success: function (data) {
 	            $("#output").text(data);
-	            console.log("SUCCESS : ", data);
 	            $("#btnSubmit").prop("disabled", false);
 	            location.reload();
 	        },
 	        error: function (e) {
 	            $("#output").text(e.responseText);
-	            console.log("ERROR : ", e);
 	            $("#btnSubmit").prop("disabled", false);
 	        }
 	      });
@@ -2503,13 +2486,11 @@ $('#serviceform').on('submit', function(event) {
 	        dataType: 'json',
 	        success: function (data) {
 	            $("#output").text(data);
-	            console.log("SUCCESS : ", data);
 	            $("#btnSubmit1").prop("disabled", false);
 	            location.reload();
 	        },
 	        error: function (e) {
 	            $("#output").text(e.responseText);
-	            console.log("ERROR : ", e);
 	            $("#btnSubmit1").prop("disabled", false);
 	        }
 	      });
@@ -2528,8 +2509,6 @@ $(document).on('click','.service_list_dot',function(e) {
 	    dataType: 'json',
 	    refresh: true,
 	    success:function(data) {
-
-	      console.log(data.html);
 	      $('#viewservicelistdata').html(data.html);
 	    }
 	})
@@ -2596,7 +2575,6 @@ $(document).on('change','#servicename',function(e) {
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            //console.log(data.totalprice);
             $('#price').val(data.totalprice);
             $('#hiddenprice').val(data.totalprice);
             $('#ticketprice').val(data.totalprice);
@@ -2618,7 +2596,6 @@ $(document).on('change','#productname',function(e) {
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            //console.log(data.totalprice);
             $('#price').val(data.totalprice);
             $('#hiddenprice').val(data.totalprice);
             $('#ticketprice').val(data.totalprice);
@@ -2642,7 +2619,6 @@ $(document).on('change','#serviceid',function(e) {
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            //console.log(data.totalprice);
             $('#priceticketedit').val(data.totalprice);
             $('#tickettotaledit').val(data.totalprice);
             $('#edithiddenprice').val(data.totalprice);
@@ -2664,7 +2640,6 @@ $(document).on('change','#productid',function(e) {
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            //console.log(data.totalprice);
             $('#priceticketedit').val(data.totalprice);
             $('#tickettotaledit').val(data.totalprice);
             $('#edithiddenprice').val(data.totalprice);
@@ -2723,7 +2698,6 @@ $(document).on('change','#productid',function(e) {
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            console.log(data.totalprice);
             $('#price1').val(data.totalprice);
             $('#ticketprice1').val(data.totalprice);
             $('#hiddenprice1').val(data.totalprice);
@@ -2744,7 +2718,6 @@ $(document).on('change','#productnamet1',function(e) {
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            console.log(data.totalprice);
             $('#price1').val(data.totalprice);
             $('#ticketprice1').val(data.totalprice);
             $('#hiddenprice1').val(data.totalprice);

@@ -306,7 +306,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftbarbillingdata').html(data.html);
             }
         })
@@ -322,7 +321,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftbarbillingdata').html(data.html);
             }
         })
@@ -358,13 +356,11 @@
           dataType: 'json',
           success: function (data) {
               $("#output").text(data);
-              console.log("SUCCESS : ", data);
               $("#btnSubmit").prop("disabled", false);
               location.reload();
           },
           error: function (e) {
               $("#output").text(e.responseText);
-              console.log("ERROR : ", e);
               $("#btnSubmit").prop("disabled", false);
           }
         });
@@ -384,7 +380,6 @@
       dataType: 'json',
       refresh: true,
       success:function(data) {
-        console.log(data.html);
         $('#viewinvoicemodaldata').html(data.html);
         
       }
@@ -404,8 +399,6 @@
       dataType: 'json',
       refresh: true,
       success:function(data) {
-
-        console.log(data.html);
         $('#viewservicelistdata').html(data.html);
       }
   })

@@ -88,7 +88,6 @@ function handleAgreementResponse(response) {
     } else {
         msg = response.token;
     }
-    console.log(msg);
     lbToken = document.getElementById("agr-token");
                    
     lbToken.innerHTML = msg;

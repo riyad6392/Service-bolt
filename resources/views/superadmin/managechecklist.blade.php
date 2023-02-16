@@ -175,7 +175,6 @@ $(document).on('click','#editchecklist',function() {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.html);
               $('#vieweditaddressmodaldata').html(data.html);
             }
         })
@@ -193,7 +192,6 @@ $(document).on('click','#manageusers',function(e) {
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
           $('#viewtenturemodal').html(data.html);
         }
     })

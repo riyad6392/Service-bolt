@@ -23,10 +23,8 @@ class AuthController extends Controller
 
     public function storeUser(Request $request)
     {
-       // dd($request->all());
-       $pricev = User::select('featureprice')->where('role','superadmin')->first();
+        $pricev = User::select('featureprice')->where('role','superadmin')->first();
         $request->session()->put('price', $pricev->featureprice);
-        //dd($request->session()->get('price'));
         if($request->session()->get('price')>0) {
             $allData = $request->all();
             return view('auth.signupcomplete',compact('allData'));

@@ -427,7 +427,6 @@ $(document).on('click','#myticketid',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata').html(data.html);
             }
         })
@@ -457,7 +456,6 @@ $('#datepicker').datepicker({
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('.hidetimesheet').html(data.html);
               $('.showtime').html(data.htmltimecontent);
             }
@@ -556,7 +554,6 @@ $('#datepicker3').datepicker({
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
           
           $('.clockin').hide();
           $('.clockout').show();
@@ -600,7 +597,6 @@ $('#datepicker3').datepicker({
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
           
           $('.clockin').show();
           $('.clockout').hide();

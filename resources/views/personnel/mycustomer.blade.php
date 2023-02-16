@@ -402,7 +402,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-			        console.log(data.html);
               $('#viewservicelistdata').html(data.html);
             }
         })

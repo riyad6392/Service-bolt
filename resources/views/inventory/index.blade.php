@@ -636,7 +636,6 @@ $(document).on('click','#next1',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -652,7 +651,6 @@ $(document).on('click','#next1',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -799,13 +797,11 @@ function readURL(input) {
         dataType: 'json',
         success: function (data) {
             $("#output").text(data);
-            //console.log("SUCCESS : ", data);
             $("#btnSubmit").prop("disabled", false);
             location.reload();
         },
         error: function (e) {
             $("#output").text(e.responseText);
-            //console.log("ERROR : ", e);
             $("#btnSubmit").prop("disabled", false);
         }
       });
@@ -909,7 +905,6 @@ function readURL(input) {
             cache: false,
             processData: false,
             success:function(data) {
-              console.log(data);
 			  swal("Done!", "Service Created Successfully!", "success");
               $("#add-services").modal('hide');
               $("#serviceid").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");

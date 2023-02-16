@@ -99,7 +99,6 @@
                 dataType: 'json',
                 refresh: true,
                 success:function(data) {
-                  console.log(data.html);
                   $('#viewcompletedmodal').html(data.html);
                 }
             })

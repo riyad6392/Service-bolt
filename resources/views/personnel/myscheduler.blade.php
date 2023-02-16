@@ -543,7 +543,6 @@ $(document).on('click','#myticketid',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata').html(data.html);
             }
         })
@@ -747,7 +746,6 @@ $(document).on('click','#myticketid',function(e) {
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
           $("#spanid1").html('Total Ticket Count : <input type="text" value="'+data.countsdata+'" name="countval" id="countval" style="pointer-events: none;position: absolute;top: -1px;background: green;color: #fff;border-radius:17px;padding: 0 8px;width: 25px;border: 0px;height: 25px;margin:0 10px;">');
           $('.showdata').html(data.html);
         }
@@ -793,7 +791,6 @@ $(document).on('click','#myticketid',function(e) {
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
           
           $('.clockin').hide();
           $('.clockout').show();
@@ -837,7 +834,6 @@ $(document).on('click','#myticketid',function(e) {
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
           
           $('.clockin').show();
           $('.clockout').hide();

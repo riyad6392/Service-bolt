@@ -134,7 +134,6 @@ $(document).on('click','#editfeature',function(e) {
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
           $('#viewpmodal').html(data.html);
         }
     })

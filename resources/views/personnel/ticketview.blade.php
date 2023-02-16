@@ -1291,7 +1291,6 @@ Save
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewticketpopup').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 3
@@ -1336,7 +1335,6 @@ Save
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.totalprice);
               $('#price12').val(data.totalprice); 
               $('#ticketprice').val(data.totalprice);
 

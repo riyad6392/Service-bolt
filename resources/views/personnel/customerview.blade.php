@@ -423,7 +423,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewinvoicemodal').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 3
@@ -502,7 +501,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -520,7 +518,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                 dataType: 'json',
                 refresh: true,
                 success:function(data) {
-                  console.log(data.html);
                   $('#viewleftservicemodal').html(data.html);
                 }
             })

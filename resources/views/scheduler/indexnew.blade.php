@@ -672,7 +672,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -688,7 +687,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -711,7 +709,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           //alert($("#workerid").val());
           var ids = $(this).sortable('toArray').toString();
           var drops =  ids.split('drop_');
-          console.log('dropid',drops);
           var lastItem = drops.pop();
           var quoteid = lastItem.split(',');
           var customerid = $("#customerid").val();
@@ -853,22 +850,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-
-              console.log(data.html);
                $("#spanid1").html('Total Ticket Count : <input type="text" value="'+data.countsdata+'" name="countval" id="countval" style="pointer-events: none;background: transparent;color: #fff;width: 15px;border: 0;">');
               $('#ajaxd').html(data.html);
               $('.showdata').hide();
-               // $("#sortable1, .sortable2").sortable();   
-               //     $( "#sortable1, .sortable2" ).disableSelection();    
-
-               //$("#sortable1, .sortable2").sortable
-               $("#sortable1, .sortable2").sortable({
+              $("#sortable1, .sortable2").sortable({
       connectWith: ".connectedSortable"
-      // update: function(event, ui) {
-      //       var ids = $(this).sortable('toArray').toString();
-      //       alert(ids);
-            
-      //   }
+      
     }).disableSelection();
      $(".sortable2").sortable({
 
@@ -876,7 +863,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           //alert($("#workerid").val());
           var ids = $(this).sortable('toArray').toString();
           var drops =  ids.split('drop_');
-          console.log('dropid',drops);
           var lastItem = drops.pop();
           var quoteid = lastItem.split(',');
           var customerid = $("#customerid").val();
@@ -932,85 +918,65 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-               //console.log(data.html.length==0);
-               // var locations = [
-               //              ['California', 38.296452, -76.508827],
-               //              ['Maryland', 39.045753, -76.641273]
-               //            ];
-               //            console.log(locations);
-                // $.each(data, function(key, value) {
-                //   // var aaa = split(',',value);
-                //   // var locations = [
-                //   //           ['California', 38.296452, -76.508827],
-                //   //           ['Maryland', 39.045753, -76.641273]
-                //   //         ];
-                //           //console.log(aaa);
-                // });
-                //           // var locations = [
-                          //   ['California', 38.296452, -76.508827],
-                          //   ['Maryland', 39.045753, -76.641273]
-                          // ];
-                          if(data.html.length==0) {
-                            var map = new google.maps.Map(document.getElementById('map'), {
-                            zoom: 10,
-                            //center: new google.maps.LatLng(38.892059, -77.019913),
-                            center: new google.maps.LatLng(38.892059, -77.019913),
-                            mapTypeId: google.maps.MapTypeId.ROADMAP
-                          });
-                          } else {
-                            var map = new google.maps.Map(document.getElementById('map'), {
-                              zoom: 10,
-                              //center: new google.maps.LatLng(38.892059, -77.019913),
-                              center: new google.maps.LatLng(data.html[0][1], data.html[0][2]),
-                              mapTypeId: google.maps.MapTypeId.ROADMAP
-                            });
-                        }
+               
+              if(data.html.length==0) {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                //center: new google.maps.LatLng(38.892059, -77.019913),
+                center: new google.maps.LatLng(38.892059, -77.019913),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+              });
+              } else {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                  zoom: 10,
+                  //center: new google.maps.LatLng(38.892059, -77.019913),
+                  center: new google.maps.LatLng(data.html[0][1], data.html[0][2]),
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
+            }
 
-                          var infowindow = new google.maps.InfoWindow();
+              var infowindow = new google.maps.InfoWindow();
 
-                          var marker, i;
+              var marker, i;
 
-                          for (i = 0; i < data.html.length; i++) {  
-                            marker = new google.maps.Marker({
-                              position: new google.maps.LatLng(data.html[i][1], data.html[i][2]),
-                              map: map,
-                              icon: {
-                                 url: APP_URL+'/uploads/personnel/'+data.html[i][3],
-                                 size: new google.maps.Size(36, 36),
-                                 scaledSize: new google.maps.Size(36, 36),
-                                 anchor: new google.maps.Point(0, 50),
-                              }
-                            });
-                            
-                            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                              return function() {
-                                if(data.html[i][3]!=null){
-                                  var imgeurl = APP_URL+'/uploads/personnel/'+data.html[i][3];
-                              } else {
-                                  var imgeurl = APP_URL+'/uploads/servicebolt-noimage.png';
-                              }
-                              var contentString =
-                              '<div class="user-box">' +
-                              '<div class="card">' +
-                              '<div class="card-body">' +
-                              '<img class="mb-2" src="'+imgeurl+'" alt="">' +
-                              '<h3 class="mb-3">'+data.html[i][0]+'</h3>' +
-                              '<div>' +
-                              '<a href="tel:'+data.html[i][4]+'" class="add-btn-yellow btn-block mb-3">Contact</a>' + 
-                              '<a href="#" class="btn btn-edit w-100 mb-3">See Schedule</a>' +
-                              "</div>" +
-                              "</div>" +
-                              "</div>" +
-                              "</div>";
-                                infowindow.setContent(contentString);
-                                //infowindow.setContent(data.html[i][0]);
-                                infowindow.open(map, marker);
-                              }
-                            })(marker, i));
-                          }
-              // console.log(data.html[0]);
-              // console.log(data.html[1]);
-              //$('.showdata').html(data.html);
+              for (i = 0; i < data.html.length; i++) {  
+                marker = new google.maps.Marker({
+                  position: new google.maps.LatLng(data.html[i][1], data.html[i][2]),
+                  map: map,
+                  icon: {
+                     url: APP_URL+'/uploads/personnel/'+data.html[i][3],
+                     size: new google.maps.Size(36, 36),
+                     scaledSize: new google.maps.Size(36, 36),
+                     anchor: new google.maps.Point(0, 50),
+                  }
+                });
+                
+                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                  return function() {
+                    if(data.html[i][3]!=null){
+                      var imgeurl = APP_URL+'/uploads/personnel/'+data.html[i][3];
+                  } else {
+                      var imgeurl = APP_URL+'/uploads/servicebolt-noimage.png';
+                  }
+                  var contentString =
+                  '<div class="user-box">' +
+                  '<div class="card">' +
+                  '<div class="card-body">' +
+                  '<img class="mb-2" src="'+imgeurl+'" alt="">' +
+                  '<h3 class="mb-3">'+data.html[i][0]+'</h3>' +
+                  '<div>' +
+                  '<a href="tel:'+data.html[i][4]+'" class="add-btn-yellow btn-block mb-3">Contact</a>' + 
+                  '<a href="#" class="btn btn-edit w-100 mb-3">See Schedule</a>' +
+                  "</div>" +
+                  "</div>" +
+                  "</div>" +
+                  "</div>";
+                    infowindow.setContent(contentString);
+                    //infowindow.setContent(data.html[i][0]);
+                    infowindow.open(map, marker);
+                  }
+                })(marker, i));
+              }
             }
         })
     });
@@ -1145,8 +1111,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
        data:{"start":start,"fulldate":fulldate},
        dataType:"json",
      success:function(data) {
-
-      console.log(data.html);
        $("#spanid1").html('Total Ticket Count : <input type="text" value="'+data.countsdata+'" name="countval" id="countval" style="pointer-events: none;background: transparent;color: #fff;width: 15px;border: 0;">');
       $('#ajaxd').html(data.html);
       $('.showdata').hide();
@@ -1157,7 +1121,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         update: function(event, ui) {
           var ids = $(this).sortable('toArray').toString();
           var drops =  ids.split('drop_');
-          console.log('dropid',drops);
           var lastItem = drops.pop();
           var quoteid = lastItem.split(',');
           var customerid = $("#customerid").val();
@@ -1210,7 +1173,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
        data:{"start":start,"fulldate":fulldate},
        dataType:"json",
      success:function(data) {
-      console.log(data.html);
        $("#spanid1").html('Total Ticket Count : <input type="text" value="'+data.countsdata+'" name="countval" id="countval" style="pointer-events: none;background: transparent;color: #fff;width: 15px;border: 0;">');
       $('#ajaxd').html(data.html);
       $('.showdata').hide();
@@ -1221,7 +1183,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         update: function(event, ui) {
           var ids = $(this).sortable('toArray').toString();
           var drops =  ids.split('drop_');
-          console.log('dropid',drops);
           var lastItem = drops.pop();
           var quoteid = lastItem.split(',');
           var customerid = $("#customerid").val();
@@ -1269,7 +1230,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata1').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 5
@@ -1289,7 +1249,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#sviewmodaldata').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 5

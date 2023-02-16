@@ -634,7 +634,6 @@ $(document).on('click','#service_list_dot',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewservicelistdata').html(data.html);
             }
         })
@@ -656,7 +655,6 @@ $(document).on('click','#createctickets',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.html);
               $('#viewcustomerquotemodaldata').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 3
@@ -773,7 +771,6 @@ $(document).on('click','#addnote',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -789,7 +786,6 @@ $(document).on('click','#addnote',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -837,7 +833,6 @@ $(document).on('click','#addnote',function(e) {
       dataType: 'json',
       refresh: true,
       success:function(data) {
-        console.log(data.html);
         $('#viewdueinvoicemodaldata').html(data.html);
         
       }
@@ -970,7 +965,6 @@ $(document).on('change','#productname',function(e) {
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            console.log(data.totalprice);
             $('#price').val(data.totalprice);
             $('#tickettotal').val(data.totalprice);
           }
@@ -1017,7 +1011,6 @@ $(document).on('change','#productname',function(e) {
             cache: false,
             processData: false,
             success:function(data) {
-              //console.log(data);
         swal("Done!", "Service Created Successfully!", "success");
               $("#add-services").modal('hide');
               $("#servicename").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");
@@ -1039,7 +1032,6 @@ $(document).on('change','#productname',function(e) {
           cache: false,
           processData: false,
           success:function(data) {
-            //console.log(data);
       swal("Done!", "Product Created Successfully!", "success");
             $("#add-products").modal('hide');
             $("#productname").append("<option value="+data.id+" data-price="+data.price+">"+data.productname+"</option>");

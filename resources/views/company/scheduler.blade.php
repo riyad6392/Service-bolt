@@ -84,7 +84,6 @@
                 }
             },
              onChange: function(node, data){
-              console.log(data);
                 addLog('onChange', data);
             },
             onInitRow: function(node, data){

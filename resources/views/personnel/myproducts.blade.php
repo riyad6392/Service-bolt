@@ -142,7 +142,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.html);
               $('#viewmodaldata').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 3
@@ -154,21 +153,6 @@
             }
         })
     });
-// $(document).on('click','#myticketid',function(e) {
-//    var id = $(this).data('id');
-//    var dataString =  'id='+ id;
-//    $.ajax({
-//             url:'{{route('worker.viewticketmodal')}}',
-//             data: dataString,
-//             method: 'post',
-//             dataType: 'json',
-//             refresh: true,
-//             success:function(data) {
-//               console.log(data.html);
-//               $('#viewmodaldata').html(data.html);
-//             }
-//         })
-//   });
 $(document).on('change','#customerid1',function(e) {
 //$('#customerid1').on('change', function() {
     var customerid = this.value;

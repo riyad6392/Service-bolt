@@ -416,7 +416,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -432,7 +431,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -448,7 +446,6 @@ $(document).on('click','#editService',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata').html(data.html);
               $('.dropify').dropify();
               $('.selectpicker').selectpicker();
@@ -466,7 +463,6 @@ $(document).on('click','#editService',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewquotemodaldata').html(data.html);
             }
         })
@@ -557,13 +553,11 @@ $(document).on('click','#editService',function(e) {
         dataType: 'json',
         success: function (data) {
             $("#output").text(data);
-            console.log("SUCCESS : ", data);
             $("#btnSubmit").prop("disabled", false);
             location.reload();
         },
         error: function (e) {
             $("#output").text(e.responseText);
-            console.log("ERROR : ", e);
             $("#btnSubmit").prop("disabled", false);
         }
       });

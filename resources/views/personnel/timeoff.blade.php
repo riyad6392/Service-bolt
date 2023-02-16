@@ -249,8 +249,6 @@
       dataType: 'json',
       refresh: true,
       success:function(data) {
-        //alert(data);
-        console.log(data.html);
         $('#viewdatelistdata').html(data.html);
       }
     })

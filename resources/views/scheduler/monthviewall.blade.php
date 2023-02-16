@@ -1211,9 +1211,7 @@ span.closeon i {
                 } 
 
                 element.find(".fa-edit").on('click', function() {
-                    //console.log(event.id);
                     $('#calendar').fullCalendar('editEvents',event._id);
-                    console.log('edit');
                 });
             },
             resourceRender: function (dataTds, eventTd) {
@@ -1241,7 +1239,6 @@ span.closeon i {
             },
 
             eventClick: function (info) {
-                //console.log(info);
             },
 
             eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) {
@@ -1427,7 +1424,6 @@ span.closeon i {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#sviewmodaldata').html(data.html);
               $('.selectpicker1').selectpicker({
                 size: 5
@@ -1471,7 +1467,6 @@ span.closeon i {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata1').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 5

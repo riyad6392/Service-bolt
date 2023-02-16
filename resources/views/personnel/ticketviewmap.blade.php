@@ -72,8 +72,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
-             console.log("latlong",data);
                           var map = new google.maps.Map(document.getElementById('map'), {
                             zoom: 10,
                             center: new google.maps.LatLng(data.html[0][1], data.html[0][2]),

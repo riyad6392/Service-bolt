@@ -215,7 +215,6 @@ $(document).on('click','#myticketid',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata').html(data.html);
             }
         })
@@ -260,7 +259,6 @@ $(document).on('click','#myticketid',function(e) {
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
           
           $('.clockin').hide();
           $('.clockout').show();
@@ -304,7 +302,6 @@ $(document).on('click','#myticketid',function(e) {
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
           
           $('.clockin').show();
           $('.clockout').hide();
@@ -326,8 +323,6 @@ $(document).on('click','.service_list_dot',function(e) {
       dataType: 'json',
       refresh: true,
       success:function(data) {
-
-        console.log(data.html);
         $('#viewservicelistdata').html(data.html);
       }
   })

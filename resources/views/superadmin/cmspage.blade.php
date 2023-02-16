@@ -180,7 +180,6 @@
 	        dataType: 'json',
 	        refresh: true,
 	        success:function(data) {
-	          console.log(data.html);
 	          $('#viewcmspagemodal').html(data.html);
 	        }
 	    })

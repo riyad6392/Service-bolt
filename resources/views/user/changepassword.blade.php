@@ -97,7 +97,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -113,7 +112,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
             }
         })
@@ -129,7 +127,6 @@ $(document).on('click','#editProduct',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata').html(data.html);
             }
         })

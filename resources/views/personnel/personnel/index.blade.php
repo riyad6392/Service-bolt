@@ -389,8 +389,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'html',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
-               // $("#spanid1").html('<input type="text" value="'+data.countsdata+'" name="countval" id="countval" style="pointer-events: none;position: absolute;top: 2px;background: #fb6794;color: #fff;border-radius:17px;padding: 0 8px;width: 25px;border: 0px;height: 25px;">');
                $("#spanid").html('<input type="text" value="'+fulldate+'" name="dateval" id="dateval" style="border:none;color:#B0B7C3;width:400px;">');
                $('.ev-arrow').show();
               $('#viewmodaldata1').html(data.html);
@@ -415,7 +413,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
                $('.selectpicker').selectpicker({
                 size: 3
@@ -434,7 +431,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewleftservicemodal').html(data.html);
                $('.selectpicker').selectpicker({
                 size: 3
@@ -455,7 +451,6 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata').html(data.html);
               $('.dropify').dropify();
               $('.selectpicker').selectpicker({
@@ -506,7 +501,6 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldata1').html(data.html);
               
             }
@@ -528,7 +522,6 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldatatimesheet').html(data.html);
               
             }
@@ -554,7 +547,6 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldatatimesheet').html(data.html);
               
             }
@@ -619,7 +611,6 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldatatimeoff').html(data.html);
               
             }
@@ -640,7 +631,6 @@ $(document).on('click','#editPersonnel',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              console.log(data.html);
               $('#viewmodaldatatimeoff').html(data.html);
               
             }

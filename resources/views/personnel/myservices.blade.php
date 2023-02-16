@@ -136,7 +136,6 @@ $(document).on('click','#myticketid',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data.html);
               $('#viewmodaldata').html(data.html);
               $('.selectpicker').selectpicker({
                 size: 3

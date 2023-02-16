@@ -735,8 +735,6 @@ $(document).on('click','#service_list_dot',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
-
-              //console.log(data.html);
               $('#viewservicelistdata').html(data.html);
             }
         })
@@ -943,13 +941,11 @@ $(document).on('click','#editCustomer',function(e) {
         dataType: 'json',
         success: function (data) {
             $("#output").text(data);
-            //console.log("SUCCESS : ", data);
             $("#btnSubmit").prop("disabled", false);
             location.reload();
         },
         error: function (e) {
             $("#output").text(e.responseText);
-            //console.log("ERROR : ", e);
             $("#btnSubmit").prop("disabled", false);
         }
       });

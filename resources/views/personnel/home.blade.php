@@ -387,7 +387,6 @@
             dataType: 'json',
             refresh: true,
             success:function(data) {
-              //console.log(data);
                $("#spanid").html('<input type="text" value="'+fulldate+'" name="dateval" id="dateval" style="border:none;color:#B0B7C3;width:400px;">');
               $('.ev-arrow').hide();
               $('.hidedata').hide();
@@ -436,8 +435,6 @@
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
-          
           $('.clockin').hide();
           $('.clockout').show();
           location.reload();
@@ -483,7 +480,6 @@
         dataType: 'json',
         refresh: true,
         success:function(data) {
-          console.log(data.html);
           
           $('.clockin').show();
           $('.clockout').hide();
