@@ -179,7 +179,7 @@ class CustomerController extends Controller
       $data['address'] = $request->address;
       Address::create($data);
 
-      if($request->ajax()){
+      if($request->ajax()) {
         return json_encode(['id' => $cinfo->id,'customername' =>$request->customername]);
     }
       $request->session()->flash('success', 'Customer added successfully');

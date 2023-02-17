@@ -226,7 +226,7 @@ i.fa.fa-plus.second.yellow-icon1 {
 </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="add-product" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+<div class="modal fade" id="add-product" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box overflow-hidden">
      <form class="form-material m-t-40 form-valide" method="post" action="{{route('company.inventorycreate')}}" enctype="multipart/form-data">
@@ -237,8 +237,7 @@ i.fa.fa-plus.second.yellow-icon1 {
      <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add a new Product/Part</h5>
      <button class="btn-close" type="button" onclick="refreshPage()"></button>
-	   
-	   </div>
+     </div>
 	   
 	   <div class="tabs-product row mb-4">
 	   <div class="col-lg-5">
@@ -414,7 +413,7 @@ i.fa.fa-plus.second.yellow-icon1 {
       <div class="modal-body">
       <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add a new Service</h5>
-     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     <button type="button" class="btn-close" aria-label="Close" id="serviceclose"></button>
 
      </div>
         @php
@@ -506,7 +505,9 @@ i.fa.fa-plus.second.yellow-icon1 {
           </div>
           <div class="row mt-3">
           <div class="col-lg-6 mb-2">
-            <button class="btn btn-cancel btn-block" id="quotecancel3" data-bs-dismiss="modal">Cancel</button>
+            <!-- <button type="button" class="btn btn-cancel btn-block" id="quotecancel3" data-bs-dismiss="modal">Cancel</button> -->
+           <!--  <button type="button" class="btn-close" aria-label="Close" id="serviceclose"></button> -->
+           <button type="button" class="btn btn-cancel btn-block" id="serviceclose1">Cancel</button>
           </div>
           <div class="col-lg-6">
             <button type="submit" class="btn btn-add btn-block">Add a Service</button>
@@ -530,7 +531,8 @@ i.fa.fa-plus.second.yellow-icon1 {
      
      <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add a new category</h5>
-     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+     <button type="button" class="btn-close" aria-label="Close" id="categoryclose"></button>
      </div>
      
      
@@ -543,7 +545,8 @@ i.fa.fa-plus.second.yellow-icon1 {
      </div>
      
      <div class="col-lg-6 mb-3">
-     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal">Cancel</button>
+     <!-- <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal">Cancel</button> -->
+     <button type="button" class="btn btn-cancel btn-block" id="categoryclose1">Cancel</button>
      </div>
      <div class="col-lg-6 mb-3">
      <button id="savecat" class="btn btn-add btn-block">Save</button>
@@ -823,7 +826,7 @@ function readURL(input) {
             refresh: true,
             success:function(data) {
               $("#add-category").modal('hide');
-              $("#category").append("<option value="+data.category_name+">"+data.category_name+"</option>");
+              $("#category").append("<option value="+data.category_name+" selected>"+data.category_name+"</option>");
             }
         })
 	})
@@ -890,7 +893,7 @@ function readURL(input) {
 	} 
 
 	$("#quotecancel3").click(function() {
-		$("#add-services").css("display", "none");
+		$("#add-services").hide();
 	});
 
 	$('#serviceform').on('submit', function(event) {
@@ -907,14 +910,37 @@ function readURL(input) {
             success:function(data) {
 			  swal("Done!", "Service Created Successfully!", "success");
               $("#add-services").modal('hide');
-              $("#serviceid").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");
+              $("#serviceid").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+" selected>"+data.servicename+"</option>");
               $("#serviceid").selectpicker('refresh');
               $("#add-product").show();
             }
         })
   });
+  // $("#hidequoteservice").click(function() {
+  // 	//$("#add-product").hide();
+  // });
+
+  $("#serviceclose").click(function() {
+  	$("#add-services").hide();
+  	$("#add-product").show();
+  });
+  $("#serviceclose1").click(function() {
+  	$("#add-services").hide();
+  	$("#add-product").show();
+  });
   $("#hidequoteservice").click(function() {
+  	$("#add-services").show();
   	//$("#add-product").hide();
+  });
+  $("#categoryclose").click(function() {
+  	$("#add-category").hide();
+  	$("#add-product").show();
+
+  });
+  $("#categoryclose1").click(function() {
+  	$("#add-category").hide();
+  	$("#add-product").show();
+
   });
 </script>
 @endsection

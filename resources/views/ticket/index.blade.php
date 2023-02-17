@@ -2945,11 +2945,11 @@ $(document).on('change','#personnelid',function(e) {
 // });
 
 $(document).on('click','.btn-close',function(e) {
-	location.reload();
+	//location.reload();
 });
 
 $(document).on('click','.btn-cancel',function(e) {
-	location.reload();
+	//location.reload();
 });
 
 </script>
