@@ -863,8 +863,7 @@ a.addnew {
               </div>
 
               <div class="col-md-6 mb-2">
-                <label>Default Service</label>
-                <select class="form-select" name="frequency" id="frequency" required="">
+               <br> <select class="form-select" name="frequency" id="frequency" required="">
                   <option selected="" value="">Service Frequency</option>
                   @foreach($tenture as $key=>$value)
                   <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
