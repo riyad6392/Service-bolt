@@ -558,7 +558,47 @@ i.fa.fa-plus.second.yellow-icon1 {
     </div>
   </div>
 </div>
+</div>
 
+<!-- Modal -->
+<div class="modal fade" id="add-category" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+     <!-- <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.catcreate')}}" enctype="multipart/form-data">
+        @csrf -->
+      <div class="modal-body">
+       <div class="add-customer-modal">
+     
+     <div class="add-customer-modal d-flex justify-content-between align-items-center">
+     <h5>Add a new category</h5>
+     <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+     <button type="button" class="btn-close" aria-label="Close" id="categoryclose"></button>
+     </div>
+     
+     
+     <div class="row customer-form">
+      
+     <div class="col-md-12 mb-3">
+     
+     <input type="text" class="form-control" placeholder="Category Name" name="category_name" id="category_name" required="">
+  
+     </div>
+     
+     <div class="col-lg-6 mb-3">
+     <!-- <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal">Cancel</button> -->
+     <button type="button" class="btn btn-cancel btn-block" id="categoryclose1">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+     <button id="savecat" class="btn btn-add btn-block">Save</button>
+     </div>
+     
+     </div>
+      </div>
+     <!-- </form> -->
+    </div>
+  </div>
+</div>
+</div>
 
 @endsection
 @section('script')

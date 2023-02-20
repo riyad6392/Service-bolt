@@ -1039,12 +1039,15 @@ class CustomerController extends Controller
       
       if($customer[0]->image != null) {
         $userimage = url('uploads/customer/'.$customer[0]->image);
-        } else {
-          $userimage = url('/').'/uploads/servicebolt-noimage.png';
-        }
+      } else {
+        $userimage = url('/').'/uploads/servicebolt-noimage.png';
+      }
 
        $customerAddress = Address::where('authid',$auth_id)->get();   
-       
+       $ckid  =Address::select('checklistid')->where('customerid',$request->id)->get();
+
+       $adminchecklist = DB::table('checklist')->select('serviceid','checklistname')->where('userid',$auth_id)->groupBy('serviceid')->get();
+
        $html ='<div class="add-customer-modal">
                   <h5>Edit Customer</h5>
                 </div>';
@@ -1055,7 +1058,25 @@ class CustomerController extends Controller
             <label>Customer Name</label>
             <input type="text" class="form-control" placeholder="Customer Name" name="customername" id="customername" value="'.$customer[0]->customername.'" required>
           </div>
-          </div>
+          </div><div class="col-md-12 mb-2">
+      <div class="input_fields_wrap">
+        <label>Select Checklist</label>
+        <select class="form-control selectpicker " multiple="" data-placeholder="Select Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">';
+            foreach($adminchecklist as $key => $value) {
+              $ckids =explode(",", $ckid[0]->checklistid);
+               if(in_array($value->serviceid, $ckids)) {
+                $selectedp = "selected";
+               } else {
+                $selectedp = "";
+               }
+              $html .='<option value="'.$value->serviceid.'" '.@$selectedp.'>'.$value->checklistname.'</option>';
+          }
+          $html .='</select>
+      </div>
+    </div> 
+
+
+
 
           <div class="col-md-12 mb-2">
            <label>Billing Address</label>
@@ -1084,7 +1105,7 @@ class CustomerController extends Controller
           <div class="col-md-12 mb-3">
           <label>Select Services</label>
       <div class="d-flex align-items-center">
-        <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" style="height:auto;">';
+        <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceidnew" style="height:auto;">';
 
               foreach($serviceData as $key => $value) {
                  //$serviceids =  $customer[0]->serviceid;
@@ -1097,12 +1118,15 @@ class CustomerController extends Controller
                 $html .='<option value="'.$value->id.'" '.@$selectedp.'>'.$value->servicename.'</option>';
               }
         $html .='</select>
+          <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+            <a class="add-person" href="#"  data-bs-toggle="modal" data-bs-target="#edit-services" class="add-coustomar" id="hidequote"><i class="add-coustomar fa fa-plus"></i></a>
+          </div>
           </div>
 
           <div class="col-md-12 mb-3">
           <label>Select Products</label>
       <div class="d-flex align-items-center">
-        <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" style="height:auto;" data-placeholder="Select Products">';
+        <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productidnew" style="height:auto;" data-placeholder="Select Products">';
 
           foreach($productData as $key => $value) {
             $productids =explode(",", $customer[0]->productid);
@@ -1114,6 +1138,9 @@ class CustomerController extends Controller
             $html .='<option value="'.$value->id.'" '.@$selectedp1.'>'.$value->productname.'</option>';
           }
         $html .='</select>
+          <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+            <a class="add-person" href="#"  data-bs-toggle="modal" data-bs-target="#edit-products" class="add-coustomar" id="hidequote"><i class="add-coustomar fa fa-plus"></i></a>
+          </div>
           </div>
           <div class="col-md-12 mb-2">
             <label>Company Name</label>
@@ -1180,6 +1207,16 @@ class CustomerController extends Controller
            $customer->image = $imageName;
       }
       $customer->save();
+
+      $addresscklist = Address::where('customerid', $request->customerid)->get()->first();
+       if(isset($request->adminck)) {
+        $addresscklist->checklistid = implode(',', $request->adminck);
+      } else {
+        $addresscklist->checklistid = null;
+      }
+
+      $addresscklist->save();
+      
       $request->session()->flash('success', 'Customer Updated successfully');
       return redirect()->route('company.customer');
     }
