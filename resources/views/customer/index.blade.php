@@ -55,6 +55,18 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
     margin-right: 6px;
 }
 
+/* @ */
+
+.mainIcon{
+  position: relative;
+}
+
+a.yelloIcon {
+    position: absolute;
+    top: -14px;
+    left: 10px;
+}
+
 </style>
 
 <div class="content">
@@ -261,8 +273,8 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
                   @endif
                 @endforeach  
               @endif
-              <td><a class="btn btn-edit p-3 w-auto" data-bs-toggle="modal" data-bs-target="#edit-customer" id="editCustomer" data-id="{{$customer->id}}">Edit</a>
-              <a href="javascript:void(0);" class="info_link1 btn btn-edit p-3 w-auto" dataval="{{$customer->id}}">Delete</a>
+              <td><a class="btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-customer" id="editCustomer" data-id="{{$customer->id}}">Edit</a>
+              <a href="javascript:void(0);" class="info_link1 btn btn-edit p-2 w-auto" dataval="{{$customer->id}}">Delete</a>
             </td>
                
               <!-- <td><a href="#" class="red-light-bg btn-common">Weekly</a></td> -->
@@ -292,6 +304,7 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
     <div class="modal-content customer-modal-box  overflow-hidden">
      <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.customercreate')}}" enctype="multipart/form-data">
         @csrf
+
       <div class="modal-body">
        <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add a new customer</h5>
@@ -354,9 +367,11 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
             <option value="{{$service->id}}">{{$service->servicename}}</option>
           @endforeach
         </select>
-        <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-          <a class="add-person" href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="add-coustomar" id="hidequote"><i class="add-coustomar fa fa-plus"></i></a>
+
+        <div class="mainIcon">
+          <a class="add-person yelloIcon" href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="add-coustomar" id="hidequote"><i class="add-coustomar fa fa-plus"></i></a>
         </div>
+
         <div class="wrapper" style="display: none;">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
           <div class="tooltip">If you are not seeing the services in dropdown then create some services in service section then select here.</div>
@@ -371,9 +386,11 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
             <option value="{{$product->id}}">{{$product->productname}}</option>
           @endforeach
         </select>
-        <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-          <a class="add-person" href="#"  data-bs-toggle="modal" data-bs-target="#add-products" class="add-coustomar" id="hidequote"><i class="add-coustomar fa fa-plus"></i></a>
+
+        <div class="mainIcon">
+          <a class="add-person yelloIcon" href="#"  data-bs-toggle="modal" data-bs-target="#add-products" class="add-coustomar" id="hidequote"><i class="add-coustomar fa fa-plus"></i></a>
         </div>
+
      </div>
    </div>
      
@@ -389,7 +406,7 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
      <div class="col-lg-6 mb-3">
      <button type="submit" class="btn btn-add btn-block">Add Customer</button>
      </div></div>
-     
+      
      </div>
       </div>
      </form>
@@ -474,7 +491,9 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
   </div>
 </div>
 <!-- dots Modal End -->
+
 <!-- Modal -->
+
 <div class="modal fade" id="add-services" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box overflow-hidden">
@@ -531,7 +550,9 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
               </p>
             </div>
           </div>
+
           <div class="col-md-6 mb-2">
+            <br>
             <select class="form-select" name="frequency" id="frequency" required="">
               <option selected="" value="">Service Frequency</option>
               @foreach($tenture as $key=>$value)
@@ -539,6 +560,7 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
               @endforeach
             </select>
           </div>
+
           <div class="col-md-6 mb-2">
             <label>Default Time (hh:mm)</label><br>
             <div class="timepicker timepicker1" style="display:inline-block;">
@@ -546,6 +568,7 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
               <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
             </div>
           </div>
+
           <div class="col-md-12">
             <label>Choose Color</label><br>
             <span class="color-picker">
@@ -584,7 +607,9 @@ i.dots.fa.fa-ellipsis-v.fa-2x.pull-right {
     </div>
   </div>
 </div>
+
 <!-- product Modal -->
+
 <div class="modal fade" id="add-products" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box overflow-hidden">

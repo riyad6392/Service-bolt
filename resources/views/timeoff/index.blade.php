@@ -80,7 +80,7 @@ tr.accepted-row:after {
         <div class="side-h3 d-flex justify-content-between">
        <h3>PTO</h3>
      
-      
+       
      </div>
      </div>
      @if(Session::has('success'))
