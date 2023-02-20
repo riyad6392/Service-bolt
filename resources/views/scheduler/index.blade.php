@@ -715,6 +715,9 @@ body::-webkit-scrollbar-thumb:hover {
                 <option value="{{$value->id}}">{{$value->customername}}</option>
               @endforeach
             </select>
+            <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+                <a class="addanew" href="#"  data-bs-toggle="modal" data-bs-target="#add-customer" class="" id="hidequote"><i class="fa fa-plus first"></i></a>
+            </div>
           </div>
       </div>
     </div>
@@ -724,7 +727,8 @@ body::-webkit-scrollbar-thumb:hover {
           <div class="mb-3">
             <select class="form-select" name="address" id="address_scheduler" required>
               <option value="">Select Customer Address</option>
-              </select>
+            </select>
+            <div id="addressicon"></div>
           </div>
       </div>
     </div>
@@ -749,6 +753,9 @@ body::-webkit-scrollbar-thumb:hover {
           <option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
         @endforeach
        </select>
+        <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus second"></i></a>
+        </div>
      </div>
 
      <div class="col-md-12 mb-3">
@@ -757,6 +764,9 @@ body::-webkit-scrollbar-thumb:hover {
                 <option value="{{$value->id}}" data-price="{{$value->price}}">{{$value->productname}}</option>
             @endforeach
             </select>
+        <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-products" class="" id="hidequoteproduct"><i class="fa fa-plus third"></i></a>
+        </div>
       </div>
      
      <div class="col-md-12 mb-3">
@@ -866,7 +876,330 @@ body::-webkit-scrollbar-thumb:hover {
 </div>
 <!-- end ticket assign modal  -->
 <!-------event hover---modal---->
+<!-- Add customer modal -->
+<div class="modal fade" id="add-customer" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box  overflow-hidden">
+     <form class="form-material m-t-40  form-valide" method="post" id="createserviceticket"  enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+      <div class="add-customer-modal d-flex justify-content-between align-items-center">
+     <h5>Add a new customer</h5>
+     
+     <button type="button" class="btn-close"  id="quotecancel"  data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+     
+    <div class="row customer-form">
+     
+    <div class="col-md-12 mb-3">
+        <input type="text" class="form-control" placeholder="Customer Full Name" name="customername" id="customername" required="">
+    </div>
 
+    <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="Address" name="address" id="addressq1" required="">
+    </div>
+
+    <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="Billing Address" name="billingaddress" id="billingaddress">
+    </div>
+
+    <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="Mailing Address" name="mailingaddress" id="mailingaddress">
+    </div>
+     
+     <div class="col-md-6 mb-3">
+     
+     <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
+     
+     </div>
+     
+     <div class="col-md-6 mb-3">
+    
+     <input type="email" class="form-control" placeholder="Email" name="email" id="email">
+     
+     </div>
+     
+     <div class="col-md-12 mb-3">
+    
+     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname">
+     
+     </div>
+     <div class="col-md-12 mb-3">
+      <div class="d-flex align-items-center">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+          @foreach ($services as $service)
+            <option value="{{$service->id}}">{{$service->servicename}}</option>
+          @endforeach
+        </select>
+     </div>
+   </div>
+
+   <div class="col-md-12 mb-3" style="display:none;">
+      <div class="d-flex align-items-center">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" data-placeholder="Select Products">
+          @foreach ($productData as $product)
+            <option value="{{$product->id}}">{{$product->productname}}</option>
+          @endforeach
+        </select>
+     </div>
+   </div>
+
+   <div class="col-lg-12 mb-3">
+      <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
+      <div class="drop-zone">
+    <span class="drop-zone__prompt text-center">
+  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></small>
+  Drop file here or click to upload</span>
+    <input type="file" name="image" id="image" class="drop-zone__input" accept="image/png, image/gif, image/jpeg">
+  </div>
+     </div>
+     
+     
+     <div class="col-lg-6 mb-3">
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel_1">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+     <button type="submit" class="btn btn-add btn-block">Add Customer</button>
+     </div>
+     
+     </div>
+      </div>
+     </form>
+    </div>
+  </div>
+</div>
+
+<!-- Add address modal -->
+<div class="modal fade" id="add-address" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box  overflow-hidden">
+      <div class="modal-body">
+      
+  
+     <div class="add-customer-modal d-flex justify-content-between align-items-center">
+     <h5>Add Address</h5>
+     <button class="btn-close"  data-bs-dismiss="modal" aria-label="Close" id="quotecancel1212"></button>
+     </div>
+     
+     
+    <div class="row customer-form">
+     
+    <div class="col-md-12 mb-3">
+        <input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address5" required="">
+         <div class="find_msg" style="display:none;"></div>
+    </div>
+
+        <div class="col-lg-6 mb-3">
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" aria-label="Close" id="quotecancel12">Cancel</button>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <button id="saveaddress" class="btn btn-add btn-block">Add Address</button>
+    </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="add-services" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box overflow-hidden">
+      <form class="form-material m-t-40 form-valide" id="serviceform" method="post" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+      <div class="add-customer-modal d-flex justify-content-between align-items-center">
+     <h5>Add a new Service</h5>
+     <button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+        @php
+        $productData = App\Models\Inventory::where('user_id',auth()->user()->id)->orderBy('id','ASC')->get();
+        if(count($productData)>0) {
+            $pname= "";
+        } else {
+            $pname= "active-focus";
+        }
+        
+        @endphp
+        <div class="row customer-form" id="product-box-tabs">
+          <div class="col-md-12 mb-2">
+            <input type="text" class="form-control" placeholder="Service Name" name="servicename" id="servicename" required="">
+          </div>
+          <div class="col-md-12 mb-2 position-relative">
+            <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
+  <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="d-flex align-items-center">
+            <select class="selectpickernew form-control me-2 {{$pname}}" multiple aria-label="Default select example" data-placeholder="Select Products" data-live-search="true" name="defaultproduct[]" id="defaultproduct" >
+              <!-- <option selected="" value="">Select Product</option> -->
+              @foreach($productData as $product)
+                <option value="{{$product->id}}">{{$product->productname}}</option>
+              @endforeach
+            </select>
+           <div class="wrapper" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <div class="tooltip">If you are not seeing the products in dropdown then add it in inventory section then select here.</div>
+          </div>
+          </div>
+        </div>
+          <div class="col-md-12 mb-2">
+            <div class="align-items-center justify-content-lg-between d-flex services-list">
+              <p>
+                <input type="radio" id="test1" name="radiogroup" value="perhour" class="radiogrp" checked>
+                <label for="test1">Per Hour</label>
+              </p>
+              <p>
+                <input type="radio" id="test2" name="radiogroup" value="flatrate" class="radiogrp">
+                <label for="test2">Flate Rate</label>
+              </p>
+              <p>
+                <input type="radio" id="test3" name="radiogroup" value="recurring" class="radiogrp">
+                <label for="test3">Recurring</label>
+              </p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <select class="form-select" name="frequency" id="frequency10" required="">
+              <option selected="" value="">Service Frequency</option>
+              @php $tenture = App\Models\Tenture::where('status','Active')->get(); @endphp
+              @foreach($tenture as $key=>$value)
+                <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label>Default Time (hh:mm)</label><br>
+            <div class="timepicker timepicker1" style="display:inline-block;">
+              <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <label>Choose Color</label><br>
+            <span class="color-picker">
+              <label for="colorPicker">
+                <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
+              </label>
+            </span>
+          </div>
+    <div class="col-lg-12 mb-3">
+      <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
+      <div class="drop-zone">
+    <span class="drop-zone__prompt text-center">
+  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></small>
+  Drop file here or click to upload</span>
+    <input type="file" name="image" id="image" class="drop-zone__input" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+  </div>
+     </div>
+
+          <div class="col-md-12 mb-2" style="display: none;">
+            <p class="create-gray mb-2">Create default checklist</p>
+            <div class="align-items-center  d-flex services-list" style="flex-flow:wrap;">
+              <label class="container-checkbox me-3">Point 1
+                <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point1"> <span class="checkmark"></span>
+              </label>
+              <label class="container-checkbox me-3">Point 2
+                <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point2"> <span class="checkmark"></span>
+              </label>
+              
+            </div>
+          </div>
+          <div class="row mt-3">
+          <div class="col-lg-6 mb-2">
+            <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+
+          </div>
+          <div class="col-lg-6">
+            <button type="submit" class="btn btn-add btn-block">Add a Service</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+
+<!-- product Modal -->
+<div class="modal fade" id="add-products" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box overflow-hidden">
+     <form class="form-material m-t-40 form-valide" id="productform" method="post" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+        <div class="add-customer-modal d-flex justify-content-between align-items-center">
+            <h5>Add a new Product/Part</h5>
+            <button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+     <input type="hidden" name="cid" id="cid" value="">
+  <div class="row customer-form" id="product-box-tabs">
+    <div class="col-md-12 mb-3">
+     <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" required="">
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <select class="selectpickernew form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+          @foreach ($services as $service)
+            <option value="{{$service->id}}">{{$service->servicename}}</option>
+          @endforeach
+        </select>
+          
+       </div>
+    
+    <div class="col-md-6 mb-3">
+     <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
+    
+     
+     </div>
+     <div class="col-md-6 mb-3">
+    
+     <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="">
+     
+     </div>
+     
+     <div class="col-md-6 mb-3">
+        <input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" required="">
+     </div>
+
+     <div class="col-md-6 mb-3">
+       <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit">
+     </div>
+
+     <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="$ Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+     </div>
+
+      <div class="col-lg-12 mb-3">
+    <textarea class="form-control height-180" name="description" id="description" required="" placeholder="Description"></textarea>
+    </div>
+    <div class="col-lg-12 mb-3">
+      <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
+      <div class="drop-zone">
+    <span class="drop-zone__prompt text-center">
+  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></small>
+  Drop file here or click to upload</span>
+    <input type="file" name="image" id="image" class="drop-zone__input" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+  </div>
+     </div>
+     
+     <div class="row mt-3">
+     <div class="col-lg-6 mb-3">
+      <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+      <button class="btn btn-add btn-block" type="submit">Complete</button>
+     </div>
+     </div>
+    </div>
+    </div>
+ </form>
+  </div>
+</div>
+</div>
+<!-- end product modal -->
 
 @endsection
 
@@ -1484,6 +1817,7 @@ body::-webkit-scrollbar-thumb:hover {
     });
 
     $(document).ready(function() {
+        $(".selectpicker").selectpicker();
     h = "1";
     realmin = "00";
     $("#time").val(h);
@@ -1504,6 +1838,7 @@ body::-webkit-scrollbar-thumb:hover {
             $.each(result.address,function(key,value) {
               $("#address_scheduler").append('<option value="'+value.address+'">'+value.address+'</option>');
             });
+            $('#addressicon').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address" id="hidequote1" class=""><i class="fa fa-plus select-customer"></i></a></div>');
           }
       });
     });    
@@ -1511,6 +1846,9 @@ body::-webkit-scrollbar-thumb:hover {
 </script>
 
 <script type="">
+ $('.selectpickernew').selectpicker();
+ $("#time10").val(1);
+ $("#minute10").val(0);
  $(document).on('click','#editTickets',function(e) {
    var id = $(this).data('id');
    var dataString =  'id='+ id;
@@ -1677,5 +2015,94 @@ $(document).on('click','.etc',function(e) {
      $("#date").attr('required',true);
     }
   });
+
+$('#createserviceticket').on('submit', function(event) {
+      event.preventDefault();
+      var url = "{{url('company/customer/createcticket')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+              swal("Done!", "Customer Created Successfully!", "success");
+              $("#add-customer").modal('hide');
+              $("#customerid1").append("<option value="+data.id+" selected>"+data.customername+"</option>");
+              //$("#customerid_service").selectpicker('refresh');
+              $("#add-tickets").show();
+            }
+        })
+  });
+
+    $(document).on('click','#saveaddress',function(e) {
+      var customerid = $('#customerid1').val();
+
+
+        var address = $('#address5').val();
+          if(address=="") {
+            alert('address field is required');
+           }
+       $.ajax({
+            url:"{{url('personnel/myticket/addaddress')}}",
+            data: {
+              address: address,
+              customerid: customerid,
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+                
+              $("#add-address").modal('hide');
+              $("#address_scheduler").append("<option value="+data.address+" selected>"+data.address+"</option>");
+              $("#add-tickets").show();
+            }
+        })
+    })
+
+    $('#serviceform').on('submit', function(event) {
+      event.preventDefault();
+      var url = "{{url('company/services/create')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+              swal("Done!", "Service Created Successfully!", "success");
+              $("#add-services").modal('hide');
+              $("#servicename").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+" selected>"+data.servicename+"</option>");
+              $("#servicename").selectpicker('refresh');
+              $("#add-tickets").show();
+            }
+        })
+    });
+
+    $('#productform').on('submit', function(event) {
+      event.preventDefault();
+      var url = "{{url('company/inventory/create')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+              swal("Done!", "Product Created Successfully!", "success");
+              $("#add-products").modal('hide');
+              $("#productname").append("<option value="+data.id+" data-price="+data.price+" selected>"+data.productname+"</option>");
+              $("#productname").selectpicker('refresh');
+              $("#add-tickets").show();
+            }
+        })
+    });
  </script>
 @endsection
