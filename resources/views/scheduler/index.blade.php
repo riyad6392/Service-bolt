@@ -1,8 +1,8 @@
 @extends('layouts.header')
 @section('content')
-  <link rel="stylesheet" type="text/css" href="https://fullcalendar.io/releases/fullcalendar/3.10.0/fullcalendar.min.css">
-   <link rel="stylesheet" type="text/css" href="https://fullcalendar.io/releases/fullcalendar-scheduler/1.9.4/scheduler.min.css">
-   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
+<link rel="stylesheet" type="text/css" href="https://fullcalendar.io/releases/fullcalendar/3.10.0/fullcalendar.min.css">
+<link rel="stylesheet" type="text/css" href="https://fullcalendar.io/releases/fullcalendar-scheduler/1.9.4/scheduler.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
 <style type="">
   body{
@@ -486,157 +486,188 @@ body::-webkit-scrollbar-thumb {
 body::-webkit-scrollbar-thumb:hover {
   background: #555; 
 } 
+
+/* new ticket asign modal 20/02/2023 */
+.modal-body.ticketModal {
+    padding: 15px 40px 15px 15px !important;
+    overflow-x: hidden;
+    /* background: red; */
+}
+
+.mainIcon{
+  position: relative;
+}
+
+.mainIcon a.yelloIcon {
+    position: absolute;
+    left: 453px;
+    bottom: 10px;
+}
+
+.mainIcon i.fa.fa-plus.first {
+    background: yellow;
+    color: black;
+    padding: 7px 9px;
+    border-radius: 100px;
+}
+
+a.addnew {
+    position: absolute;
+    bottom: 10px;
+    left: 453px;
+}
+
 </style>
 <div class="row">
-    <div class="col-md-12">
-        <div class="col-lg-12 mb-4">
-            <div class="col-md-12">
-                <div class="card position-sticky">
-                    <div class="card-body">
-                        <div class="row mb-0">
-                            <div class="col-md-6">
-                                <div class="side-h3">
-                                    <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch 
-                                        <span class="counter" style="display:none;">{{count($scheduleData)}}</span>
-                                    </h3>
+  <div class="col-md-12">
+    <div class="col-lg-12 mb-4">
+      <div class="col-md-12">
+        <div class="card position-sticky">
+          <div class="card-body">
+            <div class="row mb-0">
+              <div class="col-md-6">
+                <div class="side-h3">
+                  <h3 style="font-weight: 500;color: #000;">Scheduler & Dispatch
+                    <span class="counter" style="display:none;">{{count($scheduleData)}}</span>
+                  </h3>
 
-                                
-                            
-                                    <p style="margin: 0; font-weight: 500;color: #000;">Tickets to Assign</p>
-                                </div>
-                                @if(Session::has('success'))
 
-                                  <div class="alert alert-success" id="selector">
 
-                                      {{Session::get('success')}}
+                  <p style="margin: 0; font-weight: 500;color: #000;">Tickets to Assign</p>
+                </div>
+                @if(Session::has('success'))
 
-                                  </div>
+                <div class="alert alert-success" id="selector">
 
-                              @endif
-                            </div>
-                            
-                            @if($userData->openingtime!="")
-                            <input type="hidden" name="openingtime" id="openingtime" value="{{$userData->openingtime}}:00">
-                            <input type="hidden" name="closingtime" id="closingtime" value="{{$userData->closingtime}}:00">
-                            @else
-                            <input type="hidden" name="openingtime" id="openingtime" value="00:00">
-                            <input type="hidden" name="closingtime" id="closingtime" value="24:00">
-                            @endif
+                  {{Session::get('success')}}
 
-                            <div class="col-md-3 ms-auto" style="display:none;">
-                                <div class="datess position-relative">
-                                    @if(request()->date)
-                                      @php
-                                        $todaydate = request()->date;
-                                        $newdate = Carbon\Carbon::createFromFormat('Y-m-d', $todaydate)->format('m/d/Y');
-                                        $requestdate = request()->date;
-                                      @endphp
-                                        <input type="text" placeholder="{{ date('d/m/Y') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('d-m-Y', strtotime(request()->date ))}}">
-                                        <span class="date-icon">
-                                            <i class="fa fa-calendar"></i>
-                                        </span>
-                                    @else
-                                    @php
-                                        $requestdate = date('Y-m-d');
-                                    @endphp
-                                        <input type="text" placeholder="{{ date('d/m/Y') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('m/d/y') }}">
-                                         <span class="date-icon">
-                                            <i class="fa fa-calendar"></i>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-lg-8" id="srcoll-here">
-                                <div class="show-fillter" style="display: flex;justify-content:space-between;">
-                                    <button class="menubar" id="hide-top" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Day View</button>
-                                    <a href='{{url("/")}}/company/scheduler/detailweek' id="weekAll" class="add-btn-yellow" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Week View</a>
-                                    <a href='{{url("/")}}/company/scheduler/detailmonth' class="add-btn-yellow" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Month View</a>
-                                    <span id="close"></span>
-                                </div>
+                </div>
 
-                            </div>
+                @endif
+              </div>
 
-                            <div class="col-lg-3 mb-2 ms-auto text-end">
-                                
-                                <span id="close"></span>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#add-tickets" class="add-btn-yellow">New Ticket Assign + </a>
-                            </div>
-                        </div>
-                       
-                        <div class="card-personal" id="external-events">
-                            <div class="gallery portfolio_slider  slider">
-                                @if(count($ticketData)>0)  
-                                <ul id="sortable1" class="connectedSortable" style="width:50000px">
-                                    @foreach($ticketData as $key => $value)
-                                       @php
-                                          $servicecolor = App\Models\Service::select('color')
-                                            ->where('services.id',$value->serviceid)->get()->first();
-                                        @endphp
-                                        <li class="inner red-slide">
-                                            <span class=" icon-btn" id="closeonDelete" data-id="{{$value->id}}" data-type="permanent"><i class="fa fa-trash" > </i></span>
-                                            <div class='fc-event' style="background-color: {{$servicecolor->color}};" data-color='{{$servicecolor->color}}' data-id='{{$value->id}}' data-bs-toggle='modal' data-bs-target='#exampleModal' id="editsticket">
+              @if($userData->openingtime!="")
+              <input type="hidden" name="openingtime" id="openingtime" value="{{$userData->openingtime}}:00">
+              <input type="hidden" name="closingtime" id="closingtime" value="{{$userData->closingtime}}:00">
+              @else
+              <input type="hidden" name="openingtime" id="openingtime" value="00:00">
+              <input type="hidden" name="closingtime" id="closingtime" value="24:00">
+              @endif
 
-                                                <div class="tickets_div">
+              <div class="col-md-3 ms-auto" style="display:none;">
+                <div class="datess position-relative">
+                  @if(request()->date)
+                  @php
+                  $todaydate = request()->date;
+                  $newdate = Carbon\Carbon::createFromFormat('Y-m-d', $todaydate)->format('m/d/Y');
+                  $requestdate = request()->date;
+                  @endphp
+                  <input type="text" placeholder="{{ date('d/m/Y') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('d-m-Y', strtotime(request()->date ))}}">
+                  <span class="date-icon">
+                    <i class="fa fa-calendar"></i>
+                  </span>
+                  @else
+                  @php
+                  $requestdate = date('Y-m-d');
+                  @endphp
+                  <input type="text" placeholder="{{ date('d/m/Y') }}" onfocus="(this.type='date')" class="form-control" id="dateval" name="dateval" value="{{ date('m/d/y') }}">
+                  <span class="date-icon">
+                    <i class="fa fa-calendar"></i>
+                  </span>
+                  @endif
+                </div>
+              </div>
+              <div class="col-lg-8" id="srcoll-here">
+                <div class="show-fillter" style="display: flex;justify-content:space-between;">
+                  <button class="menubar" id="hide-top" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Day View</button>
+                  <a href='{{url("/")}}/company/scheduler/detailweek' id="weekAll" class="add-btn-yellow" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Week View</a>
+                  <a href='{{url("/")}}/company/scheduler/detailmonth' class="add-btn-yellow" style="background: #FEE200;color: #000;border: none;padding: 10px 20px;border-radius: 15px;">Full Screen Month View</a>
+                  <span id="close"></span>
+                </div>
 
-                                                    <h6>#{{$value->id}}</h6>
-                                                    <p> {{$value->customername}}</p>
-                                                    <p>{{$value->servicename}}</p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                   @endforeach 
-                                </ul>
-                                @else
-                                    <div style="text-align: center;">
-                                        No Tickets To Schedule
-                                    </div>
-                                @endif
-                                <div style="display:none;">
-                                <input type='checkbox' id='drop-remove' checked>
-                            </div>
-                            </div>
-                        </div>
+              </div>
+
+              <div class="col-lg-3 mb-2 ms-auto text-end">
+
+                <span id="close"></span>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#add-tickets" class="add-btn-yellow">New Ticket Assign + </a>
+              </div>
+            </div>
+
+            <div class="card-personal" id="external-events">
+              <div class="gallery portfolio_slider  slider">
+                @if(count($ticketData)>0)
+                <ul id="sortable1" class="connectedSortable" style="width:50000px">
+                  @foreach($ticketData as $key => $value)
+                  @php
+                  $servicecolor = App\Models\Service::select('color')
+                  ->where('services.id',$value->serviceid)->get()->first();
+                  @endphp
+                  <li class="inner red-slide">
+                    <span class=" icon-btn" id="closeonDelete" data-id="{{$value->id}}" data-type="permanent"><i class="fa fa-trash"> </i></span>
+                    <div class='fc-event' style="background-color: {{$servicecolor->color}};" data-color='{{$servicecolor->color}}' data-id='{{$value->id}}' data-bs-toggle='modal' data-bs-target='#exampleModal' id="editsticket">
+
+                      <div class="tickets_div">
+
+                        <h6>#{{$value->id}}</h6>
+                        <p> {{$value->customername}}</p>
+                        <p>{{$value->servicename}}</p>
+                      </div>
                     </div>
-                    @if(count($ticketData)>0)
-                        <div class="use">
-                            <a href="#0" class="prev control">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"  class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
-                                <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
-                                </svg>
-                            </a>
-                            <a href="#0" class="next control">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"  class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-                                </svg>
-                            </a>
-                        </div>
-                    @endif
+                  </li>
+                  @endforeach
+                </ul>
+                @else
+                <div style="text-align: center;">
+                  No Tickets To Schedule
                 </div>
-            </div>
-            <div>
-                <div id='calendar' style="position: relative; overflow:scroll;">
-                    <input type="hidden" id="suggest_trip_start" value="6">
-                    <input type="hidden" name="wcount" id="wcount" value="{{$wcount}}">
-                    @if(request()->start)
-                        <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 57px;left: 6px; z-index: 9;"></i>
-                    @else
-                    
-                    @endif
-                    <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 57px; left: 30px; z-index: 9;"></i>
+                @endif
+                <div style="display:none;">
+                  <input type='checkbox' id='drop-remove' checked>
                 </div>
+              </div>
             </div>
+          </div>
+          @if(count($ticketData)>0)
+          <div class="use">
+            <a href="#0" class="prev control">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+                <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
+              </svg>
+            </a>
+            <a href="#0" class="next control">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z" />
+              </svg>
+            </a>
+          </div>
+          @endif
         </div>
+      </div>
+      <div>
+        <div id='calendar' style="position: relative; overflow:scroll;">
+          <input type="hidden" id="suggest_trip_start" value="6">
+          <input type="hidden" name="wcount" id="wcount" value="{{$wcount}}">
+          @if(request()->start)
+          <i class="fa fa-chevron-left" id="suggest_trip_prev" style="  cursor: pointer;  font-size: 24px;position: absolute;top: 57px;left: 6px; z-index: 9;"></i>
+          @else
+
+          @endif
+          <i class="fa fa-chevron-right" id="suggest_trip_next" style="cursor: pointer;  font-size: 24px;position: absolute;top: 48px; left: 20px; z-index: 9;"></i>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
-      <form method="post" action="{{ route('company.sticketupdate') }}" enctype="multipart/form-data">
-        @csrf
-        <div id="sviewmodaldata"></div>
-      </form>
+        <form method="post" action="{{ route('company.sticketupdate') }}" enctype="multipart/form-data">
+          @csrf
+          <div id="sviewmodaldata"></div>
+        </form>
       </div>
     </div>
   </div>
@@ -646,10 +677,10 @@ body::-webkit-scrollbar-thumb:hover {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
       <div class="modal-body" style="height: 500px;">
-      <form method="post" action="{{ route('company.ticketadded') }}" enctype="multipart/form-data">
-        @csrf
-        <div id="viewmodaldata1"></div>
-      </form>
+        <form method="post" action="{{ route('company.ticketadded') }}" enctype="multipart/form-data">
+          @csrf
+          <div id="viewmodaldata1"></div>
+        </form>
       </div>
     </div>
   </div>
@@ -659,220 +690,223 @@ body::-webkit-scrollbar-thumb:hover {
 <div class="modal fade" id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
-     
-      <div class="modal-body">
-       <div class="add-customer-modal">
-      <h5>Add A New Ticket</h5>
-     </div>
-      
 
-     @if(count($services)>0)
-      @else
+      <div class="modal-body ticketModal">
+        <div class="add-customer-modal">
+          <h5>Add A New Ticket</h5>
+        </div>
+
+
+        @if(count($services)>0)
+        @else
         @if(count($productData)==0)
         <div style="color: red;">Step2: Please add a service in the services section.</div>
-        
-      @else
-        <div style="color: red;">Step1: Please add a service in the services section.</div>
-        
-      @endif
-     @endif
 
-    @if(count($customer)>0)
-      @else
+        @else
+        <div style="color: red;">Step1: Please add a service in the services section.</div>
+
+        @endif
+        @endif
+
+        @if(count($customer)>0)
+        @else
         @if(count($productData)==0 && count($services)==0)
         <div style="color: red;">Step3: Please add a customer in the customer section.</div>
-        
-      @elseif(count($productData)>0 && count($services)>0)
+
+        @elseif(count($productData)>0 && count($services)>0)
         <div style="color: red;">Step1: Please add a customer in the customer section.</div>
-      @elseif(count($productData)>0)
-        <div style="color: red;">Step2: Please add a customer in the customer section.</div>  
-        
-      @elseif(count($services)>0)
+        @elseif(count($productData)>0)
+        <div style="color: red;">Step2: Please add a customer in the customer section.</div>
+
+        @elseif(count($services)>0)
         <div style="color: red;">Step1: Please add a customer in the customer section.</div>
         <div style="color: red;">Step2: Then please create a new tickets/quote here.</div>
-        
-      @endif
-     @endif
-     
-     <form class="form-material m-t-40 row form-valide" method="post" action="{{route('company.directquotecreate')}}" enctype="multipart/form-data">
-        @csrf
-        @php
-        if(count($customer)>0) {
+
+        @endif
+        @endif
+
+        <form class="form-material m-t-40 row form-valide" method="post" action="{{route('company.directquotecreate')}}" enctype="multipart/form-data">
+          @csrf
+          @php
+          if(count($customer)>0) {
           $custmername = "";
-        }
-        else {
+          }
+          else {
           $custmername = "active-focus";
-        }
-      @endphp
-      <input type="hidden" name="tickettotal" id="tickettotal" value="">
-     <div class="row customer-form">
-     <div class="col-md-12 mb-2">
-       <div class="input_fields_wrap">
-          <div class="mb-3">
-            <select class="form-select {{$custmername}}" name="customerid" id="customerid1" required>
-                <option selected="" value="">Select a customer </option>
-              @foreach($customer as $key => $value)
-                <option value="{{$value->id}}">{{$value->customername}}</option>
-              @endforeach
-            </select>
-            <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-                <a class="addanew" href="#"  data-bs-toggle="modal" data-bs-target="#add-customer" class="" id="hidequote"><i class="fa fa-plus first"></i></a>
+          }
+          @endphp
+          <input type="hidden" name="tickettotal" id="tickettotal" value="">
+          <div class="row customer-form">
+            <div class="col-md-12 mb-2">
+              <div class="input_fields_wrap">
+                <div class="mb-3">
+                  <select class="form-select {{$custmername}}" name="customerid" id="customerid1" required>
+                    <option selected="" value="">Select a customer </option>
+                    @foreach($customer as $key => $value)
+                    <option value="{{$value->id}}">{{$value->customername}}</option>
+                    @endforeach
+                  </select>
+
+                  <div class="mainIcon">
+                    <a class="addanew yelloIcon" href="#" data-bs-toggle="modal" data-bs-target="#add-customer" class="" id="hidequote"><i class="fa fa-plus first"></i></a>
+                  </div>
+
+                </div>
+              </div>
             </div>
-          </div>
-      </div>
-    </div>
 
-    <div class="col-md-12 mb-2">
-       <div class="input_fields_wrap">
-          <div class="mb-3">
-            <select class="form-select" name="address" id="address_scheduler" required>
-              <option value="">Select Customer Address</option>
-            </select>
-            <div id="addressicon"></div>
-          </div>
-      </div>
-    </div>
+            <div class="col-md-12 mb-2">
+              <div class="input_fields_wrap">
+                <div class="mb-3">
+                  <select class="form-select" name="address" id="address_scheduler" required>
+                    <option value="">Select Customer Address</option>
+                  </select>
+                  <div id="addressicon"></div>
+                </div>
+              </div>
+            </div>
 
-    @php
-      if(count($services)>0) {
-        $cname = "";
-      }
-      else {
-        $cname = "active-focus";
-      }
-      if(count($worker)>0) {
-        $wname = "";
-      }
-      else {
-        $wname = "active-focus";
-      }
-    @endphp
-     <div class="col-md-12 mb-3">
-        <select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Services">
-          @foreach($services as $key =>$value)
-          <option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
-        @endforeach
-       </select>
-        <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus second"></i></a>
-        </div>
-     </div>
+            @php
+            if(count($services)>0) {
+            $cname = "";
+            }
+            else {
+            $cname = "active-focus";
+            }
+            if(count($worker)>0) {
+            $wname = "";
+            }
+            else {
+            $wname = "active-focus";
+            }
+            @endphp
+            <div class="col-md-12 mb-3">
+              <select class="selectpicker1 form-control {{$cname}}" name="servicename[]" id="servicename" required="" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Services">
+                @foreach($services as $key =>$value)
+                <option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
+                @endforeach
+              </select>
 
-     <div class="col-md-12 mb-3">
-        <select class="selectpickers1 form-control {{$cname}}" name="productname[]" id="productname" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Products">
-            @foreach($productData as $key =>$value)
+              <div class="mainIcon">
+                <a href="#" class="yelloIcon" data-bs-toggle="modal" data-bs-target="#add-services" class="" id="hidequoteservice"><i class="fa fa-plus first"></i></a>
+              </div>
+
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <select class="selectpickers1 form-control {{$cname}}" name="productname[]" id="productname" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Products">
+                @foreach($productData as $key =>$value)
                 <option value="{{$value->id}}" data-price="{{$value->price}}">{{$value->productname}}</option>
-            @endforeach
-            </select>
-        <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
-          <a href="#"  data-bs-toggle="modal" data-bs-target="#add-products" class="" id="hidequoteproduct"><i class="fa fa-plus third"></i></a>
-        </div>
-      </div>
-     
-     <div class="col-md-12 mb-3">
-        <select class="form-select" name="personnelid" id="personnelid">
-          <option selected="" value="">Select Personnel</option>
-          @foreach($worker as $key => $value) {
-            <option value="{{$value->id}}">{{$value->personnelname}}</option>
-           @endforeach
-        </select>
-      </div>
-      @php
-        if($userData->openingtime!="" || $userData->openingtime!=null) {
-           if($userData->openingtime<$userData->closingtime) {
-                $mintime = $userData->openingtime;
-                $maxtime = $userData->closingtime; 
-             } else {
-                $maxtime = $userData->openingtime;
-                $mintime = $userData->closingtime;
-             }
+                @endforeach
+              </select>
+
+              <div class="mainIcon">
+                <a href="#" class="yelloIcon" data-bs-toggle="modal" data-bs-target="#add-products" class="" id="hidequoteproduct"><i class="fa fa-plus first"></i></a>
+              </div>
+
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <select class="form-select" name="personnelid" id="personnelid">
+                <option selected="" value="">Select Personnel</option>
+                @foreach($worker as $key => $value) {
+                <option value="{{$value->id}}">{{$value->personnelname}}</option>
+                @endforeach
+              </select>
+            </div>
+            @php
+            if($userData->openingtime!="" || $userData->openingtime!=null) {
+            if($userData->openingtime<$userData->closingtime) {
+              $mintime = $userData->openingtime;
+              $maxtime = $userData->closingtime;
+              } else {
+              $maxtime = $userData->openingtime;
+              $mintime = $userData->closingtime;
+              }
               $mintime = date('h a', strtotime($mintime.':00'));
               $maxtime = date('h a', strtotime($maxtime.':00'));
-        } else {
+              } else {
               $mintime= "12 am";
               $maxtime= "11 pm";
-        }
-        $inc   = 30 * 60;
-        $start = (strtotime($mintime));
-        $end   = (strtotime($maxtime)); 
-     @endphp
-      <div class="form-group col-md-6 mb-3 timeschedule" style="display:none;">
-        <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
-        <select class="form-control selectpickertime" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="time" style="height:auto;">
-            @for($i = $start; $i <= $end; $i += $inc)
-                @php
-                    $range = date( 'h:i a', $i);
-                @endphp
-                <option value="{{$range}}">{{$range}}</option>
-            @endfor
-        </select>
-    </div>
-        <div class="col-md-6 mb-3 date" style="display:none;">
-         <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
-          <input type="date" class="form-control etc" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;">
-         </div>
-    
-    <div class="col-md-12 mb-3">
-       <div class="align-items-center justify-content-lg-between d-flex services-list">
-        <label class="container-checkbox">Per hour
-        <input type="radio" id="test1" name="radiogroup" value="perhour" checked>
-        <span class="checkmark"></span>
-      </label>
-      <label class="container-checkbox">Flate rate
-        <input type="radio" id="test2" name="radiogroup" value="flatrate">
-        <span class="checkmark"></span>
-      </label>
-      <label class="container-checkbox">Recurring
-        <input type="radio" id="test3" name="radiogroup" value="recurring">
-        <span class="checkmark"></span>
-      </label>
-      </div>
-      </div>
-     
-     <div class="col-md-6 mb-2">
-      <select class="form-select" name="frequency" id="frequency" required="">
-      <option selected="" value="">Service Frequency</option>
-        @foreach($tenture as $key=>$value)
-          <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
-        @endforeach
-    </select>
-     </div>
-     
-     <div class="col-md-6 mb-2">
-     <label>Default Service Time</label><br>
-            <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
-            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
-          </div>
-        </div>
+              }
+              $inc = 30 * 60;
+              $start = (strtotime($mintime));
+              $end = (strtotime($maxtime));
+              @endphp
+              <div class="form-group col-md-6 mb-3 timeschedule" style="display:none;">
+                <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
+                <select class="form-control selectpickertime" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="time" style="height:auto;">
+                  @for($i = $start; $i <= $end; $i +=$inc) @php $range=date( 'h:i a' , $i); @endphp <option value="{{$range}}">{{$range}}</option>
+                    @endfor
+                </select>
+              </div>
+              <div class="col-md-6 mb-3 date" style="display:none;">
+                <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
+                <input type="date" class="form-control etc" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;">
+              </div>
 
-     <div class="col-md-12 mb-3 position-relative">
-      <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
-      <input type="text" class="form-control" placeholder="Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
-     </div>
-     
-     <div class="col-md-12 mb-3">
-      <label style="position: relative;left: 12px;margin-bottom: 11px;">ETC</label>
-     <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;"  required>
-     </div>
-     <div class="col-md-12 mb-3">
-       <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required></textarea>
-     </div>
-     <div class="col-lg-6 mb-3">
-      <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
-     </div>
-     <div class="col-lg-6 mb-3">
-      <button type="submit" class="btn btn-add btn-block" name="ticket" value="ticket">Add a Ticket</button>
-     </div>
-     
-     <div class="col-lg-12">
-     <button type="submit" class="btn btn-dark btn-block btn-lg p-2" name="share" value="share"> Share</button>
-     </div>
-     </div>
-    </form> 
+              <div class="col-md-12 mb-3">
+                <div class="align-items-center justify-content-lg-between d-flex services-list">
+                  <label class="container-checkbox">Per hour
+                    <input type="radio" id="test1" name="radiogroup" value="perhour" checked>
+                    <span class="checkmark"></span>
+                  </label>
+                  <label class="container-checkbox">Flate rate
+                    <input type="radio" id="test2" name="radiogroup" value="flatrate">
+                    <span class="checkmark"></span>
+                  </label>
+                  <label class="container-checkbox">Recurring
+                    <input type="radio" id="test3" name="radiogroup" value="recurring">
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2">
+                <label>Default Service</label>
+                <select class="form-select" name="frequency" id="frequency" required="">
+                  <option selected="" value="">Service Frequency</option>
+                  @foreach($tenture as $key=>$value)
+                  <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
+                  @endforeach
+                </select>
+              </div>
+
+              <div class="col-md-6 mb-2">
+                <label>Default Service Time</label><br>
+                <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
+                  <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+                  <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+                </div>
+              </div>
+
+              <div class="col-md-12 mb-3 position-relative">
+                <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
+                <input type="text" class="form-control" placeholder="Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+              </div>
+
+              <div class="col-md-12 mb-3">
+                <label style="position: relative;left: 12px;margin-bottom: 11px;">ETC</label>
+                <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;" required>
+              </div>
+              <div class="col-md-12 mb-3">
+                <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required></textarea>
+              </div>
+              <div class="col-lg-6 mb-3">
+                <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
+              </div>
+              <div class="col-lg-6 mb-3">
+                <button type="submit" class="btn btn-add btn-block" name="ticket" value="ticket">Add a Ticket</button>
+              </div>
+
+              <div class="col-lg-12">
+                <button type="submit" class="btn btn-dark btn-block btn-lg p-2" name="share" value="share"> Share</button>
+              </div>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-  </div>
-</div>
 </div>
 <!-- end ticket assign modal  -->
 <!-------event hover---modal---->
@@ -880,91 +914,95 @@ body::-webkit-scrollbar-thumb:hover {
 <div class="modal fade" id="add-customer" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box  overflow-hidden">
-     <form class="form-material m-t-40  form-valide" method="post" id="createserviceticket"  enctype="multipart/form-data">
+      <form class="form-material m-t-40  form-valide" method="post" id="createserviceticket" enctype="multipart/form-data">
         @csrf
-      <div class="modal-body">
-      <div class="add-customer-modal d-flex justify-content-between align-items-center">
-     <h5>Add a new customer</h5>
-     
-     <button type="button" class="btn-close"  id="quotecancel"  data-bs-dismiss="modal" aria-label="Close"></button>
-     </div>
-     
-    <div class="row customer-form">
-     
-    <div class="col-md-12 mb-3">
-        <input type="text" class="form-control" placeholder="Customer Full Name" name="customername" id="customername" required="">
-    </div>
+        <div class="modal-body">
+          <div class="add-customer-modal d-flex justify-content-between align-items-center">
+            <h5>Add a new customer</h5>
 
-    <div class="col-md-12 mb-3">
-      <input type="text" class="form-control" placeholder="Address" name="address" id="addressq1" required="">
-    </div>
+            <button type="button" class="btn-close" id="quotecancel" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
 
-    <div class="col-md-12 mb-3">
-      <input type="text" class="form-control" placeholder="Billing Address" name="billingaddress" id="billingaddress">
-    </div>
+          <div class="row customer-form">
 
-    <div class="col-md-12 mb-3">
-      <input type="text" class="form-control" placeholder="Mailing Address" name="mailingaddress" id="mailingaddress">
-    </div>
-     
-     <div class="col-md-6 mb-3">
-     
-     <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
-     
-     </div>
-     
-     <div class="col-md-6 mb-3">
-    
-     <input type="email" class="form-control" placeholder="Email" name="email" id="email">
-     
-     </div>
-     
-     <div class="col-md-12 mb-3">
-    
-     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname">
-     
-     </div>
-     <div class="col-md-12 mb-3">
-      <div class="d-flex align-items-center">
-        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
-          @foreach ($services as $service)
-            <option value="{{$service->id}}">{{$service->servicename}}</option>
-          @endforeach
-        </select>
-     </div>
-   </div>
+            <div class="col-md-12 mb-3">
+              <input type="text" class="form-control" placeholder="Customer Full Name" name="customername" id="customername" required="">
+            </div>
 
-   <div class="col-md-12 mb-3" style="display:none;">
-      <div class="d-flex align-items-center">
-        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" data-placeholder="Select Products">
-          @foreach ($productData as $product)
-            <option value="{{$product->id}}">{{$product->productname}}</option>
-          @endforeach
-        </select>
-     </div>
-   </div>
+            <div class="col-md-12 mb-3">
+              <input type="text" class="form-control" placeholder="Address" name="address" id="addressq1" required="">
+            </div>
 
-   <div class="col-lg-12 mb-3">
-      <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
-      <div class="drop-zone">
-    <span class="drop-zone__prompt text-center">
-  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></small>
-  Drop file here or click to upload</span>
-    <input type="file" name="image" id="image" class="drop-zone__input" accept="image/png, image/gif, image/jpeg">
-  </div>
-     </div>
-     
-     
-     <div class="col-lg-6 mb-3">
-     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel_1">Cancel</button>
-     </div>
-     <div class="col-lg-6 mb-3">
-     <button type="submit" class="btn btn-add btn-block">Add Customer</button>
-     </div>
-     
-     </div>
-      </div>
-     </form>
+            <div class="col-md-12 mb-3">
+              <input type="text" class="form-control" placeholder="Billing Address" name="billingaddress" id="billingaddress">
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <input type="text" class="form-control" placeholder="Mailing Address" name="mailingaddress" id="mailingaddress">
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+              <input type="text" class="form-control" placeholder="Phone Number" name="phonenumber" id="phonenumber" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+              <input type="email" class="form-control" placeholder="Email" name="email" id="email">
+
+            </div>
+
+            <div class="col-md-12 mb-3">
+
+              <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname">
+
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex align-items-center">
+                <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+                  @foreach ($services as $service)
+                  <option value="{{$service->id}}">{{$service->servicename}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-12 mb-3" style="display:none;">
+              <div class="d-flex align-items-center">
+                <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" data-placeholder="Select Products">
+                  @foreach ($productData as $product)
+                  <option value="{{$product->id}}">{{$product->productname}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+
+            <div class="col-lg-12 mb-3">
+              <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
+              <div class="drop-zone">
+                <span class="drop-zone__prompt text-center">
+                  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg></small>
+                  Drop file here or click to upload</span>
+                <input type="file" name="image" id="image" class="drop-zone__input" accept="image/png, image/gif, image/jpeg">
+              </div>
+            </div>
+
+
+            <div class="col-lg-6 mb-3">
+              <button class="btn btn-cancel btn-block" data-bs-dismiss="modal" id="quotecancel_1">Cancel</button>
+            </div>
+            <div class="col-lg-6 mb-3">
+              <button type="submit" class="btn btn-add btn-block">Add Customer</button>
+            </div>
+
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -974,29 +1012,29 @@ body::-webkit-scrollbar-thumb:hover {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box  overflow-hidden">
       <div class="modal-body">
-      
-  
-     <div class="add-customer-modal d-flex justify-content-between align-items-center">
-     <h5>Add Address</h5>
-     <button class="btn-close"  data-bs-dismiss="modal" aria-label="Close" id="quotecancel1212"></button>
-     </div>
-     
-     
-    <div class="row customer-form">
-     
-    <div class="col-md-12 mb-3">
-        <input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address5" required="">
-         <div class="find_msg" style="display:none;"></div>
-    </div>
 
-        <div class="col-lg-6 mb-3">
-     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" aria-label="Close" id="quotecancel12">Cancel</button>
-    </div>
-    <div class="col-lg-6 mb-3">
-        <button id="saveaddress" class="btn btn-add btn-block">Add Address</button>
-    </div>
-    </div>
-    </div>
+
+        <div class="add-customer-modal d-flex justify-content-between align-items-center">
+          <h5>Add Address</h5>
+          <button class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="quotecancel1212"></button>
+        </div>
+
+
+        <div class="row customer-form">
+
+          <div class="col-md-12 mb-3">
+            <input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address5" required="">
+            <div class="find_msg" style="display:none;"></div>
+          </div>
+
+          <div class="col-lg-6 mb-3">
+            <button class="btn btn-cancel btn-block" data-bs-dismiss="modal" aria-label="Close" id="quotecancel12">Cancel</button>
+          </div>
+          <div class="col-lg-6 mb-3">
+            <button id="saveaddress" class="btn btn-add btn-block">Add Address</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1007,116 +1045,124 @@ body::-webkit-scrollbar-thumb:hover {
     <div class="modal-content customer-modal-box overflow-hidden">
       <form class="form-material m-t-40 form-valide" id="serviceform" method="post" enctype="multipart/form-data">
         @csrf
-      <div class="modal-body">
-      <div class="add-customer-modal d-flex justify-content-between align-items-center">
-     <h5>Add a new Service</h5>
-     <button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
-     </div>
-        @php
-        $productData = App\Models\Inventory::where('user_id',auth()->user()->id)->orderBy('id','ASC')->get();
-        if(count($productData)>0) {
-            $pname= "";
-        } else {
-            $pname= "active-focus";
-        }
-        
-        @endphp
-        <div class="row customer-form" id="product-box-tabs">
-          <div class="col-md-12 mb-2">
-            <input type="text" class="form-control" placeholder="Service Name" name="servicename" id="servicename" required="">
+        <div class="modal-body">
+          <div class="add-customer-modal d-flex justify-content-between align-items-center">
+            <h5>Add a new Service</h5>
+            <button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="col-md-12 mb-2 position-relative">
-            <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
-  <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
-          </div>
-          <div class="col-md-12 mb-2">
-            <div class="d-flex align-items-center">
-            <select class="selectpickernew form-control me-2 {{$pname}}" multiple aria-label="Default select example" data-placeholder="Select Products" data-live-search="true" name="defaultproduct[]" id="defaultproduct" >
-              <!-- <option selected="" value="">Select Product</option> -->
-              @foreach($productData as $product)
-                <option value="{{$product->id}}">{{$product->productname}}</option>
-              @endforeach
-            </select>
-           <div class="wrapper" style="display: none;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-            <div class="tooltip">If you are not seeing the products in dropdown then add it in inventory section then select here.</div>
-          </div>
-          </div>
-        </div>
-          <div class="col-md-12 mb-2">
-            <div class="align-items-center justify-content-lg-between d-flex services-list">
-              <p>
-                <input type="radio" id="test1" name="radiogroup" value="perhour" class="radiogrp" checked>
-                <label for="test1">Per Hour</label>
-              </p>
-              <p>
-                <input type="radio" id="test2" name="radiogroup" value="flatrate" class="radiogrp">
-                <label for="test2">Flate Rate</label>
-              </p>
-              <p>
-                <input type="radio" id="test3" name="radiogroup" value="recurring" class="radiogrp">
-                <label for="test3">Recurring</label>
-              </p>
+          @php
+          $productData = App\Models\Inventory::where('user_id',auth()->user()->id)->orderBy('id','ASC')->get();
+          if(count($productData)>0) {
+          $pname= "";
+          } else {
+          $pname= "active-focus";
+          }
+
+          @endphp
+          <div class="row customer-form" id="product-box-tabs">
+            <div class="col-md-12 mb-2">
+              <input type="text" class="form-control" placeholder="Service Name" name="servicename" id="servicename" required="">
             </div>
-          </div>
-          <div class="col-md-6 mb-2">
-            <select class="form-select" name="frequency" id="frequency10" required="">
-              <option selected="" value="">Service Frequency</option>
-              @php $tenture = App\Models\Tenture::where('status','Active')->get(); @endphp
-              @foreach($tenture as $key=>$value)
+            <div class="col-md-12 mb-2 position-relative">
+              <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
+              <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+            </div>
+            <div class="col-md-12 mb-2">
+              <div class="d-flex align-items-center">
+                <select class="selectpickernew form-control me-2 {{$pname}}" multiple aria-label="Default select example" data-placeholder="Select Products" data-live-search="true" name="defaultproduct[]" id="defaultproduct">
+                  <!-- <option selected="" value="">Select Product</option> -->
+                  @foreach($productData as $product)
+                  <option value="{{$product->id}}">{{$product->productname}}</option>
+                  @endforeach
+                </select>
+                <div class="wrapper" style="display: none;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  <div class="tooltip">If you are not seeing the products in dropdown then add it in inventory section then select here.</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-2">
+              <div class="align-items-center justify-content-lg-between d-flex services-list">
+                <p>
+                  <input type="radio" id="test1" name="radiogroup" value="perhour" class="radiogrp" checked>
+                  <label for="test1">Per Hour</label>
+                </p>
+                <p>
+                  <input type="radio" id="test2" name="radiogroup" value="flatrate" class="radiogrp">
+                  <label for="test2">Flate Rate</label>
+                </p>
+                <p>
+                  <input type="radio" id="test3" name="radiogroup" value="recurring" class="radiogrp">
+                  <label for="test3">Recurring</label>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-6 mb-2">
+              <select class="form-select" name="frequency" id="frequency10" required="">
+                <option selected="" value="">Service Frequency</option>
+                @php $tenture = App\Models\Tenture::where('status','Active')->get(); @endphp
+                @foreach($tenture as $key=>$value)
                 <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
-              @endforeach
-            </select>
-          </div>
-          <div class="col-md-6 mb-2">
-            <label>Default Time (hh:mm)</label><br>
-            <div class="timepicker timepicker1" style="display:inline-block;">
-              <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
-              <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+                @endforeach
+              </select>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label>Default Time (hh:mm)</label><br>
+              <div class="timepicker timepicker1" style="display:inline-block;">
+                <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+                <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute10" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label>Choose Color</label><br>
+              <span class="color-picker">
+                <label for="colorPicker">
+                  <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
+                </label>
+              </span>
+            </div>
+            <div class="col-lg-12 mb-3">
+              <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
+              <div class="drop-zone">
+                <span class="drop-zone__prompt text-center">
+                  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg></small>
+                  Drop file here or click to upload</span>
+                <input type="file" name="image" id="image" class="drop-zone__input" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+              </div>
+            </div>
+
+            <div class="col-md-12 mb-2" style="display: none;">
+              <p class="create-gray mb-2">Create default checklist</p>
+              <div class="align-items-center  d-flex services-list" style="flex-flow:wrap;">
+                <label class="container-checkbox me-3">Point 1
+                  <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point1"> <span class="checkmark"></span>
+                </label>
+                <label class="container-checkbox me-3">Point 2
+                  <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point2"> <span class="checkmark"></span>
+                </label>
+
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-lg-6 mb-2">
+                <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+
+              </div>
+              <div class="col-lg-6">
+                <button type="submit" class="btn btn-add btn-block">Add a Service</button>
+              </div>
             </div>
           </div>
-          <div class="col-md-12">
-            <label>Choose Color</label><br>
-            <span class="color-picker">
-              <label for="colorPicker">
-                <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
-              </label>
-            </span>
-          </div>
-    <div class="col-lg-12 mb-3">
-      <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
-      <div class="drop-zone">
-    <span class="drop-zone__prompt text-center">
-  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></small>
-  Drop file here or click to upload</span>
-    <input type="file" name="image" id="image" class="drop-zone__input" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
-  </div>
-     </div>
-
-          <div class="col-md-12 mb-2" style="display: none;">
-            <p class="create-gray mb-2">Create default checklist</p>
-            <div class="align-items-center  d-flex services-list" style="flex-flow:wrap;">
-              <label class="container-checkbox me-3">Point 1
-                <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point1"> <span class="checkmark"></span>
-              </label>
-              <label class="container-checkbox me-3">Point 2
-                <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point2"> <span class="checkmark"></span>
-              </label>
-              
-            </div>
-          </div>
-          <div class="row mt-3">
-          <div class="col-lg-6 mb-2">
-            <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-
-          </div>
-          <div class="col-lg-6">
-            <button type="submit" class="btn btn-add btn-block">Add a Service</button>
-          </div>
         </div>
-        </div>
-      </div>
-    </form>
+      </form>
     </div>
   </div>
 </div>
@@ -1126,78 +1172,82 @@ body::-webkit-scrollbar-thumb:hover {
 <div class="modal fade" id="add-products" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box overflow-hidden">
-     <form class="form-material m-t-40 form-valide" id="productform" method="post" enctype="multipart/form-data">
+      <form class="form-material m-t-40 form-valide" id="productform" method="post" enctype="multipart/form-data">
         @csrf
-      <div class="modal-body">
-        <div class="add-customer-modal d-flex justify-content-between align-items-center">
+        <div class="modal-body">
+          <div class="add-customer-modal d-flex justify-content-between align-items-center">
             <h5>Add a new Product/Part</h5>
             <button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <input type="hidden" name="cid" id="cid" value="">
+          <div class="row customer-form" id="product-box-tabs">
+            <div class="col-md-12 mb-3">
+              <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" required="">
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <select class="selectpickernew form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+                @foreach ($services as $service)
+                <option value="{{$service->id}}">{{$service->servicename}}</option>
+                @endforeach
+              </select>
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
+
+
+            </div>
+            <div class="col-md-6 mb-3">
+
+              <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="">
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" required="">
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit">
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <input type="text" class="form-control" placeholder="$ Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+            </div>
+
+            <div class="col-lg-12 mb-3">
+              <textarea class="form-control height-180" name="description" id="description" required="" placeholder="Description"></textarea>
+            </div>
+            <div class="col-lg-12 mb-3">
+              <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
+              <div class="drop-zone">
+                <span class="drop-zone__prompt text-center">
+                  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg></small>
+                  Drop file here or click to upload</span>
+                <input type="file" name="image" id="image" class="drop-zone__input" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-lg-6 mb-3">
+                <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+              </div>
+              <div class="col-lg-6 mb-3">
+                <button class="btn btn-add btn-block" type="submit">Complete</button>
+              </div>
+            </div>
+          </div>
         </div>
-
-     <input type="hidden" name="cid" id="cid" value="">
-  <div class="row customer-form" id="product-box-tabs">
-    <div class="col-md-12 mb-3">
-     <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" required="">
+      </form>
     </div>
-
-    <div class="col-md-12 mb-3">
-        <select class="selectpickernew form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
-          @foreach ($services as $service)
-            <option value="{{$service->id}}">{{$service->servicename}}</option>
-          @endforeach
-        </select>
-          
-       </div>
-    
-    <div class="col-md-6 mb-3">
-     <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
-    
-     
-     </div>
-     <div class="col-md-6 mb-3">
-    
-     <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="">
-     
-     </div>
-     
-     <div class="col-md-6 mb-3">
-        <input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" required="">
-     </div>
-
-     <div class="col-md-6 mb-3">
-       <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit">
-     </div>
-
-     <div class="col-md-12 mb-3">
-      <input type="text" class="form-control" placeholder="$ Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
-     </div>
-
-      <div class="col-lg-12 mb-3">
-    <textarea class="form-control height-180" name="description" id="description" required="" placeholder="Description"></textarea>
-    </div>
-    <div class="col-lg-12 mb-3">
-      <div style="color: #999999;margin-bottom: 6px;position: relative;left: 10px;">Approximate Image Size : 285 * 195</div>
-      <div class="drop-zone">
-    <span class="drop-zone__prompt text-center">
-  <small><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></small>
-  Drop file here or click to upload</span>
-    <input type="file" name="image" id="image" class="drop-zone__input" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
   </div>
-     </div>
-     
-     <div class="row mt-3">
-     <div class="col-lg-6 mb-3">
-      <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-     </div>
-     <div class="col-lg-6 mb-3">
-      <button class="btn btn-add btn-block" type="submit">Complete</button>
-     </div>
-     </div>
-    </div>
-    </div>
- </form>
-  </div>
-</div>
 </div>
 <!-- end product modal -->
 
@@ -1208,14 +1258,14 @@ body::-webkit-scrollbar-thumb:hover {
 <script src="https://fullcalendar.io/releases/fullcalendar/3.10.0/lib/moment.min.js"></script>
 <script src="https://fullcalendar.io/releases/fullcalendar/3.10.0/fullcalendar.min.js"></script>
 <script src="https://fullcalendar.io/releases/fullcalendar-scheduler/1.9.4/scheduler.min.js"></script>
-<script  src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
 <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
 <script src="http://localhost/servicebolt/public/js/bootstrap-select.min.js"></script>
 
 
 <script type="">
-      $.ajaxSetup({
+  $.ajaxSetup({
       headers: {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
@@ -1244,47 +1294,48 @@ body::-webkit-scrollbar-thumb:hover {
     });
 </script>
 
- <script>
-    $( function() {
-        $( "#sortable1, #sortable2" ).sortable({
-          connectWith: ".connectedSortable"
-        }).disableSelection();
-    });
-  
-    $(function() {
-        var slideCount =  $(".slider ul li").length;
-        var slideWidth =  $(".slider ul li").width();
-        var slideHeight =  $(".slider ul li").height();
-        var slideUlWidth =  slideCount * slideWidth;
+<script>
+  $(function() {
+    $("#sortable1, #sortable2").sortable({
+      connectWith: ".connectedSortable"
+    }).disableSelection();
+  });
+
+  $(function() {
+    var slideCount = $(".slider ul li").length;
+    var slideWidth = $(".slider ul li").width();
+    var slideHeight = $(".slider ul li").height();
+    var slideUlWidth = slideCount * slideWidth;
+    $(".slider ul li:last-child").prependTo($(".slider ul"));
+
+    function moveLeft() {
+      $(".slider ul").stop().animate({
+        left: +slideWidth
+      }, 700, function() {
         $(".slider ul li:last-child").prependTo($(".slider ul"));
-        
-        function moveLeft() {
-            $(".slider ul").stop().animate({
-              left: + slideWidth
-            },700, function() {
-              $(".slider ul li:last-child").prependTo($(".slider ul"));
-              $(".slider ul").css("left","");
-            });
-        }
-        function moveRight() {
-            $(".slider ul").stop().animate({
-              left: - slideWidth
-            },700, function() {
-              $(".slider ul li:first-child").appendTo($(".slider ul"));
-              $(".slider ul").css("left","");
-            });
-        }
-        $(".next").on("click",function() {
-            moveRight();
-        });
-        $(".prev").on("click",function() {
-            moveLeft();
-        });
+        $(".slider ul").css("left", "");
+      });
+    }
+
+    function moveRight() {
+      $(".slider ul").stop().animate({
+        left: -slideWidth
+      }, 700, function() {
+        $(".slider ul li:first-child").appendTo($(".slider ul"));
+        $(".slider ul").css("left", "");
+      });
+    }
+    $(".next").on("click", function() {
+      moveRight();
     });
-  </script>
+    $(".prev").on("click", function() {
+      moveLeft();
+    });
+  });
+</script>
 
 <script type="">
-    $(document).ready(function () {
+  $(document).ready(function () {
         var h=1;
         var m=0;
         $("#time1").val(h);
@@ -1329,7 +1380,7 @@ body::-webkit-scrollbar-thumb:hover {
 </script>
 <script type="">
 
-    @if(request()->start)
+  @if(request()->start)
         //var start= $("#suggest_trip_start").val();
         var start = {{request()->start}};
         var offset = start;
@@ -1838,7 +1889,9 @@ body::-webkit-scrollbar-thumb:hover {
             $.each(result.address,function(key,value) {
               $("#address_scheduler").append('<option value="'+value.address+'">'+value.address+'</option>');
             });
-            $('#addressicon').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address" id="hidequote1" class=""><i class="fa fa-plus select-customer"></i></a></div>');
+
+            $('#addressicon').html('<div class="mainIcon"><a href="#" class="addnew"  data-bs-toggle="modal" data-bs-target="#add-address" id="hidequote1" class=""><i class="fa fa-plus select-customer yellowIcon first"></i></a></div>');
+
           }
       });
     });    
@@ -1846,7 +1899,7 @@ body::-webkit-scrollbar-thumb:hover {
 </script>
 
 <script type="">
- $('.selectpickernew').selectpicker();
+  $('.selectpickernew').selectpicker();
  $("#time10").val(1);
  $("#minute10").val(0);
  $(document).on('click','#editTickets',function(e) {

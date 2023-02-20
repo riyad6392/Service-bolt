@@ -121,7 +121,7 @@ i.fa.fa-plus.third {
   </div>
   <div class="col-lg-3 offset-lg-1 mb-3">
     <!-- <button class="btn btn-add btn-block" type="submit">Add Address</button> -->
-    <a class="btn btn-add btn-block" data-bs-toggle="modal" data-bs-target="#add-note" id="addnote" style="padding: 10px;">Add Address</a>
+    <a class="btn btn-add btn-block" data-bs-toggle="modal" data-bs-target="#add-note" id="addnote" style="padding: 10px; width:max-content; height:unset; ">Add Address</a>
   </div>
 </form>
 

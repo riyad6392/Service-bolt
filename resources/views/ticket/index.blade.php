@@ -302,9 +302,9 @@ select#servicename {
     border-radius: 15px;
     width: 114px!important;
 ">Ticket +</a></td>
-	  <td><a class=" btn btn-edit p-3 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$quote->id}}">Edit</a>
-	  <a href="javascript:void(0);" class="info_link1 btn btn-edit p-3 w-auto" dataval="{{$quote->id}}">Delete</a>
-	  <a class=" btn btn-edit p-3 w-auto emailinvoice" data-id="{{$quote->id}}" data-email="{{$quote->email}}" data-bs-toggle="modal" data-bs-target="#edit-address">Share</a>
+	  <td><a class=" btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$quote->id}}">Edit</a>
+	  <a href="javascript:void(0);" class="info_link1 btn btn-edit p-2 w-auto" dataval="{{$quote->id}}">Delete</a>
+	  <a class=" btn btn-edit p-2 w-auto emailinvoice" data-id="{{$quote->id}}" data-email="{{$quote->email}}" data-bs-toggle="modal" data-bs-target="#edit-address">Share</a>
 	  </td>
 	  </tr>
 	  	@php
@@ -475,9 +475,9 @@ select#servicename {
     width: 114px!important;
 ">
 @if($ticket->ticket_status == 2)  Assigned @elseif($ticket->ticket_status == 1) Schedule + @elseif($ticket->ticket_status == 4) Picked @endif </a></td>
-	  <td><a class="btn btn-edit p-3 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$ticket->id}}" data-type="ticket">Edit</a>
-	  	<a href="javascript:void(0);" class="info_link1 btn btn-edit p-3 w-auto" dataval="{{$ticket->id}}">Delete</a>
-	  	<a class=" btn btn-edit p-3 w-auto emailinvoice" data-id="{{$ticket->id}}" data-email="{{$ticket->email}}" data-bs-toggle="modal" data-bs-target="#edit-address">Share</a>
+	  <td><a class="btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$ticket->id}}" data-type="ticket">Edit</a>
+	  	<a href="javascript:void(0);" class="info_link1 btn btn-edit p-2 w-auto" dataval="{{$ticket->id}}">Delete</a>
+	  	<a class=" btn btn-edit p-2 w-auto emailinvoice" data-id="{{$ticket->id}}" data-email="{{$ticket->email}}" data-bs-toggle="modal" data-bs-target="#edit-address">Share</a>
 	  </td>
 	  
 	  </tr>
@@ -563,9 +563,9 @@ select#servicename {
 		  @endphp
 		@endforeach</td>
 		<td>{{$payment_status}} ({{$paid_status}})</td>
-	  <td><a class="btn btn-edit p-3 w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$ticket->id}}" style="display: none;">View</a>
-	  	<a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" class="btn btn-edit p-3 w-auto">View</a>
-	  	<a class="btn btn-edit p-3 w-auto repoenticket" data-id="{{$ticket->id}}">Reopen</a>
+	  <td><a class="btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$ticket->id}}" style="display: none;">View</a>
+	  	<a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" class="btn btn-edit p-2 w-auto">View</a>
+	  	<a class="btn btn-edit p-2 w-auto repoenticket" data-id="{{$ticket->id}}">Reopen</a>
 	 </td>
 	 </tr>
 	  	@php

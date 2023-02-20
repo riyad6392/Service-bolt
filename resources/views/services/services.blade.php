@@ -134,7 +134,7 @@ i.fa.fa-plus.true-condition {
                   <thead>
                     <tr>
                       <th style="display: none;">Id</th>
-                      
+                       
                       <th></th>
                       @if($cpagedta==0)
                       <th>Service Name</th>
@@ -238,12 +238,12 @@ i.fa.fa-plus.true-condition {
         
         @endphp
         <div class="row customer-form" id="product-box-tabs">
-          <div class="col-md-11 mb-2">
-            <input type="text" class="form-control" placeholder="Service Name" name="servicename" id="servicename" required="">
+          <div class="col-md-11 mb-2 ">
+            <input type="text" class="form-control mt-2 mb-1" placeholder="Service Name" name="servicename" id="servicename" required="">
           </div>
           <div class="col-md-12 mb-2 position-relative">
             <i class="fa fa-dollar" style="position: absolute;top:18px;left: 27px;"></i>
-  <input type="text" class="form-control" placeholder="Service Default Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+  <input type="text" class="form-control mt-2 mb-1" placeholder="Service Default Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
           </div>
           <div class="col-md-12 mb-2">
             <div class="d-flex align-items-center">
