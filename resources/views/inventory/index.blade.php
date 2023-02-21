@@ -225,6 +225,18 @@ i.fa.fa-plus.second.yellow-icon1 {
   </div>
 </div>
 </div>
+
+<div class="modal fade" id="read-desc" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+     
+      <div class="modal-body">
+       	<div id="viewmodaldatareadmore"></div>
+      
+     </div>
+  </div>
+</div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="add-product" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
@@ -982,7 +994,21 @@ function readURL(input) {
   $("#categoryclose1").click(function() {
   	$("#add-category").hide();
   	$("#add-product").show();
+});
 
+$(document).on('click','#readdesc',function(e) {
+	 var id = $(this).data('id');
+   var dataString =  'id='+ id;
+   $.ajax({
+            url:'{{route('company.readmoredesc')}}',
+            data: dataString,
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#viewmodaldatareadmore').html(data.html);
+            }
+        })
   });
 </script>
 @endsection

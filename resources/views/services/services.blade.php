@@ -364,6 +364,18 @@ i.fa.fa-plus.true-condition {
   </div>
 </div>
 
+<div class="modal fade" id="read-desc" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+     
+      <div class="modal-body">
+        <div id="viewmodaldatareadmore"></div>
+      
+     </div>
+  </div>
+</div>
+</div>
+
 <!-- Dots modal start -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -841,7 +853,20 @@ $(document).on('click','#editService',function(e) {
   function refreshPage() {
     window.location.reload();
   } 
-
+  $(document).on('click','#readdesc',function(e) {
+   var id = $(this).data('id');
+   var dataString =  'id='+ id;
+   $.ajax({
+            url:'{{route('company.readmoredescservice')}}',
+            data: dataString,
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#viewmodaldatareadmore').html(data.html);
+            }
+        })
+  });
 </script>
 @endsection
 

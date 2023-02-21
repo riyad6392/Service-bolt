@@ -198,7 +198,7 @@ Route::group([
     Route::any('/services/createservice', [ServicesController::class, 'createservice'])->name('createservice');
     Route::any('/services/create-service-ticket', [ServicesController::class, 'createserviceticket'])->name('createserviceticket');
     Route::any('/services/create-service-address', [ServicesController::class, 'create_service_address'])->name('create_service_address');
-    
+     Route::any('/services/readmoredescservice', [ServicesController::class, 'readmoredescservice'])->name('readmoredescservice');
     //personnel Create
     Route::get('/personnel', [PersonnelController::class, 'index'])->name('personnel');
 
@@ -227,6 +227,8 @@ Route::group([
     Route::any('/inventory/create', [InventoryController::class, 'create'])->name('inventorycreate');
     Route::any('/inventory/leftbarinventorydata', [InventoryController::class, 'leftbarinventorydata'])->name('leftbarinventorydata');
     Route::any('/inventory/editviewinventorymodal', [InventoryController::class, 'editviewinventorymodal'])->name('editviewinventorymodal');
+    Route::any('/inventory/readmoredesc', [InventoryController::class, 'readmoredesc'])->name('readmoredesc');
+    
 
     Route::any('/inventory/editviewinventorymodal1', [InventoryController::class, 'editviewinventorymodal1'])->name('editviewinventorymodal1');
 

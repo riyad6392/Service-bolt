@@ -217,6 +217,22 @@ class InventoryController extends Controller
        
     }
 
+    public function readmoredesc(Request $request)
+    {
+       $json = array();
+       $auth_id = auth()->user()->id;
+       $inventory = Inventory::select('description')->where('id', $request->id)->first();
+      
+      $html ='<div class="add-customer-modal">
+               <h5>Description</h5>
+               </div>';
+       $html .='<div class="row customer-form" id="product-box-tabs-1">
+     <div class="col-md-12 mb-3">'.$inventory->description.'</div>
+        </div></div>';
+        return json_encode(['html' =>$html]);
+        die;
+       
+    }
     public function update(Request $request)
     {
           $inventory = Inventory::where('id', $request->productid)->get()->first();
@@ -253,6 +269,7 @@ class InventoryController extends Controller
       $serviceid = $request->serviceid;
       $auth_id = auth()->user()->id;
       $json = array();
+
       if($targetid == 0) {
          $inventory = Inventory::where('user_id',$auth_id)->get();
          $countdata = count($inventory);
@@ -262,6 +279,7 @@ class InventoryController extends Controller
        } else {
           $imagepath = url('/').'/uploads/servicebolt-noimage.png';
        }
+
       $html ='<div class="product-card targetDiv" id="div1">
               <img src="'.$imagepath.'" alt="">
               <h2>'.$inventory[$datacount]->productname.'</h2>
@@ -276,9 +294,13 @@ class InventoryController extends Controller
                 </div>
                 <div class="mb-4">
                  <p class="number-1">Description</p>
-                 <h6 class="heading-h6">'.Str::limit($inventory[$datacount]->description, 150).'</h6>
-                </div>
-                <a class="btn btn-edit mb-2 w-100 p-3" data-bs-toggle="modal" data-bs-target="#edit-product" id="editProduct" data-id="'.$inventory[$datacount]->id.'">Edit</a>
+                 <h6 class="heading-h6">'.Str::limit($inventory[$datacount]->description, 150).'</h6>';
+                 if(strlen($inventory[$datacount]->description) > 150) {
+                  $html.='<a class="" data-bs-toggle="modal" data-bs-target="#read-desc" id="readdesc" data-id="'.$inventory[$datacount]->id.'" style="margin-left:80px;color:#000;">Read More</a>';
+                  }
+                $html.='</div>';
+                
+                $html.='<a class="btn btn-edit mb-2 w-100 p-3" data-bs-toggle="modal" data-bs-target="#edit-product" id="editProduct" data-id="'.$inventory[$datacount]->id.'">Edit</a>
                 <a href="javascript:void(0);" class="info_link1 btn btn-edit w-100 p-3" dataval="'.$inventory[$datacount]->id.'" style="background:antiquewhite;color:red;">Delete</a>
                 <a class="btn btn-edit mb-2 w-100 p-3" data-bs-toggle="modal" data-bs-target="#duplicate-Product" id="duplicateProduct" data-id="'.$inventory[$datacount]->id.'" style="margin-top:10px;">Duplicate</a>
                 </div>
@@ -291,6 +313,7 @@ class InventoryController extends Controller
         } else {
           $imagepath = url('/').'/uploads/servicebolt-noimage.png';
         }
+
       $html ='<div class="product-card targetDiv" id="div1">
               <img src="'.$imagepath.'" alt="">
               <h2>'.$inventory[0]->productname.'</h2>
@@ -305,8 +328,11 @@ class InventoryController extends Controller
                 </div>
                 <div class="mb-4">
                  <p class="number-1">Description</p>
-                 <h6 class="heading-h6">'.Str::limit($inventory[0]->description, 150).'</h6>
-                </div>
+                 <h6 class="heading-h6">'.Str::limit($inventory[0]->description, 150).'</h6>';
+                 if(strlen($inventory[0]->description) > 150) {
+                  $html.='<a class="" data-bs-toggle="modal" data-bs-target="#read-desc" id="readdesc" data-id="'.$inventory[0]->id.'" style="margin-left:80px;color:#000;">Read More</a>';
+                  }
+                $html.='</div>
                 <a class="btn btn-edit mb-2 w-100 p-3" data-bs-toggle="modal" data-bs-target="#edit-product" id="editProduct" data-id="'.$inventory[0]->id.'">Edit</a>
                 <a href="javascript:void(0);" class="info_link1 btn btn-edit w-100 p-3" dataval="'.$inventory[0]->id.'" style="background:antiquewhite;color:red;">Delete</a>
                 <a class="btn btn-edit mb-2 w-100 p-3" data-bs-toggle="modal" data-bs-target="#duplicate-Product" id="duplicateProduct" data-id="'.$inventory[0]->id.'" style="margin-top:10px;">Duplicate</a>

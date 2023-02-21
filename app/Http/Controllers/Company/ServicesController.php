@@ -387,9 +387,11 @@ class ServicesController extends Controller
                 </div>
                 <div class="mb-5">
                  <p class="number-1">Description</p>
-                 <h6 class="heading-h6">'.Str::limit($services[$datacount]->description, 150).'</h6>
-                </div>
-                  <a class="btn add-btn-yellow w-100 p-3 mb-3" data-bs-toggle="modal" data-bs-target="#create-tickets" id="createtickets" data-id="'.$services[$datacount]->id.'">Create a Quote</a>
+                 <h6 class="heading-h6">'.Str::limit($services[$datacount]->description, 150).'</h6>';
+                 if(strlen($services[$datacount]->description) > 150) {
+                  $html.='<a class="" data-bs-toggle="modal" data-bs-target="#read-desc" id="readdesc" data-id="'.$services[$datacount]->id.'" style="margin-left:80px;color:#000;">Read More</a>';
+                  }
+                $html.='</div><a class="btn add-btn-yellow w-100 p-3 mb-3" data-bs-toggle="modal" data-bs-target="#create-tickets" id="createtickets" data-id="'.$services[$datacount]->id.'">Create a Quote</a>
                 <a class="btn btn-edit w-100 p-3" data-bs-toggle="modal" data-bs-target="#edit-services" id="editService" data-id="'.$services[$datacount]->id.'">Edit</a>
               </div>
             </div>';
@@ -415,8 +417,11 @@ class ServicesController extends Controller
                 </div> 
                 <div class="mb-5">
                  <p class="number-1">Description</p>
-                 <h6 class="heading-h6">'.Str::limit($services[0]->description, 150).'</h6>
-                </div>
+                 <h6 class="heading-h6">'.Str::limit($services[0]->description, 150).'</h6>';
+                 if(strlen($services[0]->description) > 150) {
+                  $html.='<a class="" data-bs-toggle="modal" data-bs-target="#read-desc" id="readdesc" data-id="'.$services[0]->id.'" style="margin-left:80px;color:#000;">Read More</a>';
+                  }
+                $html.='</div>
                  <a class="btn add-btn-yellow w-100 p-3 mb-3" data-bs-toggle="modal" data-bs-target="#create-tickets" id="createtickets" data-id="'.$services[0]->id.'">Create a Quote</a>
                 <a class="btn btn-edit w-100 p-3" data-bs-toggle="modal" data-bs-target="#edit-services" id="editService" data-id="'.$services[0]->id.'">Edit</a>
               </div>
@@ -724,7 +729,7 @@ class ServicesController extends Controller
      
   }
 
-  public function create_service_address(Request $request)
+    public function create_service_address(Request $request)
     {
         $cid = $request->customerid;
         $auth_id = auth()->user()->id;
@@ -734,6 +739,23 @@ class ServicesController extends Controller
         Address::create($data);
         
         return json_encode(['address' =>$request->address]);
+    }
+
+    public function readmoredescservice(Request $request)
+    {
+       $json = array();
+       $auth_id = auth()->user()->id;
+       $services = Service::select('description')->where('id', $request->id)->first();
+      
+      $html ='<div class="add-customer-modal">
+               <h5>Description</h5>
+               </div>';
+       $html .='<div class="row customer-form" id="product-box-tabs-1">
+     <div class="col-md-12 mb-3">'.$services->description.'</div>
+        </div></div>';
+        return json_encode(['html' =>$html]);
+        die;
+       
     }
 
     
