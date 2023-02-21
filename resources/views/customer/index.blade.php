@@ -573,7 +573,7 @@ a.yelloIcon {
             <label>Choose Color</label><br>
             <span class="color-picker">
               <label for="colorPicker">
-                <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
+                <input type="color" value="#faed61" id="colorPicker" name="colorcode" style="width:235px;">
               </label>
             </span>
           </div>
@@ -684,7 +684,7 @@ a.yelloIcon {
             <label>Choose Color</label><br>
             <span class="color-picker">
               <label for="colorPicker">
-                <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
+                <input type="color" value="#faed61" id="colorPicker" name="colorcode" style="width:235px;">
               </label>
             </span>
           </div>

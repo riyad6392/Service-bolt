@@ -110,7 +110,14 @@ label.credit img {
   <label>Invoice Header Color</label><br>
   <span class="color-picker">
     <label for="colorPicker">
-      <input type="color" value="{{$userData->color}}" id="colorPicker" name="color" style="width:235px;">
+      @php
+        if($userData->color!=null) {
+          $usrheadercolor = $userData->color;
+        } else {
+          $usrheadercolor = "#faed61";
+        }
+      @endphp
+      <input type="color" value="{{$usrheadercolor}}" id="colorPicker" name="color" style="width:235px;">
     </label>
   </span>
 </div>
@@ -118,7 +125,14 @@ label.credit img {
   <label>Invoice Text Color</label><br>
   <span class="color-picker">
     <label for="colorPicker">
-      <input type="color" value="{{$userData->txtcolor}}" id="txtcolorPicker" name="txtcolor" style="width:235px;">
+      @php
+        if($userData->txtcolor!=null) {
+          $usrtxtcolorcolor = $userData->txtcolor;
+        } else {
+          $usrtxtcolorcolor = "#000";
+        }
+      @endphp
+      <input type="color" value="{{$usrtxtcolorcolor}}" id="txtcolorPicker" name="txtcolor" style="width:235px;">
     </label>
   </span>
 </div>

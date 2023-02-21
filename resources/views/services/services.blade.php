@@ -238,7 +238,7 @@ i.fa.fa-plus.true-condition {
         
         @endphp
         <div class="row customer-form" id="product-box-tabs">
-          <div class="col-md-11 mb-2 ">
+          <div class="col-md-12 mb-2 ">
             <input type="text" class="form-control mt-2 mb-1" placeholder="Service Name" name="servicename" id="servicename" required="">
           </div>
           <div class="col-md-12 mb-2 position-relative">
@@ -297,7 +297,7 @@ i.fa.fa-plus.true-condition {
             <label>Choose Color</label><br>
             <span class="color-picker">
               <label for="colorPicker">
-                <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
+                <input type="color" value="#faed61" id="colorPicker" name="colorcode" style="width:235px;">
               </label>
             </span>
           </div>
