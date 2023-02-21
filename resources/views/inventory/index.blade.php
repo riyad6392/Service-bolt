@@ -275,13 +275,13 @@ i.fa.fa-plus.second.yellow-icon1 {
 	   <a id="Array_name" class="add_fields">+ Add more services</a>
 	   </div> -->
 	   <div class="col-md-6 mb-3">
-	   <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" data-parsley-required="true">
+	   <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" data-parsley-required="true" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
 	  
 	   
 	   </div>
 	   <div class="col-md-6 mb-3">
 	  
-	   <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" data-parsley-required="true">
+	   <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" data-parsley-required="true" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
 	   
 	   </div>
 	   

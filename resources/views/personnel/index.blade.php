@@ -230,7 +230,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	   
 	   <div class="col-md-12 mb-3">
 	   
-	   <input type="text" class="form-control" placeholder="Phone Number" name="phone" id="phone" value="{{ old('phone') }}" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
+	   <input type="text" class="form-control" placeholder="Phone Number" name="phone" id="phone" value="{{ old('phone') }}" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false" maxlength="12">
 	   
 	   </div>
     <div class="col-lg-6 mb-3" style="display:none;visibility: hidden;">

@@ -959,7 +959,7 @@ a.addnew {
             </div>
             <div class="col-md-12 mb-3">
               <div class="d-flex align-items-center">
-                <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+                <select class="selectpickerc form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
                   @foreach ($services as $service)
                   <option value="{{$service->id}}">{{$service->servicename}}</option>
                   @endforeach
@@ -1195,13 +1195,13 @@ a.addnew {
             </div>
 
             <div class="col-md-6 mb-3">
-              <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
+              <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
 
 
             </div>
             <div class="col-md-6 mb-3">
 
-              <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="">
+              <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
 
             </div>
 
@@ -2156,5 +2156,6 @@ $('#createserviceticket').on('submit', function(event) {
             }
         })
     });
+    $(".selectpickerc").selectpicker();
  </script>
 @endsection

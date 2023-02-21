@@ -309,7 +309,7 @@ class PersonnelController extends Controller
           <label class="mb-2">Phone</label>
              <div class="input_fields_wrap">
                 <div class="mb-3">
-                  <input type="text" class="form-control" placeholder="Phone Number" name="phone" id="phone" value="'.$personnel[0]->phone.'" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false">
+                  <input type="text" class="form-control" placeholder="Phone Number" name="phone" id="phone" value="'.$personnel[0]->phone.'" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" onpaste="return false" maxlength="12">
                 </div>
             </div>
           </div>

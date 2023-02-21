@@ -1538,13 +1538,13 @@ select#servicename {
        </div>
     
     <div class="col-md-6 mb-3">
-     <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
+     <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
     
      
      </div>
      <div class="col-md-6 mb-3">
     
-     <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="">
+     <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
      
      </div>
      
@@ -1610,13 +1610,13 @@ select#servicename {
        </div>
     
     <div class="col-md-6 mb-3">
-     <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="">
+     <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
     
      
      </div>
      <div class="col-md-6 mb-3">
     
-     <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="">
+     <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
      
      </div>
      
@@ -2951,6 +2951,8 @@ $(document).on('click','.btn-close',function(e) {
 $(document).on('click','.btn-cancel',function(e) {
 	//location.reload();
 });
+$("#time10").val(1);
+$("#minute10").val(0);
 
 </script>
 @endsection

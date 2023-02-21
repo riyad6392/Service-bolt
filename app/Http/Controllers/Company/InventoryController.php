@@ -153,11 +153,11 @@ class InventoryController extends Controller
           </div>
        <div class="col-md-6 mb-3">
         <label>Quantity</label>
-        <input type="text" class="form-control" placeholder="Quantity" value="'.$inventory[0]->quantity.'" name="quantity" id="quantity" data-parsley-required="true">
+        <input type="text" class="form-control" placeholder="Quantity" value="'.$inventory[0]->quantity.'" name="quantity" id="quantity" data-parsley-required="true" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
        </div>
        <div class="col-md-6 mb-3">
       <label>Preferred Quantity</label>
-      <input type="text" class="form-control" placeholder="Preferred Quantity" value="'.$inventory[0]->pquantity.'" name="pquantity" id="pquantity" data-parsley-required="true">
+      <input type="text" class="form-control" placeholder="Preferred Quantity" value="'.$inventory[0]->pquantity.'" name="pquantity" id="pquantity" data-parsley-required="true" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
      </div>
      <div class="col-md-6 mb-3">
       <label>SKU</label>

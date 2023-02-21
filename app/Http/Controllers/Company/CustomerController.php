@@ -1118,7 +1118,7 @@ class CustomerController extends Controller
                 $html .='<option value="'.$value->id.'" '.@$selectedp.'>'.$value->servicename.'</option>';
               }
         $html .='</select>
-          <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          <div class="d-flex align-items-center justify-content-end ms-3">
             <a class="add-person" href="#"  data-bs-toggle="modal" data-bs-target="#edit-services" class="add-coustomar" id="hidequote"><i class="add-coustomar fa fa-plus"></i></a>
           </div>
           </div>
@@ -1138,7 +1138,7 @@ class CustomerController extends Controller
             $html .='<option value="'.$value->id.'" '.@$selectedp1.'>'.$value->productname.'</option>';
           }
         $html .='</select>
-          <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+          <div class="d-flex align-items-center justify-content-end ms-3">
             <a class="add-person" href="#"  data-bs-toggle="modal" data-bs-target="#edit-products" class="add-coustomar" id="hidequote"><i class="add-coustomar fa fa-plus"></i></a>
           </div>
           </div>
