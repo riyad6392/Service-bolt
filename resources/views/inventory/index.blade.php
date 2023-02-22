@@ -9,6 +9,9 @@
     margin: 10px;
     overflow-y: scroll;
 }
+.show {
+	display: block;
+}
 .modal-ul-box li {
     list-style: none;
     margin: 14px;
@@ -425,7 +428,7 @@ i.fa.fa-plus.second.yellow-icon1 {
       <div class="modal-body">
       <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add a new Service</h5>
-     <button type="button" class="btn-close" aria-label="Close" id="serviceclose"></button>
+     <!-- <button type="button" class="btn-close" aria-label="Close" id="serviceclose"></button> -->
 
      </div>
         @php
@@ -544,7 +547,7 @@ i.fa.fa-plus.second.yellow-icon1 {
      <div class="add-customer-modal d-flex justify-content-between align-items-center">
      <h5>Add a new category</h5>
      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-     <button type="button" class="btn-close" aria-label="Close" id="categoryclose"></button>
+     <!-- <button type="button" class="btn-close" aria-label="Close" id="categoryclose"></button> -->
      </div>
      
      
@@ -977,14 +980,15 @@ function readURL(input) {
   $("#serviceclose").click(function() {
   	$("#add-services").hide();
   	$("#add-product").show();
+  	$('#add-services').removeClass('show');
   });
   $("#serviceclose1").click(function() {
   	$("#add-services").hide();
   	$("#add-product").show();
   });
   $("#hidequoteservice").click(function() {
-  	$("#add-services").show();
-  	//$("#add-product").hide();
+  	//$("#add-services").css('display','block');
+  	$('#add-services').addClass('show');
   });
   $("#categoryclose").click(function() {
   	$("#add-category").hide();

@@ -170,7 +170,8 @@ Route::group([
     Route::any('/customer/vieweditaddressmodal', [CustomerController::class, 'vieweditaddressmodal'])->name('vieweditaddressmodal');
 
     Route::any('/customer/vieweditnotemodal', [CustomerController::class, 'vieweditnotemodal'])->name('vieweditnotemodal');
-
+    Route::any('/customer/duplicateaddress', [CustomerController::class, 'duplicateaddress'])->name('duplicateaddress');
+    
 
     Route::any('/customer/updateaddress', [CustomerController::class, 'updateaddress'])->name('updateaddress');
     Route::any('/customer/updatenotes', [CustomerController::class, 'updatenotes'])->name('updatenotes');

@@ -111,20 +111,7 @@
   </tbody>
 </table>
 <div class="table-responsive">
-    <table class="table table-striped no-wrap table-new table-list align-items-center" style="width: 100%;background: #a4a0a0;">
-    <thead style="width: 100%; background-color: #ccc;padding: 12px;">
-        <tr>
-            <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">Item</th>
-            <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">DESCRIPTION</th>
-            <th style="font-size: 13px;border-bottom: 1px solid #ccc;">QTY</th>
-            <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">PRICE</th>
-            <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">TAX</th>
-            <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">AMOUNT</th>
-        </tr>
-    </thead>
-    <tbody style="padding: 12px; text-align: center;">
-        @php
-            
+    @php
       $servicedetails = App\Models\Service::select('servicename','price','description')
     ->whereIn('id', $serviceid)->get();
 
@@ -188,6 +175,22 @@
 
       $i=0;
         @endphp
+    <table class="table table-striped no-wrap table-new table-list align-items-center" style="width: 100%;background: #a4a0a0;">
+    <thead style="width: 100%; background-color: #ccc;padding: 12px;">
+        <tr>
+            <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">Item</th>
+            <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">DESCRIPTION</th>
+            <th style="font-size: 13px;border-bottom: 1px solid #ccc;">QTY</th>
+            <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">PRICE</th>
+            @if($taxprice=="0.00")
+            @else
+            <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">TAX</th>
+            @endif
+            <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">AMOUNT</th>
+        </tr>
+    </thead>
+    <tbody style="padding: 12px; text-align: center;">
+       
     @foreach($servicedetails as $key => $value)
         @php
         
@@ -202,6 +205,9 @@
                 $txtpercentage = 0;
             }
         }  
+        if($txtpercentage==null) {
+           $txtpercentage = 0; 
+        }
         @endphp
         @if($i % 2 == 0)
             <tr style="background-color:#fff;">
@@ -212,7 +218,10 @@
         <td style="padding: 15px;width: 50%;text-align: left;">{{ $value['description'] }}</td>
         <td style="padding: 15px;width: 15%;">1</td>
         <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;width: 15%;">{{$txtpercentage}}%</td>
+        @if($taxprice=="0.00")
+        @else
+            <td style="padding: 15px;width: 15%;">{{$txtpercentage}}%</td>
+        @endif
         <td style="padding: 15px;width: 15%;">${{ number_format((float)$value['price'] + (float)$txvalue, 2, '.', '') }}</td>
     </tr>
     @php
@@ -235,6 +244,9 @@
                 $txtpercentage1 = 0;
             }
         }
+        if($txtpercentage1==null) {
+           $txtpercentage1 = 0; 
+        }
     @endphp
         @if($i % 2 == 0)
             <tr style="background-color:#fff;">
@@ -245,7 +257,10 @@
         <td style="padding: 15px;width: 50%;text-align: left;">{{ $value['description'] }}</td>
         <td style="padding: 15px;width: 15%;">1</td>
         <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
-        <td style="padding: 15px;width: 15%;">{{$txtpercentage1}}%</td>
+        @if($taxprice=="0.00")
+        @else
+            <td style="padding: 15px;width: 15%;">{{$txtpercentage1}}%</td>
+        @endif
         <td style="padding: 15px;width: 15%;">${{ number_format((float)$value['price'] + (float)$txvalue1, 2, '.', '') }}</td>
     </tr>
     @php
@@ -267,7 +282,10 @@
         </td>
         <td style="width: 34%;padding: 0px 12px;background-color: {{$color}}; border-radius: 10px;">
         <p style="border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">Subtotal: {{$subtotalprice}}</p>
+        @if($taxprice==0.00)
+        @else
         <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">Sales Tax: {{$taxprice}}</p>
+        @endif
         <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Total: ${{ $totalprice }}</p>
         </td> 
     </tr>

@@ -1419,11 +1419,33 @@ class SchedulerController extends Controller
         $minute =  explode(" ", $quotedetails[0]->minute);
 
         $address = Address::select('id','address')->where("customerid",$quotedetails[0]->customerid)->get();
-
+        $userData = User::select('openingtime','closingtime')->where('id',$auth_id)->first();
+        if($userData->openingtime!="" || $userData->openingtime!=null) {
+            if($userData->openingtime<$userData->closingtime) {
+              $mintime = $userData->openingtime;
+              $maxtime = $userData->closingtime;
+              } else {
+              $maxtime = $userData->openingtime;
+              $mintime = $userData->closingtime;
+              }
+              $mintime = date('h a', strtotime($mintime.':00'));
+              $maxtime = date('h a', strtotime($maxtime.':00'));
+              } else {
+              $mintime= "12 am";
+              $maxtime= "11 pm";
+              }
+              $inc = 30 * 60;
+              $start = (strtotime($mintime));
+              $end = (strtotime($maxtime));
        $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
-       <h5>Edit</h5>
-       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-       </div>';
+       <h5>Edit</h5>';
+       if($quotedetails[0]->ticket_status==1) {
+         $html .='<button class="btn-close" type="button" onclick="refreshPage()"></button>';
+       } else {
+         $html .='<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+       }
+      
+       $html .='</div>';
        $html .='<input type="hidden" name="tickettotal" id="tickettotal" value="'.$quotedetails[0]->tickettotal.'"><div class="row customer-form" id="product-box-tabs">
        <input type="hidden" value="'.$request->id.'" name="quoteid">
           <div class="col-md-12 mb-2">
@@ -1477,9 +1499,33 @@ class SchedulerController extends Controller
                     $html .='<option value="'.$value->id.'" data-price="'.$value->price.'" '.@$selectedp1.'>'.$value->productname.'</option>';
                   }
             $html .='</select>
-          </div>
+          </div>';
+          if($quotedetails[0]->ticket_status==1) {
+            $html .='<div class="col-md-12 mb-3">
+                <label>Select Personnel</label>
+              <select class="form-select" name="personnelid" id="personnelid">
+                <option selected="" value="">Select Personnel</option>';
+                foreach($allworker as $key => $value) {
+                    $html .='<option value="'.$value->id.'">'.$value->personnelname.'</option>';
+                }
+            $html .='</select></div>
+            <div class="form-group col-md-6 mb-3 timeschedule" style="display:none;">
+                <label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
+                <select class="form-control selectpickertime" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="time" style="height:auto;">';
+                  for($i = $start; $i <= $end; $i +=$inc) {
+                    $range=date( 'h:i a' , $i);
+                    $html .='<option value="'.$range.'">'.$range.'</option>';
+                  }
+                  $html .='</select>
+              </div>
+              <div class="col-md-6 mb-3 date" style="display:none;">
+                <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
+                <input type="date" class="form-control etc" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;">
+              </div>';
+          }
+        
 
-          <div class="col-md-12 mb-2">
+          $html .='<div class="col-md-12 mb-2">
             <div class="align-items-center justify-content-lg-between d-flex services-list">
                <p>
                 <input type="radio" id="test4" name="radiogroup" value="perhour" '.@$checked.'>
@@ -1528,11 +1574,17 @@ class SchedulerController extends Controller
              <label>Description</label>
              <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required>'.$quotedetails[0]->description.'</textarea>
            </div>';
-
+           if($quotedetails[0]->ticket_status==1) {
+            $html .= '<div class="col-lg-6 mb-2">
+            <button class="btn btn-cancel btn-block" type="button" onclick="refreshPage()">Cancel</button>
+          </div>';
+      } else {
+          
           $html .= '<div class="col-lg-6 mb-2">
             <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
-          </div>
-          <div class="col-lg-6">
+          </div>';
+      }
+          $html .= '<div class="col-lg-6">
             <button type="submit" class="btn btn-add btn-block">Update</button>
           </div>
         </div>';
@@ -1672,6 +1724,56 @@ class SchedulerController extends Controller
 
       $quote->latitude = $latitude;
       $quote->longitude = $longitude;
+
+    if($quote->ticket_status == 1) {
+        if($request->time == null || $request->time == "" || $request->time == 00 || $request->time == 0) {
+        $hours = 0;
+          } else {
+              $hours = preg_replace("/[^0-9]/", '', $request->time);    
+          }
+
+          if($request->minute == null || $request->minute == "" || $request->minute == 00 || $request->minute == 0) {
+              $minutes = 0;
+          } else {
+              $minutes = preg_replace("/[^0-9]/", '', $request->minute);    
+          }
+        if($request->personnelid!="") {
+          //display the converted time
+          $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->giventime)));
+          $time = $request->giventime;
+         
+            $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
+            $newdate = $request->date;
+
+          
+          /*Get Dayclose time*/
+            $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+            $dayclosetime =$closingtime->closingtime;
+
+            $tstarttime = explode(':',$time);
+            $ticketstarttime = $tstarttime[0];
+            $ticketdifferncetime = $dayclosetime - $ticketstarttime;
+            // echo $ticketdifferncetime; die;
+            $givenenddate = $newdate;
+            if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
+                if($hours > $ticketdifferncetime) {
+                    $nextdaytime = $hours - $ticketdifferncetime; 
+                    //echo $nextdaytime; die;
+                    $givenenddate = $this->getenddatecalculation($newdate,$nextdaytime);
+                } else {
+                    $givenenddate = $newdate; 
+                }
+            }
+          $quote->giventime = $time;
+          $quote->givenendtime = $endtime;
+          $quote->givendate = $date;
+          $quote->givenstartdate = $request->date;
+          $quote->givenenddate = $givenenddate;
+          $quote->ticket_status = 2;
+          $quote->primaryname = $request->personnelid;
+        }
+      }
+
 
       $quote->save();
     }

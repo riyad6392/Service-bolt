@@ -404,7 +404,7 @@ class CustomerController extends Controller
    event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required>
      </div><div class="col-md-12 mb-3">
      <label style="position: relative;left: 12px;margin-bottom: 11px;">ETC</label>
-      <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;" required>
+      <input type="date" value="" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;" required>
      </div><div class="col-md-12 mb-3">
       <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required></textarea>
      </div> <div class="col-lg-6 mb-3">
@@ -1411,6 +1411,20 @@ class CustomerController extends Controller
           </div>
         </div>';
         return json_encode(['html' =>$html]);
+          die;
+    }
+
+    public function duplicateaddress(Request $request)
+    {
+      $json = array();
+      
+      $addressinfo = Address::where('customerid',$request->cid)->where('address',$request->address)->get();
+        if(count($addressinfo) >=1 ) {
+          $duplicateaddress = 1;
+        } else {
+          $duplicateaddress = 0;
+        }
+        return json_encode(['duplicateaddress' =>$duplicateaddress]);
           die;
     }
 }

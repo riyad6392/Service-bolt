@@ -121,7 +121,7 @@ i.fa.fa-plus.third {
   </div>
   <div class="col-lg-3 offset-lg-1 mb-3">
     <!-- <button class="btn btn-add btn-block" type="submit">Add Address</button> -->
-    <a class="btn btn-add btn-block" data-bs-toggle="modal" data-bs-target="#add-note" id="addnote" style="padding: 10px; width:max-content; height:unset; ">Add Address</a>
+    <a class="btn btn-add btn-block" data-bs-toggle="modal" data-bs-target="#add-note" id="addnote" data-id="{{@$customerData[0]->id}}" style="padding: 10px; width:max-content; height:unset; ">Add Address</a>
   </div>
 </form>
 
@@ -695,6 +695,11 @@ $(document).on('click','#createctickets',function(e) {
         })
   });
 
+ $(document).on('change','#date',function(e) {
+    var datev = $("#date").val();
+    $("#etc").val(datev);
+ });
+
 $(document).on('click','#addnote',function(e) {
   var address = $("#saddress").val();
   if(address=="") {
@@ -714,7 +719,38 @@ $(document).on('click','#addnote',function(e) {
         }
       }
     )
-    }    
+    }
+    var cid = $(this).data('id');
+    $.ajax({
+            url:'{{route('company.duplicateaddress')}}',
+            data: {
+              'cid':cid,
+              'address':address,
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              if(data.duplicateaddress == 1) {
+                swal({
+                    title: "Duplicate Address",
+                    text: "This address already exist!",
+                    type: "warning",
+                    showCancelButton: false,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "ok",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                  },
+                  function (isConfirm) {
+                    if (isConfirm) {
+                      location.reload();
+                    }
+                  }
+                )
+              }
+            }
+        })    
 });
  $(document).on('click','#editnote',function(e) {
    $('.selectpicker').selectpicker();
