@@ -986,7 +986,7 @@ select#servicename {
 	   
 	   <div class="col-md-12 mb-3">
 	   	<label style="position: relative;left: 12px;margin-bottom: 11px;">ETC</label>
-	   <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;" required>
+	   <input type="date" value="" class="form-control etc" placeholder="ETC" name="etc" id="etc1" onkeydown="return false" style="position: relative;" required>
 	   </div>
 	   <div class="col-md-12 mb-3">
 		   <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required></textarea>
@@ -2953,6 +2953,11 @@ $(document).on('click','.btn-cancel',function(e) {
 });
 $("#time10").val(1);
 $("#minute10").val(0);
+
+$('#date').change(function() {
+	var datev = $("#date").val();
+    $("#etc1").val(datev);
+}); 
 
 </script>
 @endsection

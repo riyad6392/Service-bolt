@@ -2157,9 +2157,13 @@ $('#createserviceticket').on('submit', function(event) {
         })
     });
     $(".selectpickerc").selectpicker();
-    
+
     function refreshPage() {
         window.location.reload();
-    } 
+    }
+    $(document).on('change','#date',function(e) {
+        var datev = $("#date").val();
+        $("#etc").val(datev);
+    }); 
  </script>
 @endsection
