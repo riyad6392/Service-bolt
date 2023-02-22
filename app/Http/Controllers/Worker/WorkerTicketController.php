@@ -503,11 +503,10 @@ class WorkerTicketController extends Controller
           
           $newimagestring = implode(',',$files);
           // $ticket->imagelist = $newimagestring;
-        
           // $ticket->save();
           DB::table('quote')->where('id','=',$request->ticketid)->orWhere('parentid','=',$request->ticketid)
           ->update([ 
-              "checklist"=>"$checklist","customernotes"=>"$customernotes","imagelist"=>"$newimagestring"
+              "checklist"=>"$checklist","customernotes"=>"$request->cnotes","imagelist"=>"$newimagestring"
           ]);
 
           $request->session()->flash('success', 'Updated successfully');
