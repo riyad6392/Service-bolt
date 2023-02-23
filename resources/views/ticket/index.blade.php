@@ -565,7 +565,9 @@ select#servicename {
 		<td>{{$payment_status}} ({{$paid_status}})</td>
 	  <td><a class="btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$ticket->id}}" style="display: none;">View</a>
 	  	<a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" class="btn btn-edit p-2 w-auto">View</a>
-	  	<a class="btn btn-edit p-2 w-auto repoenticket" data-id="{{$ticket->id}}">Reopen</a>
+	  	@if($ticket->payment_mode==null)
+	  		<a class="btn btn-edit p-2 w-auto repoenticket" data-id="{{$ticket->id}}">Reopen</a>
+	  	@endif
 	 </td>
 	 </tr>
 	  	@php
@@ -2151,28 +2153,47 @@ $('#serviceform').on('submit', function(event) {
    $(".repoenticket").click(function() {
    		var id = $(this).data('id');
    		var name="reopen";
-   		$.ajax({
-            url:"{{url('company/quote/updateticket')}}",
-            data: {
-              quoteid: id,
-              name: name 
-            },
-            method: 'post',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-            	
-            	swal({
-		            title: "Success!",
-		            text: "The ticket has been reopen Successfully!",
-		            type: "success"
-		        }, function() {
-		            location.reload();
-		        });
-            	
-              
-            }
-        })
+   		swal({
+	      title: "Are you sure?",
+	      text: "Are you sure you want to reopen this ticket!",
+	      type: "warning",
+	      showCancelButton: true,
+	      confirmButtonColor: "#DD6B55",
+	      confirmButtonText: "Yes, reopen it!",
+	      cancelButtonText: "No!",
+	      closeOnConfirm: false,
+	      closeOnCancel: false
+	    },
+    function (isConfirm) {
+      if (isConfirm) {
+       $.ajax({
+        url:"{{url('company/quote/updateticket')}}",
+        data: {
+          quoteid: id,
+          name: name 
+        },
+        method: 'post',
+        dataType: 'json',
+        refresh: true,
+        success:function(data) {
+          
+          swal({
+            title: "Success!",
+            text: "The ticket has been reopen Successfully!",
+            type: "success"
+        }, function() {
+            location.reload();
+        });
+          
+          
+        }
+    })
+      } 
+      else {
+        location.reload(); //swal("Cancelled", "Your customer is safe :)", "error");
+      }
+    }
+  );
 	});
   
   $(document).on('click','#createtickets',function(e) {

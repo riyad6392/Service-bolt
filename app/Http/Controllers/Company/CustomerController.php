@@ -39,7 +39,8 @@ class CustomerController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index(Request $request)
-    {
+    {   
+        $qstring = $request->get('q');
         $auth_id = auth()->user()->id;
         if(auth()->user()->role == 'company') {
             $auth_id = auth()->user()->id;
@@ -48,8 +49,11 @@ class CustomerController extends Controller
         }
         $services = Service::where('userid', $auth_id)->get();
         $products = Inventory::where('user_id', $auth_id)->get();
-        
-        $customerData = Customer::where('userid',$auth_id)->get();
+        if($qstring!="") {
+          $customerData = Customer::where('customername', 'LIKE', '%'. $qstring. '%')->where('userid',$auth_id)->get();
+        } else {
+          $customerData = Customer::where('userid',$auth_id)->get();
+        }
         $customerAddress = Address::where('authid',$auth_id)->get();
           
          $table="customer";

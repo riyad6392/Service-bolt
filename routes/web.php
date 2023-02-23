@@ -133,7 +133,7 @@ Route::group([
     Route::get('/payment', [CompanyHomeController::class, 'payment'])->name('payment');
     Route::get('/aggrement', [CompanyHomeController::class, 'aggrement'])->name('aggrement');
     Route::get('/agreements', [CompanyHomeController::class, 'agreements'])->name('agreements');
-
+    Route::get('home/autocomplete', [CompanyHomeController::class, 'search'])->name('autocomplete');
 
     Route::any('/home/mapdata', [CompanyHomeController::class, 'mapdata'])->name('homemapdata');
 

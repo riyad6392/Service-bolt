@@ -11,6 +11,8 @@ use Cache;
 use App\Models\Inventory;
 use App\Models\Quote;
 use App\Events\SendLocation;
+use App\Models\Customer;
+use App\Models\Address;
 
 class HomeController extends Controller
 {
@@ -235,5 +237,21 @@ class HomeController extends Controller
 
     public function agreements(Request $request) {
         return view('company.agreements');
+    }
+
+    public function search(Request $request)
+    {
+      $auth_id = auth()->user()->id;
+
+      $search = $request->get('query');
+  
+      $result = Customer::where('customername', 'LIKE', '%'. $search. '%')->where('userid',$auth_id)->get();
+
+     // $addressdata =Address::select('customerid')->where('address', 'LIKE', '%'. $search. '%')->where('authid',$auth_id)->get();
+
+     // $result = Customer::select('customername')->whereIn('id', $addressdata)->get();
+      // $result = Customer::select('customer.id','customer.customername','adds.address')->orWhere('customer.customername', 'LIKE', '%'. $search. '%')->leftjoin('address as adds', 'adds.customerid', '=', 'customer.id')->orWhere('adds.address', 'LIKE', '%'. $search. '%')->groupBy('adds.customerid')->get();
+
+      return response()->json($result);
     }
 }
