@@ -1068,9 +1068,9 @@ function initMap() {
             //return item.id+'==>'+item.customername;
         },
         emptyTemplate: "No Result Found",
-        display: ["id","customername"],
+        display: ["id","customername","address"],
         source: {
-            item: [ {name: "id"}],
+            item: [ {name: "customername"}],
             ajax: function (query) {
                 return {
                     type: "GET",

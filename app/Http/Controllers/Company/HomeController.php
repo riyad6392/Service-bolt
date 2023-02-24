@@ -245,13 +245,22 @@ class HomeController extends Controller
       $auth_id = auth()->user()->id;
 
       $search = $request->get('query');
-  
-      $result = Customer::where('customername', 'LIKE', '%'. $search. '%')->where('userid',$auth_id)->get();
-      
-     // $addressdata =Address::select('customerid')->where('address', 'LIKE', '%'. $search. '%')->where('authid',$auth_id)->get();
+      //$result1 = array();
+     //  $result1 = Customer::select('customer.id as cid')->where('customername', 'LIKE', '%'. $search. '%')->where('userid',$auth_id)->groupBy('customer.id')->get()->toArray();
 
+      
+     //  $result2 = Address::select('address.customerid as aid')->where('address', 'LIKE', '%'. $search. '%')->where('authid',$auth_id)->get()->toArray();
+
+     //  $result = array_merge($result1,$result2);
+     //  //dd($result);
+     // $result = Customer::whereIn('id', $result)->get();
+
+     
+     // $addressdata =Address::select('customerid')->where('address', 'LIKE', '%'. $search. '%')->where('authid',$auth_id)->get();
+      //echo $auth_id; die;
      // $result = Customer::select('customername')->whereIn('id', $addressdata)->get();
-      // $result = Customer::select('customer.id','customer.customername','adds.address')->orWhere('customer.customername', 'LIKE', '%'. $search. '%')->leftjoin('address as adds', 'adds.customerid', '=', 'customer.id')->orWhere('adds.address', 'LIKE', '%'. $search. '%')->groupBy('adds.customerid')->get();
+       $result = Customer::select('customer.id','customer.customername','adds.address')->orWhere('customer.customername', 'LIKE', '%'. $search. '%')->join('address as adds', 'adds.customerid', '=', 'customer.id')->orWhere('adds.address', 'LIKE', '%'. $search. '%')->where('customer.userid',$auth_id)->orWhere('adds.authid',$auth_id)->groupBy('adds.customerid')->get();
+       //dd($result);
 
       return response()->json($result);
     }
