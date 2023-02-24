@@ -1085,7 +1085,8 @@ function initMap() {
         callback: {
             onClickAfter:function(param1, param2, node, a, item, event){
                 //GetAccountData(node.id);
-                window.location.href="customer?q="+node.customername;
+                //window.location.href="customer?q="+node.customername;
+                window.location.href="{{ route('company.customer') }}?q="+node.customername;
                 return false;
             },
         }
