@@ -564,7 +564,7 @@ select#servicename {
 		@endforeach</td>
 		<td>{{$payment_status}} ({{$paid_status}})</td>
 	  <td><a class="btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$ticket->id}}" style="display: none;">View</a>
-	  	<a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" class="btn btn-edit p-2 w-auto">View</a>
+	  	<a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" class="btn btn-edit p-2 w-auto" target="_blank">View</a>
 	  	@if($ticket->payment_mode==null)
 	  		<a class="btn btn-edit p-2 w-auto repoenticket" data-id="{{$ticket->id}}">Reopen</a>
 	  	@endif

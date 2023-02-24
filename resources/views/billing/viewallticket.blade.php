@@ -104,6 +104,7 @@
         <th>Invoice Id</th>
         <th>Date</th>
         <th>Customer Name</th>
+        <th>Service Address</th>
         <th>Personnel Name</th>
         <th>Amount</th>
         <th>Payment status</th>
@@ -136,6 +137,7 @@
           <td><a class="btn add-btn-yellow w-100 viewinvoice" data-id="{{$value->id}}" data-duedate="{{$value->duedate}}" data-invoicenote="{{$value->invoicenote}}" data-bs-toggle="modal" data-bs-target="#view-invoice">#{{$value->invoiceid}}</a></td>
           <td>{{date('m-d-Y', strtotime($value->date))}}</td>
           <td>{{$value->customername}}</td>
+          <td>{{$value->address}}</td>
           <td>{{$value->personnelname}}</td>
           <td>{{$value->price}}</td>
           <td>{{$pstatus}}</td>
@@ -183,7 +185,7 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
       <div class="modal-body">
-        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data">
+        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data" target="_blank">
           @csrf
           <div id="viewdueinvoicemodaldata"></div>
         </form>

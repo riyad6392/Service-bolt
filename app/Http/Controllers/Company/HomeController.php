@@ -93,8 +93,9 @@ class HomeController extends Controller
         $serviceinfo = DB::table('quote')
                  ->select('quote.serviceid','services.servicename','services.color', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
                  ->orderBy('total','DESC')
-                 ->groupBy('quote.serviceid')
+                 ->groupBy('quote.servicename')
                  ->get();
+                 //dd($serviceinfo);
         $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->where('quote.ticket_status','4')->orderBy('quote.id','ASC')->get();
 
         $completedticketcount = DB::table('quote')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->whereDate('quote.created_at', Carbon::today())->count();
@@ -246,7 +247,7 @@ class HomeController extends Controller
       $search = $request->get('query');
   
       $result = Customer::where('customername', 'LIKE', '%'. $search. '%')->where('userid',$auth_id)->get();
-
+      
      // $addressdata =Address::select('customerid')->where('address', 'LIKE', '%'. $search. '%')->where('authid',$auth_id)->get();
 
      // $result = Customer::select('customername')->whereIn('id', $addressdata)->get();

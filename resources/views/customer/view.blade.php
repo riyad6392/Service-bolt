@@ -368,7 +368,7 @@ i.fa.fa-plus.third {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
       <div class="modal-body">
-        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data">
+        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data" target="_blank">
           @csrf
           <div id="viewdueinvoicemodaldata"></div>
         </form>

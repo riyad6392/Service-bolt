@@ -1113,7 +1113,7 @@ class BillingController extends Controller
         }
       
       $totalbillingData = DB::table('quote')
-        ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname','quote.id','quote.price','quote.payment_status','quote.payment_mode','quote.invoiceid','quote.invoiced','quote.duedate','quote.invoicenote','quote.personnelid','quote.primaryname','quote.parentid')
+        ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname','quote.id','quote.price','quote.payment_status','quote.payment_mode','quote.invoiceid','quote.invoiced','quote.duedate','quote.invoicenote','quote.personnelid','quote.primaryname','quote.parentid','quote.address')
         ->join('customer', 'customer.id', '=', 'quote.customerid')
         ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
         ->where('quote.userid',$auth_id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['2','3','4','5'])->where('quote.givenstartdate','!=',null);

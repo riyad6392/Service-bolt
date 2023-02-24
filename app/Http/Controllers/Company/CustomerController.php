@@ -1405,7 +1405,7 @@ class CustomerController extends Controller
           </div>
         <div class="row">
           <div class="col-lg-4 mb-3 mx-auto">
-            <button class="btn btn-add btn-block" type="submit" name="invoicetype" value="viewinvoice">View Invoice</button>
+            <button class="btn btn-add btn-block" type="submit" name="invoicetype" value="viewinvoice" target="_blank">View Invoice</button>
           </div>
           <div class="col-lg-4 mb-3 mx-auto">
             <button class="btn btn-add btn-block" type="submit" name="invoicetype" value="downloadinvoice">Download</button>
