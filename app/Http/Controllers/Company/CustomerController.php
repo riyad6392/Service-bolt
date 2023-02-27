@@ -1346,26 +1346,26 @@ class CustomerController extends Controller
         $app_name = 'ServiceBolt';
         $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
         $cinfo = Customer::select('customername','phonenumber','email','companyname')->where('id',$tdata->customerid)->first();
-        if($cinfo->email!=null) {
-
+        //if($cinfo->email!=null) {
+          $cemail = $request->to;
           $tdata1 = Quote::where('id', $request->ticketid)->get()->first();
           $tdata1->invoiced = 1;
           $tdata1->save();
-          $user_exist = Customer::where('email', $cinfo->email)->first();
+          //$user_exist = Customer::where('email', $cinfo->email)->first();
 
             $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode]);
 
-            Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode], function($message) use ($user_exist,$app_name,$app_email,$pdf) {
-            $message->to($user_exist->email);
+            Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode], function($message) use ($cemail,$app_name,$app_email,$pdf) {
+            $message->to($cemail);
             $message->subject('Invoice PDF!');
             //$message->from($app_email,$app_name);
             $message->attachData($pdf->output(), "invoice.pdf");
           });
 
           return redirect()->back()->withSuccess('Invoice sent');
-        } else {
-          return redirect()->back()->withSuccess('Customer Email id not exist.');
-        }
+        // } else {
+        //   return redirect()->back()->withSuccess('Customer Email id not exist.');
+        // }
       }
     }
 
@@ -1384,6 +1384,9 @@ class CustomerController extends Controller
       }  else {
         $invoicenote = "";
       }
+      $cinfo = Quote::select('customerid')->where('id',$request->id)->first();
+      $cinfoemail = Customer::select('email')->where('id',$cinfo->customerid)->first();
+
       $html ='<div class="add-customer-modal">
                   <h5>Invoice</h5>
                  </div><input type="hidden" name="ticketid" id="ticketid" value="'.$request->id.'">
@@ -1411,7 +1414,49 @@ class CustomerController extends Controller
             <button class="btn btn-add btn-block" type="submit" name="invoicetype" value="downloadinvoice">Download</button>
           </div>
           <div class="col-lg-4 mb-3 mx-auto">
-            <button class="btn btn-add btn-block" type="submit" name="invoicetype" value="sendinvoice">Send to Customer</button>
+            <a class="btn btn-add btn-block sendtocustomer" data-email="'.$cinfoemail->email.'" data-id="'.$request->id.'" data-bs-toggle="modal" data-bs-target="#send-emailinvoice" data-invoicenote='.$invoicenote.' data-duedate='.$duedate.'>Send to Customer</a>
+          </div>
+        </div>';
+        return json_encode(['html' =>$html]);
+          die;
+    }
+
+    public function leftbarviewinvoiceemail(Request $request)
+    {
+      $html ='<div class="add-customer-modal">
+                  <h5>Email Invoice</h5>
+                 </div><input type="hidden" name="ticketid" id="ticketid" value="'.$request->id.'">
+            <div class="col-md-12 mb-2">
+             <div class="input_fields_wrap">
+                <div class="mb-3">
+                  <label>Select Due Date</label>
+                  <input type="date" class="form-control" placeholder="Due Date" name="duedate" id="duedate" value="" style="position:relative;">
+                </div>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2">
+             <div class="input_fields_wrap">
+                <div class="mb-3">
+                  <label>Invoice Notes</label>
+                  <textarea class="form-control height-110" placeholder="Invoice Note" name="description" id="description"></textarea>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2">
+             <div class="input_fields_wrap">
+                <div class="mb-3">
+                  <label>To</label>
+                  <input type="email" class="form-control" placeholder="to" name="to" id="to" value="'.$request->email.'" required="">
+                </div>
+            </div>
+          </div>
+        <div class="row">
+          <div class="col-lg-6 mb-3 mx-auto">
+            <button type="submit" class="btn btn-add btn-block">Send to customer</button>
+          </div>
+          <div class="col-lg-6 mb-3 mx-auto">
+            <button type="button" class="btn btn-cancel btn-block cancelpopup">Cancel</button>
+
           </div>
         </div>';
         return json_encode(['html' =>$html]);

@@ -183,7 +183,7 @@
      
       <div class="modal-body" style="height: auto;overflow-y: auto;">
        
-    <form method="post" action="{{ route('worker.myticketupdate') }}" enctype="multipart/form-data">
+    <form id="uncloseticket" method="post" action="{{ route('worker.myticketupdate') }}" enctype="multipart/form-data">
         @csrf
         <div id="viewmodaldata"></div>
       </form>
@@ -327,6 +327,28 @@ $(document).on('click','.service_list_dot',function(e) {
       }
   })
  });
+$(document).on('click','#unclose',function(e) {
+    swal({
+          title: "Are you sure?",
+          text: "Are you sure you want to unclose this ticket!",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Yes, unclose it!",
+          cancelButtonText: "No!",
+          closeOnConfirm: false,
+          closeOnCancel: false
+        },
+    function (isConfirm) {
+        if (isConfirm) {
+            $( "#uncloseticket" ).submit();
+        } 
+    else {
+        location.reload(); //swal("Cancelled", "Your customer is safe :)", "error");
+      }
+    }
+  );
+});
 </script>
 @endsection
 

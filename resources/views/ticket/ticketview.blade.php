@@ -696,13 +696,16 @@ section.promo_section {
             </div>
         </form>
         <br>
+        @php
+            $cinfo = App\Models\Customer::select('email')->where('id',$quotedetails[0]->customerid)->first();
+        @endphp
         <form class="post-4" method="post" action="{{ route('company.sendticketinvoice') }}" enctype="multipart/form-data">
         @csrf
             <input type="hidden" name="ticketid" id="ticketid" value="{{$quotedetails[0]->id}}">
             <input type="hidden" name="tickettype" id="tickettype" value="sendcustomer">
             <div class="col-md-12">
                 <div>
-                    <button class="btn add-btn-yellow w-50 viewinvoice" type="submit">Send to Customer</button>
+                    <a class="btn add-btn-yellow w-50 sendtocustomer" data-email="{{$cinfo->email}}" data-id="{{$quotedetails[0]->id}}" data-bs-toggle="modal" data-bs-target="#edit-address">Send to Customer</a>
                 </div>
 
             </div>
@@ -714,4 +717,45 @@ section.promo_section {
 
    </div>
  </div>
+ <div class="modal fade" id="edit-address" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+        <form method="post" action="{{ route('company.sendticketinvoice') }}" enctype="multipart/form-data">
+          @csrf
+          <input type="hidden" name="tickettype" id="tickettype" value="sendcustomer">
+          <div id="viewinvoicemodaldata"></div>
+        </form>
+      </div>
+  </div>
+</div>
+</div>
+ @endsection
+ @section('script')
+ <script type="text/javascript">
+    $.ajaxSetup({
+      headers: {
+         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $(document).on('click','.sendtocustomer',function(e) {
+        var id = $(this).data('id');
+        var email = $(this).data('email');
+         $.ajax({
+          url:"{{url('company/billing/leftbarinvoiceemail')}}",
+          data: {
+            id: id,
+            email :email
+          },
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            $('#viewinvoicemodaldata').html(data.html);
+            
+          }
+        });
+       return false;
+    })
+ </script>
  @endsection

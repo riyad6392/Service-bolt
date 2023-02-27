@@ -684,7 +684,12 @@ Map / Directions</a>
     }
     @endphp
       <div class="col-lg-6">
-       <button type="submit" class="btn add-btn-yellow mb-4 w-100" name="unclose" value="unclose" style="{{$sclass}}">Unclose</button>
+        @if($quoteData->payment_mode!="")
+            <button type="button" class="btn add-btn-yellow mb-4 w-100" name="unclose" value="unclose" id="unclose" style="pointer-events: none;background:#fee2002e">Unclose</button>
+        @else
+            <button type="button" class="btn add-btn-yellow mb-4 w-100" name="unclose" value="unclose" id="unclose" style="{{$sclass}}">Unclose</button>
+        @endif
+       
      </div>
   </div>
   @endif
@@ -772,7 +777,7 @@ Map / Directions</a>
 @php
     $addressnote = App\Models\Address::select('notes')->where('customerid',$quoteData->customerid)->where('address',$quoteData->address)->first();
     
-    if($addressnote->notes !=null) {
+    if(@$addressnote->notes !=null) {
         $addressnote = $addressnote->notes;
     } else {
         $addressnote = "--";
@@ -5005,6 +5010,28 @@ Save
 $(".upload-btn").click(function() {
   
   $('input.file[type=file]').trigger('change');
+});
+$("#unclose").click(function() {
+    swal({
+          title: "Are you sure?",
+          text: "Are you sure you want to unclose this ticket!",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Yes, unclose it!",
+          cancelButtonText: "No!",
+          closeOnConfirm: false,
+          closeOnCancel: false
+        },
+    function (isConfirm) {
+        if (isConfirm) {
+            $( "#forminout" ).submit();
+        } 
+    else {
+        location.reload(); //swal("Cancelled", "Your customer is safe :)", "error");
+      }
+    }
+  );
 });
 </script>
 @endsection

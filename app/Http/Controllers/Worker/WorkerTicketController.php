@@ -108,7 +108,7 @@ class WorkerTicketController extends Controller
       if($ticketData->ticket_status=="3") {
         $html .='<button type="submit" class="btn add-btn-yellow w-100 mb-4" name="completed" value="completed" style="pointer-events:none;">Completed</button>';
 
-        $html .='<button type="submit" class="btn add-btn-yellow w-100 mb-4" name="unclose" value="unclose" style="'.$sclass.'">UnClose</button>';
+        $html .='<button type="button" class="btn add-btn-yellow w-100 mb-4" name="unclose" value="unclose" id="unclose" style="'.$sclass.'">UnClose</button>';
       }
 
       
@@ -259,8 +259,8 @@ class WorkerTicketController extends Controller
             $request->session()->flash('success', 'Ticket completed successfully');
             return redirect()->route('worker.myticket');
         }
-
-        if($request->unclose == "unclose") {
+        if($request->Pickup == null) {
+        //if($request->unclose == "unclose") {
           $ticket = Quote::where('id', $request->ticketid)->get()->first();
           $ticket->ticket_status = 4;
           $ticket->save();
@@ -431,8 +431,8 @@ class WorkerTicketController extends Controller
           $request->session()->flash('success', 'Ticket completed successfully');
           return redirect()->back();
         }
-
-        if($request->unclose == "unclose") {
+        if($request->Pickup == null) {
+        //if($request->unclose == "unclose") {
           $ticket = Quote::where('id', $request->ticketid)->get()->first();
           $ticket->ticket_status = 4;
           $ticket->save();
@@ -585,7 +585,7 @@ class WorkerTicketController extends Controller
 
         $addressinfo = Address::select('checklistid')->where('customerid',$cid)->where('address',$quoteData->address)->first();
         $ckinfo = array();
-        if($addressinfo->checklistid!="") {
+        if(@$addressinfo->checklistid!="") {
           $ckids = explode(',',$addressinfo->checklistid);
           $ckinfo = DB::table('checklist')->select('serviceid','checklistname','checklist','userid')->whereIn('serviceid',$ckids)->where('userid',$worker->userid)->groupBy('serviceid')->get();
           if(count($ckinfo)>0) {

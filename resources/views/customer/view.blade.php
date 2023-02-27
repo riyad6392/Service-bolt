@@ -162,6 +162,9 @@ i.fa.fa-plus.third {
   </div>
 </div>
 </div>
+
+
+
 <!-- edit notes modal open -->
 <div class="modal fade" id="edit-note" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -361,6 +364,20 @@ i.fa.fa-plus.third {
      
     </div>
   </div>
+</div>
+
+<div class="modal fade" id="send-emailinvoice" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data">
+          @csrf
+          <input type="hidden" name="invoicetype" id="invoicetype" value="sendinvoice">
+          <div id="viewinvoicemodaldata"></div>
+        </form>
+      </div>
+  </div>
+</div>
 </div>
 
 <!-- Due invoice modal -->
@@ -1090,5 +1107,33 @@ $(document).on('change','#productname',function(e) {
      $("#date").attr('required',true);
     }
   });
+
+  $(document).on('click','.sendtocustomer',function(e) {
+        $("#view-invoice").hide();
+    //$("#send-emailinvoice").hide();
+
+        var id = $(this).data('id');
+        var email = $(this).data('email');
+
+         $.ajax({
+          url:"{{url('company/customer/leftbarviewinvoiceemail')}}",
+          data: {
+            id: id,
+            email :email
+          },
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            $('#viewinvoicemodaldata').html(data.html);
+            
+          }
+        });
+       return false;
+    })
+  $(document).on('click','.cancelpopup',function(e) {
+   location.reload();
+  });
+  
 </script>
 @endsection

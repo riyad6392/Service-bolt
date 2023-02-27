@@ -754,6 +754,29 @@ class BillingController extends Controller
           die;
     }
 
+    public function leftbarinvoiceemail(Request $request)
+    {
+      $json = array();
+      $auth_id = auth()->user()->id;
+         
+      $html ='<div class="add-customer-modal">
+                  <h5>Email Invoice</h5>
+                 </div><input type="hidden" name="ticketid" id="ticketid" value="'.$request->id.'">
+            <div class="col-md-12 mb-2">
+             <div class="input_fields_wrap">
+                <div class="mb-3">
+                  <label>To</label>
+                  <input type="email" class="form-control" placeholder="to" name="to" id="to" value="'.$request->email.'" required="">
+                </div>
+            </div>
+          </div>
+        <div class="col-lg-6 mb-3 mx-auto">
+          <button class="btn btn-add btn-block" type="submit">Send</button>
+        </div>';
+        return json_encode(['html' =>$html]);
+          die;
+    }
+
     public function leftbarviewinvoice(Request $request)
     {
       $json = array();

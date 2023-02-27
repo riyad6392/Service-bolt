@@ -1441,7 +1441,6 @@ class TicketController extends Controller
    
   public function sendticketinvoice(Request $request)
   {
-
     $tdata = Quote::where('id', $request->ticketid)->get()->first();
 
     $cinfo = Customer::select('customername','phonenumber','email','companyname','billingaddress')->where('id',$tdata->customerid)->first();
@@ -1483,22 +1482,22 @@ class TicketController extends Controller
     $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
 
 
-      if($cinfo->email!=null) {
-        $user_exist = Customer::where('email', $cinfo->email)->first();
+      //if($cinfo->email!=null) {
+        $user_email = $request->to;
 
           $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'invoicenote'=>$tdata->customernotes,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode]);
 
-          Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'invoicenote'=>$tdata->customernotes,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode], function($message) use ($user_exist,$app_name,$app_email,$pdf) {
-          $message->to($user_exist->email);
+          Mail::send('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'invoicenote'=>$tdata->customernotes,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode], function($message) use ($user_email,$app_name,$app_email,$pdf) {
+          $message->to($user_email);
           $message->subject('Invoice Details!');
           //$message->from($app_email,$app_name);
           $message->attachData($pdf->output(), "invoice.pdf");
         });
 
         $request->session()->flash('success', 'Invoice sent');
-      } else {
-        $request->session()->flash('success', 'Customer Email id not exist.');
-      }
+      // } else {
+      //   $request->session()->flash('success', 'Customer Email id not exist.');
+      // }
      
      return redirect()->back();
   }

@@ -176,6 +176,8 @@ Route::group([
     Route::any('/customer/updateaddress', [CustomerController::class, 'updateaddress'])->name('updateaddress');
     Route::any('/customer/updatenotes', [CustomerController::class, 'updatenotes'])->name('updatenotes');
     Route::any('/customer/leftbarviewinvoice', [CustomerController::class, 'leftbarviewinvoice'])->name('leftbarviewinvoice');
+    Route::any('/customer/leftbarviewinvoiceemail', [CustomerController::class, 'leftbarviewinvoiceemail'])->name('leftbarviewinvoiceemail');
+
 
     Route::any('/customer/leftbarticketdata', [CustomerController::class, 'leftbarticketdata'])->name('leftbarticketdata');
     Route::any('/customer/deleteAddress', [CustomerController::class, 'deleteAddress'])->name('deleteAddress');
@@ -350,6 +352,8 @@ Route::group([
      Route::any('/billing/savefieldbilling', [BillingController::class, 'savefieldbilling'])->name('savefieldbilling');
 
      Route::any('/billing/leftbarinvoice', [BillingController::class, 'leftbarinvoice'])->name('leftbarinvoice');
+
+     Route::any('/billing/leftbarinvoiceemail', [BillingController::class, 'leftbarinvoiceemail'])->name('leftbarinvoiceemail');
 
      Route::any('/billing/leftbarviewinvoice', [BillingController::class, 'leftbarviewinvoice'])->name('leftbarviewinvoice');
 
