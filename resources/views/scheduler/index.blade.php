@@ -1261,6 +1261,7 @@ a.addnew {
 <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
 <script src="http://localhost/servicebolt/public/js/bootstrap-select.min.js"></script>
+<script src="{{ asset('js/jquery.typeahead.js')}}"></script>
 
 
 <script type="">

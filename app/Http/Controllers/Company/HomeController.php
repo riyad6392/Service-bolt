@@ -259,7 +259,8 @@ class HomeController extends Controller
      // $addressdata =Address::select('customerid')->where('address', 'LIKE', '%'. $search. '%')->where('authid',$auth_id)->get();
       //echo $auth_id; die;
      // $result = Customer::select('customername')->whereIn('id', $addressdata)->get();
-       $result = Customer::select('customer.id','customer.customername','adds.address')->orWhere('customer.customername', 'LIKE', '%'. $search. '%')->join('address as adds', 'adds.customerid', '=', 'customer.id')->orWhere('adds.address', 'LIKE', '%'. $search. '%')->where('customer.userid',$auth_id)->orWhere('adds.authid',$auth_id)->groupBy('adds.customerid')->get();
+       $result = Customer::select('customer.id','customer.customername','adds.address')->orWhere('customer.customername', 'LIKE', '%'. $search. '%')->join('address as adds', 'adds.customerid', '=', 'customer.id')->orWhere('adds.address', 'LIKE', '%'. $search. '%')->where('customer.userid',$auth_id)->orWhere('adds.authid',$auth_id)->get();
+       // ->groupBy('adds.customerid')->groupBy('customer.customername','adds.customerid','adds.address')
        //dd($result);
 
       return response()->json($result);

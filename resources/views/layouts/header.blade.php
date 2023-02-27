@@ -1063,7 +1063,6 @@ function initMap() {
             "background-color": "#fff"
         },
         template: function (query, item) {
-            console.log(item);
             return item.customername;
             //return item.id+'==>'+item.customername;
         },
@@ -1083,10 +1082,10 @@ function initMap() {
             }
         },
         callback: {
-            onClickAfter:function(param1, param2, node, a, item, event){
-                //GetAccountData(node.id);
+            onClickAfter:function(param1, param2, node, a, item, event,query){
                 //window.location.href="customer?q="+node.customername;
-                window.location.href="{{ route('company.customer') }}?q="+node.customername;
+                //window.location.href="{{ route('company.customer') }}/view/"+node.id+"?q="+node.customername;
+                window.location.href="{{ route('company.customer') }}/view/"+node.id;
                 return false;
             },
         }

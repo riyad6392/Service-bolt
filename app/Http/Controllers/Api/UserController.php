@@ -2480,7 +2480,7 @@ class UserController extends Controller
         }
 
         $timeoff = Workertimeoff::whereIn('id',$request->Ids)->where('workerid',auth()->user()->workerid)->delete();
-        return response()->json(['status'=>1,'message'=>'Delete Success'],$this->successStatus);
+        return response()->json(['status'=>1,'message'=>'Deleted Successfully'],$this->successStatus);
     }
 
 }
