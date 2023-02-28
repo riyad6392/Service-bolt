@@ -214,7 +214,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      
      <div class="col-md-12 mb-3">
     
-     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname" required="">
+     <input type="text" class="form-control" placeholder="Company Name" name="companyname" id="companyname">
      
      </div>
      <div class="col-md-12 mb-3">
