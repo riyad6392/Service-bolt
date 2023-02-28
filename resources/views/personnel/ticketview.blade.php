@@ -957,7 +957,6 @@ Save
      
      <div class="col-md-12">
        <!-- Completed ticket section start -->
-@if(in_array("See Previous Tickets", $permissonarray))       
 <div class="card mb-3 h-auto">
 <div class="card-body">
   <div class="row align-items-center mb-3">
@@ -999,7 +998,6 @@ Save
    </div>
 </div>
 </div>
-@endif
 <!-- Completed ticket end -->
 
 <!-- start service modal -->

@@ -532,8 +532,10 @@ select#servicename {
 			  }
 			  if($ticket->payment_mode!=null) {
 			  	$paid_status = $ticket->payment_mode;
+			  } elseif($ticket->invoiced == 1) {
+				$paid_status = "Invoiced";
 			  } else {
-			  	$paid_status = "--";
+			  	$paid_status = "Not Invoiced";
 			  }
 			@endphp
 	  <tr>

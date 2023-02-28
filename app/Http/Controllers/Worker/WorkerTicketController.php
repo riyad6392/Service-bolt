@@ -548,7 +548,13 @@ class WorkerTicketController extends Controller
         
       @$workersdata = Personnel::where('id',$worker->workerid)->first();
       @$permissonarray = explode(',',$workersdata->ticketid);
-      $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->where('quote.parentid','=','')->whereIn('quote.ticket_status',array('3','4'))->get();
+      if(in_array("See Previous Tickets", $permissonarray)) {
+        $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->where('quote.parentid','=','')->where('quote.personnelid','!=',null)->whereIn('quote.ticket_status',array('3'))->get();
+      } else {
+        $prequoteData = array();
+        //DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->where('quote.parentid','=','')->where('quote.personnelid','!=',null)->whereIn('quote.ticket_status',array('2','4'))->get();
+      }
+
         $sum = 0;
         if($quoteData->serviceid!="") {
           $serviceidarray = explode(',', $quoteData->serviceid);
@@ -1106,7 +1112,7 @@ class WorkerTicketController extends Controller
         $quotelastid = Quote::create($data);
 
         $quoteee = Quote::where('id', $quotelastid->id)->first();
-        $randomid = rand(100,199);
+        $randomid = 100;
         $quoteee->invoiceid = $randomid.''.$quotelastid->id;
         $quoteee->save();
 

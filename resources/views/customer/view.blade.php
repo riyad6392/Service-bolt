@@ -1110,7 +1110,7 @@ $(document).on('change','#productname',function(e) {
 
   $(document).on('click','.sendtocustomer',function(e) {
         $("#view-invoice").hide();
-    //$("#send-emailinvoice").hide();
+        $("#send-emailinvoice").show();
 
         var id = $(this).data('id');
         var email = $(this).data('email');

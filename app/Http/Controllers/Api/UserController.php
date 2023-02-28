@@ -473,7 +473,8 @@ class UserController extends Controller
            if(in_array("See Previous Tickets", $permissonarray)) {     
             $prequoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->whereIn('quote.ticket_status',array('3'))->get();
             } else {
-              $prequoteData = array();  
+              $prequoteData = array();
+              //DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->whereIn('quote.ticket_status',array('2','4'))->get();  
             }
             if(in_array("See Price of Previous Tickets", $permissonarray)) {
               $pricevisible = 1;
@@ -671,10 +672,11 @@ class UserController extends Controller
 
         @$workersdata = Personnel::where('id',$user->workerid)->first();
         @$permissonarray = explode(',',$workersdata->ticketid);
+        
         if(in_array("See Previous Tickets", $permissonarray)) {
             $recentTicket = Quote::where('customerid',$customerid)->where('personnelid','!=',null)->where('parentid','=',"")->where('givendate','!=',null)->orderBy('id','DESC')->get();
         } else {
-          $recentTicket = array();
+            $recentTicket = Quote::where('customerid',$customerid)->where('personnelid','!=',null)->where('parentid','=',"")->where('givendate','!=',null)->whereIn('ticket_status',array('2','4'))->orderBy('id','DESC')->get();
         }
 
         if(in_array("See Price of Previous Tickets", $permissonarray)) {
@@ -971,7 +973,7 @@ class UserController extends Controller
         
         $quotelastid = Quote::create($data);
         $quoteee = Quote::where('id', $quotelastid->id)->first();
-        $randomid = rand(100,199);
+        $randomid = 100;
         $quoteee->invoiceid = $randomid.''.$quotelastid->id;
         $quoteee->save();
     if($customer->email!=null) {    

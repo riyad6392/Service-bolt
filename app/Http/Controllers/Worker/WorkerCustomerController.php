@@ -149,11 +149,11 @@ class WorkerCustomerController extends Controller
        //dd($customerAddress);
       @$workersdata = Personnel::where('id',$worker->workerid)->first();
       @$permissonarray = explode(',',$workersdata->ticketid);
-    if(in_array("See Previous Tickets", $permissonarray)) {
-      $recentTicket = Quote::where('customerid',$id)->where('personnelid','!=',null)->where('parentid','=',"")->orderBy('id','DESC')->get();
-    } else {
-      $recentTicket = array();
-    }
+      if(in_array("See Previous Tickets", $permissonarray)) {
+        $recentTicket = Quote::where('customerid',$id)->where('personnelid','!=',null)->where('parentid','=',"")->orderBy('id','DESC')->get();
+      } else {
+        $recentTicket = Quote::where('customerid',$id)->where('personnelid','!=',null)->where('parentid','=',"")->whereIn('ticket_status',array('2','4'))->orderBy('id','DESC')->get();
+      }
       $adminchecklist = DB::table('checklist')->select('serviceid','checklistname')->where('userid',$worker->userid)->groupBy('serviceid')->get();
 
       return view('personnel.customerview',compact('customerData','customerAddress','recentTicket','adminchecklist','permissonarray'));

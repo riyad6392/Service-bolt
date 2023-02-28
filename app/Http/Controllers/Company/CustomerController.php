@@ -593,7 +593,7 @@ class CustomerController extends Controller
         //dd($data);
         $quotelastid = Quote::create($data);
         $quoteee = Quote::where('id', $quotelastid->id)->first();
-        $randomid = rand(100,199);
+        $randomid = 100;
         $quoteee->invoiceid = $randomid.''.$quotelastid->id;
         $quoteee->save();
     if($customer->email!=null) {

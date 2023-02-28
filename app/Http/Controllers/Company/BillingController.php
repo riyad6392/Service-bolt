@@ -348,7 +348,7 @@ class BillingController extends Controller
         }
         if($billingData[0]->invoiceid=="") {
           $quote = Quote::where('id',$request->serviceid)->first();
-          $randomid = rand(100,199);
+          $randomid = 100;
           $quote->invoiceid = $randomid.''.$request->serviceid;
           $quote->save();
         }
