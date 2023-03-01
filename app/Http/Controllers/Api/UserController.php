@@ -2045,7 +2045,7 @@ class UserController extends Controller
         }
         if(count($quote1)>0) {
            if($request->payment_mode == "By Check") {
-            if($auth_id == "68") {
+            if($auth_id == "68789779") {
             $data = array(
             'xKey' => 'serviceboltdev63cf6781c560436fa9f052cafa45a5d',
             'xVersion' => '4.5.9',
@@ -2115,7 +2115,7 @@ class UserController extends Controller
        }
 
         if($request->payment_mode == "Credit Card") {
-           if($auth_id == "68") {
+           if($auth_id == "68789779") {
                 $data = array(
                   'xCardNum' => $request->card_number,
                   'xExp' => $request->expiration_date,

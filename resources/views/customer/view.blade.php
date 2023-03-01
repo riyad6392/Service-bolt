@@ -116,7 +116,7 @@ i.fa.fa-plus.third {
   <input type="hidden" name="customerid" id="customerid" value="{{@$customerData[0]->id}}">
   <div class="col-lg-8 mb-2">
    <div class="show-fillter">
-	   <input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address" required="">
+	   <input type="text" class="form-control" placeholder="Enter Address" name="address" id="address" required="">
     </div>
   </div>
   <div class="col-lg-3 offset-lg-1 mb-3">
@@ -183,18 +183,33 @@ i.fa.fa-plus.third {
 	   <div class="col-lg-12 mb-2" style="display: none;">
 	   <input type="text" placeholder=" Address" class="form-control input-gray" readonly style="box-shadow: none;"/>
 	   </div>
+     <table id="example1" class="table no-wrap table-new table-list" style="
+    position: relative;">
+    <thead>
+      <tr>
+        <th style="display: none;">Id</th>
+        <th>Addresses</th>
+        </tr>
+          </thead>
+          <tbody>
      @foreach($customerAddress as $key=>$value)
+     <tr>
+      <td style="display: none;"></td>
+      <td>
   	   <div class="col-lg-12 mb-2">
     	   <div class="d-flex align-items-center justify-content-between ps-4 pt-2 pe-2 pb-2 address-line2 address-line">
-    	     <div class="d-flex align-items-center addressdata"><a href="javascript:void(0);" class="info_link1" dataval="{{$value->id}}"><i class="fa fa-trash"></i></a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="me-3"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z" fill="currentColor"></path></svg> <a class="" data-bs-toggle="modal" data-bs-target="#edit-address" id="editaddress" data-id="{{$value->id}}" data-address="{{$value->address}}">{{$value->address}}</a></div>
+    	     <div class="d-flex align-items-center addressdata"><a href="javascript:void(0);" class="info_link1" dataval="{{$value->id}}"><i class="fa fa-trash"></i></a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="me-3"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z" fill="currentColor"></path></svg> <a class="" data-bs-toggle="modal" data-bs-target="#edit-address" id="editaddress" data-id="{{$value->id}}" data-address="{{$value->address}}">{{wordwrap($value->address, 10, "\n")}}</a></div>
            <a class="" data-bs-toggle="modal" data-bs-target="#edit-note" id="editnote" data-id="{{$value->id}}" data-note="{{$value->notes}}"><img src="{{url('/')}}/images/writing.png" style="width:30px;"></a>
     	  <!--  <button class="btn btn-save confirm">Service Ticket</button> -->
         <a class="btn btn-save confirm" data-bs-toggle="modal" data-bs-target="#create-ctickets" id="createctickets" data-id="{{$value->customerid}}" data-address="{{$value->address}}" style="width:152px;">Create Ticket</a>
         <a href="{{url('company/customer/ticketviewall/')}}/{{$value->customerid}}/{{$value->address}}" class="btn btn-save confirm" style="width:152px;">View Tickets</a>
     	   </div>
   	   </div>
+     </td>
+     </tr>
 	   @endforeach
-	
+	</tbody>
+        </table>
 	   
 	   
 	   
@@ -620,9 +635,12 @@ i.fa.fa-plus.third {
   $('.dropify').dropify();
   $(document).ready(function() {
     // $('#example').DataTable({
-    //   "order": [[ 0, "desc" ]]
+    //   //"order": [[ 1, "desc" ]]
     // });
     $("#example tbody > tr:first-child").addClass('selectedrow');
+    $('#example1').DataTable({
+      //"order": [[ 1, "desc" ]]
+    });
   });
    $.ajaxSetup({
       headers: {
@@ -721,8 +739,8 @@ $(document).on('click','#addnote',function(e) {
   var address = $("#saddress").val();
   if(address=="") {
     swal({
-        title: "Search address?",
-        text: "Can you please search address!",
+        title: "Enter address?",
+        text: "Can you please first enter address!",
         type: "warning",
         showCancelButton: false,
         confirmButtonColor: "#DD6B55",

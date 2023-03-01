@@ -462,7 +462,7 @@ class BillingController extends Controller
       $cinfo = Customer::select('id','customername','phonenumber','email','companyname','billingaddress')->where('id',$request->customerid)->first();
       $url = 'https://x1.cardknox.com/gatewayjson';
       if($request->method == "Credit Card") {
-        if($auth_id == "68") {
+        if($auth_id == "6878946") {
             $data = array(
               'xCardNum' => $request->card_number,
               'xExp' => $request->expiration_date,
@@ -569,7 +569,7 @@ class BillingController extends Controller
       }
 
       if($request->method == "Check") {
-        if($auth_id == "68") {
+        if($auth_id == "6878946") {
           $data = array(
           'xKey' => 'serviceboltdev63cf6781c560436fa9f052cafa45a5d',
           'xVersion' => '4.5.9',
