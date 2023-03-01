@@ -675,7 +675,15 @@ class WorkerTicketController extends Controller
             <label>Address</label>
             <input type="text" class="form-control" placeholder="Address" name="address" id="address" value="'.$quote->address.'" readonly>
           </div>
-          </div><input type="hidden" value="'.$customer[0]->email.'" name="email" id="email">
+          </div>
+
+
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+            <label>Customer Email</label>
+            <input type="text" class="form-control" placeholder="Email" name="email" id="email" value="'.$customer[0]->email.'" required>
+          </div>
+          </div>
 
           <div class="col-md-12 mb-3">
           <label>Select Services</label>
@@ -793,10 +801,11 @@ class WorkerTicketController extends Controller
       $customerid = $request->customerid;
 
       $customer = Customer::where('id', $customerid)->get()->first();
-
+      $customer->email = $request->email;
+      $customer->save();
       $serviceid = implode(',', $request->serviceid);
 
-      $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', $worker->userid)->first();
+      $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue','bodytext','subject')->where('id', $worker->userid)->first();
 
       $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->serviceid)->get();
       $servicenames = $servicedetails[0]->servicename;
@@ -918,7 +927,7 @@ class WorkerTicketController extends Controller
         return redirect()->back();
       }
       if($request->type=="sendinvoice") {
-        if($customer->email!=null) {
+       // if($customer->email!=null) {
           // $tdata1 = Quote::where('id', $request->id)->get()->first();
           // $tdata1->invoiced = 1;
           // $tdata1->save();
@@ -927,20 +936,26 @@ class WorkerTicketController extends Controller
               "invoiced"=>1
           ]);
 
+          if($userdetails->subject!=null) {
+            $subject = $userdetails->subject;
+          } else {
+            $subject = 'Invoice details!';
+          }
+
           $app_name = 'ServiceBolt';
           $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
-          $email = $customer->email;
-          $user_exist = Customer::where('email', $email)->first();
+          $cemail = $request->email;
+          //$user_exist = Customer::where('email', $email)->first();
 
           $pdf = PDF::loadView('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'billingaddress'=>$customer->billingaddress,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->customernotes,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid]);
 
-          Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'billingaddress'=>$customer->billingaddress,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->customernotes,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email,$pdf) {
-              $message->to($user_exist->email);
-              $message->subject('Invoice details!');
+          Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'billingaddress'=>$customer->billingaddress,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->customernotes,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid,'body'=>$userdetails->bodytext,'type'=>"sendinvoice"], function($message) use ($cemail,$app_name,$app_email,$pdf,$subject) {
+              $message->to($cemail);
+              $message->subject($subject);
               $message->attachData($pdf->output(), "invoice.pdf");
 
             });
-        }
+        //}
       }
 
     

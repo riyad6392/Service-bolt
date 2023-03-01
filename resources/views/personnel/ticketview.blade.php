@@ -5031,5 +5031,32 @@ $("#unclose").click(function() {
     }
   );
 });
+
+$(document).on('click','.sendtocustomer',function(e) {
+    $("#add-tickets").hide();
+    $("#send-emailinvoice").show();
+
+    var id = $(this).data('id');
+    var email = $(this).data('email');
+
+     $.ajax({
+      url:"{{url('company/customer/leftbarviewinvoiceemail')}}",
+      data: {
+        id: id,
+        email :email
+      },
+      method: 'post',
+      dataType: 'json',
+      refresh: true,
+      success:function(data) {
+        $('#viewinvoicemodaldata').html(data.html);
+        
+      }
+    });
+});
+$(document).on('click','.cancelpopup',function(e) {
+   location.reload();
+
+});
 </script>
 @endsection

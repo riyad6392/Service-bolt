@@ -5,6 +5,11 @@
 </head>
 
 <body>
+    @if(isset($type) && ($type == "sendinvoice"))
+        @if($body!=null)
+            <span>{{$body}}</span>
+        @endif
+    @endif
 <div style="max-width: 680px;margin:auto;background: url('') no-repeat center top;background-size: cover;padding: 25px;">
 <div class="banner" style="background: #fff;width: 112%;border-radius: 4px;height: auto;border: 0px solid #a4a0a0;">
 <div>
