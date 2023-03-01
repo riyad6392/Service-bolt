@@ -106,6 +106,7 @@ label.credit img {
 </div>
  -->
 <h5 class="my-4">Manage Invoice Info</h5>
+<div class="row">
 <div class="col-lg-6 mb-3">
   <label>Invoice Header Color</label><br>
   <span class="color-picker">
@@ -139,6 +140,15 @@ label.credit img {
 <div class="col-lg-6 mb-3">
   <label>Invoice Footer content</label><br>
   <textarea class="form-control height-110" placeholder="Description" name="description" id="description">{{$userData->footercontent}}</textarea>
+</div>
+<div class="col-lg-6 mb-3">
+  <label>Body Text</label><br>
+  <textarea class="form-control height-110" placeholder="Body Text" name="bodytext" id="bodytext">{{$userData->bodytext}}</textarea>
+</div>
+<div class="col-lg-6 mb-3">
+  <label>Invoice Email Subject</label><br>
+  <input type="text" value="{{$userData->subject}}" id="subject" name="subject" placeholder="Email Subject">
+</div>
 </div>
 <h5 class="my-4">Manage Stock Percentage (%)</h5>
 <div class="col-lg-6 mb-3">

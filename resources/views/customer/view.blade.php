@@ -32,6 +32,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     overflow-y: auto;
 }
 
+table.dataTable td {
+    white-space: normal;
+}
+
 i.fa.fa-plus.second {
     position: absolute;
     top: 222px;

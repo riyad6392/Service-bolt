@@ -61,6 +61,14 @@ class SettingController extends Controller
            $user->footercontent = null; 
         }
 
+        if(isset($request->bodytext)) {
+            $user->bodytext = $request->bodytext;
+        } else {
+           $user->bodytext = null; 
+        }
+
+        $user->subject = $request->subject;
+
         $logofile = $request->file('imageUpload');
         if (isset($logofile)) {
            $new_file = $logofile;
