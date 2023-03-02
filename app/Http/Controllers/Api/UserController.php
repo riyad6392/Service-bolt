@@ -357,7 +357,7 @@ class UserController extends Controller
 
         $checklistData = DB::table('checklist')->select('id','checklist')->whereIn('serviceid',$serviceidarrays)->get();
 
-        $quoteData = DB::table('quote')->select('quote.id','quote.primaryname','quote.tax','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.givenstartdate','quote.givenenddate','quote.time','quote.minute','quote.description','quote.product_id','quote.serviceid','quote.imagelist', 'customer.phonenumber','quote.ticket_status','quote.customernotes','quote.checklist','quote.price','quote.payment_mode')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
+        $quoteData = DB::table('quote')->select('quote.id','quote.primaryname','quote.tax','quote.customerid','quote.customername','quote.address','quote.latitude','quote.longitude','quote.etc','quote.givendate','quote.giventime','quote.givenendtime','quote.givenstartdate','quote.givenenddate','quote.time','quote.minute','quote.description','quote.product_id','quote.serviceid','quote.imagelist', 'customer.phonenumber','customer.email','quote.ticket_status','quote.customernotes','quote.checklist','quote.price','quote.payment_mode')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$ticketId)->first();
         
         if($quoteData) {
             $serviceidarray = explode(',', $quoteData->serviceid);
@@ -449,6 +449,7 @@ class UserController extends Controller
                    'givenenddate'=>$quoteData->givenenddate,
                    'description'=>$quoteData->description,
                    'phonenumber'=>$quoteData->phonenumber,
+                   'email'=>$quoteData->email,
                    'ticket_status'=>$quoteData->ticket_status,
                    'addressnote'=>$addressnote,
                    'imagevideo'=>$imagearray,
@@ -1006,9 +1007,9 @@ class UserController extends Controller
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
       $cdata = Customer::where('email',$request->email)->get();
       
-      if(count($cdata)>=1) {
-        return response()->json(['status'=>0,'message'=>'This Email id already exist.'],$this->successStatus);   
-      }
+      // if(count($cdata)>=1) {
+      //   return response()->json(['status'=>0,'message'=>'This Email id already exist.'],$this->successStatus);   
+      // }
       $data['userid'] = $worker->userid;
       $data['workerid'] = $worker->workerid;
       $data['customername'] = $request->customername;
@@ -1125,11 +1126,13 @@ class UserController extends Controller
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
 
-        $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', $worker->userid)->first();
+        $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue','bodytext','subject')->where('id', $worker->userid)->first();
 
       $customerid = $request->customerid;
 
       $customer = Customer::where('id', $customerid)->get()->first();
+      $customer->email = $request->email;
+      $customer->save();
 
       $serviceid = $request->serviceid;
       $servicedetails = Service::select('servicename','productid','price')->whereIn('id', array($request->serviceid))->get();
@@ -1234,22 +1237,32 @@ class UserController extends Controller
    if($request->type=="save") {
         return response()->json(['status'=>1,'message'=>'Invoice has been save successfully'],$this->successStatus); 
    } else {
-    if($customer->email!=null) {  
+    //if($customer->email!=null) {  
           $app_name = 'ServiceBolt';
           $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
           $email = $customer->email;
-          $user_exist = Customer::where('email', $email)->first();
-
+          //$user_exist = Customer::where('email', $email)->first();
+          $cemail = $request->email;
           $tdata1 = Quote::where('id', $request->id)->get()->first();
           $tdata1->invoiced = 1;
           $tdata1->save();
-            
-          Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->customernotes,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid], function($message) use ($user_exist,$app_name,$app_email) {
-              $message->to($user_exist->email)
-              ->subject('Invoice details!');
+
+          if($userdetails->subject!=null) {
+            $subject = $userdetails->subject;
+          } else {
+            $subject = 'Invoice details!';
+          }
+        
+          $pdf = PDF::loadView('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->customernotes,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid]);
+
+          Mail::send('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->customernotes,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid,'body'=>$userdetails->bodytext,'type'=>"sendinvoice"], function($message) use ($cemail,$app_name,$app_email) {
+              $message->to($cemail);
+              $message->subject($subject);
+              $message->attachData($pdf->output(), "invoice.pdf");
+
               //$message->from($app_email,$app_name);
             });
-        }
+       // }
           return response()->json(['status'=>1,'message'=>'Invoice has been send successfully'],$this->successStatus); 
         }
     }
@@ -1838,9 +1851,9 @@ class UserController extends Controller
 
       $cdata = Customer::where('email',$request->email)->get();
       
-      if(count($cdata)>1) {
-        return response()->json(['status'=>0,'message'=>'This Email id already exist.'],$this->successStatus);   
-      }
+      // if(count($cdata)>1) {
+      //   return response()->json(['status'=>0,'message'=>'This Email id already exist.'],$this->successStatus);   
+      // }
 
       $customerid = $request->customerid;
 

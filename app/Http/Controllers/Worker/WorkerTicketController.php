@@ -639,7 +639,7 @@ class WorkerTicketController extends Controller
        $personnelid = auth()->user()->workerid;
        $quote = Quote::where('id', $request->id)->first();
        $customer = Customer::where('id', $quote->customerid)->get();
-
+       $addressinfo = Address::where('customerid',$quote->customerid)->get();
        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
        $sid = explode(',',$customer[0]->serviceid);
        $serviceData = Service::where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
@@ -681,7 +681,7 @@ class WorkerTicketController extends Controller
           <div class="col-md-12 mb-2">
             <div class="form-group">
             <label>Customer Email</label>
-            <input type="text" class="form-control" placeholder="Email" name="email" id="email" value="'.$customer[0]->email.'" required>
+            <input type="email" class="form-control emailv" placeholder="Email" name="email" id="email" value="'.$customer[0]->email.'">
           </div>
           </div>
 
@@ -747,7 +747,7 @@ class WorkerTicketController extends Controller
         if(in_array("Create Invoice for payment", $permissonarray) || in_array("Administrator", $permissonarray)) {
           
          $html .= '<div class="row"><div class="col-lg-6 mb-2">
-              <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="sendinvoice">Send Invoice</button>
+              <a class="add-btn-yellow w-100 sendtocustomer" data-email="'.$customer[0]->email.'" data-id="'.$quote->id.'" style="text-align: center;border:0;cursor:pointer;">Send Invoice</a>
             </div>
             <div class="col-lg-6">
               <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="paynow">Pay Now</button>
@@ -755,13 +755,13 @@ class WorkerTicketController extends Controller
         }
         elseif(in_array("Generate PDF for invoice", $permissonarray) || in_array("Administrator", $permissonarray)) {
          $html .= '<div class="row"><div class="col-lg-6 mb-2">
-              <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="sendinvoice">Send Invoice</button>
+              <a class="add-btn-yellow w-100 sendtocustomer" data-email="'.$customer[0]->email.'" data-id="'.$quote->id.'" style="text-align: center;border:0;cursor:pointer;">Send Invoice</a>
             </div>
             </div>';
           }
       } else {
         $html .= '<div class="row"><div class="col-lg-6 mb-2">
-              <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;pointer-events: none;background:#fee2002e;" name="type" value="sendinvoice">Send Invoice</button>
+              <a class="add-btn-yellow w-100 sendtocustomer" data-email="'.$customer[0]->email.'" data-id="'.$quote->id.'" style="text-align: center;border:0;pointer-events: none;background:#fee2002e;">Send Invoice</a>
             </div>
             <div class="col-lg-6">
               <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;pointer-events: none;background:#fee2002e;" name="type" value="paynow">Pay Now</button>
@@ -926,11 +926,8 @@ class WorkerTicketController extends Controller
         $request->session()->flash('success', 'Invoice has been Save successfully');
         return redirect()->back();
       }
-      if($request->type=="sendinvoice") {
-       // if($customer->email!=null) {
-          // $tdata1 = Quote::where('id', $request->id)->get()->first();
-          // $tdata1->invoiced = 1;
-          // $tdata1->save();
+      //if($request->type=="sendinvoice") {
+          
           DB::table('quote')->where('id','=',$request->id)->orWhere('parentid','=',$request->id)
           ->update([ 
               "invoiced"=>1
@@ -956,7 +953,7 @@ class WorkerTicketController extends Controller
 
             });
         //}
-      }
+      //}
 
     
       $request->session()->flash('success', 'Invoice has been sent successfully');

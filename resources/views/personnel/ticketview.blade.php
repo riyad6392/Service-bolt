@@ -1182,7 +1182,7 @@ Save
 
 
 
-<form method="post" action="{{route('worker.sendinvoice')}}">
+<form id="form" method="post" action="{{route('worker.sendinvoice')}}">
   @csrf
 <div class="modal fade" id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -5033,27 +5033,60 @@ $("#unclose").click(function() {
 });
 
 $(document).on('click','.sendtocustomer',function(e) {
-    $("#add-tickets").hide();
-    $("#send-emailinvoice").show();
+    // $("#add-tickets").hide();
+    // $("#send-emailinvoice").show();
 
-    var id = $(this).data('id');
+    // var id = $(this).data('id');
     var email = $(this).data('email');
+    var enteremail = $("#email").val();
 
-     $.ajax({
-      url:"{{url('company/customer/leftbarviewinvoiceemail')}}",
-      data: {
-        id: id,
-        email :email
-      },
-      method: 'post',
-      dataType: 'json',
-      refresh: true,
-      success:function(data) {
-        $('#viewinvoicemodaldata').html(data.html);
+    if(email!="") {
+        if(IsEmail(email) == false) {
+            swal("Email Validate ?", "Please enter validate Email address!", "error");
+            return false;
+        }
+       $("#form").submit();
+        return true;
+    }
+    if(enteremail!="") {
+        if(IsEmail(enteremail) == false) {
+            swal("Email Validate ?", "Please enter validate Email address!", "error");
+            return false;
+        }
+        $("#form").submit();
+        return true;
+    }
+    if(email == "" || enteremail=="") { 
+        swal("Customer Email?", "Please add customer Email!", "error");
+         return false;
+    }
+   
+
+    //  $.ajax({
+    //   url:"{{url('company/customer/leftbarviewinvoiceemail')}}",
+    //   data: {
+    //     id: id,
+    //     email :email
+    //   },
+    //   method: 'post',
+    //   dataType: 'json',
+    //   refresh: true,
+    //   success:function(data) {
+    //     $('#viewinvoicemodaldata').html(data.html);
         
-      }
-    });
+    //   }
+    // });
 });
+
+function IsEmail(email) {
+    var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (!regex.test(email)) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
 $(document).on('click','.cancelpopup',function(e) {
    location.reload();
 

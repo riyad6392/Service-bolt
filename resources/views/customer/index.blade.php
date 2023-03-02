@@ -874,7 +874,7 @@ a.yelloIcon {
 
 $(document).ready(function() {
     $('.selectpicker').selectpicker();
-    $(document).on('blur', '.email', function() {
+    $(document).on('blur', '.emailold', function() {
         email = $(this).val();
         cid = $(this).data('id');
         if(cid=="") {
