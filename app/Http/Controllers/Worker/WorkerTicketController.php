@@ -670,12 +670,23 @@ class WorkerTicketController extends Controller
             <input type="text" class="form-control" placeholder="Customer" name="customername" id="customername" value="'.$customer[0]->customername.'" readonly>
           </div>
           </div>
-          <div class="col-md-12 mb-2">
-            <div class="form-group">
-            <label>Address</label>
-            <input type="text" class="form-control" placeholder="Address" name="address" id="address" value="'.$quote->address.'" readonly>
-          </div>
-          </div>
+          <div class="col-md-12 mb-3">
+  <label>Select Address</label>
+  <div class="d-flex align-items-center">
+    <select class="form-control selectpicker" aria-label="Default select example" data-live-search="true" name="address" id="address" required="" style="height:auto;">';
+
+          foreach($addressinfo as $key => $value) {
+             if($quote->address == $value->address) {
+              $selecteda = "selected";
+             } else {
+              $selecteda = "";
+             }
+            $html .='<option value="'.$value->address.'" '.@$selecteda.'>'.$value->address.'</option>';
+          }
+    $html .='</select>
+    <a href="#" data-bs-toggle="modal" data-bs-target="#add-address" id="sclick1"><i class="fa fa-plus"></i></a>
+  </div>
+</div>
 
 
           <div class="col-md-12 mb-2">
@@ -908,7 +919,7 @@ class WorkerTicketController extends Controller
 
       DB::table('quote')->where('id','=',$request->id)->orWhere('parentid','=',$request->id)
           ->update([ 
-              "description"=>"$description","serviceid"=>"$serviceid","servicename"=>"$servicenames","product_id"=>"$pids","price"=>"$request->price","tickettotal"=>"$request->ticketprice","tax"=>"$totaltax"
+              "description"=>"$description","serviceid"=>"$serviceid","servicename"=>"$servicenames","product_id"=>"$pids","price"=>"$request->price","tickettotal"=>"$request->ticketprice","tax"=>"$totaltax","address"=>"$request->address"
       ]);
 
       // $quote->serviceid = $serviceid;

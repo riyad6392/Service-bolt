@@ -1000,6 +1000,36 @@ Save
 </div>
 <!-- Completed ticket end -->
 
+<!-- address model start-->
+<div class="modal fade" id="add-address" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box  overflow-hidden">
+     <!-- <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.customeraddresscreate')}}" enctype="multipart/form-data">
+        @csrf -->
+      <div class="modal-body">
+       <div class="add-customer-modal">
+     <h5>Add Address</h5>
+     </div>
+     <input type="hidden" name="customerid" id="customerid" value="">
+     <div class="row customer-form">
+     <div class="col-md-12 mb-3">
+     
+     <input type="text" class="form-control" placeholder="Search Addresses" name="address" id="address" required="">
+  
+     </div>
+     <div class="col-lg-6 mb-3">
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+     <button id="saveaddress" class="btn btn-add btn-block">Add Address</button>
+     </div>
+     
+     </div>
+      </div>
+     <!-- </form> -->
+    </div>
+  </div>
+</div>
 <!-- start service modal -->
 <div class="modal fade" id="add-services" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -1254,6 +1284,9 @@ Save
       }
   });
   $(document).on('click','#sclick',function(e) {
+    $("#add-tickets").hide();
+  });
+   $(document).on('click','#sclick1',function(e) {
     $("#add-tickets").hide();
   });
   $(document).on('click','#pclick',function(e) {
