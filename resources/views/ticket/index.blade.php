@@ -531,11 +531,14 @@ select#servicename {
 			  	$payment_status = "Pending";
 			  }
 			  if($ticket->payment_mode!=null) {
-			  	$paid_status = $ticket->payment_mode;
-			  } elseif($ticket->invoiced == 1) {
-				$paid_status = "Invoiced";
+			  	$paid_status = '-'.$ticket->payment_mode;
 			  } else {
-			  	$paid_status = "Not Invoiced";
+			  	$paid_status = "";
+			  }
+			  if($ticket->invoiced == 1) {
+				$invoice_status = "Invoiced";
+			  } else {
+			  	$invoice_status = "Not Invoiced";
 			  }
 			@endphp
 	  <tr>
@@ -547,7 +550,7 @@ select#servicename {
 		@endphp
 		@foreach($servicedata as $servicename)
 		    @php
-		      if(count($servicedata) == 0){
+		      if(count($servicedata) == 0) {
 		        $servicename = '-';
 		      } else {
 		        $servicename = $servicename->servicename;
@@ -564,10 +567,10 @@ select#servicename {
 		    $i=1; break;
 		  @endphp
 		@endforeach</td>
-		<td>{{$payment_status}} ({{$paid_status}})</td>
+		<td>{{$payment_status}} {{$paid_status}} <br>({{$invoice_status}})</td>
 	  <td><a class="btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$ticket->id}}" style="display: none;">View</a>
 	  	<a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" class="btn btn-edit p-2 w-auto" target="_blank">View</a>
-	  	@if($ticket->payment_mode==null && $paid_status == "Not Invoiced")
+	  	@if($ticket->payment_mode==null && $invoice_status == "Not Invoiced")
 	  		<a class="btn btn-edit p-2 w-auto repoenticket" data-id="{{$ticket->id}}">Reopen</a>
 	  	@endif
 	 </td>
