@@ -180,6 +180,20 @@
 </div>
 </div>
 
+<div class="modal fade" id="send-emailinvoice" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data">
+          @csrf
+          <input type="hidden" name="invoicetype" id="invoicetype" value="sendinvoice">
+          <div id="viewinvoicemodaldatainvoiced"></div>
+        </form>
+      </div>
+  </div>
+</div>
+</div>
+
 <!-- Due invoice modal -->
 <div class="modal fade" id="view-invoice" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -342,7 +356,34 @@
         
       }
     });
-  })  
+  })
+
+  $(document).on('click','.sendtocustomer',function(e) {
+        $("#view-invoice").hide();
+        $("#send-emailinvoice").show();
+
+        var id = $(this).data('id');
+        var email = $(this).data('email');
+
+         $.ajax({
+          url:"{{url('company/customer/leftbarviewinvoiceemail')}}",
+          data: {
+            id: id,
+            email :email
+          },
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            $('#viewinvoicemodaldatainvoiced').html(data.html);
+            
+          }
+        });
+       return false;
+    })
+  $(document).on('click','.cancelpopup',function(e) {
+   location.reload();
+  }); 
 </script>
 @endsection
 

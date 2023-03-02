@@ -37,6 +37,8 @@ class ReportController extends Controller
         } else {
            return redirect()->back();
         }
+
+        $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('quote.ticket_status','3')->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->orderBy('quote.id','DESC')->get();
         
        @$pdata1 = Personnel::where('userid',$auth_id)->get();
         $percentall = array();
@@ -123,6 +125,6 @@ class ReportController extends Controller
         $currentdate = date('Y-m-d', strtotime($currentdate));
         @$from = $request->since;
         @$to = $request->until;
-        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to'));
+        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport'));
     }
 }

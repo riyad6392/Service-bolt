@@ -765,8 +765,8 @@ class BillingController extends Controller
             <div class="col-md-12 mb-2">
              <div class="input_fields_wrap">
                 <div class="mb-3">
-                  <label>To</label>
-                  <input type="email" class="form-control" placeholder="to" name="to" id="to" value="'.$request->email.'" required="">
+                  <label>Customer Email</label>
+                  <input type="email" class="form-control" placeholder="Customer Email" name="to" id="to" value="'.$request->email.'" required="">
                 </div>
             </div>
           </div>

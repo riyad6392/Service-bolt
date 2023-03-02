@@ -262,18 +262,57 @@ Service Report</div>
 	  </tr>
 	  </thead>
 	  <tbody>
-	  	No record found
-	  <!-- <tr>
-	  <td>1</td>
-	  <td>John Tomas</td>
-	  <td>123 Street Russell...</td>
-	  <td>Billy Thomas</td>
-	  <td>Stump Grinding</td>
-	  <td>$355,00</td>
-	  <td><a href="#" class="btn-incompleted btn-common">Pending</a></td>
+        @foreach($servicereport as $key => $ticket)
+            @php
+              $explode_id = explode(',', $ticket->serviceid);
+              $servicedata = App\Models\Service::select('servicename')
+                ->whereIn('services.id',$explode_id)->get();
+              if($ticket->payment_status!=null || $ticket->payment_mode!=null) {
+                $payment_status = "Completed";
+              } else {
+                $payment_status = "Pending";
+              }
+              if($ticket->payment_mode!=null) {
+                $paid_status = '-'.$ticket->payment_mode;
+              } else {
+                $paid_status = "";
+              }
+            @endphp
+	  <tr>
+	  <td>#{{$ticket->id}}</td>
+	  <td>{{$ticket->customername}}</td>
+	  <td>{{$ticket->address}}</td>
+	  <td>{{$ticket->personnelname}}</td>
+	  <td>@php
+          $i=0;
+        @endphp
+        @foreach($servicedata as $servicename)
+            @php
+              if(count($servicedata) == 0){
+                $servicename = '-';
+              } else {
+                $servicename = $servicename->servicename;
+              }
+            @endphp
+
+            {{$servicename}}
+          @if(count($servicedata)>1) 
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" class="sup-dot service_list_dot" xmlns="http://www.w3.org/2000/svg" data-bs-toggle="modal" data-bs-target="#service-list-dot" id="service_list_dot" data-id="{{ $ticket->serviceid }}">
+              <circle cx="5" cy="5" r="5" fill="#FA8F61"></circle>
+            </svg>
+            @endif
+            @php
+            $i=1; break;
+          @endphp
+        @endforeach</td>
+	  <td>{{$ticket->price}}</td>
+	  <td><a href="#" class="btn-incompleted btn-common">{{$payment_status}} {{$paid_status}}</a></td>
 	  
-	  </tr> -->
-	  
+	  </tr>
+	   @php
+          $i++;
+        @endphp
+    @endforeach
 	  </tbody>
 	  </table>
 	  
@@ -694,7 +733,13 @@ Service Report</div>
 
           </div>
      
-
+<div class="modal fade" id="service-list-dot" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+       <div id="viewservicelistdata"></div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('script')
@@ -761,6 +806,24 @@ Service Report</div>
                 localStorage.setItem('lastTab', $(this).data('bs-target'));
             });
         });
+
+$(document).on('click','.service_list_dot',function(e) {
+   var id = $(this).data('id');
+   var name = "Service Name";
+   $.ajax({
+        url:'{{route('company.viewservicepopup')}}',
+        data: {
+          'id':id,
+          'name':name
+        },
+        method: 'post',
+        dataType: 'json',
+        refresh: true,
+        success:function(data) {
+          $('#viewservicelistdata').html(data.html);
+        }
+    })
+ });
 </script>
 @endsection
 
