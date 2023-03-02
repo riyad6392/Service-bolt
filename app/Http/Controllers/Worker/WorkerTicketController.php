@@ -684,7 +684,7 @@ class WorkerTicketController extends Controller
             $html .='<option value="'.$value->address.'" '.@$selecteda.'>'.$value->address.'</option>';
           }
     $html .='</select>
-    <a href="#" data-bs-toggle="modal" data-bs-target="#add-address" id="sclick1"><i class="fa fa-plus"></i></a>
+    <a href="#" data-bs-toggle="modal" data-bs-target="#add-address" id="sclick1" data-cid="'.$quote->customerid.'"><i class="fa fa-plus"></i></a>
   </div>
 </div>
 

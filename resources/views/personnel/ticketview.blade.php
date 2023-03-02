@@ -13,6 +13,10 @@
     position: absolute;
     right: 1%;
 }
+.pac-container.pac-logo {
+    z-index: 999999;
+    display: block;
+}
 input[type="date"]::-webkit-calendar-picker-indicator {
     background: transparent;
     bottom: 0;
@@ -1001,7 +1005,7 @@ Save
 <!-- Completed ticket end -->
 
 <!-- address model start-->
-<div class="modal fade" id="add-address" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
+<div class="modal fade" id="add-address" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box  overflow-hidden">
      <!-- <form class="form-material m-t-40  form-valide" method="post" action="{{route('company.customeraddresscreate')}}" enctype="multipart/form-data">
@@ -1018,7 +1022,7 @@ Save
   
      </div>
      <div class="col-lg-6 mb-3">
-     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal">Cancel</button>
+     <button class="btn btn-cancel btn-block cancelpopup"  data-bs-dismiss="modal">Cancel</button>
      </div>
      <div class="col-lg-6 mb-3">
      <button id="saveaddress" class="btn btn-add btn-block">Add Address</button>
@@ -1288,6 +1292,9 @@ Save
   });
    $(document).on('click','#sclick1',function(e) {
     $("#add-tickets").hide();
+    var cid = $(this).data('cid');
+    $("#customerid").val(cid);
+
   });
   $(document).on('click','#pclick',function(e) {
     $("#add-tickets").hide();
@@ -5124,5 +5131,28 @@ $(document).on('click','.cancelpopup',function(e) {
    location.reload();
 
 });
+
+$(document).on('click','#saveaddress',function(e) {
+       var customerid = $('#customerid').val();
+       var address = $('#address').val();
+       if(address=="") {
+        swal("Address?",'address field is required','error');
+       }
+       $.ajax({
+            url:"{{url('personnel/myticket/addaddress')}}",
+            data: {
+              address: address,
+              customerid: customerid,
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $("#add-address").modal('hide');
+              $("#address").append("<option value="+data.address+" selected>"+data.address+"</option>");
+                location.reload();
+        }
+        })
+    })
 </script>
 @endsection
