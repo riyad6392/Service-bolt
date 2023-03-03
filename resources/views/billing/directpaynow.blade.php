@@ -47,38 +47,48 @@
 	  
 	  
 	  </div>
-      <div class="card admin-setting mb-3">
-	  <div class="card-body">
-	  <h5 class="mb-4">Credit Card Info</h5>
+<form method="put" action="{{ url('company/billing/directicketsave') }}" enctype="multipart/form-data">
+	  <div class="card admin-setting mb-3">
+	  <input type="hidden" name="customername" id="customername" value="{{$customer->customername}}">
+	  <input type="hidden" name="customerid" id="customerid" value="{{$customer->id}}">
+	  <input type="hidden" name="sid" id="sid" value="{{$serviceid}}">
+	  <input type="hidden" name="pid" id="pid" value="{{$pid}}">
+	  @csrf
+	  <input type="hidden" class="form-control form-control-2" name="method" id="method"  value="Credit Card">
+	  <input type="hidden" name="ticketprice" id="ticketprice" value="{{$ticketprice}}">
+	  <input type="hidden" name="amount" id="amount" value="{{$amount}}">
+		  <div class="card-body">
+		  	<p>@if($servicename!="") Service Name - {{$servicename}}@endif</p>
+	  <p>@if($productname!="") Product Name - {{$productname}} @endif</p>
+	  <h4>You have to pay</h4>
+	  <h4>Total: <span>${{number_format((float)$amount, 2, '.', '')}}</span></h4><br>
+		  <h5 class="mb-4">Credit Card Info</h5>
+		  <div class="mb-3">
+	<label class="form-label">Credit Card Number</label>
+	  <input type="text" class="border form-control form-control-2" placeholder="Credit Card Number" name="card_number" id="card_number" onkeypress="return checkDigit(event)" required>
+	</div>
+
+	<div class="row">
+	<div class="col-md-6">
 	  <div class="mb-3">
-<label class="form-label">Credit Card Number</label>
-  <input type="text" class="border form-control form-control-2" placeholder="Credit Card Number" name="card_number" id="card_number" onkeypress="return checkDigit(event)" required>
-</div>
+	<label class="form-label">Expiration Date</label>
+	  <input type="text" class="border form-control form-control-2" name="expiration_date" placeholder="MMYY" onkeypress="return checkDigit(event)" maxlength="4" required>
+	</div>
+	</div>
 
-<div class="row">
-<div class="col-md-6">
-  <div class="mb-3">
-<label class="form-label">Expiration Date</label>
-  <input type="text" class="border form-control form-control-2" name="expiration_date" placeholder="MMYY" onkeypress="return checkDigit(event)" maxlength="4" required>
-</div>
-</div>
-
-<div class="col-md-6">
-  <div class="mb-3">
-<label class="form-label">Security Code</label>
-  <input type="text" class="border form-control form-control-2" name="cvv" placeholder="Security Code" onkeypress="return checkDigit(event)" maxlength="5" required>
-</div>
-</div>
-
-</div>
-	  
-	  </div>
-	  </div>
-	  
-	  
-	     <div class="col-lg-12 text-center mt-3">
-<button type="submit" class="btn btn-add w-100 fw-bold">Pay</button>
-</div>
+	<div class="col-md-6">
+	  <div class="mb-3">
+	<label class="form-label">Security Code</label>
+	  <input type="text" class="border form-control form-control-2" name="cvv" placeholder="Security Code" onkeypress="return checkDigit(event)" maxlength="5" required>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	<div class="col-lg-12 text-center mt-3">
+		<button type="submit" class="btn btn-add w-100 fw-bold">Pay</button>
+	</div>
+</form>
 	  
 	  
 	  
@@ -144,7 +154,7 @@
                   <input type="hidden" name="customerid" id="customerid" value="{{$customer->id}}">
                   <input type="hidden" name="sid" id="sid" value="{{$serviceid}}">
                   <input type="hidden" name="pid" id="pid" value="{{$pid}}">
-							@csrf 
+								@csrf 
 								<div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
 									<div class="accordion-body">
 									<div class="mb-3">
@@ -162,7 +172,7 @@
 								<div class="mt-4 text-center">
 								<button type="submit" class="btn btn-add w-100 fw-bold">Pay</button>
 								</div>
-</form>
+							</form>
 									</div>
 								</div>
 							</div>

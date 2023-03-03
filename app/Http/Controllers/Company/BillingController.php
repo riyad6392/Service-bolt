@@ -1060,7 +1060,13 @@ class BillingController extends Controller
             'ticket_status' => "5",
             'etc' => $etc,
             'serviceid' => $request->sid,
-            'product_id' => $request->pid
+            'product_id' => $request->pid,
+            'payment_status'=>'Completed',
+            'payment_amount'=> $request->amount,
+            "checknumber"=>"$request->check_no",
+            "card_number"=>"$request->card_number",
+            "expiration_date"=>"$request->expiration_date",
+            "cvv"=>"$request->cvv"
           ]);
 
           DB::table('balancesheet')->insertGetId([
