@@ -211,7 +211,7 @@ Service Report</div>
 	   </div>
 	   
 	   <div class="col-lg-5 mb-2 offset-lg-2" style="margin-left:415px;">
-	   <div class="show-fillter">
+	   <div class="show-fillter" style="display:none;">
 	   <input type="text" class="form-control" placeholder="Search Reports">
 	   <button class="search-icon">
 	   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M14.53 15.59a8.25 8.25 0 111.06-1.06l5.69 5.69a.75.75 0 11-1.06 1.06l-5.69-5.69zM2.5 9.25a6.75 6.75 0 1111.74 4.547.746.746 0 00-.443.442A6.75 6.75 0 012.5 9.25z" fill="currentColor"></path></svg>
@@ -246,22 +246,20 @@ Service Report</div>
 </ul>
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-  <div class="table-responsive">
-	  
-	   <table class="table no-wrap table-new table-list align-items-center">
-	  <thead>
-	  <tr>
-	  <th>Ticket number</th>
-	  <th>Customer Name</th>
-	  <th>Service location</th>
-	  <th>Personel</th>
-	  <th>Service Provided</th>
-	  <th>Cost</th>
-	  <th>Status</th>
-	  
-	  </tr>
-	  </thead>
-	  <tbody>
+    <div class="table-responsive">
+	    <table id="example" class="table no-wrap table-new table-list align-items-center">
+    	    <thead>
+        	    <tr>
+            	  <th>Ticket number</th>
+            	  <th>Customer Name</th>
+            	  <th>Service location</th>
+            	  <th>Personel</th>
+            	  <th>Service Provided</th>
+            	  <th>Cost</th>
+            	  <th>Status</th>
+        	    </tr>
+    	    </thead>
+	    <tbody>
         @foreach($servicereport as $key => $ticket)
             @php
               $explode_id = explode(',', $ticket->serviceid);
@@ -278,45 +276,45 @@ Service Report</div>
                 $paid_status = "";
               }
             @endphp
-	  <tr>
-	  <td>#{{$ticket->id}}</td>
-	  <td>{{$ticket->customername}}</td>
-	  <td>{{$ticket->address}}</td>
-	  <td>{{$ticket->personnelname}}</td>
-	  <td>@php
-          $i=0;
-        @endphp
-        @foreach($servicedata as $servicename)
-            @php
-              if(count($servicedata) == 0){
-                $servicename = '-';
-              } else {
-                $servicename = $servicename->servicename;
-              }
+	    <tr>
+    	  <td>#{{$ticket->id}}</td>
+    	  <td>{{$ticket->customername}}</td>
+    	  <td>{{$ticket->address}}</td>
+    	  <td>{{$ticket->personnelname}}</td>
+    	  <td>@php
+              $i=0;
             @endphp
+            @foreach($servicedata as $servicename)
+                @php
+                  if(count($servicedata) == 0){
+                    $servicename = '-';
+                  } else {
+                    $servicename = $servicename->servicename;
+                  }
+                @endphp
 
-            {{$servicename}}
-          @if(count($servicedata)>1) 
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" class="sup-dot service_list_dot" xmlns="http://www.w3.org/2000/svg" data-bs-toggle="modal" data-bs-target="#service-list-dot" id="service_list_dot" data-id="{{ $ticket->serviceid }}">
-              <circle cx="5" cy="5" r="5" fill="#FA8F61"></circle>
-            </svg>
-            @endif
-            @php
-            $i=1; break;
-          @endphp
-        @endforeach</td>
-	  <td>{{$ticket->price}}</td>
-	  <td><a href="#" class="btn-incompleted btn-common">{{$payment_status}} {{$paid_status}}</a></td>
+                {{$servicename}}
+              @if(count($servicedata)>1) 
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" class="sup-dot service_list_dot" xmlns="http://www.w3.org/2000/svg" data-bs-toggle="modal" data-bs-target="#service-list-dot" id="service_list_dot" data-id="{{ $ticket->serviceid }}">
+                  <circle cx="5" cy="5" r="5" fill="#FA8F61"></circle>
+                </svg>
+                @endif
+                @php
+                $i=1; break;
+              @endphp
+            @endforeach</td>
+    	  <td>{{$ticket->price}}</td>
+    	  <td><a href="#" class="btn-incompleted btn-common">{{$payment_status}} {{$paid_status}}</a>
+          </td>
 	  
-	  </tr>
+	    </tr>
 	   @php
           $i++;
         @endphp
     @endforeach
 	  </tbody>
-	  </table>
-	  
-	 </div>
+	</table>
+	</div>
   </div>
   <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">Coming Soon</div>
   <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">Coming Soon</div>
@@ -372,7 +370,7 @@ Service Report</div>
 
 <div class="col-lg-12">
 <div class="table-responsive">
- <table id="example" class="table no-wrap table-new table-list no-footer" style="position: relative;">
+ <table id="example1" class="table no-wrap table-new table-list no-footer" style="position: relative;">
      <thead>
            <tr>
                <th style="font-weight:400;font-size:15px;">Personnel Name</th>
@@ -746,9 +744,9 @@ Service Report</div>
 <script type="text/javascript">
     $('.dropify').dropify();
     $(document).ready(function() {
-     // $('#example').DataTable({
-     //  "order": [[ 0, "desc" ]]
-     //  });
+     $('#example').DataTable({
+      "order": [[ 0, "desc" ]]
+      });
     });
 
     $.ajaxSetup({
