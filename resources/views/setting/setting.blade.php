@@ -142,12 +142,13 @@ label.credit img {
   <textarea class="form-control height-110" placeholder="Description" name="description" id="description">{{$userData->footercontent}}</textarea>
 </div>
 <div class="col-lg-6 mb-3">
-  <label>Body Text</label><br>
-  <textarea class="form-control height-110" placeholder="Body Text" name="bodytext" id="bodytext">{{$userData->bodytext}}</textarea>
+  <label>Invoice Email Body Description
+</label><br>
+  <textarea class="form-control height-110" placeholder="Invoice email body description" name="bodytext" id="bodytext">{{$userData->bodytext}}</textarea>
 </div>
 <div class="col-lg-6 mb-3">
   <label>Invoice Email Subject</label><br>
-  <input type="text" value="{{$userData->subject}}" id="subject" name="subject" placeholder="Email Subject">
+  <input type="text" value="{{$userData->subject}}" id="subject" name="subject" placeholder="Invoice Email Subject" class="form-control form-control-2">
 </div>
 </div>
 <h5 class="my-4">Manage Stock Percentage (%)</h5>
