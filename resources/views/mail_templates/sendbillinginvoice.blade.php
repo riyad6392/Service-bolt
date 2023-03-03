@@ -9,7 +9,7 @@
 <body>
     @if(isset($type) && ($type == "sendinvoice"))
         @if($body!=null)
-            <span>{{$body}}</span>
+            <span>{!!$body!!}</span>
         @endif
     @endif
 <div style="max-width: 680px;margin:auto;background: url('') no-repeat center top;background-size: cover;padding: 25px;">

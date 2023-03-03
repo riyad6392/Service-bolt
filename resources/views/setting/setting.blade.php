@@ -44,6 +44,7 @@ label.credit img {
     width: 160px;
 }
 </style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.css" rel="stylesheet">
 <div class="">
 <div class="content">
      <div class="row">
@@ -137,19 +138,20 @@ label.credit img {
     </label>
   </span>
 </div>
-<div class="col-lg-6 mb-3">
+<div class="col-lg-12 mb-3">
   <label>Invoice Footer content</label><br>
   <textarea class="form-control height-110" placeholder="Description" name="description" id="description">{{$userData->footercontent}}</textarea>
 </div>
-<div class="col-lg-6 mb-3">
-  <label>Invoice Email Body Description
-</label><br>
-  <textarea class="form-control height-110" placeholder="Invoice email body description" name="bodytext" id="bodytext">{{$userData->bodytext}}</textarea>
-</div>
-<div class="col-lg-6 mb-3">
+<div class="col-lg-12 mb-3">
   <label>Invoice Email Subject</label><br>
   <input type="text" value="{{$userData->subject}}" id="subject" name="subject" placeholder="Invoice Email Subject" class="form-control form-control-2">
 </div>
+<div class="col-lg-12 mb-3">
+  <label>Invoice Email Body Description
+</label><br>
+  <textarea class="summernote form-control customer-height mb-4" placeholder="Invoice Email Body Description" name="bodytext" id="bodytext">{{$userData->bodytext}}</textarea>
+</div>
+
 </div>
 <h5 class="my-4">Manage Stock Percentage (%)</h5>
 <div class="col-lg-6 mb-3">
@@ -435,7 +437,26 @@ label.credit img {
 </div>
 @endsection
 @section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.js"></script>
 <script type="text/javascript">
+  $(document).ready(function() {
+    $('.summernote').summernote({
+      height: 300,
+       toolbar: [
+            [ 'style', [ 'style' ] ],
+            [ 'font', [ 'bold', 'italic', 'underline', 'clear'] ],
+            //[ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
+            [ 'fontname', [ 'fontname' ] ],
+            [ 'fontsize', [ 'fontsize' ] ],
+            [ 'color', [ 'color' ] ],
+            [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+            //[ 'table', [ 'table' ] ],
+            [ 'insert', [ 'link'] ],
+            //[ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
+            [ 'view', [ 'undo', 'redo', 'fullscreen', 'help' ] ]
+        ]
+    });
+  });
   function cc_format(value) {
   var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
   var matches = v.match(/\d{4,16}/g);
