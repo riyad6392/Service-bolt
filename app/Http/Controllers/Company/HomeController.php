@@ -90,12 +90,30 @@ class HomeController extends Controller
         $inventoryinfo = DB::table('quote')
                  ->select('quote.product_id','quote.product_name', DB::raw('count(*) as total'),'products.pquantity','products.quantity')->join('products', 'products.id', '=', 'quote.product_id')->where('quote.userid',$auth_id)->where('quote.product_name', '!=',"")->limit(3)->orderBy('quote.product_id','DESC')
                  ->groupBy('quote.product_name')->get();
-        $serviceinfo = DB::table('quote')
-                 ->select('quote.serviceid','services.servicename','services.color', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
-                 ->orderBy('total','DESC')
-                 ->groupBy('quote.servicename')
-                 ->get();
+        // $serviceinfo = DB::table('quote')
+        //          ->select('quote.serviceid','services.servicename','services.color', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
+        //          ->orderBy('total','DESC')
+        //          ->groupBy('quote.servicename')
+        //          ->get();
                  //dd($serviceinfo);
+        $serviceinfo = DB::table('quote')->select('quote.id','quote.serviceid')->where('quote.userid',$auth_id)->where('quote.ticket_status','!=','5')->get();
+        
+        foreach($serviceinfo as $key =>$value) {
+           $sids[] = $value->serviceid;
+        }
+
+       $counts = implode(",", $sids);
+       $arrayv = explode(",",$counts);
+       $countsf = array_count_values($arrayv);
+       arsort($countsf);
+      
+       $newArray = array_slice($countsf, 0, 4, true);
+      
+       $newArray1 = array_flip($newArray);
+      
+       $serviceinfo = DB::table('services')->whereIn('id',$newArray1)->get();
+      $numerickey = array_values($newArray);
+      //dd($serviceinfo);
         $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->where('quote.ticket_status','4')->orderBy('quote.id','ASC')->get();
 
         $completedticketcount = DB::table('quote')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->whereDate('quote.created_at', Carbon::today())->count();
@@ -108,7 +126,7 @@ class HomeController extends Controller
           $dailyprogress = 0;
         }
         
-        return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData','usersaddress'));
+        return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData','usersaddress','numerickey'));
     }
 
     public function index1(Request $request)
@@ -161,11 +179,29 @@ class HomeController extends Controller
                  ->select('quote.product_id','quote.product_name', DB::raw('count(*) as total'),'products.pquantity','products.quantity')->join('products', 'products.id', '=', 'quote.product_id')->where('quote.userid',$auth_id)->limit(3)->orderBy('quote.product_id','DESC')
                  ->groupBy('quote.product_name')
                  ->get();     
-        $serviceinfo = DB::table('quote')
-                 ->select('quote.serviceid','services.servicename','services.color', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
-                 ->orderBy('total','DESC')
-                 ->groupBy('quote.serviceid')
-                 ->get();
+        // $serviceinfo = DB::table('quote')
+        //          ->select('quote.serviceid','services.servicename','services.color', DB::raw('count(*) as total'))->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.userid',$auth_id)->limit(4)
+        //          ->orderBy('total','DESC')
+        //          ->groupBy('quote.serviceid')
+        //          ->get();
+        $serviceinfo = DB::table('quote')->select('quote.id','quote.serviceid')->where('quote.userid',$auth_id)->where('quote.ticket_status','!=','5')->get();
+        
+        foreach($serviceinfo as $key =>$value) {
+           $sids[] = $value->serviceid;
+        }
+
+       $counts = implode(",", $sids);
+       $arrayv = explode(",",$counts);
+       $countsf = array_count_values($arrayv);
+       arsort($countsf);
+      
+       $newArray = array_slice($countsf, 0, 4, true);
+      
+       $newArray1 = array_flip($newArray);
+      
+       $serviceinfo = DB::table('services')->whereIn('id',$newArray1)->get();
+       $numerickey = array_values($newArray);       
+
          $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->where('quote.ticket_status','4')->orderBy('quote.id','ASC')->get();
 
         $completedticketcount = DB::table('quote')->where('quote.userid',$auth_id)->where('quote.ticket_status',"3")->whereDate('quote.created_at', Carbon::today())->count();
@@ -178,7 +214,7 @@ class HomeController extends Controller
           $dailyprogress = 0;
         }
         
-         return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData','usersaddress'));
+         return view('company.home',compact('auth_id','ticket','customerData','inventoryinfo','scheduleData','serviceinfo','dailyprogress','goodproduct','lowproduct','restockproduct','inventoryData','usersaddress','numerickey'));
     }
 
     public function index2(Request $request) {

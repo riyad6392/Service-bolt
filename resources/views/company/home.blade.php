@@ -773,7 +773,7 @@ function CustomMarker(latlng, map, imageSrc) {
     var four1 = 0;
   }
   if(colorcount=="1") {
-    var first = {{@$serviceinfo[0]->total ?? 0}};
+    var first = {{@$numerickey[0] ?? 0}};
     var first1 = "{{@$serviceinfo[0]->servicename}}";
     var two = 0;
     var two1 = 0;
@@ -783,9 +783,9 @@ function CustomMarker(latlng, map, imageSrc) {
     var four1 = 0;
   }
   if(colorcount=="2") {
-    var first = {{@$serviceinfo[0]->total ?? 0 }};
+    var first = {{@$numerickey[0] ?? 0 }};
     var first1 = "{{@$serviceinfo[0]->servicename}}";
-    var two = {{@$serviceinfo[1]->total ?? 0}};
+    var two = {{@$numerickey[1] ?? 0}};
     var two1 = "{{@$serviceinfo[1]->servicename}}";
     var three = 0;
     var three1 = 0;
@@ -793,23 +793,23 @@ function CustomMarker(latlng, map, imageSrc) {
     var four1 = 0;
   }
   if(colorcount=="3") {
-    var first = {{@$serviceinfo[0]->total ?? 0}};
+    var first = {{@$numerickey[0] ?? 0}};
     var first1 = "{{@$serviceinfo[0]->servicename}}";
-    var two = {{@$serviceinfo[1]->total ?? 0}};
+    var two = {{@$numerickey[1] ?? 0}};
     var two1 = "{{@$serviceinfo[1]->servicename}}";
-    var three = {{@$serviceinfo[2]->total ?? 0}};
+    var three = {{@$numerickey[2] ?? 0}};
     var three1 = "{{@$serviceinfo[2]->servicename}}";
     var four = 0;
     var four1 = 0;
   }
   if(colorcount=="4") {
-    var first = {{@$serviceinfo[0]->total ?? 0}};
+    var first = {{@$numerickey[0] ?? 0}};
     var first1 = "{{@$serviceinfo[0]->servicename}}";
-    var two = {{@$serviceinfo[1]->total ?? 0}};
+    var two = {{@$numerickey[1] ?? 0}};
     var two1 = "{{@$serviceinfo[1]->servicename}}";
-    var three = {{@$serviceinfo[2]->total ?? 0}};
+    var three = {{@$numerickey[2] ?? 0}};
     var three1 = "{{@$serviceinfo[2]->servicename}}";
-    var four = {{@$serviceinfo[3]->total ?? 0}};
+    var four = {{@$numerickey[3] ?? 0}};
     var four1 = "{{@$serviceinfo[3]->servicename}}";
   }
   
