@@ -435,7 +435,7 @@ class UserController extends Controller
                    'primaryid'=>$quoteData->primaryname,
                    'price'=>$quoteData->price,
                    'tax'=>$quoteData->tax,
-                   'addressid'=>$addressinfo->id,
+                   'addressid'=>@$addressinfo->id,
                    'customerid'=>$quoteData->customerid,
                    'customername'=>$quoteData->customername,
                    'address'=>$quoteData->address,
