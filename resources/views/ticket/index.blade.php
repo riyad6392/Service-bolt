@@ -729,15 +729,15 @@ select#servicename {
 		<div class="col-md-12 mb-3">
 		   <div class="align-items-center justify-content-lg-between d-flex services-list">
 		  	<label class="container-checkbox">Per hour
-			  <input type="radio" id="test1" name="radiogroup" value="perhour" class="radiogroup" checked>
+			  <input type="radio" id="test11" name="radiogroup" value="perhour" class="radiogroupforquote" checked>
 			  <span class="checkmark"></span>
 			</label>
 			<label class="container-checkbox">Flate rate
-			  <input type="radio" id="test2" name="radiogroup" value="flatrate" class="radiogroup">
+			  <input type="radio" id="test22" name="radiogroup" value="flatrate" class="radiogroupforquote">
 			  <span class="checkmark"></span>
 			</label>
 			<label class="container-checkbox">Reccuring
-			  <input type="radio" id="test3" name="radiogroup" value="recurring" class="radiogroup">
+			  <input type="radio" id="test33" name="radiogroup" value="recurring" class="radiogroupforquote">
 			  <span class="checkmark"></span>
 			</label>
 		  </div>
@@ -953,15 +953,15 @@ select#servicename {
 		<div class="col-md-12 mb-3">
 		   <div class="align-items-center justify-content-lg-between d-flex services-list">
 		  	<label class="container-checkbox">Per hour
-			  <input type="radio" id="test1" name="radiogroup" class="radiogroup1" value="perhour" checked>
+			  <input type="radio" id="test111" name="radiogroup" class="radiogroupforticket" value="perhour" checked>
 			  <span class="checkmark"></span>
 			</label>
 			<label class="container-checkbox">Flate rate
-			  <input type="radio" id="test2" name="radiogroup" class="radiogroup1" value="flatrate">
+			  <input type="radio" id="test222" name="radiogroup" class="radiogroupforticket" value="flatrate">
 			  <span class="checkmark"></span>
 			</label>
 			<label class="container-checkbox">Reccuring
-			  <input type="radio" id="test3" name="radiogroup" class="radiogroup1" value="recurring">
+			  <input type="radio" id="test333" name="radiogroup" class="radiogroupforticket" value="recurring">
 			  <span class="checkmark"></span>
 			</label>
 		  </div>
@@ -1707,16 +1707,16 @@ select#servicename {
           <div class="col-md-12 mb-2">
             <div class="align-items-center justify-content-lg-between d-flex services-list">
               <p>
-                <input type="radio" id="test1" name="radiogroup" value="perhour" class="radiogrp" checked>
-                <label for="test1">Per Hour</label>
+                <input type="radio" id="tickerservice1" name="radiogroup" value="perhour" class="radio" checked>
+                <label for="tickerservice1">Per Hour</label>
               </p>
               <p>
-                <input type="radio" id="test2" name="radiogroup" value="flatrate" class="radiogrp">
-                <label for="test2">Flate Rate</label>
+                <input type="radio" id="tickerservice2" name="radiogroup" value="flatrate" class="radio">
+                <label for="tickerservice2">Flate Rate</label>
               </p>
               <p>
-                <input type="radio" id="test3" name="radiogroup" value="recurring" class="radiogrp">
-                <label for="test3">Recurring</label>
+                <input type="radio" id="tickerservice3" name="radiogroup" value="recurring" class="radio">
+                <label for="tickerservice3">Recurring</label>
               </p>
             </div>
           </div>
@@ -1836,7 +1836,7 @@ $('#serviceform').on('submit', function(event) {
             success:function(data) {
 			  swal("Done!", "Service Created Successfully!", "success");
               $("#add-services").modal('hide');
-              $("#servicename").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");
+              $("#servicename").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+" selected>"+data.servicename+"</option>");
               $("#servicename").selectpicker('refresh');
               $("#add-tickets").show();
             }
@@ -1857,8 +1857,8 @@ $('#serviceform').on('submit', function(event) {
             success:function(data) {
 			  swal("Done!", "Service Created Successfully!", "success");
               $("#add-services1").modal('hide');
-              $(".service").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+">"+data.servicename+"</option>");
-              $(".service").selectpicker('refresh');
+              $("#servicenamet1").append("<option value="+data.id+"  data-hour="+data.time+" data-min="+data.minute+" data-price="+data.price+" data-frequency="+data.frequency+" selected>"+data.servicename+"</option>");
+              $("#servicenamet1").selectpicker('refresh');
               $("#add-tickets1").show();
             }
         })
@@ -1878,7 +1878,7 @@ $('#serviceform').on('submit', function(event) {
 	            success:function(data) {
 				  swal("Done!", "Product Created Successfully!", "success");
 	              $("#add-products").modal('hide');
-	              $("#productname").append("<option value="+data.id+" data-price="+data.price+">"+data.productname+"</option>");
+	              $("#productname").append("<option value="+data.id+" data-price="+data.price+" selected>"+data.productname+"</option>");
 	              $("#productname").selectpicker('refresh');
               	  $("#add-tickets").show();
 	            }
@@ -1899,7 +1899,7 @@ $('#serviceform').on('submit', function(event) {
 	            success:function(data) {
 				  swal("Done!", "Product Created Successfully!", "success");
 	              $("#add-products1").modal('hide');
-	              $("#productnamet1").append("<option value="+data.id+" data-price="+data.price+">"+data.productname+"</option>");
+	              $("#productnamet1").append("<option value="+data.id+" data-price="+data.price+" selected>"+data.productname+"</option>");
 	              $("#productnamet1").selectpicker('refresh');
               	  $("#add-tickets1").show();
 	            }
