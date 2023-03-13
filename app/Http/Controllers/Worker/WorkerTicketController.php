@@ -982,8 +982,8 @@ class WorkerTicketController extends Controller
       
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
       $customer = Customer::where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();
-      $services = Service::where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->get();
-      $products = Inventory::where('user_id', $worker->userid)->orWhere('workerid',$worker->workerid)->get();
+      $services = Service::where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+      $products = Inventory::where('user_id', $worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();
 
       //$workerlist = Personnel::where('userid', $worker->userid)->where('id','!=',$worker->workerid)->get();
       $workerlist = Personnel::where('userid', $worker->userid)->get();
