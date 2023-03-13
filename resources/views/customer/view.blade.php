@@ -27,6 +27,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     /*background: #FDFBEC;*/
     background: #FAED61 !important;
   }
+  .table-new tbody td, .table-new thead th
+  {
+    z-index: 1;
+    padding: 0px 0px;
+    height: 2.5em;
+  }
+  
   .card-body.customer-scroll-div {
     height: 450px;
     overflow-y: auto;
