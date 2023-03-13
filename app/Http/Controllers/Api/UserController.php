@@ -121,8 +121,7 @@ class UserController extends Controller
     }
 
     public function loginerror() {
-        //return response()->json(['status'=>0,'message'=>'Unauthenticated'],$this->errorresultStatus);   
-        return response()->json(['status'=>0,'message'=>'You are logged in to another device, so you have been logged out from here'],$this->errorresultStatus);   
+        return response()->json(['status'=>0,'message'=>'Unauthenticated'],$this->errorresultStatus);   
     }
 
      public function workerlogout() {
