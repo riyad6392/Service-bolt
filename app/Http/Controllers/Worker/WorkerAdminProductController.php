@@ -90,7 +90,12 @@ class WorkerAdminProductController extends Controller
                 $data['category'] = $request->category;
                 $data['description'] = $request->description;
            
-            Inventory::create($data);
+            $inventoryData = Inventory::create($data);
+
+            if($request->ajax()) {
+              return json_encode(['id' => $inventoryData->id,'price' => $inventoryData->price,'productname' =>$inventoryData->productname]);
+            }
+
             $request->session()->flash('success', 'Product added successfully');
             if(isset($request->cid)) {
             

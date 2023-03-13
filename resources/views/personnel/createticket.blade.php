@@ -84,6 +84,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	        		<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
 	        	@endforeach
 	        </select>
+	        @if(in_array("Add Service", $permissonarray))
+				<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+		  			<a href="#"  data-bs-toggle="modal" data-bs-target="#add-services" class=""><i class="fa fa-plus"></i></a>
+		  		</div>
+	  		@endif
 			   </div>
 
 			   <div class="col-md-6 mb-3">
@@ -92,6 +97,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	        		<option value="{{$value->id}}" data-hour="{{$value->time}}" data-min="{{$value->minute}}" data-price="{{$value->price}}" data-frequency="{{$value->frequency}}">{{$value->productname}}</option>
 	        	@endforeach
 	        </select>
+	        @if(in_array("Add Product", $permissonarray))
+	        	<div class="d-flex align-items-center justify-content-end pe-3 mt-3">
+	  				<a href="#"  data-bs-toggle="modal" data-bs-target="#add-products" class=""><i class="fa fa-plus"></i></a>
+	  			</div>
+  			@endif
 			   </div>
 	   
 	    <div class="col-md-6 mb-3" style="display: none;">
@@ -285,10 +295,193 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     </div>
   </div>
 </div>
+
+<!-- service Modal -->
+<div class="modal fade" id="add-services" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box overflow-hidden">
+      <form class="form-material m-t-40 form-valide" id="serviceform" method="post" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+        <div class="add-customer-modal">
+          <h5>Add a new Service</h5>
+        </div>
+        @php
+        if(count($products)>0){
+            $pname= "";
+        } else {
+            $pname= "active-focus";
+        }
+        
+        @endphp
+        <div class="row customer-form" id="product-box-tabs">
+          <div class="col-md-12 mb-2">
+            <input type="text" class="form-control" placeholder="Service Name" name="servicename" id="servicename" required="">
+          </div>
+          <div class="col-md-12 mb-2">
+            <input type="number" class="form-control" placeholder="Service Default Price" name="price" id="price" required="">
+          </div>
+          <div class="col-md-12 mb-3">
+            <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" data-placeholder="Select Products" name="defaultproduct[]" id="defaultproduct">
+            @foreach ($products as $product)
+                  <option value="{{$product->id}}">{{$product->productname}}</option>
+                @endforeach
+            </select>
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="align-items-center justify-content-lg-between d-flex services-list">
+              <p>
+                <input type="radio" id="test11" name="radiogroup" value="perhour" checked>
+                <label for="test11">Per Hour</label>
+              </p>
+              <p>
+                <input type="radio" id="test22" name="radiogroup" value="flatrate">
+                <label for="test22">Flate Rate</label>
+              </p>
+              <p>
+                <input type="radio" id="test33" name="radiogroup" value="recurring">
+                <label for="test33">Recurring</label>
+              </p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <select class="form-select" name="frequency" id="frequency" required="">
+              <option selected="" value="">Service Frequency</option>
+              @foreach($tenture as $key=>$value)
+                <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
+              @endforeach
+              <!-- <option name="Weekly" value="Weekly">Weekly</option>
+              <option name="Be weekly" value="Be weekly">Bi-Weekly</option>
+              <option name="Monthly" value="Monthly">Monthly</option> -->
+            </select>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label>Default Time (hh:mm)</label><br>
+            <div class="timepicker timepicker1" style="display:inline-block;">
+            <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" value="1">:
+            <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" value="0">
+          </div></div>
+          <div class="col-md-12 mb-2">
+            <label>Choose Color</label><br>
+            <span class="color-picker">
+              <label for="colorPicker">
+                <input type="color" value="#faed61" id="colorPicker" name="colorcode" style="width:235px;">
+              </label>
+            </span>
+          </div>
+          <div class="col-lg-12 mb-2">
+            <textarea class="form-control height-180" name="description" id="description" placeholder="Description" required></textarea>
+          </div>
+          <div class="col-md-12">
+            <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
+              <input type="file" class="dropify" name="image" id="image"data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+          </div>
+          <div class="col-md-12 mb-2" style="display: none;">
+            <p class="create-gray mb-2">Create default checklist</p>
+            <div class="align-items-center  d-flex services-list" style="flex-flow:wrap;">
+              <label class="container-checkbox me-3">Point 1
+                <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point1"> <span class="checkmark"></span>
+              </label>
+              <label class="container-checkbox me-3">Point 2
+                <input type="checkbox" name="pointckbox[]" id="pointckbox" value="point2"> <span class="checkmark"></span>
+              </label>
+              
+            </div>
+          </div>
+          <div class="row mt-3">
+          <div class="col-lg-6 mb-2">
+            <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
+          </div>
+          <div class="col-lg-6">
+            <button type="submit" class="btn btn-add btn-block">Add a Service</button>
+          </div>
+        </div>
+        </div>
+      </div>
+
+    </form>
+    </div>
+  </div>
+</div>
+
+<!-- product Modal -->
+<div class="modal fade" id="add-products" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box overflow-hidden">
+     <form class="form-material m-t-40 form-valide" id="productform" method="post" enctype="multipart/form-data">
+        @csrf
+      <div class="modal-body">
+        <div class="add-customer-modal d-flex justify-content-between align-items-center">
+        <h5>Add a new Product/Part</h5>
+        <button type="button" class="btn-close" id="quotecancel3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+     <input type="hidden" name="cid" id="cid" value="">
+  <div class="row customer-form" id="product-box-tabs">
+    <div class="col-md-12 mb-3">
+     <input type="text" class="form-control" placeholder="Product/Part Name" name="productname" id="productname" required="">
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <select class="selectpicker form-control" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid">
+          @foreach ($services as $service)
+            <option value="{{$service->id}}">{{$service->servicename}}</option>
+          @endforeach
+        </select>
+          
+       </div>
+    
+    <div class="col-md-6 mb-3">
+     <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity" required="" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+    
+     
+     </div>
+     <div class="col-md-6 mb-3">
+    
+     <input type="text" class="form-control" placeholder="Preferred Quantity" name="pquantity" id="pquantity" required="" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+     
+     </div>
+     
+     <div class="col-md-6 mb-3">
+      <input type="text" class="form-control" placeholder="SKU #" name="sku" id="sku" required="">
+     </div>
+
+     <div class="col-md-6 mb-3">
+     <input type="text" class="form-control" placeholder="Unit" name="unit" id="unit">
+   </div>
+
+     <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="$ Price" name="price" id="price" required="" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false">
+     </div>
+
+      <div class="col-lg-12 mb-3">
+    <textarea class="form-control height-180" name="description" id="description" required="" placeholder="Description"></textarea>
+    </div>
+      <div class="col-md-12">
+      <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
+      <input type="file" class="dropify" name="image" id="image" data-max-file-size="2M" data-allowed-file-extensions='["jpg", "jpeg","png","gif","svg","bmp"]' accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+     </div>
+     
+     <div class="row mt-3">
+     <div class="col-lg-6 mb-3">
+      <button type="button" class="btn btn-cancel btn-block" id="quotecancel31" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+     </div>
+     <div class="col-lg-6 mb-3">
+      <button class="btn btn-add btn-block" type="submit">Complete</button>
+     </div>
+     </div>
+    </div>
+    </div>
+ </form>
+  </div>
+</div>
+</div>
+<!-- end product modal -->
 @endsection
 
 @section('script')
 <script type="text/javascript">
+  $('.dropify').dropify();
   $(document).ready(function() {
     $('#example').DataTable();
     h=1;
@@ -447,6 +640,46 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	})
 
 $('#selector').delay(2000).fadeOut('slow');
+
+$('#productform').on('submit', function(event) {
+    event.preventDefault();
+    var url = "{{url('personnel/manageproducts/create')}}";
+     $.ajax({
+          url:url,
+          data: new FormData(this),
+          method: 'POST',
+          dataType: 'JSON',
+          contentType: false,
+          cache: false,
+          processData: false,
+          success:function(data) {
+            swal("Done!", "Product Created Successfully!", "success");
+            $("#add-products").modal('hide');
+            $("#productname").append("<option value="+data.id+" data-price="+data.price+" selected>"+data.productname+"</option>");
+            $("#productname").selectpicker('refresh');
+            //location.reload();
+          }
+      })
+});
+$('#serviceform').on('submit', function(event) {
+    event.preventDefault();
+    var url = "{{url('personnel/manageservices/create')}}";
+     $.ajax({
+          url:url,
+          data: new FormData(this),
+          method: 'POST',
+          dataType: 'JSON',
+          contentType: false,
+          cache: false,
+          processData: false,
+          success:function(data) {
+            swal("Done!", "Services Created Successfully!", "success");
+            $("#add-services").modal('hide');
+            $("#servicename").append("<option value="+data.id+" data-hour="+data.time+" data-min="+data.minute+" data-frequency="+data.frequency+" data-price="+data.price+" selected>"+data.servicename+"</option>");
+            $("#servicename").selectpicker('refresh');
+          }
+      })
+});
 </script>
 @endsection
 

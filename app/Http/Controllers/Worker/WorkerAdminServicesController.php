@@ -98,6 +98,10 @@ class WorkerAdminServicesController extends Controller
         $data['color'] = $request->colorcode;
       
       $sid = Service::create($data);
+
+      if($request->ajax()) {
+        return json_encode(['id' => $sid->id,'time' => $sid->time,'minute' => $sid->minute,'price' => $sid->price,'frequency' => $sid->frequency,'servicename' =>$sid->servicename]);
+      }
       if(isset($request->cid)) {
         // $customer = Customer::where('id', $request->cid)->get()->first();
 

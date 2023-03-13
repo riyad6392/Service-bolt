@@ -993,7 +993,7 @@ class WorkerTicketController extends Controller
       $permissonarray = explode(',',$personnel->ticketid);
       $tenture = Tenture::where('status','Active')->get();
       if(in_array("Create Ticket", $permissonarray)) {
-        return view('personnel.createticket',compact('auth_id','customer','services','workerlist','tenture','products'));
+        return view('personnel.createticket',compact('auth_id','customer','services','workerlist','tenture','products','permissonarray'));
       } else {
         return redirect()->back();
       }
