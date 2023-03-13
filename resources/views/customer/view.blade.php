@@ -30,7 +30,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .table-new tbody td, .table-new thead th
   {
     z-index: 1;
-    padding: 0px 0px;
+    padding: 6px 12px;
     height: 2.5em;
   }
   
