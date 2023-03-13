@@ -73,7 +73,7 @@ tr.accepted-row:after {
 }
 </style>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/> -->
 <div class="content">
      <div class="row">
       <div class="col-md-12">
@@ -121,17 +121,17 @@ tr.accepted-row:after {
       </div>
       @if(isset($from))
         <div class="col-lg-3 mb-3">
-          <input type="date" id="since" value="{{$from}}" name="since" class="form-control">
+          <input type="text" id="since1" value="{{$from}}" name="since" class="form-control" readonly>
         </div>
         <div class="col-lg-3 mb-3">
-          <input type="date" id="until" value="{{$to}}" name="until" class="form-control">
+          <input type="text" id="until1" value="{{$to}}" name="until" class="form-control" readonly>
         </div>
       @else
         <div class="col-lg-3 mb-3">
-          <input type="date" id="since" value="{{$currentdate}}" name="since" class="form-control">
+          <input type="text" id="since" value="{{$currentdate}}" name="since" class="form-control" readonly>
         </div>
         <div class="col-lg-3 mb-3">
-          <input type="date" id="until" value="{{$currentdate}}" name="until" class="form-control">
+          <input type="text" id="until" value="{{$currentdate}}" name="until" class="form-control" readonly>
         </div>
       @endif
       <div class="col-lg-3 mb-3 pe-0" >
@@ -299,7 +299,7 @@ tr.accepted-row:after {
 @endsection
 
 @section('script')
-<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+<!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script> -->
 <script type="text/javascript">
   $(document).ready(function() {
     $('#example').DataTable({
@@ -448,6 +448,27 @@ $('#datepicker2old').datepicker({
 	    }
 	})
  });
+$(function () {
+  $("#since").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true
+  }).datepicker('update', new Date());
+
+   $("#until").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true
+  }).datepicker('update', new Date());
+
+  $("#since1").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true
+  });
+
+   $("#until1").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true
+  });
+});
 </script>
 @endsection
 

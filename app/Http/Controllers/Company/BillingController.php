@@ -1155,13 +1155,19 @@ class BillingController extends Controller
             $pid = $request->pid;
             $totalbillingData->where('quote.personnelid',$pid);
         }
+
+       
+
         if(isset($request->from)) {
           if(!isset($request->to)) {
             $todate = $request->from;
+              $todate = date('Y-m-d', strtotime($request->from));
           } else {
-            $todate = $request->to;
+            $todate = date('Y-m-d', strtotime($request->to));
+
           }
-          $totalbillingData->whereBetween('quote.givenstartdate', [$request->from, $todate]);
+          $fromdate = date('Y-m-d', strtotime($request->from));
+          $totalbillingData->whereBetween('quote.givenstartdate', [$fromdate, $todate]);
         }
         $totalbillingData = $totalbillingData->orderBy('quote.id','desc')->get();
 

@@ -87,11 +87,14 @@ use Image;
        $stimesheetData = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('COUNT(timeoff.id) as counttotal'),'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->groupBy('timeoff.created_at')->get();
 
       } else {
+        $date1 = date('Y-m-d', strtotime($request->since));
+        $date2 = date('Y-m-d', strtotime($request->until));
         //$stimesheetData  = DB::table('timeoff')->select('timeoff.*', 'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->whereBetween('date1', [$request->since, $request->until])->get();
-        $stimesheetData = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('COUNT(timeoff.id) as counttotal'),'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->groupBy('timeoff.created_at')->whereBetween('timeoff.date1', [$request->since, $request->until])->get();
+        $stimesheetData = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('COUNT(timeoff.id) as counttotal'),'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->groupBy('timeoff.created_at')->whereBetween('timeoff.date1', [$date1, $date2])->get();
       }
       $from = $request->since;
-        $to = $request->until;
+      $to = $request->until;
+
       $personnelUser = Personnel::select('*')->where('userid',$auth_id)->orderBy('id','DESC')->get(); 
       $currentdate = Carbon::now();
       $currentdate = date('Y-m-d', strtotime($currentdate));
@@ -103,10 +106,11 @@ use Image;
         if(isset($pdata)) {
           $name = $pdata->personnelname;
         }
-        
+        $date1 = date('Y-m-d', strtotime($request->since));
+        $date2 = date('Y-m-d', strtotime($request->until));
         //$stimesheetData  = DB::table('timeoff')->select('timeoff.*', 'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->where('timeoff.workerid',$personnelid)->whereBetween('date1', [$request->since, $request->until])->get();
 
-        $stimesheetData = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('COUNT(timeoff.id) as counttotal'),'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->where('timeoff.workerid',$personnelid)->groupBy('timeoff.created_at')->whereBetween('timeoff.date1', [$request->since, $request->until])->get();
+        $stimesheetData = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('COUNT(timeoff.id) as counttotal'),'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->where('timeoff.workerid',$personnelid)->groupBy('timeoff.created_at')->whereBetween('timeoff.date1', [$date1, $date2])->get();
 
         $from = $request->since;
         $to = $request->until;

@@ -1163,6 +1163,5 @@ $(document).on('change','#productname',function(e) {
   $(document).on('click','.cancelpopup',function(e) {
    location.reload();
   });
-  
 </script>
 @endsection

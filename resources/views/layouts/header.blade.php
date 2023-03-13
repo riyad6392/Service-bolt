@@ -17,7 +17,8 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css')}}">
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css'>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap5.min.css">
-
+<!-- for datepicker -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
 <link rel='stylesheet' href="{{ asset('css/jquery.typeahead.css')}}">
 
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css"> -->
@@ -617,6 +618,7 @@ $googleplacekey = $userinfo->googleplace;
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css'>
+
 <script src="{{ asset('js/jquery-ui.js')}}"></script>
 <script src="{{ asset('js/add-field.js')}}"></script>
 <script src="https://js.pusher.com/7.1/pusher.min.js"></script>
@@ -625,6 +627,8 @@ $googleplacekey = $userinfo->googleplace;
    
 @yield('script')
  <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $googleplacekey; ?>&callback=initAutocomplete&libraries=places" async></script>
+ <!-- for datepicker -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
  
  <!-- AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc -->
  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOi1ruL06YUktpnX-qRJlTtXxPL6RUzcg&callback=initAutocomplete&libraries=places" async></script> -->

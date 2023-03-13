@@ -50,22 +50,22 @@
       </div>
       @if(isset($from))
         <div class="col-lg-2 mb-2">
-          <input type="date" id="from" value="{{$from}}" name="from" class="form-control">
+          <input type="text" id="from" placeholder="mm/dd/yyyy" value="{{$from}}" name="from" class="form-control" readonly>
         </div>
         <div class="col-lg-2 mb-2">
-          <input type="date" id="to" value="{{$to}}" name="to" class="form-control">
+          <input type="text" id="to" placeholder="mm/dd/yyyy" value="{{$to}}" name="to" class="form-control" readonly>
         </div>
       @else
         <div class="col-lg-2 mb-2">
-          <input type="date" id="from" value="{{@$_REQUEST['from']}}" name="from" class="form-control">
+          <input type="text" id="from" value="{{@$_REQUEST['from']}}" name="from" class="form-control" placeholder="mm/dd/yyyy" readonly>
         </div>
         @if(!isset($_REQUEST['to']))
         <div class="col-lg-2 mb-2">
-          <input type="date" id="to" value="{{@$_REQUEST['from']}}" name="to" class="form-control">
+          <input type="text" id="to" value="{{@$_REQUEST['from']}}" name="to" class="form-control" placeholder="mm/dd/yyyy" readonly>
         </div>
         @else
           <div class="col-lg-2 mb-2">
-          <input type="date" id="to" value="{{@$_REQUEST['to']}}" name="to" class="form-control">
+          <input type="text" id="to" value="{{@$_REQUEST['to']}}" name="to" class="form-control" placeholder="mm/dd/yyyy" readonly>
         </div>
         @endif
       @endif
@@ -384,6 +384,18 @@
   $(document).on('click','.cancelpopup',function(e) {
    location.reload();
   }); 
+
+  $(function () {
+  $("#from").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true
+  });
+
+   $("#to").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true
+  });
+});
 </script>
 @endsection
 
