@@ -1296,7 +1296,7 @@ class CustomerController extends Controller
     public function viewinvoice(Request $request)
     {
       $tdata = Quote::where('id', $request->ticketid)->get()->first();
-      $tdata->duedate = $request->duedate;
+      $tdata->duedate = date('Y-m-d', strtotime($request->duedate));
       $tdata->invoicenote = $request->description;
       $tdata->save();
 
@@ -1383,6 +1383,7 @@ class CustomerController extends Controller
       
       if($request->duedate!="") {
         $duedate =   $request->duedate;
+        $duedate = date('m/d/Y', strtotime($request->duedate));
       }  else {
         $duedate = "";
       }
@@ -1401,7 +1402,7 @@ class CustomerController extends Controller
              <div class="input_fields_wrap">
                 <div class="mb-3">
                   <label>Select Due Date</label>
-                  <input type="date" class="form-control" placeholder="Due Date" name="duedate" id="duedate" value="'.$duedate.'" style="position:relative;">
+                  <input type="text" class="form-control" placeholder="mm/dd/yyyy" name="duedate" id="duedate" value="'.$duedate.'" style="position:relative;" readonly>
                 </div>
             </div>
           </div>
@@ -1430,6 +1431,19 @@ class CustomerController extends Controller
 
     public function leftbarviewinvoiceemail(Request $request)
     {
+
+      if($request->duedate!="") {
+        //$duedate =   $request->duedate;
+        $duedate = date('m/d/Y', strtotime($request->duedate));
+      }  else {
+        $duedate = "";
+      }
+      if($request->invoicenote!="") {
+        $invoicenote =   $request->invoicenote;
+      }  else {
+        $invoicenote = "";
+      }
+
       $html ='<div class="add-customer-modal">
                   <h5>Email Invoice</h5>
                  </div><input type="hidden" name="ticketid" id="ticketid" value="'.$request->id.'">
@@ -1437,7 +1451,7 @@ class CustomerController extends Controller
              <div class="input_fields_wrap">
                 <div class="mb-3">
                   <label>Select Due Date</label>
-                  <input type="date" class="form-control" placeholder="Due Date" name="duedate" id="duedate" value="" style="position:relative;">
+                  <input type="text" class="form-control" placeholder="mm/dd/yyyy" name="duedate" id="duedate" value="'.$duedate.'" style="position:relative;" readonly>
                 </div>
             </div>
           </div>
@@ -1445,7 +1459,7 @@ class CustomerController extends Controller
              <div class="input_fields_wrap">
                 <div class="mb-3">
                   <label>Invoice Notes</label>
-                  <textarea class="form-control height-110" placeholder="Invoice Note" name="description" id="description"></textarea>
+                  <textarea class="form-control height-110" placeholder="Invoice Note" name="description" id="description">'.$invoicenote.'</textarea>
                 </div>
             </div>
           </div>

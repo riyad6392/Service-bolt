@@ -1,5 +1,7 @@
 @extends('layouts.header')
 @section('content')
+<!-- for datepicker -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
 <style type="text/css">
   #loader1 {
   border: 16px solid #f3f3f3;
@@ -338,11 +340,11 @@ Service Report</div>
     @endphp
     <div class="col-md-3" style="padding:7px;">
      <label style="visibility:hidden;">Select Date Range</label>
-     <input type="date" id="since" name="since" value="{{$from}}" class="form-control date1">
+     <input type="text" id="since" name="since" value="{{$from}}" class="form-control date1" placeholder="mm/dd/yyyy" readonly>
    </div>
    <div class="col-md-3" style="padding:7px;">
      <label style="visibility:hidden;">To Date</label>
-     <input type="date" id="until" name="until" value="{{$to}}" class="form-control date2">
+     <input type="text" id="until" name="until" value="{{$to}}" class="form-control date2" placeholder="mm/dd/yyyy" readonly>
    </div>
    
 
@@ -741,6 +743,8 @@ Service Report</div>
 @endsection
 
 @section('script')
+<!-- for datepicker -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
     $('.dropify').dropify();
     $(document).ready(function() {
@@ -822,6 +826,16 @@ $(document).on('click','.service_list_dot',function(e) {
         }
     })
  });
+
+$("#since").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
+
+  $("#until").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
 </script>
 @endsection
 

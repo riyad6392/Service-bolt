@@ -916,6 +916,10 @@ $(document).on('click','#addnote',function(e) {
       refresh: true,
       success:function(data) {
         $('#viewdueinvoicemodaldata').html(data.html);
+        $("#duedate").datepicker({ 
+          autoclose: true, 
+          todayHighlight: true
+        });
         
       }
     });
@@ -1140,7 +1144,8 @@ $(document).on('change','#productname',function(e) {
   $(document).on('click','.sendtocustomer',function(e) {
         $("#view-invoice").hide();
         $("#send-emailinvoice").show();
-
+        var duedate = $(this).data('duedate');
+        var invoicenote = $(this).data('invoicenote');
         var id = $(this).data('id');
         var email = $(this).data('email');
 
@@ -1148,14 +1153,19 @@ $(document).on('change','#productname',function(e) {
           url:"{{url('company/customer/leftbarviewinvoiceemail')}}",
           data: {
             id: id,
-            email :email
+            email :email,
+            duedate: duedate,
+            invoicenote: invoicenote,
           },
           method: 'post',
           dataType: 'json',
           refresh: true,
           success:function(data) {
             $('#viewinvoicemodaldata').html(data.html);
-            
+            $("#duedate").datepicker({ 
+              autoclose: true, 
+              todayHighlight: true
+            });
           }
         });
        return false;

@@ -1,5 +1,7 @@
 @extends('layouts.header')
 @section('content')
+<!-- for datepicker -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
 <style type="text/css">
   .table-new tbody tr.selectedrow:after {
     background: #FAED61 !important;
@@ -43,23 +45,38 @@
         </select>
       </div>
       @if(isset($from))
+        @php
+        
+          $from = date('m/d/Y', strtotime($from));
+          $to = date('m/d/Y', strtotime($to));
+
+        @endphp
         <div class="col-lg-3 mb-3">
-          <input type="date" id="from" value="{{$from}}" name="from" class="form-control">
+          <input type="text" id="from" value="{{$from}}" name="from" class="form-control" readonly>
         </div>
         <div class="col-lg-3 mb-3">
-          <input type="date" id="to" value="{{$to}}" name="to" class="form-control">
+          <input type="text" id="to" value="{{$to}}" name="to" class="form-control" readonly>
         </div>
       @else
+      @php
+        $requestfrom = date('m/d/Y', strtotime(@$_REQUEST['from']));
+      @endphp
         <div class="col-lg-3 mb-3">
-          <input type="date" id="from" value="{{@$_REQUEST['from']}}" name="from" class="form-control">
+          <input type="text" id="from" value="{{@$requestfrom}}" name="from" class="form-control" readonly>
         </div>
         @if(!isset($_REQUEST['to']))
+        @php
+          $requestfrom = date('m/d/Y', strtotime(@$_REQUEST['from']));
+        @endphp
         <div class="col-lg-3 mb-3">
-          <input type="date" id="to" value="{{@$_REQUEST['from']}}" name="to" class="form-control">
+          <input type="text" id="to" value="{{@$requestfrom}}" name="to" class="form-control" readonly>
         </div>
         @else
+          @php
+            $requestto = date('m/d/Y', strtotime(@$_REQUEST['to']));
+          @endphp
           <div class="col-lg-3 mb-3">
-          <input type="date" id="to" value="{{@$_REQUEST['to']}}" name="to" class="form-control">
+          <input type="text" id="to" value="{{@$requestto}}" name="to" class="form-control" readonly>
         </div>
         @endif
       @endif
@@ -267,6 +284,9 @@
 @endsection
 
 @section('script')
+<!-- for datepicker -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+
 <script type="text/javascript">
 
   $(document).ready(function() {
@@ -402,7 +422,10 @@
       refresh: true,
       success:function(data) {
         $('#viewdueinvoicemodaldata').html(data.html);
-        
+        $("#duedate").datepicker({ 
+          autoclose: true, 
+          todayHighlight: true
+        });
       }
     });
   })
@@ -425,6 +448,15 @@
   })
  });
 
+  $("#from").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
+
+  $("#to").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
 
 </script>
 @endsection

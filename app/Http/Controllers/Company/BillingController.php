@@ -156,11 +156,12 @@ class BillingController extends Controller
 
     
     public function billingview(Request $request) {
-        $date = $request->from;
+        $date = date('Y-m-d', strtotime($request->from));
+        //$date = $request->from;
         if(!isset($request->to)) {
           $todate = $date;
         } else {
-          $todate = $request->to;
+          $todate = date('Y-m-d', strtotime($request->to));
         }
         
         $auth_id = auth()->user()->id;
@@ -199,9 +200,10 @@ class BillingController extends Controller
       $date = $request->date;
       if(!isset($request->to)) {
           $todate = $date;
-        } else{
-          $todate = $request->to;
-        }
+      } else {
+        $todate = date('Y-m-d', strtotime($request->to));
+      }
+        
       $json = array();
 
       if($targetid == 0) {
@@ -783,15 +785,9 @@ class BillingController extends Controller
       $auth_id = auth()->user()->id;
       
       if($request->duedate!="") {
-        $duedate =   $request->duedate;
+        $duedate = date('m/d/Y', strtotime($request->duedate));
       }  else {
         $duedate = "";
-      }
-
-      if($request->invoicenote!="") {
-        $invoicenote =   $request->invoicenote;
-      }  else {
-        $invoicenote = "";
       }
 
       if($request->invoicenote!="") {
@@ -807,7 +803,7 @@ class BillingController extends Controller
              <div class="input_fields_wrap">
                 <div class="mb-3">
                   <label>Select Due Date</label>
-                  <input type="date" class="form-control" placeholder="Due Date" name="duedate" id="duedate" value="'.$duedate.'">
+                  <input type="text" class="form-control" placeholder="mm/dd/yyyy" name="duedate" id="duedate" value="'.$duedate.'" readonly>
                 </div>
             </div>
           </div>
@@ -1085,7 +1081,7 @@ class BillingController extends Controller
     public function downloadinvoiceview(Request $request)
     {
         $tdata = Quote::where('id', $request->ticketid)->get()->first();
-        $tdata->duedate = $request->duedate;
+        $tdata->duedate = date('Y-m-d', strtotime($request->duedate));
         $tdata->invoicenote = $request->description;
         $tdata->save();
         
