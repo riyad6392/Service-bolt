@@ -252,13 +252,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             </select>
           </div>
           <div class="col-md-6 mb-2">
-            <!-- <select class="form-select" name="time" required="">
-              <option selected="" value="">Select Default Time</option>
-              <option value="15 Minutes">15 Minutes</option>
-              <option value="30 Minutes">30 Minutes</option>
-              <option value="45 Minutes">45 Minutes</option>
-              <option value="1 Hours">1 Hours</option>
-            </select> -->
             <label>Default Time (hh:mm)</label><br>
             <div class="timepicker timepicker1" style="display:inline-block;">
             <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
@@ -268,7 +261,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             <label>Choose Color</label><br>
             <span class="color-picker">
               <label for="colorPicker">
-                <input type="color" value="" id="colorPicker" name="colorcode" style="width:235px;">
+                <input type="color" value="#faed61" id="colorPicker" name="colorcode" style="width:235px;">
               </label>
             </span>
           </div>
