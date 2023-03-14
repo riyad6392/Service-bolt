@@ -28,9 +28,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background: #FAED61 !important;
   }
 
+  .table-new tbody td, .table-new thead th
+  {
+    z-index: 1;
+    padding: 6px 12px;
+    height: 2.5em;
+  }
+
   .card-body.customer-scroll-div {
     height: 450px;
     overflow-y: auto;
+  }
+
+  table.dataTable td {
+    white-space: normal;
   }
 
   .pac-container.pac-logo {
@@ -150,10 +161,22 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 </div>
 
      
-     <div class="col-lg-12 mb-2" style="display: block;">
+     <div class="col-lg-12 mb-2" style="display: none;">
      <input type="text" placeholder=" Address" class="form-control input-gray" readonly style="box-shadow: none;"/>
      </div>
+    <table id="example1" class="table no-wrap table-new table-list" style="
+    position: relative;">
+    <thead>
+      <tr>
+        <th style="display: none;">Id</th>
+        <th>Addresses</th>
+        </tr>
+          </thead>
+          <tbody>
      @foreach($customerAddress as $key=>$value)
+     <tr>
+      <td style="display: none;"></td>
+      <td>
        <div class="col-lg-12 mb-2">
          <div class="d-flex align-items-center justify-content-between ps-4 pt-2 pe-4 pb-2 address-line2 address-line">
            <div class="d-flex align-items-center"><a href="javascript:void(0);" class="info_link1" dataval="{{$value['id']}}"><i class="fa fa-trash"></i></a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="me-3"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z" fill="currentColor"></path></svg> <a class="" data-bs-toggle="modal" data-bs-target="#edit-address" id="editaddress" data-id="{{$value['id']}}" data-address="{{$value['address']}}">{{$value['address']}}</a></div>
@@ -162,8 +185,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <a class="btn btn-save confirm" data-bs-toggle="modal" data-bs-target="#create-ctickets" id="createctickets" data-id="{{$value['customerid']}}" data-address="{{$value['address']}}" style="display: none;">Service Ticket</a>
          </div>
        </div>
+      </td>
+     </tr>
      @endforeach
-  
+    </tbody>
+    </table>
     <!-- edit notes modal open -->
     <div class="modal fade" id="edit-note" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -404,6 +430,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     // $('#example').DataTable({
     //   "order": [[ 0, "desc" ]]
     // });
+    $('#example1').DataTable({
+      //"order": [[ 1, "desc" ]]
+    });
     $("#example tbody > tr:first-child").addClass('selectedrow');
   });
   
