@@ -108,9 +108,9 @@ class HomeController extends Controller
        arsort($countsf);
       
        $newArray = array_slice($countsf, 0, 4, true);
-      
+     
        $newArray1 = array_flip($newArray);
-      
+       
        $serviceinfo = DB::table('services')->whereIn('id',$newArray1)->get();
       $numerickey = array_values($newArray);
       //dd($serviceinfo);

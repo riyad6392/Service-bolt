@@ -316,7 +316,7 @@
 	</div>
   </div>
   
-<div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
     <div class="table-responsive">
         <table id="exampleproduct" class="table no-wrap table-new table-list align-items-center">
             <thead>
@@ -330,12 +330,58 @@
                 </tr>
             </thead>
         <tbody>
-       
+        @foreach($productinfo as $key => $ticket)
+         @php
+            $pinfo = App\Models\Personnel::select('personnelname')->where('id',$personnelids[$key])->first();
+         @endphp 
+        <tr>
+          <td>{{$ticket->productname}}</td>
+          <td>{{$numerickey[$key]}}</td>
+          <td>{{$ticket->updated_at}}</td>
+          <td>{{$ticket->quantity}}</td>
+          <td>{{$ticket->price*$numerickey[$key]}}</td>
+          <td>{{$pinfo->personnelname}}</td>
+      </tr>
+    @endforeach
       </tbody>
     </table>
     </div>
   </div>
-  <div class="tab-pane fade" id="sale" role="tabpanel" aria-labelledby="sale-tab">Coming Soon</div>
+  <div class="tab-pane fade" id="sale" role="tabpanel" aria-labelledby="sale-tab">
+    <div class="table-responsive">
+        <table id="examplesaletab" class="table no-wrap table-new table-list align-items-center">
+            <thead>
+                <tr>
+                  <th>Date</th>
+                  <th># of Tickets</th>
+                  <th>Service Sold Total ($)</th>
+                  <th>Product Sold Total ($)</th>
+                  <th>Ticket Total</th>
+                  <th>Billing Total</th>
+                </tr>
+            </thead>
+        <tbody>
+        @foreach($salesreport as $key => $value)
+         @php
+            if($value->tickettotalprice==null || $value->tickettotalprice==0 || $value->tickettotalprice=="") {
+              $newprice = $value->totalprice;
+            } else {
+              $newprice = $value->tickettotalprice;
+            }
+          @endphp
+        <tr>
+          <td>{{date('m-d-Y', strtotime($value->date))}}</td>
+          <td>{{$value->totalticket}}</td>
+          <td>--</td>
+          <td>--</td>
+          <td>{{number_format((float)$newprice, 2, '.', '')}}</td>
+          <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
+      </tr>
+    @endforeach
+      </tbody>
+    </table>
+    </div>
+  </div>
   <div class="tab-pane fade" id="commission" role="tabpanel" aria-labelledby="commission-tab">
   <form method="post" action="{{route('company.report') }}" class="row pe-0">
       @csrf
@@ -765,11 +811,14 @@
 <script type="text/javascript">
     $('.dropify').dropify();
     $(document).ready(function() {
-     $('#example').DataTable({
-      "order": [[ 0, "desc" ]]
+      $('#example').DataTable({
+       "order": [[ 0, "desc" ]]
       });
       $('#exampleproduct').DataTable({
-      "order": [[ 0, "desc" ]]
+       "order": [[ 0, "desc" ]]
+      });
+      $('#examplesaletab').DataTable({
+       "order": [[ 0, "desc" ]]
       });
     });
 

@@ -129,6 +129,35 @@ class ReportController extends Controller
         $currentdate = date('Y-m-d', strtotime($currentdate));
         @$from = $request->since;
         @$to = $request->until;
-        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport'));
+
+        $productinfo = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->get();
+
+        foreach($productinfo as $key =>$value) {
+           $pids[] = $value->product_id;
+           $personnelid[] = $value->personnelid;
+        }
+
+        $counts = implode(",", $pids);
+        $arrayv = explode(",",$counts);
+        $countsf = array_count_values($arrayv);
+        arsort($countsf);
+        $newArray1 = array_flip($countsf);
+        $productinfo = DB::table('products')->whereIn('id',$newArray1)->get();
+        $numerickey = array_values($countsf);
+        
+        $countsf1 = array_count_values($personnelid);
+        arsort($countsf1);
+        $personnelids = array_flip($countsf1);
+        $personnelids = array_values($personnelids);
+
+        $salesreport = DB::table('quote')
+        ->select(DB::raw('givenstartdate as date'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
+        ->join('customer', 'customer.id', '=', 'quote.customerid')
+        ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
+        ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.givenstartdate','!=',null)
+        ->groupBy(DB::raw('date'))
+        ->get();
+        //dd($salesreport);
+        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport'));
     }
 }
