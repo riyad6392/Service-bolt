@@ -202,7 +202,7 @@
 <div class="card-body">
 <div class="row align-items-center mb-3">
 <div class="col-lg-2 mb-2">
-Service Report</div>
+</div>
 	   <div class="col-lg-3 mb-2" style="display: none;">
 	   <div class="show-fillter">
 	    <select id="inputState" class="form-select">
@@ -233,9 +233,6 @@ Service Report</div>
   </li>
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Product Sold</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Personnel</button>
   </li>
    <li class="nav-item" role="presentation">
     <button class="nav-link" id="sale-tab" data-bs-toggle="tab" data-bs-target="#sale" type="button" role="tab" aria-controls="sele" aria-selected="false">Sales Report</button>
@@ -318,8 +315,26 @@ Service Report</div>
 	</table>
 	</div>
   </div>
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">Coming Soon</div>
-  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">Coming Soon</div>
+  
+<div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+    <div class="table-responsive">
+        <table id="exampleproduct" class="table no-wrap table-new table-list align-items-center">
+            <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Units Sold</th>
+                  <th>Date of Last Sale</th>
+                  <th>Remain Stock</th>
+                  <th>Total Cost</th>
+                  <th>Top Seller (Personnel)</th>
+                </tr>
+            </thead>
+        <tbody>
+       
+      </tbody>
+    </table>
+    </div>
+  </div>
   <div class="tab-pane fade" id="sale" role="tabpanel" aria-labelledby="sale-tab">Coming Soon</div>
   <div class="tab-pane fade" id="commission" role="tabpanel" aria-labelledby="commission-tab">
   <form method="post" action="{{route('company.report') }}" class="row pe-0">
@@ -530,7 +545,9 @@ Service Report</div>
                             <tbody>
                                 @php
                                     if($from!=null && $to!=null) {
-                                        @$tickedatadetailsdata = \App\Models\Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$value->personnelid)->where('quote.ticket_status',3)->whereColumn('quote.personnelid','quote.primaryname')->whereBetween('quote.ticketdate', [$from, $to])->get();
+                                        $since = date('Y-m-d', strtotime($from));
+                                        $until = date('Y-m-d', strtotime($to));
+                                        @$tickedatadetailsdata = \App\Models\Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$value->personnelid)->where('quote.ticket_status',3)->whereColumn('quote.personnelid','quote.primaryname')->whereBetween('quote.ticketdate', [$since, $until])->get();
                                     } else {
                                         @$tickedatadetailsdata = \App\Models\Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$value->personnelid)->whereColumn('quote.personnelid','quote.primaryname')->where('quote.ticket_status',3)->get();
                                     }
@@ -749,6 +766,9 @@ Service Report</div>
     $('.dropify').dropify();
     $(document).ready(function() {
      $('#example').DataTable({
+      "order": [[ 0, "desc" ]]
+      });
+      $('#exampleproduct').DataTable({
       "order": [[ 0, "desc" ]]
       });
     });
