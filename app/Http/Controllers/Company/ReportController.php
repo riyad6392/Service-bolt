@@ -131,7 +131,7 @@ class ReportController extends Controller
         @$to = $request->until;
 
         $productinfo = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->get();
-
+        $personnelid  =array();
         foreach($productinfo as $key =>$value) {
            $pids[] = $value->product_id;
            $personnelid[] = $value->personnelid;
