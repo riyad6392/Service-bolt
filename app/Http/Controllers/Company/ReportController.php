@@ -157,7 +157,6 @@ class ReportController extends Controller
         ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.givenstartdate','!=',null)
         ->groupBy(DB::raw('date'))
         ->get();
-        //dd($salesreport);
         return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport'));
     }
 }

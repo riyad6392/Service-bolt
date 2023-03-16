@@ -241,6 +241,10 @@
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="commission-tab" data-bs-toggle="tab" data-bs-target="#commission" type="button" role="tab" aria-controls="commission" aria-selected="false">Commission Report</button>
   </li>
+
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="commission-tab1" data-bs-toggle="tab" data-bs-target="#commission1" type="button" role="tab" aria-controls="commission1" aria-selected="false">Other Report</button>
+  </li>
   
 </ul>
 <div class="tab-content" id="myTabContent">
@@ -349,20 +353,24 @@
     </div>
   </div>
   <div class="tab-pane fade" id="sale" role="tabpanel" aria-labelledby="sale-tab">
-    <div class="table-responsive">
-        <table id="examplesaletab" class="table no-wrap table-new table-list align-items-center">
-            <thead>
-                <tr>
-                  <th>Date</th>
-                  <th># of Tickets</th>
-                  <th>Service Sold Total ($)</th>
-                  <th>Product Sold Total ($)</th>
-                  <th>Ticket Total</th>
-                  <th>Billing Total</th>
-                </tr>
-            </thead>
-        <tbody>
-        @foreach($salesreport as $key => $value)
+   <div class="col-md-12">
+<div class="card">
+<div class="card-body">
+<div class="col-lg-12">
+<div class="table-responsive">
+ <table id="example111" class="table no-wrap table-new table-list no-footer" style="position: relative;">
+     <thead>
+           <tr>
+              <th>Date</th>
+              <th># of Tickets</th>
+              <th>Service Sold <br>Total ($)</th>
+              <th>Product Sold <br>Total ($)</th>
+              <th>Ticket Total</th>
+              <th>Billing Total</th>
+            </tr>
+     </thead>
+        <tbody class="tbody-1">
+            @foreach($salesreport as $key => $value)
          @php
             if($value->tickettotalprice==null || $value->tickettotalprice==0 || $value->tickettotalprice=="") {
               $newprice = $value->totalprice;
@@ -393,18 +401,73 @@
            }
 
           @endphp
-        <tr>
-          <td>{{date('m-d-Y', strtotime($value->date))}}</td>
-          <td>{{$value->totalticket}}</td>
-          <td>{{$totalssold}}</td>
-          <td>{{$totalpsold}}</td>
-          <td>{{number_format((float)$newprice, 2, '.', '')}}</td>
-          <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
-      </tr>
-    @endforeach
-      </tbody>
+               <tr class="sub-container">
+                    <td style="display: flex;">
+                        <div class="glyphicon glyphicon-plus plusIcon">+</div>
+                            <div class="glyphicon glyphicon-minus plusIcon" style="display:none">-</div>{{date('m-d-Y', strtotime($value->date))}}</td>
+                      <td>{{$value->totalticket}}</td>
+                      <td>{{$totalssold}}</td>
+                      <td>{{$totalpsold}}</td>
+                      <td>{{number_format((float)$newprice, 2, '.', '')}}</td>
+                      <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
+               </tr>
+               
+                <tr class="explode hide" style="display:none;">
+                    <td colspan="8" id="toggle_text">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr style="font-family: system-ui;">
+                                    <th>Personnel</th>
+                                    <th>Customer</th>
+                                    <th>Ticket Total</th>
+                                    <th>Billing Total</th>
+                                 </tr>
+                            </thead>
+                            <tbody>
+                                 @php
+                                    $billingData = \App\Models\Quote::select('quote.id','quote.parentid','quote.serviceid','quote.product_id','quote.price','quote.tickettotal','quote.givendate','quote.etc','quote.payment_status','quote.personnelid','quote.primaryname','quote.tax', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',auth()->user()->id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['3','5','4'])->whereBetween('quote.givenstartdate', [$value->date, $value->date])->orderBy('quote.id','desc')->get();
+                                @endphp
+                                @foreach($billingData as $key1=>$value1)
+                                @php
+                                    if($value1->tickettotal==null || $value1->tickettotal==0 || $value1->tickettotal=="") {
+                                      $newprice = $value1->price;
+                                    } else {
+                                      $newprice = $value1->tickettotal;
+                                    }
+                                    $ids=$value1->id;
+                                    if(!empty($value1->parentid))
+                                    {
+                                        $ids=$value1->parentid;
+
+                                    }
+                                  @endphp
+                                <tr style="font-size: 17px; border:none; background:white;">
+                                    <td>@if($value1->personnelname!="")
+                                            {{@$value1->personnelname}}
+                                        @else
+                                            --
+                                        @endif
+                                    </td>
+                                    <td>{{$value->customername}}</td>
+                                    <td>{{number_format((float)$newprice, 2, '.', '')}}</td>
+                                    <td>{{number_format((float)$value1->price, 2, '.', '')}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+               @endforeach 
+                </tbody>
+                
+           </tbody>
     </table>
-    </div>
+ </div>
+</div>
+</div>
+</div>
+</div> 
+    
   </div>
   <div class="tab-pane fade" id="commission" role="tabpanel" aria-labelledby="commission-tab">
   <form method="post" action="{{route('company.report') }}" class="row pe-0">
@@ -792,33 +855,82 @@
 </div>
 </div>
 
+<!-- For other report start-->
+<div class="tab-pane fade" id="commission1" role="tabpanel" aria-labelledby="commission-tab1">
+<div class="col-md-12">
+<div class="card">
+<div class="card-body">
+<div class="col-lg-12">
+<div class="table-responsive">
+ <table id="example111" class="table no-wrap table-new table-list no-footer" style="position: relative;">
+     <thead>
+           <tr>
+               <th style="font-weight:400;font-size:15px;">Personnel Name</th>
+               <th style="font-weight:400;font-size:15px;">Tickets Worked</th>
+               <th style="font-weight:400;font-size:15px;">Flat Amount</th>
+               <th style="font-weight:400;font-size:15px;">Variable Amount</th>
+               <th style="font-weight:400;font-size:15px;">Totol Payout</th>
+           </tr>
+     </thead>
+        <tbody class="tbody-1">
+               <tr class="sub-container">
+                    <td style="display: flex;">
+                        <div class="glyphicon glyphicon-plus plusIcon">+</div>
+                            <div class="glyphicon glyphicon-minus plusIcon" style="display:none">-</div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    
+                </tr>
+                <tr class="explode hide" style="display:none;">
+                    <td colspan="8" id="toggle_text">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr style="font-family: system-ui;">
+                                    <th>Date</th>
+                                    <th>Ticket#</th>
+                                    <th>Services</th>
+                                    <th>Products</th>
+                                    <th>Flat Amount</th>
+                                    <th>Variable Amount</th>
+                                    <th>Total Payout</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="font-size: 17px; border:none; background:white;">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
 
-
-  
-  </div>
+           </tbody>
+    </table>
+ </div>
 </div>
-	   
-	  
-	   
-	   
 </div>
 </div>
-
-
-
-
 </div>
-
-    
-     
-
-
-     </div>
-   </div>
-
-
-
-          </div>
+</div>
+<!-- End here -->
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
      
 <div class="modal fade" id="service-list-dot" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
