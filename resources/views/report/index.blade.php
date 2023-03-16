@@ -333,11 +333,12 @@
         @foreach($productinfo as $key => $ticket)
          @php
             $pinfo = App\Models\Personnel::select('personnelname')->where('id',$personnelids[$key])->first();
+            $lastdate = App\Models\Quote::whereRaw('FIND_IN_SET("'.$ticket->id.'",product_id)')->where('quote.userid',$auth_id)->whereIn('ticket_status',array('2','3','4'))->where('payment_status','!=',null)->where('payment_mode','!=',null)->where('parentid', '=',"")->orderBy('id','desc')->first();
          @endphp 
         <tr>
           <td>{{$ticket->productname}}</td>
           <td>{{$numerickey[$key]}}</td>
-          <td>{{$ticket->updated_at}}</td>
+          <td>{{$lastdate->updated_at}}</td>
           <td>{{$ticket->quantity}}</td>
           <td>{{$ticket->price*$numerickey[$key]}}</td>
           <td>{{$pinfo->personnelname}}</td>
@@ -368,12 +369,35 @@
             } else {
               $newprice = $value->tickettotalprice;
             }
+
+           $arrayv = explode(",",$value->serviceid);
+           $countsf = array_count_values($arrayv);
+           arsort($countsf);
+
+           $totalssold = 0;
+           foreach($countsf as $key1=>$value1) {
+                $servicedata = App\Models\Service::select('price')
+                    ->where('id',$key1)->get();
+                $totalssold =  $totalssold+@$servicedata[0]->price * $value1;
+           }
+
+           $parrayv = explode(",",$value->product_id);
+           $pcountsf = array_count_values($parrayv);
+           arsort($pcountsf);
+           
+           $totalpsold = 0;
+           foreach($pcountsf as $key11=>$value11) {
+                $pdata = App\Models\Inventory::select('price')
+                    ->where('id',$key11)->get();
+                $totalpsold =  $totalpsold+@$pdata[0]->price * $value11;
+           }
+
           @endphp
         <tr>
           <td>{{date('m-d-Y', strtotime($value->date))}}</td>
           <td>{{$value->totalticket}}</td>
-          <td>--</td>
-          <td>--</td>
+          <td>{{$totalssold}}</td>
+          <td>{{$totalpsold}}</td>
           <td>{{number_format((float)$newprice, 2, '.', '')}}</td>
           <td>{{number_format((float)$value->totalprice, 2, '.', '')}}</td>
       </tr>

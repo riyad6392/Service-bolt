@@ -131,10 +131,10 @@ class ReportController extends Controller
         @$to = $request->until;
 
         $productinfo = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->get();
-        $personnelid  =array();
+        $personnelids  =array();
         foreach($productinfo as $key =>$value) {
            $pids[] = $value->product_id;
-           $personnelid[] = $value->personnelid;
+           $personnelids[] = $value->personnelid;
         }
 
         $counts = implode(",", $pids);
@@ -145,13 +145,13 @@ class ReportController extends Controller
         $productinfo = DB::table('products')->whereIn('id',$newArray1)->get();
         $numerickey = array_values($countsf);
         
-        $countsf1 = array_count_values($personnelid);
+        $countsf1 = array_count_values($personnelids);
         arsort($countsf1);
         $personnelids = array_flip($countsf1);
         $personnelids = array_values($personnelids);
 
         $salesreport = DB::table('quote')
-        ->select(DB::raw('givenstartdate as date'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
+        ->select(DB::raw('givenstartdate as date'),DB::raw('group_concat(quote.serviceid) as serviceid'),DB::raw('group_concat(quote.product_id) as product_id'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
         ->join('customer', 'customer.id', '=', 'quote.customerid')
         ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
         ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.givenstartdate','!=',null)
