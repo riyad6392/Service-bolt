@@ -154,8 +154,8 @@ class ReportController extends Controller
         ->select(DB::raw('givenstartdate as date'),DB::raw('group_concat(quote.serviceid) as serviceid'),DB::raw('group_concat(quote.product_id) as product_id'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
         ->join('customer', 'customer.id', '=', 'quote.customerid')
         ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
-        ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.givenstartdate','!=',null)
-        ->groupBy(DB::raw('date'))
+        ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.givenstartdate','!=',null)
+        ->groupBy(DB::raw('date'))->orderBy('date','desc')
         ->get();
         return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport'));
     }

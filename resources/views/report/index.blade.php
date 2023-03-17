@@ -24,6 +24,10 @@
     justify-content: center;
 }
 
+/*table.dataTable th, table.dataTable td {
+    white-space : initial;
+}*/
+
 /* Safari */
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }
@@ -241,10 +245,6 @@
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="commission-tab" data-bs-toggle="tab" data-bs-target="#commission" type="button" role="tab" aria-controls="commission" aria-selected="false">Commission Report</button>
   </li>
-
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="commission-tab1" data-bs-toggle="tab" data-bs-target="#commission1" type="button" role="tab" aria-controls="commission1" aria-selected="false">Other Report</button>
-  </li>
   
 </ul>
 <div class="tab-content" id="myTabContent">
@@ -281,8 +281,8 @@
             @endphp
 	    <tr>
     	  <td>#{{$ticket->id}}</td>
-    	  <td>{{$ticket->customername}}</td>
-    	  <td>{{$ticket->address}}</td>
+    	  <td style="white-space: initial;">{{$ticket->customername}}</td>
+    	  <td style="white-space: initial;">{{$ticket->address}}</td>
     	  <td>{{$ticket->personnelname}}</td>
     	  <td>@php
               $i=0;
@@ -425,7 +425,7 @@
                             </thead>
                             <tbody>
                                  @php
-                                    $billingData = \App\Models\Quote::select('quote.id','quote.parentid','quote.serviceid','quote.product_id','quote.price','quote.tickettotal','quote.givendate','quote.etc','quote.payment_status','quote.personnelid','quote.primaryname','quote.tax', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',auth()->user()->id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['3','5','4'])->whereBetween('quote.givenstartdate', [$value->date, $value->date])->orderBy('quote.id','desc')->get();
+                                    $billingData = \App\Models\Quote::select('quote.id','quote.parentid','quote.serviceid','quote.product_id','quote.price','quote.tickettotal','quote.givendate','quote.etc','quote.payment_status','quote.personnelid','quote.primaryname','quote.tax', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',auth()->user()->id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['3','5','4'])->whereBetween('quote.givenstartdate', [$value->date, $value->date])->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->orderBy('quote.id','desc')->get();
                                 @endphp
                                 @foreach($billingData as $key1=>$value1)
                                 @php
@@ -855,74 +855,6 @@
 </div>
 </div>
 
-<!-- For other report start-->
-<div class="tab-pane fade" id="commission1" role="tabpanel" aria-labelledby="commission-tab1">
-<div class="col-md-12">
-<div class="card">
-<div class="card-body">
-<div class="col-lg-12">
-<div class="table-responsive">
- <table id="example111" class="table no-wrap table-new table-list no-footer" style="position: relative;">
-     <thead>
-           <tr>
-               <th style="font-weight:400;font-size:15px;">Personnel Name</th>
-               <th style="font-weight:400;font-size:15px;">Tickets Worked</th>
-               <th style="font-weight:400;font-size:15px;">Flat Amount</th>
-               <th style="font-weight:400;font-size:15px;">Variable Amount</th>
-               <th style="font-weight:400;font-size:15px;">Totol Payout</th>
-           </tr>
-     </thead>
-        <tbody class="tbody-1">
-               <tr class="sub-container">
-                    <td style="display: flex;">
-                        <div class="glyphicon glyphicon-plus plusIcon">+</div>
-                            <div class="glyphicon glyphicon-minus plusIcon" style="display:none">-</div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    
-                </tr>
-                <tr class="explode hide" style="display:none;">
-                    <td colspan="8" id="toggle_text">
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr style="font-family: system-ui;">
-                                    <th>Date</th>
-                                    <th>Ticket#</th>
-                                    <th>Services</th>
-                                    <th>Products</th>
-                                    <th>Flat Amount</th>
-                                    <th>Variable Amount</th>
-                                    <th>Total Payout</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="font-size: 17px; border:none; background:white;">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                </tbody>
-
-           </tbody>
-    </table>
- </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- End here -->
 </div>
 </div>
 </div>
