@@ -230,6 +230,15 @@ $googleplacekey = $userinfo->googleplace;
 </svg>Pending Tickets</a>
       </li>
     </li>
+@php
+    $auth_id = auth()->user()->id;
+    $userData =  App\Models\User::select('workerid')->where('id',$auth_id)->first();
+    $workers = App\Models\Personnel::where('id',$userData->workerid)->first();
+    
+    $permissonarray = explode(',',$workers->ticketid);
+       
+  if(in_array("See Previous Tickets", $permissonarray) || in_array("Administrator", $permissonarray)) {
+@endphp
 <li class="menu">
       <li class="link" style="margin-left:9px;">
         <a href="{{route('worker.completedticket')}}"><svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -245,7 +254,9 @@ $googleplacekey = $userinfo->googleplace;
 </svg>Completed Tickets</a>
       </li>
     </li>
-      
+  @php
+    }
+@endphp    
   </div>
 
   @php

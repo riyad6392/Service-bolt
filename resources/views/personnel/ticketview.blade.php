@@ -689,9 +689,9 @@ Map / Directions</a>
     @endphp
       <div class="col-lg-6">
         @if($quoteData->payment_mode!="")
-            <button type="button" class="btn add-btn-yellow mb-4 w-100" name="unclose" value="unclose" id="unclose" style="pointer-events: none;background:#fee2002e">Unclose</button>
+            <button type="button" class="btn add-btn-yellow mb-4 w-100" name="unclose" value="unclose" id="unclose" style="pointer-events: none;background:#fee2002e">Reopen</button>
         @else
-            <button type="button" class="btn add-btn-yellow mb-4 w-100" name="unclose" value="unclose" id="unclose" style="{{$sclass}}">Unclose</button>
+            <button type="button" class="btn add-btn-yellow mb-4 w-100" name="unclose" value="unclose" id="unclose" style="{{$sclass}}">Reopen</button>
         @endif
        
      </div>
@@ -5052,11 +5052,11 @@ $(".upload-btn").click(function() {
 $("#unclose").click(function() {
     swal({
           title: "Are you sure?",
-          text: "Are you sure you want to unclose this ticket!",
+          text: "Are you sure you want to reopen this ticket!",
           type: "warning",
           showCancelButton: true,
           confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, unclose it!",
+          confirmButtonText: "Yes, reopen it!",
           cancelButtonText: "No!",
           closeOnConfirm: false,
           closeOnCancel: false

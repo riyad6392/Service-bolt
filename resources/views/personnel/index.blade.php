@@ -273,7 +273,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	  	<div class="multbox-modal">
 			<select class="form-control selectpicker " multiple="" data-placeholder="Select Permissions" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="ticketid[]" id="ticketid" required="">
 				@foreach($permission as $key =>$value)
-                 <option value="{{$value}}">{{$value}}</option>
+                 <option value="{{$value}}">@if($value=="Unclose Ticket") Reopen Ticket @else {{$value}}@endif</option>
                 @endforeach
             </select>
   		</div>

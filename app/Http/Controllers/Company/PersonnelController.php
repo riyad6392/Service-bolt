@@ -195,7 +195,11 @@ class PersonnelController extends Controller
               <button class="btn mb-3 btn-block btn-schedule" data-bs-toggle="modal" style="pointer-events:none;display:none;">'.$PersonnelData[$datacount]->ticketid.'</button>
               <select class="form-control selectpicker " multiple="" data-placeholder="Permissions" data-live-search="false" style="width: 100%;" tabindex="-1" aria-hidden="true" name="ticketid[]" id="ticketid">';
               foreach($permissionarray as $value) {
-                $html .='<option value="'.$value.'" selected="selected" disabled>'.$value.'</option>';
+                if($value=="Unclose Ticket") {
+                  $html .='<option value="'.$value.'" selected="selected" disabled>Reopen Ticket</option>';
+                } else {
+                  $html .='<option value="'.$value.'" selected="selected" disabled>'.$value.'</option>';
+                }
               }
               $html .='</select>
               <div class="mb-3 multbox" style="display:none;">
@@ -244,7 +248,11 @@ class PersonnelController extends Controller
               <button class="btn mb-3 btn-block btn-schedule" data-bs-toggle="modal" style="pointer-events:none;display:none;">'.$PersonnelData[0]->ticketid.'</button>
                <select class="form-control selectpicker" multiple="" data-placeholder="Permissions" data-live-search="false" style="width: 100%;" tabindex="-1" aria-hidden="true" name="ticketid[]" id="ticketid">';
               foreach($permissionarray1 as $value) {
-                $html .='<option value="'.$value.'" selected="selected" disabled>'.$value.'</option>';
+                if($value=="Unclose Ticket") {
+                  $html .='<option value="'.$value.'" selected="selected" disabled>Reopen Ticket</option>';
+              } else {
+                  $html .='<option value="'.$value.'" selected="selected" disabled>'.$value.'</option>';
+              }
               }
               $html .='</select>
               <div class="mb-3 multbox" style="display:none;">
@@ -347,7 +355,12 @@ class PersonnelController extends Controller
                  } else {
                   $selectedp = "";
                  }
-                $html .='<option value="'.$value.'" '.@$selectedp.'>'.$value.'</option>';
+                 if($value=="Unclose Ticket") {
+                  $html .='<option value="'.$value.'" '.@$selectedp.'>Reopen Ticket</option>';  
+                 } else {
+                   $html .='<option value="'.$value.'" '.@$selectedp.'>'.$value.'</option>';  
+                 }
+                
               }
         $html .='</select>
           </div>
