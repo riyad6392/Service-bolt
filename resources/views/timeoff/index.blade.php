@@ -1,5 +1,6 @@
 @extends('layouts.header')
 @section('content')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
 <style type="text/css">
   #loader1 {
   border: 16px solid #f3f3f3;
@@ -72,8 +73,6 @@ tr.accepted-row:after {
      width: 72%!important;
 }
 </style>
-
-<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/> -->
 <div class="content">
      <div class="row">
       <div class="col-md-12">
@@ -299,7 +298,7 @@ tr.accepted-row:after {
 @endsection
 
 @section('script')
-<!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script> -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
     $('#example').DataTable({
