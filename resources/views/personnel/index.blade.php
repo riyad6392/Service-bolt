@@ -358,6 +358,36 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   </div>
 </div>
 
+<div class="modal fade" id="add-reason" tabindex="-1" aria-labelledby="add-customerModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content customer-modal-box  overflow-hidden">
+      <div class="modal-body">
+       <div class="add-customer-modal">
+     <h5>Add Reason</h5>
+     </div>
+     <form action="{{route('company.rejecttime')}}" method="post" >
+      @csrf
+    <div class="row customer-form">
+     
+    <div class="col-md-12 mb-3">
+      <input type="hidden" id="ids" name="ids" value="" >
+      <textarea class="form-control" placeholder="Reason" col="5" row="10" name="reason" id="reason" required=""></textarea>
+    </div>
+
+    <div class="col-lg-6 mb-3">
+     <button class="btn btn-cancel btn-block"  data-bs-dismiss="modal" id="quotecancel1">Cancel</button>
+    </div>
+    <div class="col-lg-6 mb-3">
+      <button type="submit" class="btn btn-add btn-block">Add Reason</button>
+    </div>
+    </div>
+          </form>
+    </div>
+    </div>
+  </div>
+</div>
+
+
 @endsection
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/eonasdan-bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
@@ -738,19 +768,26 @@ $('html').on('click','#accept',function() {
         })
   });
 
+
 $('html').on('click','#reject',function() {
+  $('#add-reason').modal('show');
    var id = $(this).data('id');
-   var dataString =  'id='+ id;
-   $.ajax({
-            url:'{{route('company.rejecttime')}}',
-            data: dataString,
-            method: 'post',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-               swal("Done!","It was succesfully Rejected!","success");
-            }
-        })
-  });
+   $('#ids').val(id);
+});
+
+// $('html').on('click','#reject',function() {
+//    var id = $(this).data('id');
+//    var dataString =  'id='+ id;
+//    $.ajax({
+//             url:'{{route('company.rejecttime')}}',
+//             data: dataString,
+//             method: 'post',
+//             dataType: 'json',
+//             refresh: true,
+//             success:function(data) {
+//                swal("Done!","It was succesfully Rejected!","success");
+//             }
+//         })
+//   });
 </script>
 @endsection
