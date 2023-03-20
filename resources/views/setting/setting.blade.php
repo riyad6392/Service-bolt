@@ -374,25 +374,9 @@ label.credit img {
 
 <hr/>
 
-<h5 class="my-4">Manage Payment Gateway</h5>
+<h5 class="my-4">Select payment types available</h5>
 
 <div class="row">
-<div class="col-lg-6 border-end pe-lg-4">
-<div class="row justify-content-around text-color">
-<!-- <label class="form-label col-md-12 mb-4">Choose one to set up</label> -->
-<div class="col-md-6 text-center">
-<div class="card-app mb-4">
-<input type="radio" id="control_01" name="select" value="1" checked>
-  <label for="control_01" class="credit">
-    <img src="{{url('/')}}/images/logo.png" alt=""/>
-    <p class="credit">Credit Card</p>
-  </label>
-</div>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-</div>
-
-</div>
-</div>
   @php
     $paymenttype = array (
       '1'=>"Cash",
@@ -403,7 +387,6 @@ label.credit img {
     
   @endphp
 <div class="col-lg-6 ps-lg-4">
-<label class="form-label mb-lg-5">Select payment types available</label>
 <div class="services-list">
 
   @foreach($paymenttype as $key => $value)

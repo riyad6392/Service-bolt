@@ -78,7 +78,7 @@ class WorkerServicesController extends Controller
             
             <div class="col-md-12 mb-2">
             <label>Customer</label>
-            <select class="form-select" name="customerid" id="customerid1" required=""><option value="">Select Customer</option>';
+            <select class="form-select" name="customerid" id="customerid1" required=""><option value="">Select Customer or Begin Typing a Name</option>';
 
              foreach($customer as $key => $value) {
 
@@ -93,7 +93,7 @@ class WorkerServicesController extends Controller
               <div class="mb-3">
               <label>Customer Address</label>
                 <select class="form-select" name="address" id="address2" required>
-                  <option value="">Select Customer Address</option>
+                  <option value="">Select Customer Address or Begin Typing a Name</option>
                   </select>
               </div>
           </div>

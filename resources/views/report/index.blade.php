@@ -249,6 +249,18 @@
 </ul>
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+    <form action="{{ route('company.servicefilter') }}" method="post">
+      @csrf
+      <div class="row">
+      <div class="col-md-4">
+      </div><div class="col-md-3">
+      </div><div class="col-md-3">
+      </div>
+      <div class="col-md-2">
+       <button class="btn add-btn-yellow py-2 px-5" type="submit" name="search" value="excel">{{ __('Export') }}</button>
+      </div>
+    </div>
+     </form><br>
     <div class="table-responsive">
 	    <table id="example" class="table no-wrap table-new table-list align-items-center">
     	    <thead>
@@ -256,7 +268,7 @@
             	  <th>Ticket number</th>
             	  <th>Customer Name</th>
             	  <th>Service location</th>
-            	  <th>Personel</th>
+            	  <th>Personnel</th>
             	  <th>Service Provided</th>
             	  <th>Cost</th>
             	  <th>Status</th>
@@ -658,7 +670,6 @@
                     <td>${{@$ttlflat+@$ptamounttotal}}</td>
                     <td>
                         <i class="fa fa-cog" aria-hidden="true"></i>
-                        <input class="form-check-input flexCheckDefault" type="checkbox" value="" id="flexCheckDefault">
                     </td>
                 </tr>
                 <tr class="explode hide" style="display:none;">

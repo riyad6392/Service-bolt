@@ -8,6 +8,7 @@ use App\Models\Personnel;
 use App\Models\Quote;
 use App\Models\PaymentSetting;
 use Carbon\Carbon;
+use App\Models\Service;
 
 use DB;
 use Image;
@@ -158,5 +159,101 @@ class ReportController extends Controller
         ->groupBy(DB::raw('date'))->orderBy('date','desc')
         ->get();
         return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport'));
+    }
+
+    public function servicefilter(Request $request) 
+    {
+      $auth_id = auth()->user()->id;
+      $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->orderBy('quote.id','DESC')->get();
+
+        $fileName = date('d-m-Y').'_order.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+        $columns = array('Ticket #','Customer Name','Service location','Personnel','Service Provided', 'Cost','Status');
+
+        $callback = function() use($servicereport, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+            foreach ($servicereport as $key =>$ticket) {
+              $explode_id = explode(',', $ticket->serviceid);
+              $servicedata = Service::select('servicename')
+                ->whereIn('services.id',$explode_id)->get();
+              if($ticket->payment_status!=null || $ticket->payment_mode!=null) {
+                $payment_status = "Completed";
+              } else {
+                $payment_status = "Pending";
+              }
+              if($ticket->payment_mode!=null) {
+                $paid_status = '-'.$ticket->payment_mode;
+              } else {
+                $paid_status = "";
+              }
+              $statusfinal = $payment_status.$paid_status;
+               $i=0;
+               foreach($servicedata as $servicename) {
+                if(count($servicedata) == 0) {
+                    $servicename = '-';
+                  } else {
+                    $servicename = $servicename->servicename;
+                  }
+                  $i=1; break;
+               }
+              fputcsv($file, array($ticket->id, $ticket->customername, $ticket->address, $ticket->personnelname,$servicename, $ticket->price, $statusfinal));
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function productfilter(Request $request) 
+    {
+      $auth_id = auth()->user()->id;
+      $productinfo = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->get();
+        $personnelids  =array();
+        foreach($productinfo as $key =>$value) {
+           $pids[] = $value->product_id;
+           $personnelids[] = $value->personnelid;
+        }
+        
+        $counts = implode(",", $pids);
+        $arrayv = explode(",",$counts);
+        $countsf = array_count_values($arrayv);
+        arsort($countsf);
+        $newArray1 = array_flip($countsf);
+        $productinfo = DB::table('products')->whereIn('id',$newArray1)->get();
+        $numerickey = array_values($countsf);
+        
+        $countsf1 = array_count_values($personnelids);
+        arsort($countsf1);
+        $personnelids = array_flip($countsf1);
+        $personnelids = array_values($personnelids);
+
+        $fileName = date('d-m-Y').'_order.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+        $columns = array('Product','Units Sold','Date of Last Sale','Remain Stock','Total Cost', 'Top Seller (Personnel)');
+
+        $callback = function() use($productinfo, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+            foreach ($productinfo as $key =>$ticket) {
+              $pinfo = Personnel::select('personnelname')->where('id',$personnelids[$key])->first();
+            $lastdate = Quote::whereRaw('FIND_IN_SET("'.$ticket->id.'",product_id)')->where('quote.userid',$auth_id)->whereIn('ticket_status',array('2','3','4'))->where('payment_status','!=',null)->where('payment_mode','!=',null)->where('parentid', '=',"")->orderBy('id','desc')->first();
+
+              fputcsv($file, array($ticket->productname, $numerickey[$key], $lastdate->updated_at, $ticket->quantity,$ticket->price*$numerickey[$key], $pinfo->personnelname));
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
     }
 }

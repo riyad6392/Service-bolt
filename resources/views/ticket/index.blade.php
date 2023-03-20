@@ -658,7 +658,7 @@ select#servicename {
 		   <div class="input_fields_wrap">
 	    		<div class="mb-3">
 			    	<select class="form-select {{$custmername}}" name="customerid" id="customerid" required>
-			      	  <option selected="" value="">Select a customer </option>
+			      	  <option selected="" value="">Select a customer or Begin Typing a Name</option>
 				      @foreach($customer as $key => $value)
 				      	<option value="{{$value->id}}">{{$value->customername}}</option>
 				      @endforeach
@@ -675,7 +675,7 @@ select#servicename {
 		   <div class="input_fields_wrap">
 	    		<div class="mb-3">
 			    	<select class="form-select" name="address" id="address1" required>
-			    		<option value="">Select Customer Address</option>
+			    		<option value="">Select Customer Address or Begin Typing a Name</option>
 			      	</select>
 			      	<div id="addressicon"></div>
 			    </div>
@@ -849,7 +849,7 @@ select#servicename {
 		   <div class="input_fields_wrap">
 	    		<div class="mb-3">
 			    	<select class="form-select {{$custmername}}" name="customerid" id="customerid1" required>
-			      	  <option selected="" value="">Select a customer </option>
+			      	  <option selected="" value="">Select a customer or Begin Typing a Name</option>
 				      @foreach($customer as $key => $value)
 				      	<option value="{{$value->id}}">{{$value->customername}}</option>
 				      @endforeach
@@ -865,7 +865,7 @@ select#servicename {
 		   <div class="input_fields_wrap">
 	    		<div class="mb-3">
 			    	<select class="form-select" name="address" id="address2" required>
-			    		<option value="">Select Customer Address</option>
+			    		<option value="">Select Customer Address or Begin Typing a Name</option>
 			      	</select>
 			      	<div id="addressicon1"></div>
 			    </div>
@@ -2298,7 +2298,7 @@ $('#serviceform').on('submit', function(event) {
 					dataType : 'json',
 					success: function(result) {
 
-					$('#address1').html('<option value="">Select Customer Address</option>'); 
+					$('#address1').html('<option value="">Select Customer Address or Begin Typing a Name</option>'); 
 						$.each(result.address,function(key,value) {
 							$("#address1").append('<option value="'+value.address+'">'+value.address+'</option>');
 						});
@@ -2321,7 +2321,7 @@ $('#serviceform').on('submit', function(event) {
 					},
 					dataType : 'json',
 					success: function(result) {
-					$('#address2').html('<option value="">Select Customer Address</option>'); 
+					$('#address2').html('<option value="">Select Customer Address or Begin Typing a Name</option>'); 
 						$.each(result.address,function(key,value) {
 							$("#address2").append('<option value="'+value.address+'">'+value.address+'</option>');
 						});
@@ -2343,7 +2343,7 @@ $('#serviceform').on('submit', function(event) {
 					},
 					dataType : 'json',
 					success: function(result) {
-					$('#address3').html('<option value="">Select Customer Address</option>'); 
+					$('#address3').html('<option value="">Select Customer Address or Begin Typing a Name</option>'); 
 						$.each(result.address,function(key,value) {
 							$("#address3").append('<option value="'+value.address+'">'+value.address+'</option>');
 						});

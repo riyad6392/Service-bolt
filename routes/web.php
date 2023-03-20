@@ -330,6 +330,9 @@ Route::group([
     Route::any('/scheduler/geteventdata', [SchedulerController::class, 'geteventdata'])->name('geteventdata');
 
     Route::any('/report', [ReportController::class, 'index'])->name('report');
+    Route::any('/servicefilter', [ReportController::class, 'servicefilter'])->name('servicefilter');
+    Route::any('/productfilter', [ReportController::class, 'productfilter'])->name('productfilter');
+
     Route::get('/managecommission', [CommissionController::class, 'index'])->name('managecommission');
     Route::any('/personnel/managecommissioncreate', [CommissionController::class, 'commissioncreate'])->name('commissioncreate');
 

@@ -56,7 +56,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 					<div class="input_fields_wrap">
 	    	 			<div class="mb-3">
 	    	 				<select class="form-select" name="customerid" id="customerid1" required>
-					      	  <option selected="" value="">Select a customer </option>
+					      	  <option selected="" value="">Select a customer or Begin Typing a Name</option>
 						      @foreach($customer as $key => $value)
 						      	<option value="{{$value->id}}">{{$value->customername}}</option>
 						      @endforeach
@@ -72,7 +72,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 				   <div class="input_fields_wrap">
 			    		<div class="mb-3">
 					    	<select class="form-select" name="address" id="address2" required>
-					    		<option value="">Select Customer Address</option>
+					    		<option value="">Select Customer Address or Begin Typing a Name</option>
 					      	</select>
 					      	<div id="addressicon"></div>
 					    </div>
