@@ -100,10 +100,11 @@ if($value->product_id!=null || $value->product_id!="") {
                           $sname[] = $value1->servicename;
                            $servname = implode(',',$sname);
                         }
+
                         if($pexplode_id!=0) {
-                        foreach($pdata as $key2=>$value2) {
-                           @$pname[] = @$value2->productname;
-                           $productname = implode(',',$pname);
+                           foreach($pdata as $key2=>$value2) {
+                           @$pname = @$value2->productname;
+                           $productname = $pname;
                          }
                         }
 
