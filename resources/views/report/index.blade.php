@@ -333,6 +333,18 @@
   </div>
   
 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+    <form action="{{ route('company.productfilter') }}" method="post">
+      @csrf
+      <div class="row">
+      <div class="col-md-4">
+      </div><div class="col-md-3">
+      </div><div class="col-md-3">
+      </div>
+      <div class="col-md-2">
+       <button class="btn add-btn-yellow py-2 px-5" type="submit" name="search" value="excel">{{ __('Export') }}</button>
+      </div>
+    </div>
+     </form><br>
     <div class="table-responsive">
         <table id="exampleproduct" class="table no-wrap table-new table-list align-items-center">
             <thead>
@@ -365,6 +377,18 @@
     </div>
   </div>
   <div class="tab-pane fade" id="sale" role="tabpanel" aria-labelledby="sale-tab">
+    <form action="{{ route('company.salesfilter') }}" method="post">
+      @csrf
+      <div class="row">
+      <div class="col-md-4">
+      </div><div class="col-md-3">
+      </div><div class="col-md-3">
+      </div>
+      <div class="col-md-2">
+       <button class="btn add-btn-yellow py-2 px-5" type="submit" name="search" value="excel">{{ __('Export') }}</button>
+      </div>
+    </div>
+     </form><br>
    <div class="col-md-12">
 <div class="card">
 <div class="card-body">
@@ -669,8 +693,21 @@
                     <td>${{@$ptamounttotal}}</td>
                     <td>${{@$ttlflat+@$ptamounttotal}}</td>
                     <td>
-                        <i class="fa fa-cog" aria-hidden="true"></i>
-                    </td>
+                        <!-- <i class="fa fa-cog" aria-hidden="true"></i> -->
+                        <form action="{{ route('company.commissiondownload') }}" method="post">
+                          @csrf
+                          <input type="hidden" name="persid" value="{{$value->personnelid}}">
+                          <div class="row">
+                          <div class="col-md-4">
+                          </div><div class="col-md-3">
+                          </div><div class="col-md-3">
+                          </div>
+                          <div class="col-md-2">
+                           <button class="" type="submit" name="search" value="excel"><i class="fa fa-download" aria-hidden="true"></i></button>
+                          </div>
+                          </div>
+                         </form>
+                     </td>
                 </tr>
                 <tr class="explode hide" style="display:none;">
                     <td colspan="8" id="toggle_text">

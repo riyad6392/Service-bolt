@@ -12,6 +12,7 @@ use App\Models\Service;
 
 use DB;
 use Image;
+use PDF;
 
 class ReportController extends Controller
 {
@@ -166,7 +167,7 @@ class ReportController extends Controller
       $auth_id = auth()->user()->id;
       $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->orderBy('quote.id','DESC')->get();
 
-        $fileName = date('d-m-Y').'_order.csv';
+        $fileName = date('d-m-Y').'_servicereport.csv';
         $headers = array(
             "Content-type"        => "text/csv",
             "Content-Disposition" => "attachment; filename=$fileName",
@@ -233,7 +234,7 @@ class ReportController extends Controller
         $personnelids = array_flip($countsf1);
         $personnelids = array_values($personnelids);
 
-        $fileName = date('d-m-Y').'_order.csv';
+        $fileName = date('d-m-Y').'_productreport.csv';
         $headers = array(
             "Content-type"        => "text/csv",
             "Content-Disposition" => "attachment; filename=$fileName",
@@ -241,9 +242,9 @@ class ReportController extends Controller
             "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
             "Expires"             => "0"
         );
-        $columns = array('Product','Units Sold','Date of Last Sale','Remain Stock','Total Cost', 'Top Seller (Personnel)');
+        $columns = array('Product','Units Sold','Date of Last Sale','Remain Stock','Total Cost','Top Seller (Personnel)');
 
-        $callback = function() use($productinfo, $columns) {
+         $callback = function() use($productinfo,$auth_id,$numerickey,$personnelids,$columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
             foreach ($productinfo as $key =>$ticket) {
@@ -256,4 +257,129 @@ class ReportController extends Controller
         };
         return response()->stream($callback, 200, $headers);
     }
+
+    public function salesfilter(Request $request)
+    {
+        $auth_id = auth()->user()->id;
+        $salesreport = DB::table('quote')
+        ->select(DB::raw('givenstartdate as date'),DB::raw('group_concat(quote.serviceid) as serviceid'),DB::raw('group_concat(quote.product_id) as product_id'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
+        ->join('customer', 'customer.id', '=', 'quote.customerid')
+        ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
+        ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.givenstartdate','!=',null)
+        ->groupBy(DB::raw('date'))->orderBy('date','desc')
+        ->get();
+
+        $pdf = PDF::loadView('mail_templates.salesreport', ['salesreport'=>$salesreport]);
+
+        
+        return $pdf->download('salesreport.pdf');
+    }
+    public function commissiondownload(Request $request)
+    {
+        if(auth()->user()->role == 'company') {
+            $auth_id = auth()->user()->id;
+        } else {
+           return redirect()->back();
+        }
+
+        $auth_id = auth()->user()->id;
+        $personnelid = $request->persid;
+
+        @$pdata1 = Personnel::where('userid',$auth_id)->get();
+        $percentall = array();
+        $amountall = array();
+        $comisiondataamount = array();
+        $comisiondatapercent = array();
+       ;
+        @$pdata = PaymentSetting::where('uid',$auth_id)->groupBy('pid')->get()->pluck('pid')->toArray();
+        
+        // if(empty($request->all()) || $request->pid == 'All') {
+        //     $tickedata = [];
+        //     $personnelid = [];
+        //     $tickedatadetails = "";
+
+        //     $personeldata = Personnel::select('personnel.id','quote.primaryname')->join('quote','quote.primaryname','=','personnel.id')->where('ticket_status','3')->whereIn('personnel.id',$pdata)->whereColumn('quote.personnelid','quote.primaryname')->groupBy('primaryname')->get()->pluck('primaryname')->toArray();
+        //     //dd($personeldata);
+        //     if($request->since!=null && $request->until!=null) {
+        //     $since = date('Y-m-d', strtotime($request->since));
+        //     $until = date('Y-m-d', strtotime($request->until));
+        //         @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('quote.personnelid',$personeldata)->where('quote.ticket_status',3)->whereColumn('quote.personnelid','quote.primaryname')->whereBetween('quote.ticketdate', [$since, $until])->groupBy('quote.personnelid')->get();    
+        //     } else {
+        //         @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('quote.personnelid',$personeldata)->where('quote.ticket_status',3)->whereColumn('quote.personnelid','quote.primaryname')->groupBy('quote.personnelid')->get();
+        //     }
+        //     @$tickedatadetails = Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->whereIn('quote.personnelid',$personeldata)->whereColumn('quote.personnelid','quote.primaryname')->where('quote.ticket_status',3)->get();
+
+ 
+        //     foreach($tickedata as $key=>$value) {
+        //       @$percentall=PaymentSetting::where('pid',$personeldata[$key])->where('paymentbase','commission')->where('type','percent')->get();
+        //       @$amountall=PaymentSetting::where('pid',$personeldata[$key])->where('paymentbase','commission')->where('type','amount')->get();
+        //       @$comisiondatapercent = json_decode($percentall[$key]->contentcommission);
+             
+             
+        //      @$comisiondataamount = json_decode($amountall[$key]->contentcommission);
+        //     }
+
+        //     if(count($amountall)==0 && count($percentall)==0) {
+        //         $tickedata = array();
+        //         $tickedatadetails = "";
+        //     }
+           
+        // } 
+        //else {
+            //$personnelid = @$request->pid;
+            $tickerdatas = Quote::select('primaryname')->where('personnelid',$personnelid)->whereColumn('personnelid','primaryname')->where('ticket_status','3')->get();  
+
+            @$percentall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','percent')->get();
+
+            @$amountall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','amount')->get();
+            if(count($amountall)!=0 || count($percentall)!=0) {
+
+
+            if(count($tickerdatas)>=1) { 
+                foreach($tickerdatas as $key => $value) {
+                if($value->primaryname == $personnelid) {
+
+                if($request->since!=null && $request->until!=null) {
+                    $since = date('Y-m-d', strtotime($request->since));
+                    $until = date('Y-m-d', strtotime($request->until));
+                    @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->whereColumn('quote.personnelid','quote.primaryname')->where('quote.ticket_status',3)->whereBetween('quote.ticketdate', [$since, $until])->groupBy('quote.personnelid')->get();
+                } else {
+                    @$tickedata = Quote::select(DB::raw('quote.*, GROUP_CONCAT(quote.serviceid ORDER BY quote.id) AS serviceid'),DB::raw('GROUP_CONCAT(quote.product_id ORDER BY quote.id) AS product_id'),DB::raw('COUNT(quote.id) as counttotal'),'personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->whereColumn('quote.personnelid','quote.primaryname')->where('quote.ticket_status',3)->groupBy('quote.personnelid')->get();
+                }
+                
+                @$tickedatadetails = Quote::select('quote.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$personnelid)->whereColumn('quote.personnelid','quote.primaryname')->where('quote.ticket_status',3)->get();
+
+                @$percentall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','percent')->get();
+
+                @$comisiondatapercent = json_decode($percentall[0]->contentcommission);
+
+                @$amountall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','amount')->get();
+                @$comisiondataamount = json_decode($amountall[0]->contentcommission);
+             } else {
+                $tickedata = array();
+                $tickedatadetails = "";
+             }
+            }
+        }
+        else {
+          $tickedata = array();
+            $tickedatadetails = "";  
+        }
+        } else {
+            $tickedata = array();
+            $tickedatadetails = "";  
+        }
+      //}
+
+        $currentdate = Carbon::now();
+        $currentdate = date('Y-m-d', strtotime($currentdate));
+        @$from = $request->since;
+        @$to = $request->until;
+
+        $pname = Personnel::select('personnelname')->where('id',$personnelid)->first();
+        $pdf = PDF::loadView('mail_templates.commissiondownload', ['persid'=>$personnelid,'amountall'=>$amountall,'percentall'=>$percentall,'comisiondataamount'=>$comisiondataamount,'comisiondatapercent'=>$comisiondatapercent,'pname'=>$pname->personnelname]);
+
+        return $pdf->download($pname->personnelname .'_commissionreport.pdf'); 
+    }
+    
 }

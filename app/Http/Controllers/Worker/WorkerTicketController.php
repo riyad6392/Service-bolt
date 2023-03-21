@@ -999,6 +999,34 @@ class WorkerTicketController extends Controller
       }
     }
 
+    public function createquote(Request $request)
+    {
+      $auth_id = auth()->user()->id;
+      if(auth()->user()->role == 'worker') {
+          $auth_id = auth()->user()->id;
+      } else {
+         return redirect()->back();
+      }
+      
+      $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+      $customer = Customer::where('userid',$worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+      $services = Service::where('userid', $worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+      $products = Inventory::where('user_id', $worker->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','DESC')->get();
+
+      //$workerlist = Personnel::where('userid', $worker->userid)->where('id','!=',$worker->workerid)->get();
+      $workerlist = Personnel::where('userid', $worker->userid)->get();
+      
+      $personnel = Personnel::where('id',$worker->workerid)->first();
+    
+      $permissonarray = explode(',',$personnel->ticketid);
+      $tenture = Tenture::where('status','Active')->get();
+      if(in_array("Create Ticket", $permissonarray)) {
+        return view('personnel.createquote',compact('auth_id','customer','services','workerlist','tenture','products','permissonarray'));
+      } else {
+        return redirect()->back();
+      }
+    }
+
     public function getaddressbyid(Request $request)
     {
         $data['address'] = Address::where("customerid",$request->customerid)

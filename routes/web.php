@@ -332,6 +332,8 @@ Route::group([
     Route::any('/report', [ReportController::class, 'index'])->name('report');
     Route::any('/servicefilter', [ReportController::class, 'servicefilter'])->name('servicefilter');
     Route::any('/productfilter', [ReportController::class, 'productfilter'])->name('productfilter');
+    Route::any('/salesfilter', [ReportController::class, 'salesfilter'])->name('salesfilter');
+    Route::any('/commissiondownload', [ReportController::class, 'commissiondownload'])->name('commissiondownload');
 
     Route::get('/managecommission', [CommissionController::class, 'index'])->name('managecommission');
     Route::any('/personnel/managecommissioncreate', [CommissionController::class, 'commissioncreate'])->name('commissioncreate');
@@ -394,6 +396,7 @@ Route::group([
     
     Route::get('/completedticket', [WorkerTicketController::class, 'completedticket'])->name('completedticket');
     Route::get('/createticket', [WorkerTicketController::class, 'createticket'])->name('createticket');
+    Route::get('/createquote', [WorkerTicketController::class, 'createquote'])->name('createquote');
     Route::any('/myticket/viewticketmodal', [WorkerTicketController::class, 'viewticketmodal'])->name('viewticketmodal');
     Route::any('/myticket/update', [WorkerTicketController::class, 'update'])->name('myticketupdate');
     Route::any('/myticket/update1', [WorkerTicketController::class, 'update1'])->name('myticketupdate1');
