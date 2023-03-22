@@ -24,6 +24,11 @@
     justify-content: center;
 }
 
+.searchBtnDown {
+    outline: none;
+    border: none;
+    background: transparent;
+}
 /*table.dataTable th, table.dataTable td {
     white-space : initial;
 }*/
@@ -732,7 +737,7 @@
                           </div><div class="col-md-3">
                           </div>
                           <div class="col-md-2">
-                           <button class="" type="submit" name="searchdownload" id="search" value="excel"><i class="fa fa-download" aria-hidden="true"></i></button>
+                           <button class="searchBtnDown" type="submit" name="searchdownload" id="search" value="excel"><i class="fa fa-download" aria-hidden="true"></i></button>
                           </div>
                           </div>
                          </form>
