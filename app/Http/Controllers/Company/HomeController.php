@@ -96,23 +96,29 @@ class HomeController extends Controller
         //          ->groupBy('quote.servicename')
         //          ->get();
                  //dd($serviceinfo);
+
         $serviceinfo = DB::table('quote')->select('quote.id','quote.serviceid')->where('quote.userid',$auth_id)->where('quote.ticket_status','!=','5')->get();
-        
-        foreach($serviceinfo as $key =>$value) {
+        if(count($serviceinfo)>0) {
+            foreach($serviceinfo as $key =>$value) {
            $sids[] = $value->serviceid;
         }
 
-       $counts = implode(",", $sids);
-       $arrayv = explode(",",$counts);
-       $countsf = array_count_values($arrayv);
-       arsort($countsf);
-      
-       $newArray = array_slice($countsf, 0, 4, true);
-     
-       $newArray1 = array_flip($newArray);
-       
-       $serviceinfo = DB::table('services')->whereIn('id',$newArray1)->get();
-      $numerickey = array_values($newArray);
+           $counts = implode(",", @$sids);
+           $arrayv = explode(",",$counts);
+           $countsf = array_count_values($arrayv);
+           arsort($countsf);
+          
+           $newArray = array_slice($countsf, 0, 4, true);
+         
+           $newArray1 = array_flip($newArray);
+           
+           $serviceinfo = DB::table('services')->whereIn('id',$newArray1)->get();
+           $numerickey = array_values($newArray);    
+        } else {
+           $serviceinfo = array();
+           $numerickey = array(); 
+        }
+        
       //dd($serviceinfo);
         $scheduleData = DB::table('quote')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.latitude as lat','personnel.longitude as long')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->where('quote.ticket_status','4')->orderBy('quote.id','ASC')->get();
 

@@ -494,10 +494,10 @@
                                     arsort($pcountsfp);
 
                                     $totalpsoldp = 0;
-                                    foreach($pcountsf as $key111=>$value111) {
+                                    foreach($pcountsfp as $key111=>$value111) {
                                         $pdata = App\Models\Inventory::select('price')
                                             ->where('id',$key111)->get();
-                                        $totalpsoldp =  $totalpsold+@$pdata[0]->price * $value111;
+                                        $totalpsoldp =  $totalpsoldp+@$pdata[0]->price * $value111;
                                     }
 
 
@@ -720,16 +720,19 @@
                     <td>${{@$ttlflat+@$ptamounttotal}}</td>
                     <td>
                         <!-- <i class="fa fa-cog" aria-hidden="true"></i> -->
-                        <form action="{{ route('company.commissiondownload') }}" method="post">
+                        <form id="comsearch" action="{{ route('company.commissiondownload') }}" method="post">
                           @csrf
-                          <input type="hidden" name="persid" value="{{$value->personnelid}}">
+                          <input type="hidden" name="persid" id="persid" value="{{$value->personnelid}}">
+                          <input type="hidden" name="sinced" id="sinced" value="">
+                          <input type="hidden" name="untild" id="untild" value="">
+
                           <div class="row">
                           <div class="col-md-4">
                           </div><div class="col-md-3">
                           </div><div class="col-md-3">
                           </div>
                           <div class="col-md-2">
-                           <button class="" type="submit" name="search" value="excel"><i class="fa fa-download" aria-hidden="true"></i></button>
+                           <button class="" type="submit" name="searchdownload" id="search" value="excel"><i class="fa fa-download" aria-hidden="true"></i></button>
                           </div>
                           </div>
                          </form>
@@ -1047,6 +1050,17 @@ $("#since").datepicker({
     autoclose: true, 
     todayHighlight: true
   });
+
+    $(document).on('click','.searchdownload',function(e) {
+        since = $("#since").val();
+        until = $("#until").val();
+        var form = $(this).closest('form');
+        var persid = $.trim(form.find("input[name='persid']").val());
+        $("#persid").val(persid);
+        $("#sinced").val(since);
+        $("#untild").val(until);
+        $("#comsearch").submit();
+    });
 </script>
 @endsection
 

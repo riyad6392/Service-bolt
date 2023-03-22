@@ -134,19 +134,27 @@ class ReportController extends Controller
 
         $productinfo = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->get();
         $personnelids  =array();
+        
+
+        
         foreach($productinfo as $key =>$value) {
            $pids[] = $value->product_id;
            $personnelids[] = $value->personnelid;
         }
 
-        $counts = implode(",", $pids);
-        $arrayv = explode(",",$counts);
-        $countsf = array_count_values($arrayv);
-        arsort($countsf);
-        $newArray1 = array_flip($countsf);
-        $productinfo = DB::table('products')->whereIn('id',$newArray1)->get();
-        $numerickey = array_values($countsf);
-        
+        if(count($productinfo)>0) {
+            $counts = implode(",", $pids);
+            $arrayv = explode(",",$counts);
+            $countsf = array_count_values($arrayv);
+            arsort($countsf);
+            $newArray1 = array_flip($countsf);
+            $productinfo = DB::table('products')->whereIn('id',$newArray1)->get();
+            $numerickey = array_values($countsf);
+        } else {
+           $productinfo = array(); 
+           $numerickey = array();
+        }
+
         $countsf1 = array_count_values($personnelids);
         arsort($countsf1);
         $personnelids = array_flip($countsf1);
@@ -375,11 +383,10 @@ class ReportController extends Controller
 
         $currentdate = Carbon::now();
         $currentdate = date('Y-m-d', strtotime($currentdate));
-        @$from = $request->since;
-        @$to = $request->until;
-
-        $pname = Personnel::select('personnelname')->where('id',$personnelid)->first();
-        $pdf = PDF::loadView('mail_templates.commissiondownload', ['persid'=>$personnelid,'amountall'=>$amountall,'percentall'=>$percentall,'comisiondataamount'=>$comisiondataamount,'comisiondatapercent'=>$comisiondatapercent,'pname'=>$pname->personnelname]);
+        @$from = $request->sinced;
+        @$to = $request->untild;
+        $pname = Personnel::select('personnelname')->where('id',$request->persid)->first();
+        $pdf = PDF::loadView('mail_templates.commissiondownload', ['persid'=>$request->persid,'amountall'=>$amountall,'percentall'=>$percentall,'comisiondataamount'=>$comisiondataamount,'comisiondatapercent'=>$comisiondatapercent,'pname'=>$pname->personnelname,'from'=>@$from,'to'=>@$to]);
 
         return $pdf->download($pname->personnelname .'_commissionreport.pdf'); 
     }

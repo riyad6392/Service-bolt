@@ -19,8 +19,8 @@
            <tr>
               <th>Date</th>
               <th># of Tickets</th>
-              <th>Service Sold <br>Total ($)</th>
-              <th>Product Sold <br>Total ($)</th>
+              <th>Service Sold Total ($)</th>
+              <th>Product Sold Total ($)</th>
               <th>Ticket Total</th>
               <th>Billing Total</th>
             </tr>
@@ -42,7 +42,7 @@
            foreach($countsf as $key1=>$value1) {
                 $servicedata = App\Models\Service::select('price')
                     ->where('id',$key1)->get();
-                $totalssold =  $totalssold+@$servicedata[0]->price * $value1;
+                $totalssold =  $totalssold+@$servicedata[0]->price;
            }
 
            $parrayv = explode(",",$value->product_id);
@@ -53,7 +53,7 @@
            foreach($pcountsf as $key11=>$value11) {
                 $pdata = App\Models\Inventory::select('price')
                     ->where('id',$key11)->get();
-                $totalpsold =  $totalpsold+@$pdata[0]->price * $value11;
+                $totalpsold =  $totalpsold+@$pdata[0]->price;
            }
 
           @endphp
@@ -72,7 +72,9 @@
                             <thead>
                                 <tr style="font-family: system-ui;">
                                     <th>Personnel</th>
-                                    <th>Customer</th>
+                                    <th># of Tickets</th>
+                                    <th>Service Sold Total ($)</th>
+                                    <th>Product Sold Total ($)</th>
                                     <th>Ticket Total</th>
                                     <th>Billing Total</th>
                                  </tr>
@@ -94,6 +96,28 @@
                                         $ids=$value1->parentid;
 
                                     }
+
+                                    $arrayvs = explode(",",$value1->serviceid);
+                                    $countsfs = array_count_values($arrayvs);
+                                    arsort($countsfs);
+
+                                    $totalssolds = 0;
+                                    foreach($countsfs as $key2=>$value2) {
+                                        $servicedata = App\Models\Service::select('price')
+                                            ->where('id',$key2)->get();
+                                        $totalssolds =  $totalssolds+@$servicedata[0]->price * $value2;
+                                    }
+
+                                    $parrayvp = explode(",",$value1->product_id);
+                                    $pcountsfp = array_count_values($parrayvp);
+                                    arsort($pcountsfp);
+
+                                    $totalpsoldp = 0;
+                                    foreach($pcountsfp as $key111=>$value111) {
+                                        $pdata = App\Models\Inventory::select('price')
+                                            ->where('id',$key111)->get();
+                                        $totalpsoldp =  $totalpsoldp+@$pdata[0]->price * $value111;
+                                    }
                                   @endphp
                                 <tr style="font-size: 17px; border:none; background:white;">
                                     <td>@if($value1->personnelname!="")
@@ -102,13 +126,16 @@
                                             --
                                         @endif
                                     </td>
-                                    <td>{{$value->customername}}</td>
+                                    <td>1</td>
+                                    <td>{{$totalssolds}}</td>
+                                    <td>{{$totalpsoldp}}</td>
                                     <td>{{number_format((float)$newprice, 2, '.', '')}}</td>
                                     <td>{{number_format((float)$value1->price, 2, '.', '')}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                        <br><hr>
                     </td>
                 </tr>
                @endforeach 
