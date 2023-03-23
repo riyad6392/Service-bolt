@@ -334,6 +334,7 @@ Route::group([
     Route::any('/productfilter', [ReportController::class, 'productfilter'])->name('productfilter');
     Route::any('/salesfilter', [ReportController::class, 'salesfilter'])->name('salesfilter');
     Route::any('/commissiondownload', [ReportController::class, 'commissiondownload'])->name('commissiondownload');
+    Route::any('/commissionreport', [ReportController::class, 'commissionreport'])->name('commissionreport');
 
     Route::get('/managecommission', [CommissionController::class, 'index'])->name('managecommission');
     Route::any('/personnel/managecommissioncreate', [CommissionController::class, 'commissioncreate'])->name('commissioncreate');

@@ -302,9 +302,11 @@ select#servicename {
     border-radius: 15px;
     width: 114px!important;
 ">Ticket +</a></td>
-	  <td><a class=" btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$quote->id}}">Edit</a>
+	  <td><a href="{{url('company/quote/ticketdetail/')}}/{{$quote->id}}&q" class="btn btn-edit p-2 w-auto" target="_blank">View</a><a class=" btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$quote->id}}">Edit</a>
 	  <a href="javascript:void(0);" class="info_link1 btn btn-edit p-2 w-auto" dataval="{{$quote->id}}">Delete</a>
+	  
 	  <a class=" btn btn-edit p-2 w-auto emailinvoice" data-id="{{$quote->id}}" data-email="{{$quote->email}}" data-bs-toggle="modal" data-bs-target="#edit-address">Share</a>
+
 	  </td>
 	  </tr>
 	  	@php

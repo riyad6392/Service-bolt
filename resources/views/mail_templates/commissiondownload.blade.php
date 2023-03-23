@@ -39,16 +39,16 @@
                     $ids=$value->parentid;
 
                 }
-$explode_id = explode(',', $value->serviceid);
-$servicedata = App\Models\Service::select('servicename','price')
-                ->whereIn('services.id',$explode_id)->get();
-$pexplode_id = 0;
-$productname = "--";
-if($value->product_id!=null || $value->product_id!="") {   
-  $pexplode_id = explode(',', $value->product_id);
-   $pdata = App\Models\Inventory::select('id','price','productname')
-    ->whereIn('products.id',$pexplode_id)->get();
-}
+                $explode_id = explode(',', $value->serviceid);
+                $servicedata = App\Models\Service::select('servicename','price')
+                                ->whereIn('services.id',$explode_id)->get();
+                $pexplode_id = 0;
+                $productname = "--";
+                if($value->product_id!=null || $value->product_id!="") {   
+                  $pexplode_id = explode(',', $value->product_id);
+                   $pdata = App\Models\Inventory::select('id','price','productname')
+                    ->whereIn('products.id',$pexplode_id)->get();
+                }
              
                 $ttlflat = 0;
                 $ptamounttotal = 0;
@@ -86,7 +86,6 @@ if($value->product_id!=null || $value->product_id!="") {
                             {
                                 if($sitem1->id==$servicevalue && $sitem1->price!=0)
                                 {
-                                //echo $servicevalue."==={$sitem1->id}price==".  $sitem1->price."<br>";
                                   $ttlflat2 += $sitem1->price;
                                 }
                             }

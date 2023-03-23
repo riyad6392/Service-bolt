@@ -537,6 +537,7 @@
     
   </div>
   <div class="tab-pane fade" id="commission" role="tabpanel" aria-labelledby="commission-tab">
+
   <form method="post" action="{{route('company.report') }}" class="row pe-0">
       @csrf
 
@@ -581,6 +582,23 @@
   </div>
 </div>
 
+
+    <form id="comsearch1" action="{{ route('company.commissionreport') }}" method="post">
+      @csrf
+      <input type="hidden" name="pidd" id="pidd" value="">
+      <input type="hidden" name="sincedd" id="sincedd" value="">
+      <input type="hidden" name="untildd" id="untildd" value="">
+
+      <div class="row">
+      <div class="col-md-4">
+      </div><div class="col-md-3">
+      </div><div class="col-md-3">
+      </div>
+      <div class="col-md-2">
+      <button class="btn add-btn-yellow py-2 px-5 searchBtnDown1" type="button" name="search" value="" style="margin-top:-127px;margin-left:47px;">{{ __('Export') }}</button>
+      </div>
+      </div>
+    </form>
 <div class="col-md-12">
  <div class="card">
 <div class="card-body">
@@ -737,7 +755,7 @@
                           </div><div class="col-md-3">
                           </div>
                           <div class="col-md-2">
-                           <button class="searchBtnDown" type="submit" name="searchdownload" id="search" value="excel"><i class="fa fa-download" aria-hidden="true"></i></button>
+                           <button class="searchBtnDown" type="button" name="searchdownload" id="search" value="excel"><i class="fa fa-download" aria-hidden="true"></i></button>
                           </div>
                           </div>
                          </form>
@@ -1056,7 +1074,7 @@ $("#since").datepicker({
     todayHighlight: true
   });
 
-    $(document).on('click','.searchdownload',function(e) {
+    $(document).on('click','.searchBtnDown',function(e) {
         since = $("#since").val();
         until = $("#until").val();
         var form = $(this).closest('form');
@@ -1065,6 +1083,16 @@ $("#since").datepicker({
         $("#sinced").val(since);
         $("#untild").val(until);
         $("#comsearch").submit();
+    });
+
+    $(document).on('click','.searchBtnDown1',function(e) {
+        since = $("#since").val();
+        until = $("#until").val();
+        pid = $("#pid").val();
+        $("#sincedd").val(since);
+        $("#untildd").val(until);
+        $("#pidd").val(pid);
+        $("#comsearch1").submit();
     });
 </script>
 @endsection

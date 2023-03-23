@@ -1406,6 +1406,9 @@ class TicketController extends Controller
 
    public function ticketdetail(Request $request)
    {
+    $url =  $request->url();
+    $urlexist = explode('&',$url);
+    
     $auth_id = auth()->user()->id;
     $allservices = Service::where('userid', $auth_id)->get();
     $allworker = Personnel::where('userid', $auth_id)->get();
@@ -1434,8 +1437,11 @@ class TicketController extends Controller
     
 
     $allcustomer = Customer::where('userid', $auth_id)->get();
-    
-    return view('ticket.ticketview',compact('quotedetails','servicename','allcustomer','productname'));
+    if(isset($urlexist[1]) && $urlexist[1]== 'q') {
+        return view('ticket.quoteview',compact('quotedetails','servicename','allcustomer','productname'));
+    } else {
+        return view('ticket.ticketview',compact('quotedetails','servicename','allcustomer','productname'));
+    }
    }
 
    
