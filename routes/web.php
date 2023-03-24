@@ -333,6 +333,7 @@ Route::group([
     Route::any('/servicefilter', [ReportController::class, 'servicefilter'])->name('servicefilter');
     Route::any('/productfilter', [ReportController::class, 'productfilter'])->name('productfilter');
     Route::any('/salesfilter', [ReportController::class, 'salesfilter'])->name('salesfilter');
+    Route::any('/recuringfilter', [ReportController::class, 'recuringfilter'])->name('recuringfilter');
     Route::any('/commissiondownload', [ReportController::class, 'commissiondownload'])->name('commissiondownload');
     Route::any('/commissionreport', [ReportController::class, 'commissionreport'])->name('commissionreport');
 

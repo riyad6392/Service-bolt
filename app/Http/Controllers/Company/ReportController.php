@@ -167,9 +167,17 @@ class ReportController extends Controller
         ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.givenstartdate','!=',null)
         ->groupBy(DB::raw('date'))->orderBy('date','desc')
         ->get();
-
+        if(empty($request->all()) || $request->fhiddenid == 'All') {
+            $fhiddenid = [];
+            $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->orderBy('quote.id','DESC')->get();
+        } 
+        if($request->fhiddenid != "All") {
+            $fhiddenid = $request->fhiddenid;
+            $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->where('quote.frequency',$request->fhiddenid)->orderBy('quote.id','DESC')->get();
+        }
+        $frequency = DB::table('tenture')->get();
         
-        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport'));
+        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','fhiddenid'));
     }
 
     public function servicefilter(Request $request) 
@@ -215,6 +223,37 @@ class ReportController extends Controller
                   $i=1; break;
                }
               fputcsv($file, array($ticket->id, $ticket->customername, $ticket->address, $ticket->personnelname,$servicename, $ticket->price, $statusfinal));
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function recuringfilter(Request $request)
+    {
+        $auth_id = auth()->user()->id;
+        $frequencytype = $request->frequencytype;
+        if($frequencytype == "All") {
+            $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->orderBy('quote.id','DESC')->get();
+        } else {
+            $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->where('quote.frequency',$frequencytype)->orderBy('quote.id','DESC')->get();
+        }
+
+        $fileName = date('d-m-Y').'_recurringreport.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+        $columns = array('Ticket #','Date','Frequency','Service Address');
+
+        $callback = function() use($recurringreport, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+            foreach ($recurringreport as $key =>$ticket) {
+              fputcsv($file, array($ticket->id, $ticket->created_at, $ticket->frequency, $ticket->address));
             }
             fclose($file);
         };

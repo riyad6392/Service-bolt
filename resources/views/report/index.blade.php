@@ -250,6 +250,10 @@
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="commission-tab" data-bs-toggle="tab" data-bs-target="#commission" type="button" role="tab" aria-controls="commission" aria-selected="false">Commission Report</button>
   </li>
+
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="recurring-tab" data-bs-toggle="tab" data-bs-target="#recurring" type="button" role="tab" aria-controls="recurring" aria-selected="false">Reoccuring Jobs Report</button>
+  </li>
   
 </ul>
 <div class="tab-content" id="myTabContent">
@@ -336,6 +340,70 @@
 	</table>
 	</div>
   </div>
+
+  <!-- recurring job report start -->
+    <div class="tab-pane fade show" id="recurring" role="tabpanel" aria-labelledby="recurring-tab">
+    <form id="recurringreport" action="{{ route('company.report') }}" method="post">
+     @csrf
+    <div class="row">
+        <input type="hidden" name="fhiddenid" id="fhiddenid" value="">
+        <div class="col-md-3">
+           
+        </div>
+        <div class="col-md-3">
+           
+        </div>
+        <div class="col-md-3">
+           <div class="side-h3">
+            Select Frequency
+            <select class="form-select precurring" name="frequencyid" id="frequencyid" required="">
+               <option value="All"> All </option>
+               @foreach($frequency as $key => $value)
+                    <option value="{{$value->tenturename}}" @if(@$fhiddenid ==  $value->tenturename) selected @endif> {{$value->tenturename}}</option>
+                    @endforeach
+            </select>
+           </div>
+        </div>
+    </div>
+    </form>
+    <form id="comsearch2" action="{{ route('company.recuringfilter') }}" method="post">
+      @csrf
+      <div class="row">
+      <div class="col-md-4">
+      </div><div class="col-md-3">
+      </div><div class="col-md-3">
+      </div>
+      <input type="hidden" name="frequencytype" id="frequencytype" value="">
+      <div class="col-md-2">
+       <button class="btn add-btn-yellow py-2 px-5 searchBtnDown2" type="button" name="search" value="excel" style="margin-top:-127px;margin-left:-85px;">{{ __('Export') }}</button>
+      </div>
+    </div>
+     </form><br>
+    <div class="table-responsive">
+        <table id="examplerecurring" class="table no-wrap table-new table-list align-items-center">
+            <thead>
+                <tr>
+                  <th>Ticket Number</th>
+                  <th>Date</th>
+                  <th>Frequency</th>
+                  <th>Service Address</th>
+                </tr>
+            </thead>
+        <tbody>
+        @foreach($recurringreport as $key => $ticket)
+        <tr>
+          <td>#{{$ticket->id}}</td>
+          <td>{{$ticket->created_at}}</td>
+          <td>{{$ticket->frequency}}</td>
+          <td style="">{{$ticket->address}}</td>
+        </tr>
+      
+    @endforeach
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <!-- end -->
   
 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
     <form action="{{ route('company.productfilter') }}" method="post">
@@ -988,6 +1056,9 @@
       $('#examplesaletab').DataTable({
        "order": [[ 0, "desc" ]]
       });
+      $("#examplerecurring").DataTable({
+       "order": [[ 0, "desc" ]] 
+      });
     });
 
     $.ajaxSetup({
@@ -1029,6 +1100,12 @@
       $("#phiddenid").val(pid);
       this.form.submit();
     });
+    $('.precurring').on('change', function() {
+      var pid = this.value;
+      $("#fhiddenid").val(pid);
+      $("#recurringreport").submit();
+    });
+    
 
 
 
@@ -1093,6 +1170,13 @@ $("#since").datepicker({
         $("#untildd").val(until);
         $("#pidd").val(pid);
         $("#comsearch1").submit();
+    });
+
+    $(document).on('click','.searchBtnDown2',function(e) {
+       
+        pid = $("#frequencyid").val();
+        $("#frequencytype").val(pid);
+        $("#comsearch2").submit();
     });
 </script>
 @endsection
