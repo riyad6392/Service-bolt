@@ -40,7 +40,15 @@ class ReportController extends Controller
            return redirect()->back();
         }
 
-        $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->orderBy('quote.id','DESC')->get();
+        @$sinceservice = $request->sinceservice;
+        @$untilservice = $request->untilservice;
+        if($request->sinceservice!=null && $request->untilservice!=null) {
+            $startDate = date('Y-m-d', strtotime($request->sinceservice));
+            $endDate = date('Y-m-d', strtotime($request->untilservice)); 
+            $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->whereBetween(DB::raw('DATE(quote.created_at)'), [$startDate, $endDate])->orderBy('quote.id','DESC')->get();
+        } else {
+           $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->orderBy('quote.id','DESC')->get(); 
+        }
         
        @$pdata1 = Personnel::where('userid',$auth_id)->get();
         $percentall = array();
@@ -160,31 +168,71 @@ class ReportController extends Controller
         $personnelids = array_flip($countsf1);
         $personnelids = array_values($personnelids);
 
-        $salesreport = DB::table('quote')
-        ->select(DB::raw('givenstartdate as date'),DB::raw('group_concat(quote.serviceid) as serviceid'),DB::raw('group_concat(quote.product_id) as product_id'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
-        ->join('customer', 'customer.id', '=', 'quote.customerid')
-        ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
-        ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.givenstartdate','!=',null)
-        ->groupBy(DB::raw('date'))->orderBy('date','desc')
-        ->get();
-        if(empty($request->all()) || $request->fhiddenid == 'All') {
-            $fhiddenid = [];
-            $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->orderBy('quote.id','DESC')->get();
-        } 
-        if($request->fhiddenid != "All") {
-            $fhiddenid = $request->fhiddenid;
-            $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->where('quote.frequency',$request->fhiddenid)->orderBy('quote.id','DESC')->get();
+        @$sincesale = $request->sincesale;
+        @$untilsale = $request->untilsale;
+        if($request->sincesale!=null && $request->untilsale!=null) {
+            $startDate = date('Y-m-d', strtotime($request->sincesale));
+            $endDate = date('Y-m-d', strtotime($request->untilsale));
+                $salesreport = DB::table('quote')
+                ->select(DB::raw('givenstartdate as date'),DB::raw('group_concat(quote.serviceid) as serviceid'),DB::raw('group_concat(quote.product_id) as product_id'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
+                ->join('customer', 'customer.id', '=', 'quote.customerid')
+                ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
+                ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.givenstartdate','!=',null)->whereBetween('quote.givenstartdate', [$startDate, $endDate])->groupBy(DB::raw('date'))->orderBy('date','desc')
+                ->get();
+        } else {
+            $salesreport = DB::table('quote')
+                ->select(DB::raw('givenstartdate as date'),DB::raw('group_concat(quote.serviceid) as serviceid'),DB::raw('group_concat(quote.product_id) as product_id'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
+                ->join('customer', 'customer.id', '=', 'quote.customerid')
+                ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
+                ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.givenstartdate','!=',null)
+                ->groupBy(DB::raw('date'))->orderBy('date','desc')
+                ->get();  
         }
-        $frequency = DB::table('tenture')->get();
+        $fhiddenid = [];
+        $recurringreport = [];
+        if(isset($request->fhiddenid)) {
+           if($request->fhiddenid == 'All') {
+                $fhiddenid = [];
+                if($request->sincerecur!=null && $request->untilrecur!=null) {
+                    $startDate = date('Y-m-d', strtotime($request->sincerecur));
+                    $endDate = date('Y-m-d', strtotime($request->untilrecur));
+                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])->orderBy('quote.id','DESC')->get();
+                } else {
+                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->orderBy('quote.id','DESC')->get();
+
+                }
+            } 
+            if($request->fhiddenid != "All") {
+                $fhiddenid = $request->fhiddenid;
+                if($request->sincerecur!=null && $request->untilrecur!=null) {
+                    $startDate = date('Y-m-d', strtotime($request->sincerecur));
+                    $endDate = date('Y-m-d', strtotime($request->untilrecur));
+                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])->where('quote.frequency',$request->fhiddenid)->orderBy('quote.id','DESC')->get();
+                } else {
+                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->where('quote.frequency',$request->fhiddenid)->orderBy('quote.id','DESC')->get();
+                }
+            }  
+        }
         
-        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','fhiddenid'));
+         $frequency = DB::table('tenture')->get();
+         @$sincerecur = $request->sincerecur;
+         @$untilrecur = $request->untilrecur;
+
+         
+
+        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','fhiddenid','sincerecur','untilrecur','sincesale','untilsale','sinceservice','untilservice'));
     }
 
     public function servicefilter(Request $request) 
     {
       $auth_id = auth()->user()->id;
-      $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->orderBy('quote.id','DESC')->get();
-
+      if($request->sinceservices!=null && $request->untilservices!=null) {
+        $startDate = date('Y-m-d', strtotime($request->sinceservices));
+        $endDate = date('Y-m-d', strtotime($request->untilservices));
+        $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->whereBetween(DB::raw('DATE(quote.created_at)'), [$startDate, $endDate])->orderBy('quote.id','DESC')->get();
+        } else {
+           $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->orderBy('quote.id','DESC')->get(); 
+        }
         $fileName = date('d-m-Y').'_servicereport.csv';
         $headers = array(
             "Content-type"        => "text/csv",
@@ -234,9 +282,21 @@ class ReportController extends Controller
         $auth_id = auth()->user()->id;
         $frequencytype = $request->frequencytype;
         if($frequencytype == "All") {
-            $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->orderBy('quote.id','DESC')->get();
+            if($request->sincerecuring!=null && $request->untilrecuring!=null) { 
+              $startDate = date('Y-m-d', strtotime($request->sincerecuring));
+              $endDate = date('Y-m-d', strtotime($request->untilrecuring));
+                $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])->orderBy('quote.id','DESC')->get();
+            } else {
+                $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->orderBy('quote.id','DESC')->get();
+            }
         } else {
-            $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->where('quote.frequency',$frequencytype)->orderBy('quote.id','DESC')->get();
+            if($request->sincerecuring!=null && $request->untilrecuring!=null) { 
+              $startDate = date('Y-m-d', strtotime($request->sincerecuring));
+              $endDate = date('Y-m-d', strtotime($request->untilrecuring));
+                $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->where('quote.frequency',$frequencytype)->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])->orderBy('quote.id','DESC')->get();
+            } else {
+                $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->where('quote.frequency',$frequencytype)->orderBy('quote.id','DESC')->get();
+            }
         }
 
         $fileName = date('d-m-Y').'_recurringreport.csv';
@@ -310,14 +370,25 @@ class ReportController extends Controller
     public function salesfilter(Request $request)
     {
         $auth_id = auth()->user()->id;
-        $salesreport = DB::table('quote')
-        ->select(DB::raw('givenstartdate as date'),DB::raw('group_concat(quote.serviceid) as serviceid'),DB::raw('group_concat(quote.product_id) as product_id'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
-        ->join('customer', 'customer.id', '=', 'quote.customerid')
-        ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
-        ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.givenstartdate','!=',null)
-        ->groupBy(DB::raw('date'))->orderBy('date','desc')
-        ->get();
-
+        if($request->sincesales!=null && $request->untilsales!=null) {
+            $startDate = date('Y-m-d', strtotime($request->sincesales));
+            $endDate = date('Y-m-d', strtotime($request->untilsales));
+            $salesreport = DB::table('quote')
+            ->select(DB::raw('givenstartdate as date'),DB::raw('group_concat(quote.serviceid) as serviceid'),DB::raw('group_concat(quote.product_id) as product_id'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
+            ->join('customer', 'customer.id', '=', 'quote.customerid')
+            ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
+            ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.givenstartdate','!=',null)->whereBetween('quote.givenstartdate', [$startDate, $endDate])
+            ->groupBy(DB::raw('date'))->orderBy('date','desc')
+            ->get();
+        } else {
+            $salesreport = DB::table('quote')
+                ->select(DB::raw('givenstartdate as date'),DB::raw('group_concat(quote.serviceid) as serviceid'),DB::raw('group_concat(quote.product_id) as product_id'),'quote.id','quote.updated_at','customer.customername','personnel.personnelname', DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN price END) as totalprice'),DB::raw('SUM(CASE WHEN quote.personnelid = quote.primaryname THEN tickettotal END) as tickettotalprice'),DB::raw('COUNT(CASE WHEN quote.personnelid = quote.primaryname THEN quote.id END) as totalticket'))
+                ->join('customer', 'customer.id', '=', 'quote.customerid')
+                ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
+                ->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',['3','5','4'])->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.givenstartdate','!=',null)
+                ->groupBy(DB::raw('date'))->orderBy('date','desc')
+                ->get();
+        }
         $fileName = date('d-m-Y').'_salesreport.csv';
         $headers = array(
             "Content-type"        => "text/csv",

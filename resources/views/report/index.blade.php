@@ -258,18 +258,56 @@
 </ul>
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-    <form action="{{ route('company.servicefilter') }}" method="post">
+    
+    <form action="{{ route('company.report') }}" method="post">
       @csrf
-      <div class="row">
-      <div class="col-md-4">
-      </div><div class="col-md-3">
-      </div><div class="col-md-3">
-      </div>
-      <div class="col-md-2">
-       <button class="btn add-btn-yellow py-2 px-5" type="submit" name="search" value="excel">{{ __('Export') }}</button>
-      </div>
+       @php
+            if($sinceservice!=null) {
+                $sinceservice = $sinceservice;
+            }  else {
+                $sinceservice = "";
+            }
+            if($untilservice!=null) {
+                $untilservice = $untilservice;
+            }  else {
+                $untilservice = "";
+            }
+        @endphp
+        <div class="row">
+            <div class="col-md-3" style="padding:7px;">
+              <label style="visibility:hidden;">Select Date Range</label>
+              <input type="text" id="sinceservice" name="sinceservice" value="{{$sinceservice}}" class="form-control date1" placeholder="mm/dd/yyyy" readonly>
+            </div>
+            <div class="col-md-3" style="padding:7px;">
+              <label style="visibility:hidden;">To Date</label>
+              <input type="text" id="untilservice" name="untilservice" value="{{$untilservice}}" class="form-control date2" placeholder="mm/dd/yyyy" readonly>
+            </div>
+            <div class="col-md-3">
+              <div class="side-h3">
+                <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
+              </div>
+            </div>
+    </form>
+    <div class="col-md-3">
+        <form id="comsearchservice" action="{{ route('company.servicefilter') }}" method="post">
+          @csrf
+          <input type="hidden" name="sinceservices" id="sinceservices" value="">
+          <input type="hidden" name="untilservices" id="untilservices" value="">
+          <div class="row">
+          <div class="col-md-4">
+          </div><div class="col-md-3">
+          </div><div class="col-md-3">
+          </div>
+          <div class="col-md-3">
+            <div class="side-h3">
+            <button class="btn add-btn-yellow py-2 px-5 searchBtnDownservice" type="button" name="search" value="excel">{{ __('Export') }}</button>
+            </div>
+          </div>
+        </div>
+         </form>
     </div>
-     </form><br>
+</div>
+     <br>
     <div class="table-responsive">
 	    <table id="example" class="table no-wrap table-new table-list align-items-center">
     	    <thead>
@@ -347,15 +385,28 @@
      @csrf
     <div class="row">
         <input type="hidden" name="fhiddenid" id="fhiddenid" value="">
-        <div class="col-md-3">
-           
-        </div>
-        <div class="col-md-3">
-           
-        </div>
+        @php
+            if($sincerecur!=null) {
+                $sincerecur = $sincerecur;
+            }  else {
+                $sincerecur = "";
+            }
+            if($untilrecur!=null) {
+                $untilrecur = $untilrecur;
+            }  else {
+                $untilrecur = "";
+            }
+        @endphp
+        <div class="col-md-3" style="padding:7px;">
+         <label style="visibility:hidden;">Select Date Range</label>
+         <input type="text" id="sincerecur" name="sincerecur" value="{{$sincerecur}}" class="form-control date1" placeholder="mm/dd/yyyy" readonly>
+       </div>
+       <div class="col-md-3" style="padding:7px;">
+         <label style="visibility:hidden;">To Date</label>
+         <input type="text" id="untilrecur" name="untilrecur" value="{{$untilrecur}}" class="form-control date2" placeholder="mm/dd/yyyy" readonly>
+       </div>
         <div class="col-md-3">
            <div class="side-h3">
-            Select Frequency
             <select class="form-select precurring" name="frequencyid" id="frequencyid" required="">
                <option value="All"> All </option>
                @foreach($frequency as $key => $value)
@@ -374,6 +425,8 @@
       </div><div class="col-md-3">
       </div>
       <input type="hidden" name="frequencytype" id="frequencytype" value="">
+      <input type="hidden" name="sincerecuring" id="sincerecuring" value="">
+      <input type="hidden" name="untilrecuring" id="untilrecuring" value="">
       <div class="col-md-2">
        <button class="btn add-btn-yellow py-2 px-5 searchBtnDown2" type="button" name="search" value="excel" style="margin-top:-127px;margin-left:-85px;">{{ __('Export') }}</button>
       </div>
@@ -450,18 +503,55 @@
     </div>
   </div>
   <div class="tab-pane fade" id="sale" role="tabpanel" aria-labelledby="sale-tab">
-    <form action="{{ route('company.salesfilter') }}" method="post">
+    <form action="{{ route('company.report') }}" method="post">
       @csrf
-      <div class="row">
-      <div class="col-md-4">
-      </div><div class="col-md-3">
-      </div><div class="col-md-3">
-      </div>
-      <div class="col-md-2">
-       <button class="btn add-btn-yellow py-2 px-5" type="submit" name="search" value="excel">{{ __('Export') }}</button>
-      </div>
+       @php
+            if($sincesale!=null) {
+                $sincesale = $sincesale;
+            }  else {
+                $sincesale = "";
+            }
+            if($untilsale!=null) {
+                $untilsale = $untilsale;
+            }  else {
+                $untilsale = "";
+            }
+        @endphp
+        <div class="row">
+            <div class="col-md-3" style="padding:7px;">
+              <label style="visibility:hidden;">Select Date Range</label>
+              <input type="text" id="sincesale" name="sincesale" value="{{$sincesale}}" class="form-control date1" placeholder="mm/dd/yyyy" readonly>
+            </div>
+            <div class="col-md-3" style="padding:7px;">
+              <label style="visibility:hidden;">To Date</label>
+              <input type="text" id="untilsale" name="untilsale" value="{{$untilsale}}" class="form-control date2" placeholder="mm/dd/yyyy" readonly>
+            </div>
+        <div class="col-md-3">
+          <div class="side-h3">
+            <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
+          </div>
+        </div>
+    </form>
+    <div class="col-md-3">
+        <form id="comsearchsales" action="{{ route('company.salesfilter') }}" method="post">
+          @csrf
+          <input type="hidden" name="sincesales" id="sincesales" value="">
+          <input type="hidden" name="untilsales" id="untilsales" value="">
+
+          <div class="row">
+          <div class="col-md-4">
+          </div><div class="col-md-3">
+          </div><div class="col-md-3">
+          </div>
+            <div class="col-md-3">
+              <div class="side-h3">
+                <button class="btn add-btn-yellow py-2 px-5 searchBtnDownsales" type="button" name="search" value="excel">{{ __('Export') }}</button>
+              </div>
+            </div>
+          </div>
+        </form>
     </div>
-     </form><br>
+    </div>
    <div class="col-md-12">
 <div class="card">
 <div class="card-body">
@@ -633,23 +723,23 @@
    
 
  <input type="hidden" name="phiddenid" id="phiddenid" value="">
-<div class="col-md-3">
-   <div class="side-h3">
-    <select class="form-select puser" name="pid" id="pid" required="">
-       <option value="All"> All </option>
-       @foreach($pdata1 as $key => $value)
-            <option value="{{$value->id}}" @if(@$personnelid ==  $value->id) selected @endif> {{$value->personnelname}}</option>
-            @endforeach
-    </select>
-   </div>
-</div>
-  </form>
-<div class="col-md-3">
-  <div class="side-h3">
-    <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
-  </div>
-</div>
-
+    <div class="col-md-3">
+       <div class="side-h3">
+        <select class="form-select puser" name="pid" id="pid" required="">
+           <option value="All"> All </option>
+           @foreach($pdata1 as $key => $value)
+                <option value="{{$value->id}}" @if(@$personnelid ==  $value->id) selected @endif> {{$value->personnelname}}</option>
+                @endforeach
+        </select>
+       </div>
+    </div>
+  
+    <div class="col-md-3">
+      <div class="side-h3">
+        <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
+      </div>
+    </div>
+</form>
 
     <form id="comsearch1" action="{{ route('company.commissionreport') }}" method="post">
       @csrf
@@ -1151,6 +1241,37 @@ $("#since").datepicker({
     todayHighlight: true
   });
 
+  $("#sincerecur").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
+
+  $("#untilrecur").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
+
+  $("#sincesale").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
+
+  $("#untilsale").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
+
+  $("#sinceservice").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
+
+  $("#untilservice").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
+
+
     $(document).on('click','.searchBtnDown',function(e) {
         since = $("#since").val();
         until = $("#until").val();
@@ -1173,10 +1294,41 @@ $("#since").datepicker({
     });
 
     $(document).on('click','.searchBtnDown2',function(e) {
-       
+        since = $("#sincerecur").val();
+        until = $("#untilrecur").val();
+        $("#sincerecuring").val(since);
+        $("#untilrecuring").val(until);
+
         pid = $("#frequencyid").val();
         $("#frequencytype").val(pid);
         $("#comsearch2").submit();
+    });
+
+    $(document).on('click','.searchBtnDown3',function(e) {
+        since = $("#sincerecur").val();
+        until = $("#untilrecur").val();
+        $("#sincerecuring").val(since);
+        $("#untilrecuring").val(until);
+
+        pid = $("#frequencyid").val();
+        $("#frequencytype").val(pid);
+        $("#comsearch2").submit();
+    });
+
+    $(document).on('click','.searchBtnDownsales',function(e) {
+        since = $("#sincesale").val();
+        until = $("#untilsale").val();
+        $("#sincesales").val(since);
+        $("#untilsales").val(until);
+        $("#comsearchsales").submit();
+    });
+
+    $(document).on('click','.searchBtnDownservice',function(e) {
+        since = $("#sinceservice").val();
+        until = $("#untilservice").val();
+        $("#sinceservices").val(since);
+        $("#untilservices").val(until);
+        $("#comsearchservice").submit();
     });
 </script>
 @endsection
