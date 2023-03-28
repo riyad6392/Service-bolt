@@ -140,7 +140,15 @@ class ReportController extends Controller
         @$from = $request->since;
         @$to = $request->until;
 
-        $productinfo = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->get();
+        @$sinceproduct = $request->sinceproduct;
+        @$untilproduct = $request->untilproduct;
+        if($request->sinceproduct!=null && $request->untilproduct!=null) {
+            $startDate = date('Y-m-d', strtotime($request->sinceproduct));
+            $endDate = date('Y-m-d', strtotime($request->untilproduct)); 
+            $productinfo = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->whereBetween(DB::raw('DATE(quote.created_at)'), [$startDate, $endDate])->get();
+        } else {
+             $productinfo = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->get(); 
+        }
         $personnelids  =array();
         
 
@@ -188,11 +196,11 @@ class ReportController extends Controller
                 ->groupBy(DB::raw('date'))->orderBy('date','desc')
                 ->get();  
         }
-        $fhiddenid = [];
+        $frequencyid = [];
         $recurringreport = [];
-        if(isset($request->fhiddenid)) {
-           if($request->fhiddenid == 'All') {
-                $fhiddenid = [];
+       // if(isset($request->frequencyid)) {
+           if($request->frequencyid == 'All') {
+                $frequencyid = [];
                 if($request->sincerecur!=null && $request->untilrecur!=null) {
                     $startDate = date('Y-m-d', strtotime($request->sincerecur));
                     $endDate = date('Y-m-d', strtotime($request->untilrecur));
@@ -201,18 +209,17 @@ class ReportController extends Controller
                     $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->orderBy('quote.id','DESC')->get();
 
                 }
-            } 
-            if($request->fhiddenid != "All") {
-                $fhiddenid = $request->fhiddenid;
+            } else {
+                $frequencyid = $request->frequencyid;
                 if($request->sincerecur!=null && $request->untilrecur!=null) {
                     $startDate = date('Y-m-d', strtotime($request->sincerecur));
                     $endDate = date('Y-m-d', strtotime($request->untilrecur));
-                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])->where('quote.frequency',$request->fhiddenid)->orderBy('quote.id','DESC')->get();
+                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])->where('quote.frequency',$request->frequencyid)->orderBy('quote.id','DESC')->get();
                 } else {
-                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->where('quote.frequency',$request->fhiddenid)->orderBy('quote.id','DESC')->get();
+                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->where('quote.frequency',$request->frequencyid)->orderBy('quote.id','DESC')->get();
                 }
             }  
-        }
+       //}
         
          $frequency = DB::table('tenture')->get();
          @$sincerecur = $request->sincerecur;
@@ -220,7 +227,7 @@ class ReportController extends Controller
 
          
 
-        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','fhiddenid','sincerecur','untilrecur','sincesale','untilsale','sinceservice','untilservice'));
+        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','frequencyid','sincerecur','untilrecur','sincesale','untilsale','sinceservice','untilservice','sinceproduct','untilproduct'));
     }
 
     public function servicefilter(Request $request) 
@@ -322,8 +329,14 @@ class ReportController extends Controller
 
     public function productfilter(Request $request) 
     {
-      $auth_id = auth()->user()->id;
-      $productinfo = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->get();
+        $auth_id = auth()->user()->id;
+        if($request->sinceproducts!=null && $request->untilproducts!=null) {
+            $startDate = date('Y-m-d', strtotime($request->sinceproducts));
+            $endDate = date('Y-m-d', strtotime($request->untilproducts)); 
+            $productinfo = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->whereBetween(DB::raw('DATE(quote.created_at)'), [$startDate, $endDate])->get();
+        } else {
+            $productinfo = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->get();
+        }
         $personnelids  =array();
         foreach($productinfo as $key =>$value) {
            $pids[] = $value->product_id;

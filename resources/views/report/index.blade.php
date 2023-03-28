@@ -384,7 +384,7 @@
     <form id="recurringreport" action="{{ route('company.report') }}" method="post">
      @csrf
     <div class="row">
-        <input type="hidden" name="fhiddenid" id="fhiddenid" value="">
+        <!-- <input type="hidden" name="fhiddenid" id="fhiddenid" value=""> -->
         @php
             if($sincerecur!=null) {
                 $sincerecur = $sincerecur;
@@ -410,11 +410,16 @@
             <select class="form-select precurring" name="frequencyid" id="frequencyid" required="">
                <option value="All"> All </option>
                @foreach($frequency as $key => $value)
-                    <option value="{{$value->tenturename}}" @if(@$fhiddenid ==  $value->tenturename) selected @endif> {{$value->tenturename}}</option>
+                    <option value="{{$value->tenturename}}" @if(@$frequencyid ==  $value->tenturename) selected @endif> {{$value->tenturename}}</option>
                     @endforeach
             </select>
            </div>
         </div>
+      <div class="col-md-3">
+      <div class="side-h3">
+        <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
+      </div>
+    </div>
     </div>
     </form>
     <form id="comsearch2" action="{{ route('company.recuringfilter') }}" method="post">
@@ -428,10 +433,10 @@
       <input type="hidden" name="sincerecuring" id="sincerecuring" value="">
       <input type="hidden" name="untilrecuring" id="untilrecuring" value="">
       <div class="col-md-2">
-       <button class="btn add-btn-yellow py-2 px-5 searchBtnDown2" type="button" name="search" value="excel" style="margin-top:-127px;margin-left:-85px;">{{ __('Export') }}</button>
-      </div>
+        <button class="btn add-btn-yellow py-2 px-4 searchBtnDown2" type="button" name="search" value="excel" style="margin-top:-127px;margin-left:47px;">{{ __('Export') }}</button>
+       </div>
     </div>
-     </form><br>
+     </form>
     <div class="table-responsive">
         <table id="examplerecurring" class="table no-wrap table-new table-list align-items-center">
             <thead>
@@ -459,18 +464,55 @@
   <!-- end -->
   
 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-    <form action="{{ route('company.productfilter') }}" method="post">
+
+    <form action="{{ route('company.report') }}" method="post">
       @csrf
-      <div class="row">
-      <div class="col-md-4">
-      </div><div class="col-md-3">
-      </div><div class="col-md-3">
-      </div>
-      <div class="col-md-2">
-       <button class="btn add-btn-yellow py-2 px-5" type="submit" name="search" value="excel">{{ __('Export') }}</button>
-      </div>
-    </div>
-     </form><br>
+       @php
+            if($sinceproduct!=null) {
+                $sinceproduct = $sinceproduct;
+            }  else {
+                $sinceproduct = "";
+            }
+            if($untilproduct!=null) {
+                $untilproduct = $untilproduct;
+            }  else {
+                $untilproduct = "";
+            }
+        @endphp
+        <div class="row">
+        <div class="col-md-3" style="padding:7px;">
+          <label style="visibility:hidden;">Select Date Range</label>
+          <input type="text" id="sinceproduct" name="sinceproduct" value="{{$sinceproduct}}" class="form-control date1" placeholder="mm/dd/yyyy" readonly>
+        </div>
+        <div class="col-md-3" style="padding:7px;">
+          <label style="visibility:hidden;">To Date</label>
+          <input type="text" id="untilproduct" name="untilproduct" value="{{$untilproduct}}" class="form-control date2" placeholder="mm/dd/yyyy" readonly>
+        </div>
+        <div class="col-md-3">
+          <div class="side-h3">
+            <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
+          </div>
+        </div>
+    </form>
+    <div class="col-md-3">
+    <form id="comsearchproduct" action="{{ route('company.productfilter') }}" method="post">
+       @csrf
+          <input type="hidden" name="sinceproducts" id="sinceproducts" value="">
+          <input type="hidden" name="untilproducts" id="untilproducts" value="">
+          <div class="row">
+          <div class="col-md-4">
+          </div><div class="col-md-3">
+          </div><div class="col-md-3">
+          </div>
+          <div class="col-md-3">
+            <div class="side-h3">
+                <button class="btn add-btn-yellow py-2 px-5 searchBtnDownproduct" type="button" name="search" value="excel">{{ __('Export') }}</button>
+            </div>
+          </div>
+        </div>
+    </form>
+     </div>
+ </div>
     <div class="table-responsive">
         <table id="exampleproduct" class="table no-wrap table-new table-list align-items-center">
             <thead>
@@ -1191,27 +1233,22 @@
       this.form.submit();
     });
     $('.precurring').on('change', function() {
-      var pid = this.value;
-      $("#fhiddenid").val(pid);
+      // var pid = this.value;
+      // $("#fhiddenid").val(pid);
       $("#recurringreport").submit();
     });
     
-
-
-
-
-  
-        $(function() {
-            var lastTab = localStorage.getItem('lastTab');
-            $('#myTab').removeClass('hidden');
-            if (lastTab) {
-                $('[data-bs-target="' + lastTab + '"]').tab('show');
-                localStorage.removeItem('lastTab');
-            }
-            $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
-                localStorage.setItem('lastTab', $(this).data('bs-target'));
-            });
+    $(function() {
+        var lastTab = localStorage.getItem('lastTab');
+        $('#myTab').removeClass('hidden');
+        if (lastTab) {
+            $('[data-bs-target="' + lastTab + '"]').tab('show');
+            localStorage.removeItem('lastTab');
+        }
+        $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+            localStorage.setItem('lastTab', $(this).data('bs-target'));
         });
+    });
 
 $(document).on('click','.service_list_dot',function(e) {
    var id = $(this).data('id');
@@ -1267,6 +1304,16 @@ $("#since").datepicker({
   });
 
   $("#untilservice").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
+
+  $("#sinceproduct").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true
+  });
+
+  $("#untilproduct").datepicker({ 
     autoclose: true, 
     todayHighlight: true
   });
@@ -1329,6 +1376,14 @@ $("#since").datepicker({
         $("#sinceservices").val(since);
         $("#untilservices").val(until);
         $("#comsearchservice").submit();
+    });
+
+    $(document).on('click','.searchBtnDownproduct',function(e) {
+        since = $("#sinceproduct").val();
+        until = $("#untilproduct").val();
+        $("#sinceproducts").val(since);
+        $("#untilproducts").val(until);
+        $("#comsearchproduct").submit();
     });
 </script>
 @endsection
