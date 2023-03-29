@@ -284,7 +284,7 @@
             </div>
             <div class="col-md-3">
               <div class="side-h3">
-                <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
+                <button type="submit" class="btn btn-block button" style="width:100%;height: 40px;">Run</button>
               </div>
             </div>
     </form>
@@ -490,7 +490,7 @@
         </div>
         <div class="col-md-3">
           <div class="side-h3">
-            <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
+            <button type="submit" class="btn btn-block button" style="width:100%;height: 40px;">Run</button>
           </div>
         </div>
     </form>
@@ -570,7 +570,7 @@
             </div>
         <div class="col-md-3">
           <div class="side-h3">
-            <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
+            <button type="submit" class="btn btn-block button" style="width:100%;height: 40px;">Run</button>
           </div>
         </div>
     </form>

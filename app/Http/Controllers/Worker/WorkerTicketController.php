@@ -21,6 +21,7 @@ use App\Models\Notification;
 use App\Events\MyEvent;
 use Image;
 use PDF;
+use App\Models\Hourlyprice;
 
 class WorkerTicketController extends Controller
 {
@@ -655,7 +656,7 @@ class WorkerTicketController extends Controller
        $productData = DB::table('products')->where('user_id',$userData->userid)->orWhere('workerid',$worker->workerid)->orderBy('id','desc')->get();
 
        $permissonarray = explode(',',$workers->ticketid);
-
+       
       $paynowurl = url('personnel/myticket/paynow/').'/'.$request->id;
        
        $html ='<div class="add-customer-modal">
@@ -692,7 +693,7 @@ class WorkerTicketController extends Controller
           <div class="col-md-12 mb-2">
             <div class="form-group">
             <label>Customer Email</label>
-            <input type="email" class="form-control emailv" placeholder="Email" name="email" id="email" value="'.$customer[0]->email.'">
+            <input type="email" class="form-control emailv" placeholder="Email" name="email" id="email" value="'.$customer[0]->email.'" required>
           </div>
           </div>
 
@@ -712,8 +713,44 @@ class WorkerTicketController extends Controller
               }
         $html .='</select>
         <a href="#" data-bs-toggle="modal" data-bs-target="#add-services" id="sclick"><i class="fa fa-plus"></i></a>
-          </div>
-          <div class="col-md-12 mb-3">
+          </div>';
+          $serviceids =explode(",", $quote->serviceid);
+          $html .='<div class="row mt-4" id="testprice">';
+          foreach($serviceids as $key1=>$value1) {
+             $serviceinfo = Service::select('id','servicename')->where('id',$value1)->first();
+             $horalyp = Hourlyprice::where('ticketid',$request->id)->get();
+             if(count($horalyp)>0) {
+              $hpinfo = Hourlyprice::select('hour','minute')->where('ticketid',$request->id)->whereIn('serviceid',array($value1))->first();
+             }
+            $html .='
+              <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-4 mb-2">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="'.$serviceinfo->servicename.'"required readonly>
+                    <input type="hidden" name="serviceids[]" id="serviceids" value="'.$serviceinfo->id.'">
+                  </div>
+                </div>
+                <div class="col-md-4 mb-2">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Hour" name="hours[]" id="hours" value="'.@$hpinfo->hour.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                  </div>
+                </div>
+                <div class="col-md-4 mb-2">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Minute" name="minutes[]" id="minutes" value="'.@$hpinfo->minute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                  </div>
+                </div>
+              </div>
+              </div>
+              ';
+          }
+      $html .='</div>';
+
+     
+      
+
+      $html .='<div class="col-md-12 mb-3">
           <label>Select Products</label>
       <div class="d-flex align-items-center">
         <select class="form-control selectpicker" data-live-search="true" multiple="" data-placeholder="Select Products" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="productid[]" id="productid" style="height:auto;">';
@@ -729,7 +766,8 @@ class WorkerTicketController extends Controller
               }
         $html .='</select>
         <a href="#" data-bs-toggle="modal" data-bs-target="#add-product" id="pclick"><i class="fa fa-plus"></i></a>
-          </div><div class="col-md-12 mb-2">
+          </div>
+          <div class="col-md-12 mb-2">
             <div class="form-group">
             <label>Price</label>
             <input type="text" class="form-control" placeholder="Price" name="price" id="price12" value="'.$request->price.'" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" required>
@@ -745,7 +783,7 @@ class WorkerTicketController extends Controller
             <label>Personnel Notes</label>
             <input type="text" class="form-control" placeholder="Notes" name="customernotes" id="customernotes" value="'.strip_tags($quote->customernotes).'" readonly>
           </div>
-          </div><input type="hidden" name="id" id="id" value="'.$quote->id.'">';
+          </div><input type="hidden" name="id" id="id" value="'.$quote->id.'"><input type="hidden" name="productprice" id="productprice" value="">';
       $html .= '<div class="row">
           <div class="col-lg-6">
             <span class="btn btn-cancel btn-block" data-bs-dismiss="modal" style="height:42px;">Cancel</span>
@@ -758,7 +796,7 @@ class WorkerTicketController extends Controller
         if(in_array("Create Invoice for payment", $permissonarray) || in_array("Administrator", $permissonarray)) {
           
          $html .= '<div class="row"><div class="col-lg-6 mb-2">
-              <a class="add-btn-yellow w-100 sendtocustomer" data-email="'.$customer[0]->email.'" data-id="'.$quote->id.'" style="text-align: center;border:0;cursor:pointer;">Send Invoice</a>
+              <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;height:42px;" name="type" value="sendinvoice">Send Invoice</button>
             </div>
             <div class="col-lg-6">
               <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;" name="type" value="paynow">Pay Now</button>
@@ -766,13 +804,13 @@ class WorkerTicketController extends Controller
         }
         elseif(in_array("Generate PDF for invoice", $permissonarray) || in_array("Administrator", $permissonarray)) {
          $html .= '<div class="row"><div class="col-lg-6 mb-2">
-              <a class="add-btn-yellow w-100 sendtocustomer" data-email="'.$customer[0]->email.'" data-id="'.$quote->id.'" style="text-align: center;border:0;cursor:pointer;">Send Invoice</a>
+              <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;height:42px;" name="type" value="sendinvoice">Send Invoice</button>
             </div>
             </div>';
           }
       } else {
         $html .= '<div class="row"><div class="col-lg-6 mb-2">
-              <a class="add-btn-yellow w-100 sendtocustomer" data-email="'.$customer[0]->email.'" data-id="'.$quote->id.'" style="text-align: center;border:0;pointer-events: none;background:#fee2002e;">Send Invoice</a>
+              <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;pointer-events: none;background:#fee2002e;" name="type" value="sendinvoice">Send Invoice</button>
             </div>
             <div class="col-lg-6">
               <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;pointer-events: none;background:#fee2002e;" name="type" value="paynow">Pay Now</button>
@@ -930,15 +968,113 @@ class WorkerTicketController extends Controller
       // $quote->tax = $totaltax;
       // $quote->save();
       if($request->type=="paynow") {
+        if(count($request->serviceids)>0) {
+          DB::table('hourlyprice')->where('ticketid',$request->qid)->delete();
+          $pricetotal = 0;
+          foreach($request->serviceids as $key =>$value) {
+            $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value))->first();
+            $hrpicehour = 0;
+            if($request->hours[$key]!='0' || $request->hours[$key]!='00') {
+                $hrpicehour = $servicedetails->price*$request->hours[$key];
+            }
+            $hrpiceminute = 0;
+            if($request->minutes[$key]!='0' || $request->minutes[$key]!='00') {
+              $perminuteprice =$servicedetails->price/60;
+              $hrpiceminute = $perminuteprice*$request->minutes[$key];
+            }
+            
+            $data['ticketid'] = $request->qid;
+            $data['serviceid'] = $value;
+            $data['hour'] = $request->hours[$key];
+            $data['minute'] = $request->minutes[$key];
+            $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+            
+            Hourlyprice::create($data);
+            $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+          }
+          $productprice= 0;
+          if($request->productprice!=null || $request->productprice!='0') {
+              $productprice = $request->productprice;
+          }
+            $finalsumprice = $pricetotal+$productprice;
+            DB::table('quote')->where('id','=',$request->qid)->update([ 
+                "price"=>$finalsumprice
+            ]);
+        }
         $paynowurl = url('personnel/myticket/paynow/').'/'.$request->id;
         return redirect($paynowurl);
       }
       if($request->type=="save") {
+        if(count($request->serviceids)>0) {
+          DB::table('hourlyprice')->where('ticketid',$request->qid)->delete();
+          $pricetotal = 0;
+          foreach($request->serviceids as $key =>$value) {
+            $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value))->first();
+            $hrpicehour = 0;
+            if($request->hours[$key]!='0' || $request->hours[$key]!='00') {
+                $hrpicehour = $servicedetails->price*$request->hours[$key];
+            }
+            $hrpiceminute = 0;
+            if($request->minutes[$key]!='0' || $request->minutes[$key]!='00') {
+                $perminuteprice =$servicedetails->price/60;
+                $hrpiceminute = $perminuteprice*$request->minutes[$key];
+            }
+            
+            $data['ticketid'] = $request->qid;
+            $data['serviceid'] = $value;
+            $data['hour'] = $request->hours[$key];
+            $data['minute'] = $request->minutes[$key];
+            $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+
+            Hourlyprice::create($data);
+            $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', ''); 
+          }
+          $productprice= 0;
+          if($request->productprice!=null || $request->productprice!='0') {
+              $productprice = $request->productprice;
+          }
+            $finalsumprice = $pricetotal+$productprice;
+            DB::table('quote')->where('id','=',$request->qid)->update([ 
+                "price"=>$finalsumprice
+            ]);            
+        }
         $request->session()->flash('success', 'Invoice has been Save successfully');
         return redirect()->back();
       }
-      //if($request->type=="sendinvoice") {
-          
+      if($request->type=="sendinvoice") {
+        if(count($request->serviceids)>0) {
+          DB::table('hourlyprice')->where('ticketid',$request->qid)->delete();
+          $pricetotal = 0;
+          foreach($request->serviceids as $key =>$value) {
+            $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value))->first();
+            $hrpicehour = 0;
+            if($request->hours[$key]!='0' || $request->hours[$key]!='00') {
+                $hrpicehour = $servicedetails->price*$request->hours[$key];
+            }
+            $hrpiceminute = 0;
+            if($request->minutes[$key]!='0' || $request->minutes[$key]!='00') {
+                $perminuteprice =$servicedetails->price/60;
+                $hrpiceminute = $perminuteprice*$request->minutes[$key];
+            }
+            
+            $data['ticketid'] = $request->qid;
+            $data['serviceid'] = $value;
+            $data['hour'] = $request->hours[$key];
+            $data['minute'] = $request->minutes[$key];
+            $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+
+            Hourlyprice::create($data);
+            $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', ''); 
+          }
+          $productprice= 0;
+          if($request->productprice!=null || $request->productprice!='0') {
+              $productprice = $request->productprice;
+          }
+            $finalsumprice = $pricetotal+$productprice;
+            DB::table('quote')->where('id','=',$request->qid)->update([ 
+                "price"=>$finalsumprice
+            ]);
+        }
           DB::table('quote')->where('id','=',$request->id)->orWhere('parentid','=',$request->id)
           ->update([ 
               "invoiced"=>1
@@ -963,7 +1099,7 @@ class WorkerTicketController extends Controller
               $message->attachData($pdf->output(), "invoice.pdf");
 
             });
-        //}
+        }
       //}
 
     
@@ -1442,11 +1578,36 @@ class WorkerTicketController extends Controller
     public function calculateprice(Request $request) {
       $json = array();
       $serviceidarray = explode(',', $request->serviceid);
-      $servicedetails = Service::select('servicename','price')->whereIn('id', $serviceidarray)->get();
+      $servicedetails = Service::select('servicename','price','id')->whereIn('id', $serviceidarray)->get();
       $sum = 0;
+      $hourpricehtml = "";
       foreach ($servicedetails as $key => $value) {
+        $horalyp = Hourlyprice::where('ticketid',$request->qid)->get();
+        if(count($horalyp)>0) {
+          $hpinfo = Hourlyprice::select('hour','minute')->where('ticketid',$request->qid)->whereIn('serviceid',array($value['id']))->first();
+        }
         $sname[] = $value['servicename'];
         $sum+= (float)$value['price'];
+        $hourpricehtml .='<div class="col-md-12">
+            <div class="row">
+              <div class="col-md-4 mb-2">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="'.$value['servicename'].'" required readonly>
+                    <input type="hidden" name="serviceids[]" id="serviceids" value="'.$value['id'].'">
+                </div>
+              </div>
+              <div class="col-md-4 mb-2">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Hour" name="hours[]" id="hours" value="'.@$hpinfo->hour.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                </div>
+              </div>
+              <div class="col-md-4 mb-2">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Minute" name="minutes[]" id="minutes" value="'.@$hpinfo->minute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                </div>
+              </div>
+            </div>
+            </div>';
       } 
 
       $pidarray = explode(',', $request->productid);
@@ -1464,7 +1625,7 @@ class WorkerTicketController extends Controller
           $quote->tickettotal = $totalprice;
       }
       
-      return json_encode(['totalprice' =>$totalprice]);
+      return json_encode(['totalprice' =>$totalprice,'hourpricehtml'=>$hourpricehtml,'productprice'=>$sum1]);
         die;
     }
 

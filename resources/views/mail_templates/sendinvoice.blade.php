@@ -107,7 +107,7 @@
 <div class="table-responsive">
     @php
           $serviceidarray = explode(',', $serviceid);
-          $servicedetails = App\Models\Service::select('servicename','price','description')
+          $servicedetails = App\Models\Service::select('id','servicename','price','description')
         ->whereIn('id', $serviceidarray)->get();
 
         $worker = App\Models\User::select('userid','workerid')->where('id',auth()->user()->id)->first();
@@ -129,11 +129,17 @@
                 $txtpercentage = $userdetails->servicevalue; 
             }
         }
-        $sum+= $value['price'] + $txvalue;
+        
         $price1+= $value['price'];
         $tax1+= $txvalue;
-       }
-       
+        $horalyp = App\Models\Hourlyprice::where('ticketid',$ticketid)->get();
+        if(count($horalyp)>0) {
+             $hpinfo = App\Models\Hourlyprice::select('hour','minute','price')->where('ticketid',$ticketid)->whereIn('serviceid',array($value['id']))->first(); 
+            $sum+= $hpinfo->price + $txvalue;
+        } else {
+            $sum+= $value['price'] + $txvalue;
+        }
+    }
       $pidarray = explode(',', $productid);
       $pdetails = 
       App\Models\Inventory::select('productname','id','price','description')
@@ -202,6 +208,16 @@
                 $txtpercentage = $userdetails->servicevalue; 
             }
         }
+        $horalyp = App\Models\Hourlyprice::where('ticketid',$ticketid)->get();
+        if(count($horalyp)>0) {
+            $hpinfo = App\Models\Hourlyprice::select('hour','minute','price')->where('ticketid',$ticketid)->whereIn('serviceid',array($value['id']))->first();
+
+            $totalpricefinal = number_format((float)$hpinfo->price + (float)$txvalue, 2, '.', '');
+        } else {
+            $totalpricefinal = number_format((float)$value['price'] + (float)$txvalue, 2, '.', '');
+        }
+
+
     @endphp
         @if($i % 2 == 0)
             <tr style="background-color:#fff;">
@@ -216,7 +232,7 @@
             @else
             <td style="padding: 15px;border-bottom: 1px solid #ccc;">{{@$txtpercentage}}%</td>
             @endif
-            <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ number_format((float)$value['price'] + (float)$txvalue, 2, '.', '') }}</td>
+            <td style="padding: 15px;border-bottom: 1px solid #ccc;">${{ @$totalpricefinal }}</td>
         </tr>
     @php
         $i++;

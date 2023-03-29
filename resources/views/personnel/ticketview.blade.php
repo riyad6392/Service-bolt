@@ -1219,7 +1219,7 @@ Save
 <form id="form" method="post" action="{{route('worker.sendinvoice')}}">
   @csrf
 <div class="modal fade" id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content customer-modal-box">
      <div class="modal-body">
       <div id="viewinvoicemodal"></div>
@@ -1312,6 +1312,7 @@ Save
             refresh: true,
             success:function(data) {
               $('#viewinvoicemodal').html(data.html);
+
               $('.selectpicker').selectpicker({
                 size: 3
               });
@@ -1350,6 +1351,9 @@ Save
     if(qid==undefined) {
       var qid = "";
     }
+    //$('#testprice').empty('');
+    $(document).find('#testprice').empty('');
+
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
     $.ajax({
           url:'{{route('worker.calculateprice')}}',
@@ -1358,8 +1362,11 @@ Save
           dataType: 'json',
           refresh: true,
           success:function(data) {
+
             $('#price12').val(data.totalprice);
             $('#ticketprice').val(data.totalprice);
+            $('#productprice').val(data.productprice);
+            $('#testprice').append(data.hourpricehtml);
           }
       })
   });
@@ -1380,6 +1387,7 @@ Save
             success:function(data) {
               $('#price12').val(data.totalprice); 
               $('#ticketprice').val(data.totalprice);
+              $('#productprice').val(data.productprice);
 
             }
         })

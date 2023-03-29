@@ -117,7 +117,7 @@
 </table>
 <div class="table-responsive">
     @php
-      $servicedetails = App\Models\Service::select('servicename','price','description')
+      $servicedetails = App\Models\Service::select('id','servicename','price','description')
     ->whereIn('id', $serviceid)->get();
 
     $userdetails = App\Models\User::select('taxtype','taxvalue','servicevalue','productvalue')
@@ -137,9 +137,16 @@
             }
         }
 
-        $sum+= $value['price'] + $txvalue;
         $price1+= $value['price'];
         $tax1+= $txvalue;
+        
+        $horalyp = App\Models\Hourlyprice::where('ticketid',$ticketid)->get();
+        if(count($horalyp)>0) {
+             $hpinfo = App\Models\Hourlyprice::select('hour','minute','price')->where('ticketid',$ticketid)->whereIn('serviceid',array($value['id']))->first(); 
+            $sum+= $hpinfo->price + $txvalue;
+        } else {
+            $sum+= $value['price'] + $txvalue;
+        }
 
       }
 
@@ -213,6 +220,15 @@
         if($txtpercentage==null) {
            $txtpercentage = 0; 
         }
+
+        $horalyp = App\Models\Hourlyprice::where('ticketid',$ticketid)->get();
+        if(count($horalyp)>0) {
+            $hpinfo = App\Models\Hourlyprice::select('hour','minute','price')->where('ticketid',$ticketid)->whereIn('serviceid',array($value['id']))->first();
+
+            $totalpricefinal = number_format((float)$hpinfo->price + (float)$txvalue, 2, '.', '');
+        } else {
+            $totalpricefinal = number_format((float)$value['price'] + (float)$txvalue, 2, '.', '');
+        }
         @endphp
         @if($i % 2 == 0)
             <tr style="background-color:#fff;">
@@ -227,7 +243,7 @@
         @else
             <td style="padding: 15px;width: 15%;">{{$txtpercentage}}%</td>
         @endif
-        <td style="padding: 15px;width: 15%;">${{ number_format((float)$value['price'] + (float)$txvalue, 2, '.', '') }}</td>
+        <td style="padding: 15px;width: 15%;">${{ @$totalpricefinal }}</td>
     </tr>
     @php
         $i++;
