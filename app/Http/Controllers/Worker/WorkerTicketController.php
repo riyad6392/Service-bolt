@@ -733,12 +733,12 @@ class WorkerTicketController extends Controller
                 </div>
                 <div class="col-md-4 mb-2">
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Hour" name="hours[]" id="hours" value="'.@$hpinfo->hour.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                    <input type="text" class="form-control hours" placeholder="hh" name="hours[]" id="hours" value="'.@$hpinfo->hour.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                   </div>
                 </div>
                 <div class="col-md-4 mb-2">
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Minute" name="minutes[]" id="minutes" value="'.@$hpinfo->minute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                    <input type="text" class="form-control minutes" placeholder="mm" name="minutes[]" id="minutes" value="'.@$hpinfo->minute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                   </div>
                 </div>
               </div>
@@ -844,6 +844,7 @@ class WorkerTicketController extends Controller
 
     public function sendinvoice(Request $request)
     {
+      //dd($request->all());
       $auth_id = auth()->user()->id;
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
 
@@ -1097,14 +1098,10 @@ class WorkerTicketController extends Controller
               $message->to($cemail);
               $message->subject($subject);
               $message->attachData($pdf->output(), "invoice.pdf");
-
-            });
+          });
+          $request->session()->flash('success', 'Invoice has been sent successfully');
+          return redirect()->back();
         }
-      //}
-
-    
-      $request->session()->flash('success', 'Invoice has been sent successfully');
-      return redirect()->back();
     }
 
     public function createticket(Request $request)
@@ -1598,12 +1595,12 @@ class WorkerTicketController extends Controller
               </div>
               <div class="col-md-4 mb-2">
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Hour" name="hours[]" id="hours" value="'.@$hpinfo->hour.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                  <input type="text" class="form-control" placeholder="hh" name="hours[]" id="hours" value="'.@$hpinfo->hour.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                 </div>
               </div>
               <div class="col-md-4 mb-2">
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Minute" name="minutes[]" id="minutes" value="'.@$hpinfo->minute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                  <input type="text" class="form-control" placeholder="mm" name="minutes[]" id="minutes" value="'.@$hpinfo->minute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                 </div>
               </div>
             </div>
@@ -1626,6 +1623,128 @@ class WorkerTicketController extends Controller
       }
       
       return json_encode(['totalprice' =>$totalprice,'hourpricehtml'=>$hourpricehtml,'productprice'=>$sum1]);
+        die;
+    }
+
+     public function calculatepricenew(Request $request) {
+      $json = array();
+      $serviceidarray = $request->serviceid;
+      $servicedetails = Service::select('servicename','price','id')->whereIn('id', $serviceidarray)->get();
+      $sum = 0;
+      $hourpricehtml = "";
+      foreach ($servicedetails as $key => $value) {
+        $horalyp = Hourlyprice::where('ticketid',$request->qid)->get();
+        if(count($horalyp)>0) {
+          $hpinfo = Hourlyprice::select('hour','minute')->where('ticketid',$request->qid)->whereIn('serviceid',array($value['id']))->first();
+        }
+        $sname[] = $value['servicename'];
+        $sum+= (float)$value['price'];
+        $hourpricehtml .='<div class="col-md-12">
+            <div class="row">
+              <div class="col-md-4 mb-2">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="'.$value['servicename'].'" required readonly>
+                    <input type="hidden" name="serviceids[]" id="serviceids" value="'.$value['id'].'">
+                </div>
+              </div>
+              <div class="col-md-4 mb-2">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Hour" name="hours[]" id="hours" value="'.@$hpinfo->hour.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                </div>
+              </div>
+              <div class="col-md-4 mb-2">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Minute" name="minutes[]" id="minutes" value="'.@$hpinfo->minute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                </div>
+              </div>
+            </div>
+            </div>';
+      }
+      $sum1 = 0;
+      if(isset($request->productid)) {
+         $pidarray = $request->productid;
+        $pdetails = Inventory::select('productname','id','price')->whereIn('id', $pidarray)->get();
+        foreach ($pdetails as $key => $value) {
+          $pname[] = $value['productname'];
+          $sum1+= (float)$value['price'];
+        }
+      }
+     
+      $totalprice = $sum+$sum1;
+      $totalprice = number_format($totalprice,2);
+      $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
+      if($request->qid != null) {
+         $quote = Quote::where('id', $request->qid)->first();
+          $quote->tickettotal = $totalprice;
+      }
+
+      if(count($request->serviceid)>0) {
+        $pricetotal = 0;
+        foreach($request->serviceid as $key =>$value) {
+          $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value))->first();
+          $hrpicehour = 0;
+          if(isset($request->hours)) {
+            if($request->hours[$key]!='0' || $request->hours[$key]!='00' || $request->hours[$key]!=null) {
+              $hrpicehour = $servicedetails->price*$request->hours[$key];
+            }
+          }
+          
+          $hrpiceminute = 0;
+          if(isset($request->minutes)) {
+            if($request->minutes[$key]!='0' || $request->minutes[$key]!='00' || $request->minutes[$key]!=null) {
+              $perminuteprice =$servicedetails->price/60;
+              $hrpiceminute = $perminuteprice*$request->minutes[$key];
+            }
+          }
+          
+          $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', ''); 
+        }
+        $finalsumprice = $pricetotal+$sum1;
+      } else {
+        $finalsumprice = 0;
+      }
+      
+      return json_encode(['totalprice' =>$finalsumprice,'hourpricehtml'=>$hourpricehtml,'productprice'=>$sum1]);
+        die;
+    }
+
+    public function calculatepricewithtimewise(Request $request) {
+      $json = array();
+      $sum1 = 0;
+      if(isset($request->productid)) {
+          $pidarray = $request->productid;
+          $pdetails = Inventory::select('productname','id','price')->whereIn('id', $pidarray)->get();
+          foreach ($pdetails as $key => $value) {
+            $pname[] = $value['productname'];
+            $sum1+= (float)$value['price'];
+          }
+      }
+     
+      if(count($request->serviceids)>0) {
+        $pricetotal = 0;
+        foreach($request->serviceids as $key =>$value) {
+          $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value))->first();
+          $hrpicehour = 0;
+          if($request->hours[$key]!='0' || $request->hours[$key]!='00' || $request->hours[$key]!=null) {
+              $hrpicehour = $servicedetails->price*$request->hours[$key];
+          }
+          $hrpiceminute = 0;
+          if($request->minutes[$key]!='0' || $request->minutes[$key]!='00' || $request->minutes[$key]!=null) {
+              $perminuteprice =$servicedetails->price/60;
+              $hrpiceminute = $perminuteprice*$request->minutes[$key];
+          }
+          $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', ''); 
+        }
+        // $productprice= 0;
+        // if($request->productprice!=null || $request->productprice!='0') {
+        //     $productprice = $request->productprice;
+        // }
+          $finalsumprice = $pricetotal+$sum1;
+      } else {
+        $finalsumprice = 0;
+      }
+      
+      return json_encode(['totalprice' =>$finalsumprice,'productprice'=>$sum1]);
         die;
     }
 

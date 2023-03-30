@@ -409,6 +409,8 @@ Route::group([
     Route::any('/myticket/paynow/{id}', [WorkerTicketController::class, 'paynow'])->name('myticketpaynow');
     Route::any('/myticket/vieweditinvoicemodal', [WorkerTicketController::class, 'vieweditinvoicemodal'])->name('vieweditinvoicemodal');
     Route::any('/myticket/calculateprice', [WorkerTicketController::class, 'calculateprice'])->name('calculateprice');
+    Route::any('/myticket/calculatepricenew', [WorkerTicketController::class, 'calculatepricenew'])->name('calculatepricenew');
+    Route::any('/myticket/calculatepricewithtimewise', [WorkerTicketController::class, 'calculatepricewithtimewise'])->name('calculatepricewithtimewise');
     Route::any('/myticket/viewticketpopup', [WorkerTicketController::class, 'viewticketpopup'])->name('viewticketpopup');
     Route::any('/myticket/ticketupdate', [WorkerTicketController::class, 'ticketupdate'])->name('ticketupdate123');
     Route::any('/myticket/sendinvoice', [WorkerTicketController::class, 'sendinvoice'])->name('sendinvoice');

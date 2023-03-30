@@ -1356,8 +1356,8 @@ Save
 
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
     $.ajax({
-          url:'{{route('worker.calculateprice')}}',
-          data: dataString,
+          url:'{{route('worker.calculatepricenew')}}',
+          data: $('#form').serialize(),
           method: 'post',
           dataType: 'json',
           refresh: true,
@@ -1379,8 +1379,8 @@ Save
         }
       var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
       $.ajax({
-            url:'{{route('worker.calculateprice')}}',
-            data: dataString,
+            url:'{{route('worker.calculatepricenew')}}',
+            data: $('#form').serialize(),
             method: 'post',
             dataType: 'json',
             refresh: true,
@@ -1392,6 +1392,38 @@ Save
             }
         })
      });
+
+   //for hours onclick function
+    $(document).on('change','#hours',function(e) {
+        $.ajax({
+            url:'{{route('worker.calculatepricewithtimewise')}}',
+            data: $('#form').serialize(),
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#price12').val(data.totalprice); 
+              $('#ticketprice').val(data.totalprice);
+
+            }
+        })
+    });
+
+    //for minutes onclick function
+    $(document).on('change','#minutes',function(e) {
+        $.ajax({
+            url:'{{route('worker.calculatepricewithtimewise')}}',
+            data: $('#form').serialize(),
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#price12').val(data.totalprice); 
+              $('#ticketprice').val(data.totalprice);
+
+            }
+        })
+    });
 
     $(document).on('click',".delete" ,function() {
       $(this).closest(".removediv" ).parent().remove();
