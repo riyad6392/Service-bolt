@@ -1739,7 +1739,7 @@ class WorkerTicketController extends Controller
         // if($request->productprice!=null || $request->productprice!='0') {
         //     $productprice = $request->productprice;
         // }
-          $finalsumprice = $pricetotal+$sum1;
+          $finalsumprice = number_format((float)$pricetotal+$sum1, 2, '.', '');
       } else {
         $finalsumprice = 0;
       }

@@ -377,6 +377,20 @@ class UserController extends Controller
               $sum+= (int)$value['price'];
             }
 
+        //For hoursprice data
+            $hoursinfo = DB::table('hourlyprice')->where('ticketid',$ticketId)->get();
+            $servicetimearray=array();
+            if(count($hoursinfo)>0) {
+                foreach ($hoursinfo as $key => $value) {
+                    $servicetimearray[] = array (
+                     'id' =>$value->serviceid,
+                     'hrs' => $value->hour,
+                     'mins' => $value->minute,
+                    );
+                }    
+            }
+            
+
             $servicename = "";
 
             $pidarray = explode(',', $quoteData->product_id);
@@ -457,6 +471,7 @@ class UserController extends Controller
                    'imagevideo'=>$imagearray,
                    'pointcheckbox'=>$pointbox,
                    'servicedata'=>$serearray,
+                   'servicetimedata'=>$servicetimearray,
                    'productdata'=>$proarray,
                    'customernotes'=>$quoteData->customernotes,
                    'payment_mode'=>$quoteData->payment_mode,
