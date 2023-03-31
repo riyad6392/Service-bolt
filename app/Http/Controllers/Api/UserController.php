@@ -367,30 +367,24 @@ class UserController extends Controller
             $sum = 0;
             $serearray=array();
             foreach ($servicedetails as $key => $value) {
-                 $serearray[] = array (
+                $horalyp = Hourlyprice::select('hour','minute')->where('ticketid',$ticketId)->where('serviceid',$value['id'])->first();
+                $hours = "";
+                if(isset($horalyp->hour)) {
+                   $hours = $horalyp->hour; 
+                }
+                $minutes = "";
+                if(isset($horalyp->minute)) {
+                   $minutes = $horalyp->minute; 
+                }
+                $serearray[] = array (
                      'id' =>$value['id'],
                      'servicename' => $value['servicename'],
                      'price' => $value['price'],
-                     
+                     'hrs' => $hours,
+                     'mins' => $minutes,
                    );
-             // $sname[] = $value['servicename'];
               $sum+= (int)$value['price'];
             }
-
-        //For hoursprice data
-            $hoursinfo = DB::table('hourlyprice')->where('ticketid',$ticketId)->get();
-            $servicetimearray=array();
-            if(count($hoursinfo)>0) {
-                foreach ($hoursinfo as $key => $value) {
-                    $servicetimearray[] = array (
-                     'id' =>$value->serviceid,
-                     'hrs' => $value->hour,
-                     'mins' => $value->minute,
-                    );
-                }    
-            }
-            
-
             $servicename = "";
 
             $pidarray = explode(',', $quoteData->product_id);
@@ -471,7 +465,6 @@ class UserController extends Controller
                    'imagevideo'=>$imagearray,
                    'pointcheckbox'=>$pointbox,
                    'servicedata'=>$serearray,
-                   'servicetimedata'=>$servicetimearray,
                    'productdata'=>$proarray,
                    'customernotes'=>$quoteData->customernotes,
                    'payment_mode'=>$quoteData->payment_mode,
