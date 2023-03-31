@@ -33,6 +33,7 @@ use App\Models\Notification;
 use App\Events\MyEvent;
 use App\Models\Checklist;
 use PDF;
+use App\Models\Hourlyprice;
 
 class UserController extends Controller
 {
@@ -1191,6 +1192,7 @@ class UserController extends Controller
         $productname = "";
         $sum1 = 0;
         $txvalue1 = 0;
+        $sum2 = 0;
        if($request->productid!="") {
         $productid = $request->productid;
          $pdetails = Inventory::select('productname','id','price')->whereIn('id', array($request->productid))->get();
@@ -1205,6 +1207,7 @@ class UserController extends Controller
                 }
             }
             $sum1+= $txvalue1;
+            $sum2+= $value['price'];
           }
           $productname = implode(',', $pname);    
        }
@@ -1236,6 +1239,35 @@ class UserController extends Controller
               "description"=>"$description","serviceid"=>"$serviceid","servicename"=>"$servicenames","product_id"=>"$productid","price"=>"$request->price","tickettotal"=>"$request->ticketprice","tax"=>"$totaltax"
       ]);
    if($request->type=="save") {
+        if(count($request->pricearray)>0) {
+          DB::table('hourlyprice')->where('ticketid',$request->id)->delete();
+          $pricetotal = 0;
+          foreach($request->pricearray as $key =>$value) {
+            $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value['id']))->first();
+            $hrpicehour = 0;
+            if($value['hrs']!='0' || $value['hrs']!='00') {
+                $hrpicehour = $servicedetails->price*$value['hrs'];
+            }
+            $hrpiceminute = 0;
+            if($value['mins']!='0' || $value['mins']!='00') {
+              $perminuteprice =$servicedetails->price/60;
+              $hrpiceminute = $perminuteprice*$value['mins'];
+            }
+            
+            $data['ticketid'] = $request->id;
+            $data['serviceid'] = $value['id'];
+            $data['hour'] = $value['hrs'];
+            $data['minute'] = $value['mins'];
+            $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+            
+            Hourlyprice::create($data);
+            $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+          }
+            $finalsumprice = $pricetotal+$sum2;
+            DB::table('quote')->where('id','=',$request->id)->update([ 
+                "price"=>$finalsumprice
+            ]);
+        }
         return response()->json(['status'=>1,'message'=>'Invoice has been save successfully'],$this->successStatus); 
    } else {
     //if($customer->email!=null) {  
@@ -1262,7 +1294,35 @@ class UserController extends Controller
 
               //$message->from($app_email,$app_name);
             });
-       // }
+              if(count($request->pricearray)>0) {
+                  DB::table('hourlyprice')->where('ticketid',$request->id)->delete();
+                  $pricetotal = 0;
+                  foreach($request->pricearray as $key =>$value) {
+                    $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value['id']))->first();
+                    $hrpicehour = 0;
+                    if($value['hrs']!='0' || $value['hrs']!='00') {
+                        $hrpicehour = $servicedetails->price*$value['hrs'];
+                    }
+                    $hrpiceminute = 0;
+                    if($value['mins']!='0' || $value['mins']!='00') {
+                      $perminuteprice =$servicedetails->price/60;
+                      $hrpiceminute = $perminuteprice*$value['mins'];
+                    }
+                    
+                    $data['ticketid'] = $request->id;
+                    $data['serviceid'] = $value['id'];
+                    $data['hour'] = $value['hrs'];
+                    $data['minute'] = $value['mins'];
+                    $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+                    
+                    Hourlyprice::create($data);
+                    $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+                  }
+                    $finalsumprice = $pricetotal+$sum2;
+                    DB::table('quote')->where('id','=',$request->id)->update([ 
+                        "price"=>$finalsumprice
+                    ]);
+                }
           return response()->json(['status'=>1,'message'=>'Invoice has been send successfully'],$this->successStatus); 
         }
     }
@@ -2123,6 +2183,31 @@ class UserController extends Controller
               ->update([ 
                   "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->payment_mode","checknumber"=>"$request->checknumber","tickettotal"=>"$request->ticketprice","serviceid"=>"$request->serviceidnew","product_id"=>"$request->productidnew"
             ]);
+
+            if(count($request->pricearray)>0) {
+              DB::table('hourlyprice')->where('ticketid',$request->ticketid)->delete();
+              $pricetotal = 0;
+              foreach($request->pricearray as $key =>$value) {
+                $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value['id']))->first();
+                $hrpicehour = 0;
+                if($value['hrs']!='0' || $value['hrs']!='00') {
+                    $hrpicehour = $servicedetails->price*$value['hrs'];
+                }
+                $hrpiceminute = 0;
+                if($value['mins']!='0' || $value['mins']!='00') {
+                  $perminuteprice =$servicedetails->price/60;
+                  $hrpiceminute = $perminuteprice*$value['mins'];
+                }
+                
+                $data['ticketid'] = $request->ticketid;
+                $data['serviceid'] = $value['id'];
+                $data['hour'] = $value['hrs'];
+                $data['minute'] = $value['mins'];
+                $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+                
+                Hourlyprice::create($data);
+              }
+            }
               return response()->json(['status'=>1,'message'=>'Payment has been successfully'],$this->successStatus);
            }
        }
@@ -2193,6 +2278,30 @@ class UserController extends Controller
               ->update([ 
                   "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->payment_mode","card_number"=>"$request->card_number","expiration_date"=>"$request->expiration_date","cvv"=>"$request->cvv","tickettotal"=>"$request->ticketprice","serviceid"=>"$request->serviceidnew","product_id"=>"$request->productidnew"
             ]);
+            if(count($request->pricearray)>0) {
+              DB::table('hourlyprice')->where('ticketid',$request->ticketid)->delete();
+              $pricetotal = 0;
+              foreach($request->pricearray as $key =>$value) {
+                $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value['id']))->first();
+                $hrpicehour = 0;
+                if($value['hrs']!='0' || $value['hrs']!='00') {
+                    $hrpicehour = $servicedetails->price*$value['hrs'];
+                }
+                $hrpiceminute = 0;
+                if($value['mins']!='0' || $value['mins']!='00') {
+                  $perminuteprice =$servicedetails->price/60;
+                  $hrpiceminute = $perminuteprice*$value['mins'];
+                }
+                
+                $data['ticketid'] = $request->ticketid;
+                $data['serviceid'] = $value['id'];
+                $data['hour'] = $value['hrs'];
+                $data['minute'] = $value['mins'];
+                $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+                
+                Hourlyprice::create($data);
+              }
+            }
               return response()->json(['status'=>1,'message'=>'Payment has been successfully'],$this->successStatus);
            } 
         }
@@ -2212,6 +2321,31 @@ class UserController extends Controller
               ->update([ 
                   "payment_status"=>"Completed","price"=>"$request->payment_amount","payment_amount"=>"$request->payment_amount","payment_mode"=>"$request->payment_mode","checknumber"=>"$request->checknumber","tickettotal"=>"$request->ticketprice","serviceid"=>"$request->serviceidnew","product_id"=>"$request->productidnew"
             ]);
+
+                if(count($request->pricearray)>0) {
+                  DB::table('hourlyprice')->where('ticketid',$request->ticketid)->delete();
+                  $pricetotal = 0;
+                  foreach($request->pricearray as $key =>$value) {
+                    $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value['id']))->first();
+                    $hrpicehour = 0;
+                    if($value['hrs']!='0' || $value['hrs']!='00') {
+                        $hrpicehour = $servicedetails->price*$value['hrs'];
+                    }
+                    $hrpiceminute = 0;
+                    if($value['mins']!='0' || $value['mins']!='00') {
+                      $perminuteprice =$servicedetails->price/60;
+                      $hrpiceminute = $perminuteprice*$value['mins'];
+                    }
+                    
+                    $data['ticketid'] = $request->ticketid;
+                    $data['serviceid'] = $value['id'];
+                    $data['hour'] = $value['hrs'];
+                    $data['minute'] = $value['mins'];
+                    $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+                    
+                    Hourlyprice::create($data);
+                  }
+                }
               return response()->json(['status'=>1,'message'=>'Payment has been successfully'],$this->successStatus);
             }
            
