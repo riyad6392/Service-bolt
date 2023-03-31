@@ -153,18 +153,6 @@ class WorkerTicketController extends Controller
               ]);    
             }
           }
-          //$pidarray = explode(',', $ticket->product_id);
-
-          // if(!empty($ticket->product_id)) {
-          //   foreach($pidarray as $key => $pid) {
-          //     $productd = Inventory::where('id', $pid)->first();
-          //     if(!empty($productd)) {
-          //       $productd->quantity = (@$productd->quantity) - 1;
-          //       $productd->save();
-          //     }
-
-          //   }
-          // }
           date_default_timezone_set('Asia/Kolkata');
           $currentDateTime=date('m/d/Y H:i:s');
           $date1=date('Y-m-d');
@@ -285,7 +273,6 @@ class WorkerTicketController extends Controller
 
     public function update1(Request $request)
     {
-
        $personeldata =Quote::select('quote.personnelid','personnel.personnelname')->leftjoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id', $request->ticketid)->get()->first();
 
         $auth_id = auth()->user()->id;
@@ -308,20 +295,6 @@ class WorkerTicketController extends Controller
               ]);    
             }
           }
-
-        // if(!empty($ticket->product_id)) {
-        //   $pidarray = explode(',', $ticket->product_id);
-        //   //dd($pidarray);
-        //   foreach($pidarray as $key => $pid) {
-        //     $productd = Inventory::where('id', $pid)->first();
-        //     if($productd!=null) {
-        //       $productd->quantity = @$productd->quantity - 1;
-        //       $productd->save();  
-        //     }
-        //   }
-        // }
-
-
           date_default_timezone_set('Asia/Kolkata');
           $currentDateTime=date('m/d/Y H:i:s');
           $date1=date('Y-m-d');
@@ -432,7 +405,7 @@ class WorkerTicketController extends Controller
           $request->session()->flash('success', 'Ticket completed successfully');
           return redirect()->back();
         }
-        if($request->Pickup == null) {
+        if($request->reopen == 'reopen') {
         //if($request->unclose == "unclose") {
           $ticket = Quote::where('id', $request->ticketid)->get()->first();
           $ticket->ticket_status = 4;
@@ -450,7 +423,6 @@ class WorkerTicketController extends Controller
           $request->session()->flash('success', 'Ticket Unclose successfully');
           return redirect()->back();
         }
-
         if($request->closeout == null) {
 
           $ticket = Quote::where('id', $request->ticketid)->first();
@@ -506,6 +478,7 @@ class WorkerTicketController extends Controller
           $newimagestring = implode(',',$files);
           // $ticket->imagelist = $newimagestring;
           // $ticket->save();
+
           DB::table('quote')->where('id','=',$request->ticketid)->orWhere('parentid','=',$request->ticketid)
           ->update([ 
               "checklist"=>"$checklist","customernotes"=>"$request->cnotes","imagelist"=>"$newimagestring"

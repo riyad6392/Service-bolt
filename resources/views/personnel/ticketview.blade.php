@@ -693,7 +693,7 @@ Map / Directions</a>
         @else
             <button type="button" class="btn add-btn-yellow mb-4 w-100" name="unclose" value="unclose" id="unclose" style="{{$sclass}}">Reopen</button>
         @endif
-       
+       <input type="hidden" name="reopen" id="reopen" value="">
      </div>
   </div>
   @endif
@@ -862,7 +862,7 @@ Map / Directions</a>
     
 <!-- <textarea name="cnotes" class="form-control customer-height mb-4" placeholder="Customer Notes" style="height: 280px;color: gray;">{{$quoteData->customernotes}}</textarea> -->
 <div class="mb-3">
-<textarea class="summernote form-control customer-height mb-4" name="cnotes" name="description" placeholder="Customer Notes">{{$quoteData->customernotes}}</textarea>
+<textarea class="summernote form-control customer-height mb-4" name="cnotes" placeholder="Customer Notes">{{$quoteData->customernotes}}</textarea>
 </div>
 
  @php
@@ -5103,6 +5103,7 @@ $("#unclose").click(function() {
         },
     function (isConfirm) {
         if (isConfirm) {
+            $("#reopen").val('reopen');
             $( "#forminout" ).submit();
         } 
     else {
