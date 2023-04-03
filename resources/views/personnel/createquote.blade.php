@@ -47,7 +47,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	<div class="card mb-3 h-auto">
 		<div class="card-body">
 
-	<form class="form-material m-t-40 row form-valide" method="post" action="{{route('worker.ticketcreate1')}}" enctype="multipart/form-data">
+	<form class="form-material m-t-40 row form-valide" method="post" action="{{route('worker.ticketquotecreate')}}" enctype="multipart/form-data">
         	@csrf
       <input type="hidden" name="ticketprice" id="ticketprice" value="">
 			<div class="row customer-form">
@@ -142,60 +142,61 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             <input type="text" class="hh N" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="time" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
             <input type="text" class="mm N" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minute" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
           </div>
-	  	<!-- <select class="form-select" name="time" required="">
-	        <option selected="" value="">Default Time</option>
-	        <option value="15 Minutes">15 Minutes</option>
-	        <option value="30 Minutes">30 Minutes</option>
-	        <option value="45 Minutes">45 Minutes</option>
-	        <option value="1 Hours">1 Hours</option>
-      	</select> -->
 	   </div>
-	   @php
-	   	$timearray = array(
-	   		"09:00 AM" =>"09:00 AM",
-	   		"10:00 AM" =>"10:00 AM",
-	   		"11:00 AM" =>"11:00 AM",
-	   		"12:00 PM" =>"12:00 PM",
-	   		"13:00 AM" =>"01:00 PM",
-	   		"14:00 PM" =>"02:00 PM",
-	   		"15:00 PM" =>"03:00 PM",
-	   		"16:00 PM" =>"04:00 PM",
-	   		"17:00 PM" =>"05:00 PM",
-	   		"18:00 PM" =>"06:00 PM",
-	   	)
-	   @endphp
+	    @php
+     	if($userData->openingtime!="" || $userData->openingtime!=null) {
+           if($userData->openingtime<$userData->closingtime) {
+            	$mintime = $userData->openingtime;
+            	$maxtime = $userData->closingtime; 
+	         } else {
+	            $maxtime = $userData->openingtime;
+	            $mintime = $userData->closingtime;
+	         }
+
+	          $mintime = date('h a', strtotime($mintime.':00'));
+	          $maxtime = date('h a', strtotime($maxtime.':00'));
+	    } else {
+	          $mintime= "12 am";
+	          $maxtime= "11 pm";
+	    }
+	    $inc   = 30 * 60;
+        $start = (strtotime($mintime));
+        $end   = (strtotime($maxtime)); 
+     @endphp
 	   <div class="col-md-6 mb-3">
 	   	<input type="text" class="form-control" placeholder="Price" name="price" id="price" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" required>
 	   </div>
 	   
 	   <div class="col-md-6 mb-3">
 	   	<label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
-	   <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;" required>
+	   <input type="date" class="form-control etc" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;" required>
 	   </div>
 	   <div class="col-md-6 mb-3 time" style="">
 	   	<label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
-        <select class="form-control selectpicker" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="timedefault" style="height:auto;">
-        	@foreach($timearray as $value)
-        	
-        		<option value="{{$value}}">{{$value}}</option>
-        	@endforeach
+        <select class="form-control selectpicker" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="timedefault" style="height:auto;" required>
+        	@for( $i = $start; $i <= $end; $i += $inc)
+        		@php
+        			$range = date( 'h:i a', $i);
+        		@endphp
+        		<option value="{{$range}}">{{$range}}</option>
+        	@endfor
 	    </select>
 	</div>
-	<div class="col-md-6 mb-3">
+	  <div class="col-md-6 mb-3">
 	   	<label style="position: relative;left: 12px;margin-bottom: 11px;">ETC</label>
-	   <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;" required>
-	   </div>
-	   <div class="col-md-12 mb-3">
+	    <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;" required>
+	  </div>
+	  <div class="col-md-12 mb-3">
 	   	<textarea class="form-control height-180" placeholder="Customer Notes" name="description" id="description" style="color:#212529;" required></textarea>
+	  </div>
+	   <div class="col-lg-6 mb-3">
+	   	<button type="submit" class="btn btn-add btn-block" data-bs-dismiss="modal" name="type" value="addquote">Add a Quote</button>
 	   </div>
-	   <div class="col-lg-4 mb-3">
-	   	<button type="submit" class="btn btn-add btn-block" data-bs-dismiss="modal" style="pointer-events:none;">Add a Quote</button>
-	   </div>
-	   <div class="col-lg-4 mb-3">
-	   	<button type="submit" class="btn btn-add btn-block" type="submit" style="pointer-events:none;">Add a Ticket</button>
+	   <div class="col-lg-6 mb-3">
+	   	<button type="submit" class="btn btn-add btn-block" type="submit" name="type" value="addticket">Add a Ticket</button>
 	   </div>
 	   
-	   <div class="col-lg-4">
+	   <div class="col-lg-4" style="display:none;">
 	   	<button type="submit" class="btn btn-dark btn-block btn-lg p-2" style="pointer-events:none;"><img src="images/share-2.png" alt=""> Share</button>
 	   </div>
 	</div>

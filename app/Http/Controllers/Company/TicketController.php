@@ -64,18 +64,17 @@ class TicketController extends Controller
     }
 
     public function updateticket(Request $request) {
-    	$quoteid = $request->quoteid;
+      $quoteid = $request->quoteid;
       $quote = Quote::where('id', $quoteid)->get()->first();
       if($request->name!="") {
         $quote->ticket_status = "4";
         $quote->save();
         echo "1";  
-      } else {
-        $quote->ticket_status = "1";
+      } elseif($quote->personnelid!="") {
+        $quote->ticket_status = "2";
         $quote->save();
         echo "1";
-
-       if(!empty($quote->product_id)) {
+        if(!empty($quote->product_id)) {
           $pidarray = explode(',', $quote->product_id);
           foreach($pidarray as $key => $pid) {
             $productd = Inventory::where('id', $pid)->first();
@@ -84,8 +83,23 @@ class TicketController extends Controller
               $productd->save();  
             }
           }
-        }  
-      }
+        } 
+       } else {
+          $quote->ticket_status = "1";
+          $quote->save();
+          echo "1";
+          if(!empty($quote->product_id)) {
+          $pidarray = explode(',', $quote->product_id);
+          foreach($pidarray as $key => $pid) {
+            $productd = Inventory::where('id', $pid)->first();
+            if($productd!=null) {
+              $productd->quantity = @$productd->quantity - 1;
+              $productd->save();  
+            }
+          }
+        } 
+       }
+        
     }
 
     public function quotecreate(Request $request)
@@ -703,6 +717,7 @@ class TicketController extends Controller
           } else {
               $minutes = preg_replace("/[^0-9]/", '', $request->minute);    
           }
+          dd($request->all());
       if($request->personnelid!="") {
           //display the converted time
           $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->giventime)));

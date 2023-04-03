@@ -421,6 +421,8 @@ Route::group([
 
     Route::any('/myticket/ticketcreate', [WorkerTicketController::class, 'ticketcreate'])->name('ticketcreate1');
 
+    Route::any('/myticket/ticketquotecreate', [WorkerTicketController::class, 'ticketquotecreate'])->name('ticketquotecreate');
+
     Route::any('/myticket/addaddress', [WorkerTicketController::class, 'addaddress'])->name('addaddress');
     
 
