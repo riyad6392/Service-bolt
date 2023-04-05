@@ -86,6 +86,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::post('/getResendScheduleData', [App\Http\Controllers\Api\UserController::class, 'getResendScheduleData'])->name('getResendScheduleData');
 
 	Route::get('/gettime', [App\Http\Controllers\Api\UserController::class, 'gettime'])->name('gettime');
+	Route::get('/timedetails', [App\Http\Controllers\Api\UserController::class, 'timedetails'])->name('timedetails');
 	
 	Route::post('/getservicedatabyid', [App\Http\Controllers\Api\UserController::class, 'getservicedatabyid'])->name('getservicedatabyid');
 

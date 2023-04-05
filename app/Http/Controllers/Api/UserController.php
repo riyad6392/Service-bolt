@@ -951,6 +951,9 @@ class UserController extends Controller
         if($request->productid) {
             $data['product_id'] = $request->productid;
         }
+        if($request->personnelid) {
+            $data['personnelid'] = $worker->workerid;
+        }
         $data['radiogroup'] = $request->radiogroup;
         $data['frequency'] = $request->frequency;
         if($request->hour!=null || $request->hour!=0) {
@@ -980,8 +983,58 @@ class UserController extends Controller
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
 
+        //$data['ticket_status'] = 1;
+    if($request->giventime!="") {
+        //for new feature
+        if($request->hour == null || $request->hour == "" || $request->hour == 00 || $request->hour == 0) 
+        {
+          $hours = 0;
+        } else {
+          $hours = preg_replace("/[^0-9]/", '', $request->hour);    
+        }
+
+        if($request->minute == null || $request->minute == "" || $request->minute == 00 || $request->minute == 0) {
+            $minutes = 0;
+        } else {
+            $minutes = preg_replace("/[^0-9]/", '', $request->minute);    
+        }
+
+        //display the converted time
+        $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->giventime)));
+        $time = $request->giventime;
+
+        $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
+        $newdate = $request->date;
+
+
+        /*Get Dayclose time*/
+        $closingtime = DB::table('users')->select('closingtime')->where('id',$worker->userid)->first();
+        $dayclosetime =$closingtime->closingtime;
+
+        $tstarttime = explode(':',$time);
+        $ticketstarttime = $tstarttime[0];
+        $ticketdifferncetime = $dayclosetime - $ticketstarttime;
+        // echo $ticketdifferncetime; die;
+        $givenenddate = $newdate;
+        if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
+            if($hours > $ticketdifferncetime) {
+                $nextdaytime = $hours - $ticketdifferncetime; 
+                //echo $nextdaytime; die;
+                $givenenddate = $this->getenddatecalculation($newdate,$nextdaytime);
+            } else {
+                $givenenddate = $newdate; 
+            }
+        }
+
+        $data['giventime'] = $time;
+        $data['givenendtime'] = $endtime;
+        $data['givendate'] = $date;
+        $data['givenstartdate'] = $request->date;
+        $data['givenenddate'] = $givenenddate;
+        $data['ticket_status'] = '2'; 
+    } else {
         $data['ticket_status'] = 1;
-        
+    }
         $quotelastid = Quote::create($data);
         $quoteee = Quote::where('id', $quotelastid->id)->first();
         $randomid = 100;
@@ -1559,6 +1612,33 @@ class UserController extends Controller
 
       $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
       return response()->json(['status'=>1,'message'=>'Success','data'=>$userData],$this->successStatus);  
+    }
+
+    public function timedetails(Request $request) {
+      $auth_id = auth()->user()->id;
+      $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+      $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
+      if($userData->openingtime!="" || $userData->openingtime!=null) {
+           if($userData->openingtime<$userData->closingtime) {
+                $mintime = $userData->openingtime;
+                $maxtime = $userData->closingtime; 
+             } else {
+                $maxtime = $userData->openingtime;
+                $mintime = $userData->closingtime;
+             }
+
+              $mintime = date('h a', strtotime($mintime.':00'));
+              $maxtime = date('h a', strtotime($maxtime.':00'));
+        } else {
+              $mintime= "12 am";
+              $maxtime= "11 pm";
+        }
+        $inc   = 30 * 60;
+        $start = (strtotime($mintime));
+        $end   = (strtotime($maxtime)); 
+
+      return response()->json(['status'=>1,'message'=>'Success','start'=>$start,'end'=>$end],$this->successStatus);   
     }
 
     public function getservicedatabyid(Request $request) {
@@ -2639,5 +2719,38 @@ class UserController extends Controller
         $timeoff = Workertimeoff::whereIn('id',$request->Ids)->where('workerid',auth()->user()->workerid)->delete();
         return response()->json(['status'=>1,'message'=>'Deleted Successfully'],$this->successStatus);
     }
+
+    public function getenddatecalculation($newdate,$nextdaytime) 
+  {
+      $auth_id = auth()->user()->id;
+      $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+      $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$worker->userid)->first();
+
+      $fulldaytime = $closingtime->closingtime - $closingtime->openingtime;
+      
+      if($nextdaytime > $fulldaytime) {
+         $divisionvalue = $nextdaytime / $fulldaytime;
+
+         $dividev = explode('.',$divisionvalue);
+         $daycount = $dividev[0];
+         $dayhours = $dividev[1];
+
+          if($dayhours!="") {
+              $daycount = $daycount +1;
+          } else {
+              $daycount = $dividev[0];
+          }
+          $ddd = $daycount. 'day';
+
+          //day added as per calcuation wise
+          $givenenddate = date('Y-m-d', strtotime($newdate . ' +'.$ddd));
+          
+      }
+      else {
+          //day added as per calcuation wise
+          $givenenddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
+      }
+      return $givenenddate;
+  }
 
 }
