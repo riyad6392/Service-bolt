@@ -51,15 +51,30 @@ class WorkerTicketController extends Controller
         }
 
         $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
-        //echo $worker->workerid; die; 
+        
         $ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('2','4'))->orderBy('id','desc')->get();
-//dd($ticketdata);
-        //$workerh = DB::table('workerhour')->where('workerid',$worker->workerid)->whereDate('created_at', DB::raw('CURDATE()'))->first();
-
+        
         $workerh = DB::table('workerhour')->where('workerid',$worker->workerid)->whereDate('created_at', DB::raw('CURDATE()'))->orderBy('id','desc')->first();
        
         return view('personnel.myticket',compact('auth_id','ticketdata','workerh'));
     }
+
+  public function myquote(Request $request)
+  {
+      $auth_id = auth()->user()->id;
+     
+      if(auth()->user()->role == 'worker') {
+          $auth_id = auth()->user()->id;
+      } else {
+         return redirect()->back();
+      }
+
+      $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
+      
+      $ticketdata = DB::table('quote')->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('0'))->orderBy('id','desc')->get();
+      
+      return view('personnel.myquote',compact('auth_id','ticketdata'));
+  }
 
   public function completedticket(Request $request) 
   {
@@ -1098,7 +1113,7 @@ class WorkerTicketController extends Controller
       $permissonarray = explode(',',$personnel->ticketid);
       $tenture = Tenture::where('status','Active')->get();
       $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
-      if(in_array("Create Ticket", $permissonarray)) {
+      if(in_array("Create Ticket", $permissonarray) || in_array("Administrator", $permissonarray)) {
         return view('personnel.createticket',compact('auth_id','customer','services','workerlist','tenture','products','permissonarray','userData'));
       } else {
         return redirect()->back();
@@ -1129,7 +1144,7 @@ class WorkerTicketController extends Controller
 
       $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
 
-      if(in_array("Create Ticket", $permissonarray)) {
+      if(in_array("Create Quote", $permissonarray) || in_array("Administrator", $permissonarray)) {
         return view('personnel.createquote',compact('auth_id','customer','services','workerlist','tenture','products','permissonarray','userData'));
       } else {
         return redirect()->back();
@@ -1524,6 +1539,7 @@ class WorkerTicketController extends Controller
       }
       if($request->type == 'addquote') {
         $request->session()->flash('success', 'Quote added successfully');
+        return redirect()->route('worker.myquote');
       } 
       if($request->type == 'addticket') {
         $request->session()->flash('success', 'Ticket added successfully');

@@ -192,7 +192,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	   	<textarea class="form-control height-180" placeholder="Description" name="description" id="description" style="color:#212529;" required></textarea>
 	   </div>
 	   <div class="col-lg-4 mb-3">
-	   	<button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
+	   	<button type="button" class="btn btn-cancel btn-block cancelticket" id="cancelticket">Cancel</button>
 	   </div>
 	   <div class="col-lg-4 mb-3">
 	   	<button type="submit" class="btn btn-add btn-block" type="submit">Add a Ticket</button>
@@ -632,6 +632,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     		$("#sptime").css("display", "block");
     	}
     })
+
+     $(document).on('click','#cancelticket',function(e) {
+    	location.reload();
+    });
 
     $(document).on('click','#saveaddress',function(e) {
        var customerid = $('#customerid').val();

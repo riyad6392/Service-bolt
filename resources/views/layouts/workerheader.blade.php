@@ -217,6 +217,19 @@ $googleplacekey = $userinfo->googleplace;
 <div class="collapse" id="collapseExample" style="">
     <li class="menu">
       <li class="link" style="margin-left:9px;">
+        <a href="{{route('worker.myquote')}}"><svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0)">
+        <path d="M0.327487 8.89696L1.14336 9.75505C1.30747 9.70168 1.47995 9.67265 1.65816 9.67265H14.8723L9.3126 3.82537L8.13383 5.40269L7.34109 4.56893L8.51986 2.99162L6.40387 0.766187C6.2191 0.571836 5.98867 0.476273 5.75922 0.476273C5.49039 0.476273 5.22284 0.607321 5.03086 0.864138L3.80632 2.5027L3.95991 2.66425C4.31261 3.03519 4.52245 3.5469 4.55074 4.10511C4.57903 4.66332 4.4224 5.20117 4.10972 5.61958C3.79699 6.03803 3.36565 6.28693 2.8951 6.32049C2.8589 6.32308 2.82273 6.32434 2.78682 6.32434C2.35533 6.32434 1.94407 6.13971 1.61846 5.79721L1.46491 5.63571L0.244953 7.26815C0.0725762 7.49879 -0.0137359 7.7952 0.00183842 8.10283C0.0174127 8.41047 0.133072 8.69251 0.327487 8.89696ZM6.59811 5.56306L7.39085 6.39686L6.64773 7.3912L5.85499 6.5574L6.59811 5.56306ZM5.10948 7.55497L5.90221 8.38873L5.15909 9.38307L4.36636 8.54931L5.10948 7.55497Z" fill="currentColor"></path>
+        <path d="M17.1637 10.9295H5.36134V12.8875H4.30187V10.9295H1.65805C1.16715 10.9295 0.767731 11.4032 0.767731 11.9856V14.0172H1.10496C2.04073 14.0172 2.80207 14.9203 2.80207 16.0304C2.80207 17.1405 2.04073 18.0437 1.10496 18.0437H0.767731V20.0752C0.767731 20.6576 1.16715 21.1314 1.65805 21.1314H4.30183V19.1734H5.36131V21.1314H17.1636C17.6248 21.1314 17.9999 20.6863 17.9999 20.1394V11.9215C18 11.3745 17.6248 10.9295 17.1637 10.9295ZM5.36134 17.9156H4.30187V16.6595H5.36134V17.9156ZM5.36134 15.3993H4.30187V14.1433H5.36134V15.3993ZM14.9425 16.3336H13.0682L12.0386 18.6019L11.1058 18.0061L11.8649 16.3336H10.3281L9.644 17.4698L8.78187 16.7392L9.36363 15.7731L8.66985 14.95L9.419 14.0613L10.275 15.0767H11.8649L11.1058 13.4042L12.0386 12.8084L13.0682 15.0767H14.9425V16.3336H14.9425Z" fill="currentColor"></path>
+        </g>
+        <defs>
+        <clipPath id="clip0">
+        <rect width="18" height="21.3534" fill="white" transform="translate(0 0.127167)"></rect>
+        </clipPath>
+        </defs>
+        </svg>Pending Quotes</a>
+      </li>
+      <li class="link" style="margin-left:9px;">
         <a href="{{route('worker.myticket')}}"><svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0)">
 <path d="M0.327487 8.89696L1.14336 9.75505C1.30747 9.70168 1.47995 9.67265 1.65816 9.67265H14.8723L9.3126 3.82537L8.13383 5.40269L7.34109 4.56893L8.51986 2.99162L6.40387 0.766187C6.2191 0.571836 5.98867 0.476273 5.75922 0.476273C5.49039 0.476273 5.22284 0.607321 5.03086 0.864138L3.80632 2.5027L3.95991 2.66425C4.31261 3.03519 4.52245 3.5469 4.55074 4.10511C4.57903 4.66332 4.4224 5.20117 4.10972 5.61958C3.79699 6.03803 3.36565 6.28693 2.8951 6.32049C2.8589 6.32308 2.82273 6.32434 2.78682 6.32434C2.35533 6.32434 1.94407 6.13971 1.61846 5.79721L1.46491 5.63571L0.244953 7.26815C0.0725762 7.49879 -0.0137359 7.7952 0.00183842 8.10283C0.0174127 8.41047 0.133072 8.69251 0.327487 8.89696ZM6.59811 5.56306L7.39085 6.39686L6.64773 7.3912L5.85499 6.5574L6.59811 5.56306ZM5.10948 7.55497L5.90221 8.38873L5.15909 9.38307L4.36636 8.54931L5.10948 7.55497Z" fill="currentColor"></path>
@@ -256,16 +269,18 @@ $googleplacekey = $userinfo->googleplace;
     </li>
   @php
     }
-@endphp    
-  </div>
-  <li class="link"><a href="{{route('worker.createquote')}}"><svg width="18" height="22" focusable="false" data-prefix="fas" data-icon="plus-square" class="svg-inline--fa fa-plus-square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-<path fill="currentColor" d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-32 252c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92H92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path></svg> Create Quote</a></li>
-  @php
     $auth_id = auth()->user()->id;
     $userData =  App\Models\User::select('workerid')->where('id',$auth_id)->first();
 
     $workers = App\Models\Personnel::where('id',$userData->workerid)->first();
     $permissonarray = explode(',',$workers->ticketid);
+    if(in_array("Create Quote", $permissonarray) || in_array("Administrator", $permissonarray)) {
+@endphp    
+  </div>
+  <li class="link"><a href="{{route('worker.createquote')}}"><svg width="18" height="22" focusable="false" data-prefix="fas" data-icon="plus-square" class="svg-inline--fa fa-plus-square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+<path fill="currentColor" d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-32 252c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92H92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path></svg> Create Quote</a></li>
+  @php
+  }
     if(in_array("Create Ticket", $permissonarray) || in_array("Administrator", $permissonarray)) {
 @endphp
 <li class="link"><a href="{{route('worker.createticket')}}"><svg width="18" height="22" focusable="false" data-prefix="fas" data-icon="plus-square" class="svg-inline--fa fa-plus-square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">

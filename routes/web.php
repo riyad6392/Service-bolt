@@ -396,6 +396,8 @@ Route::group([
 
     Route::get('/myticket', [WorkerTicketController::class, 'index'])->name('myticket');
     
+    Route::get('/myquote', [WorkerTicketController::class, 'myquote'])->name('myquote');
+    
     Route::get('/completedticket', [WorkerTicketController::class, 'completedticket'])->name('completedticket');
     Route::get('/createticket', [WorkerTicketController::class, 'createticket'])->name('createticket');
     Route::get('/createquote', [WorkerTicketController::class, 'createquote'])->name('createquote');

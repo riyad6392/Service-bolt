@@ -189,15 +189,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	  <div class="col-md-12 mb-3">
 	   	<textarea class="form-control height-180" placeholder="Customer Notes" name="description" id="description" style="color:#212529;" required></textarea>
 	  </div>
-	   <div class="col-lg-6 mb-3">
+	  <div class="col-lg-4 mb-3">
+	   	<button type="button" class="btn btn-cancel btn-block cancelticket" id="cancelticket">Cancel</button>
+	   </div>
+	   <div class="col-lg-4 mb-3">
 	   	<button type="submit" class="btn btn-add btn-block" data-bs-dismiss="modal" name="type" value="addquote">Add a Quote</button>
 	   </div>
-	   <div class="col-lg-6 mb-3">
+	   <div class="col-lg-4 mb-3">
 	   	<button type="submit" class="btn btn-add btn-block" type="submit" name="type" value="addticket">Add a Ticket</button>
-	   </div>
-	   
-	   <div class="col-lg-4" style="display:none;">
-	   	<button type="submit" class="btn btn-dark btn-block btn-lg p-2" style="pointer-events:none;"><img src="images/share-2.png" alt=""> Share</button>
 	   </div>
 	</div>
 </form>
@@ -580,12 +579,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 						  }
 				      })
 				});
-    
-   //  $(document).on('change', 'select.selectpicker',function() {
-   //    gethours();
-   //    getprice();
-			// getfrequency();
-   //  });
    $('#customerid1').on('change', function() {
 		var customerid = this.value;
 		$("#address2").html('');
@@ -695,6 +688,9 @@ $('#serviceform').on('submit', function(event) {
           }
       })
 });
+		$(document).on('click','#cancelticket',function(e) {
+    	location.reload();
+    });
 </script>
 @endsection
 

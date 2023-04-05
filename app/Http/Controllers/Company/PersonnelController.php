@@ -336,6 +336,7 @@ class PersonnelController extends Controller
             <select class="form-control selectpicker" data-live-search="true" multiple="" data-placeholder="Permissions" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="ticketid[]" id="ticketid" required="" style="height:auto;">';
               $permission = array (
                 '7'=>"Administrator",
+                '13'=>"Create Quote",
                 '5'=>"Create Ticket",
                 '12'=>"Unclose Ticket",
                 '6'=>"Add Customer",

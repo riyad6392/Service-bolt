@@ -256,6 +256,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	@php
 	  	$permission = array (
         '7'=>"Administrator",
+        '13'=>"Create Quote",
 	  		'5'=>"Create Ticket",
         '12'=>"Unclose Ticket",
 	  		'6'=>"Add Customer",
