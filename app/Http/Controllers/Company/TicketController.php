@@ -717,7 +717,7 @@ class TicketController extends Controller
           } else {
               $minutes = preg_replace("/[^0-9]/", '', $request->minute);    
           }
-          dd($request->all());
+          
       if($request->personnelid!="") {
           //display the converted time
           $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->giventime)));

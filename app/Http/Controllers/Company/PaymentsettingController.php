@@ -39,7 +39,6 @@ class PaymentsettingController extends Controller
 
     public function create(Request $request)
     {
-        dd($request->all());
           $auth_id = auth()->user()->id;
           $pid = $request->pid;
             // $validate = Validator($request->all(), [
