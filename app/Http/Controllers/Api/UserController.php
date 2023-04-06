@@ -1638,7 +1638,13 @@ class UserController extends Controller
         $start = (strtotime($mintime));
         $end   = (strtotime($maxtime)); 
 
-      return response()->json(['status'=>1,'message'=>'Success','start'=>$start,'end'=>$end],$this->successStatus);   
+        $inc   = 30 * 60;
+        for( $i = $start; $i <= $end; $i += $inc) {
+            $range[] = date( 'h:i a', $i);
+        }
+               
+               
+      return response()->json(['status'=>1,'message'=>'Success','time'=>$range],$this->successStatus);   
     }
 
     public function getservicedatabyid(Request $request) {
