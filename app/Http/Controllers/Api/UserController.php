@@ -983,7 +983,6 @@ class UserController extends Controller
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
 
-        //$data['ticket_status'] = 1;
     if($request->giventime!="") {
         //for new feature
         if($request->hour == null || $request->hour == "" || $request->hour == 00 || $request->hour == 0) 
@@ -2726,8 +2725,204 @@ class UserController extends Controller
         return response()->json(['status'=>1,'message'=>'Deleted Successfully'],$this->successStatus);
     }
 
+    public function createquote(Request $request) {
+
+        $auth_id = auth()->user()->id;
+        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+        $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', $worker->userid)->first();
+
+        $customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
+
+        $serviceid = $request->serviceid;
+        $servids = explode(',',$serviceid);
+
+        $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $servids)->get();
+        $sum = 0;
+        foreach($servicedetails as $key => $value) {
+          $pid[] = $value['productid'];
+          $sname[] = $value['servicename'];
+          $txvalue = 0;
+          if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+            if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                $txvalue = $value['price']*$userdetails->servicevalue/100; 
+            } else {
+                $txvalue = 0;
+            }
+          }
+          $sum+= $txvalue;
+        }
+
+        //$productid = implode(',', array_unique($pid));
+        
+        $servicename = implode(',', $sname);
+
+        $productid = "";
+        $productname = "";
+        $productname1 = "";
+
+        $sum1 = 0;
+        $txvalue1 = 0;
+        if($request->productid!="") {
+          $productid = explode(',', $request->productid);
+
+          $pdetails = Inventory::select('productname','id','price')->whereIn('id', $productid)->get();
+
+            foreach ($pdetails as $key => $value) {
+              $pname[] = $value['productname'];
+              if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+                if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
+                    $txvalue1 = $value['price']*$userdetails->productvalue/100; 
+                } else {
+                    $txvalue1 = 0;
+                }
+                }
+                $sum1+= $txvalue1;
+
+                  $productd = Inventory::where('id', $value['id'])->first();
+                  if(!empty($productd)) {
+                    $productd->quantity = (@$productd->quantity) - 1;
+                    $productd->save();
+                  }
+            } 
+            $productname = implode(',', $pname);
+            $productname1 = $pdetails[0]->productname;
+
+        }
+
+        $totaltax = $sum+$sum1;
+        $totaltax = number_format($totaltax,2);
+        $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
+        
+        $servicename = implode(',', $sname);
+
+        $auth_id = auth()->user()->id;
+        $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+        $data['userid'] = $worker->userid;
+        $data['workerid'] = $worker->workerid;
+        $data['customerid'] = $request->customerid;
+        $data['serviceid'] =  $serviceid;
+        $data['servicename'] = $servicedetails[0]->servicename;
+        $data['product_name'] = $productname1;
+        if($request->productid) {
+            $data['product_id'] = $request->productid;
+        }
+        if($request->personnelid) {
+            $data['personnelid'] = $worker->workerid;
+        }
+        $data['radiogroup'] = $request->radiogroup;
+        $data['frequency'] = $request->frequency;
+        if($request->hour!=null || $request->hour!=0) {
+          $data['time'] = $request->hour.' Hours';
+        }
+        if($request->minute!=null || $request->minute!=0) {
+          $data['minute'] = $request->minute.' Minutes';;
+        }
+        $data['price'] = $request->price;
+        $data['tickettotal'] = $request->ticketprice;
+        $data['tax'] = $totaltax;
+        $data['etc'] = $request->etc;
+        $data['description'] = $request->description;
+        $data['customername'] =  $customer->customername;
+        $data['address'] = $request->address;
+        
+
+        $formattedAddr = str_replace(' ','+',$request->address);
+        //Send request and receive json data by address
+        $auth_id = Auth::user()->userid;
+        $placekey = custom_userinfo($auth_id);
+        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$placekey); 
+        $output = json_decode($geocodeFromAddr);
+        $latitude  = $output->results[0]->geometry->location->lat; 
+        $longitude = $output->results[0]->geometry->location->lng;
+
+        $data['latitude'] = $latitude;
+        $data['longitude'] = $longitude;
+        
+        //for new feature
+        if($request->hour == null || $request->hour == "" || $request->hour == 00 || $request->hour == 0) 
+        {
+          $hours = 0;
+        } else {
+          $hours = preg_replace("/[^0-9]/", '', $request->hour);    
+        }
+
+        if($request->minute == null || $request->minute == "" || $request->minute == 00 || $request->minute == 0) {
+            $minutes = 0;
+        } else {
+            $minutes = preg_replace("/[^0-9]/", '', $request->minute);    
+        }
+
+        //display the converted time
+        $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->giventime)));
+        $time = $request->giventime;
+
+        $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
+        $newdate = $request->date;
+
+
+        /*Get Dayclose time*/
+        $closingtime = DB::table('users')->select('closingtime')->where('id',$worker->userid)->first();
+        $dayclosetime =$closingtime->closingtime;
+
+        $tstarttime = explode(':',$time);
+        $ticketstarttime = $tstarttime[0];
+        $ticketdifferncetime = $dayclosetime - $ticketstarttime;
+        // echo $ticketdifferncetime; die;
+        $givenenddate = $newdate;
+        if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
+            if($hours > $ticketdifferncetime) {
+                $nextdaytime = $hours - $ticketdifferncetime; 
+                //echo $nextdaytime; die;
+                $givenenddate = $this->getenddatecalculation($newdate,$nextdaytime);
+            } else {
+                $givenenddate = $newdate; 
+            }
+        }
+
+        $data['giventime'] = $time;
+        $data['givenendtime'] = $endtime;
+        $data['givendate'] = $date;
+        $data['givenstartdate'] = $request->date;
+        $data['givenenddate'] = $givenenddate;
+        
+        if($request->type == 'quote') {
+            $data['ticket_status'] = '0';  
+        }
+
+        if($request->type == 'ticket') {
+            $data['ticket_status'] = '2';  
+        } 
+    
+        $quotelastid = Quote::create($data);
+        $quoteee = Quote::where('id', $quotelastid->id)->first();
+        $randomid = 100;
+        $quoteee->invoiceid = $randomid.''.$quotelastid->id;
+        $quoteee->save();
+    if($customer->email!=null) {    
+      $app_name = 'ServiceBolt';
+      $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
+      $email = $customer->email;
+      $user_exist = Customer::where('email', $email)->first();
+      $name = "Ticket";  
+      Mail::send('mail_templates.sharequote', ['address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'productname'=>$productname,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description,'name'=>$name], function($message) use ($user_exist,$app_name,$app_email) {
+          $message->to($user_exist->email)
+          ->subject('Ticket details!');
+          //$message->from($app_email,$app_name);
+        }); 
+     }
+        if($request->type == 'ticket') {
+            return response()->json(['status'=>1,'message'=>'Ticket Created Successfully'],$this->successStatus);
+        }
+
+        if($request->type == 'quote') {
+           return response()->json(['status'=>1,'message'=>'Quote Created Successfully'],$this->successStatus);
+        }    
+    }
+
     public function getenddatecalculation($newdate,$nextdaytime) 
-  {
+    {
       $auth_id = auth()->user()->id;
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
       $closingtime = DB::table('users')->select('closingtime','openingtime')->where('id',$worker->userid)->first();
@@ -2757,6 +2952,6 @@ class UserController extends Controller
           $givenenddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
       }
       return $givenenddate;
-  }
+    }
 
 }
