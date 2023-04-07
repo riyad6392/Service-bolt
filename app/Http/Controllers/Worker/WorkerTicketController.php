@@ -710,6 +710,16 @@ class WorkerTicketController extends Controller
              if(count($horalyp)>0) {
               $hpinfo = Hourlyprice::select('hour','minute')->where('ticketid',$request->id)->whereIn('serviceid',array($value1))->first();
              }
+             if(@$hpinfo->hour!="") {
+                $hhour = @$hpinfo->hour;
+             } else {
+                $hhour = "01";
+             }
+             if(@$hpinfo->minute!="") {
+                $hminute = @$hpinfo->minute;
+             } else {
+                $hminute = "00";
+             }
             $html .='
               <div class="col-md-12">
               <div class="row">
@@ -721,12 +731,12 @@ class WorkerTicketController extends Controller
                 </div>
                 <div class="col-md-4 mb-2">
                   <div class="form-group">
-                    <input type="text" class="form-control hours" placeholder="hh" name="hours[]" id="hours" value="'.@$hpinfo->hour.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                    <input type="text" class="form-control hours" placeholder="hh" name="hours[]" id="hours" value="'.@$hhour.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                   </div>
                 </div>
                 <div class="col-md-4 mb-2">
                   <div class="form-group">
-                    <input type="text" class="form-control minutes" placeholder="mm" name="minutes[]" id="minutes" value="'.@$hpinfo->minute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                    <input type="text" class="form-control minutes" placeholder="mm" name="minutes[]" id="minutes" value="'.@$hminute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                   </div>
                 </div>
               </div>

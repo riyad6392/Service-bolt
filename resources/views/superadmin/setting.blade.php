@@ -70,6 +70,18 @@
         <input type="text" name="googleplace" id="googleplace" class="form-control" placeholder="Google Place Key" value="{{$userData->googleplace}}">
       </div>
     </div>
+    <div class="col-md-12">
+     <div class="mb-3">
+      <label class="form-label"> Stripe Public Key </label>
+        <input type="text" name="spublickey" id="spublickey" class="form-control" placeholder="Stripe Public Key" value="{{$userData->spublickey}}">
+      </div>
+    </div>
+    <div class="col-md-12">
+     <div class="mb-3">
+      <label class="form-label"> Stripe Secret Key </label>
+        <input type="text" name="ssecretkey" id="ssecretkey" class="form-control" placeholder="Stripe Secret Key" value="{{$userData->ssecretkey}}">
+      </div>
+    </div>
     <div class="col-md-6">
      <div class="mb-3">
       <label class="form-label"> Currency </label>

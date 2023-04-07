@@ -50,6 +50,10 @@ class AdminsettingController extends Controller
       $setting->featureprice = $request->featureprice;
       $setting->firebase = $request->firebase;
       $setting->googleplace = $request->googleplace;
+      
+      $setting->spublickey = $request->spublickey;
+      $setting->ssecretkey = $request->ssecretkey;
+
         if(!empty($request->smtppassword)) {
             $setting->host = $request->host;
             $setting->smtpusername = $request->smtpusername;

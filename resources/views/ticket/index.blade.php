@@ -747,7 +747,7 @@ select#servicename {
 	   
 	   <div class="col-md-6 mb-2">
 	  	<select class="form-select" name="frequency" id="frequency" required="">
-		  <option selected="" value="">Service Frequency</option>
+		  <option value="">Service Frequency</option>
 		  @foreach($tenture as $key=>$value)
 		  	<option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
           @endforeach
@@ -971,7 +971,7 @@ select#servicename {
 	   
 	   <div class="col-md-6 mb-2">
 	  	<select class="form-select" name="frequency" id="frequency" required="">
-		  <option selected="" value="">Service Frequency</option>
+		  <option value="">Service Frequency</option>
            @foreach($tenture as $key=>$value)
 		  	<option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
           @endforeach
@@ -1464,7 +1464,7 @@ select#servicename {
           </div>
           <div class="col-md-6 mb-2">
             <select class="form-select" name="frequency" id="frequency10" required="">
-              <option selected="" value="">Service Frequency</option>
+              <option value="">Service Frequency</option>
 			  @php $tenture = App\Models\Tenture::where('status','Active')->get(); @endphp
               @foreach($tenture as $key=>$value)
                 <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
@@ -1724,7 +1724,7 @@ select#servicename {
           </div>
           <div class="col-md-6 mb-2">
             <select class="form-select" name="frequency" id="frequency11" required="">
-              <option selected="" value="">Service Frequency</option>
+              <option value="">Service Frequency</option>
 			  @php $tenture = App\Models\Tenture::where('status','Active')->get(); @endphp
               @foreach($tenture as $key=>$value)
                 <option name="{{$value->tenturename}}" value="{{$value->tenturename}}">{{$value->tenturename}}</option>
