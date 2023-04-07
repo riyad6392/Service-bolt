@@ -967,6 +967,8 @@ class UserController extends Controller
         $data['serviceid'] =  $serviceid;
         $data['servicename'] = $servicedetails[0]->servicename;
         $data['product_name'] = $productname1;
+        $data['primaryname'] = $worker->workerid;
+
         if($request->productid) {
             $data['product_id'] = $request->productid;
         }
@@ -2824,6 +2826,8 @@ class UserController extends Controller
         $data['serviceid'] =  $serviceid;
         $data['servicename'] = $servicedetails[0]->servicename;
         $data['product_name'] = $productname1;
+        $data['primaryname'] = $worker->workerid;
+        
         if($request->productid) {
             $data['product_id'] = $request->productid;
         }

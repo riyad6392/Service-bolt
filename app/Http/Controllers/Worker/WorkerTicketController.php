@@ -1247,6 +1247,7 @@ class WorkerTicketController extends Controller
         $data['personnelid'] = $worker->workerid;
         $data['radiogroup'] = $request->radiogroup;
         $data['frequency'] = $request->frequency;
+        $data['primaryname'] = $worker->workerid;
         //$data['time'] = $request->time;
         if($request->time!=null || $request->time!=0) {
           $data['time'] = $request->time.' Hours';
@@ -1435,6 +1436,7 @@ class WorkerTicketController extends Controller
       $data['personnelid'] = $worker->workerid;
       $data['radiogroup'] = $request->radiogroup;
       $data['frequency'] = $request->frequency;
+      $data['primaryname'] = $worker->workerid;
       //$data['time'] = $request->time;
       if($request->time!=null || $request->time!=0) {
         $data['time'] = $request->time.' Hours';
