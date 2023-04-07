@@ -329,6 +329,25 @@ class UserController extends Controller
         }
     }
 
+    public function pendingticketdata(Request $request) {
+        $user = Auth::user();
+        $auth_id = $user->id;
+
+        $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first(); 
+        $ticketdata = DB::table('quote')
+            ->select("*",
+            \DB::raw('(CASE 
+                WHEN quote.parentid = "0" THEN quote.id 
+                ELSE quote.parentid 
+                END) AS id'))->where('personnelid',$worker->workerid)->whereIn('ticket_status',array('0'))->get();
+
+        if ($ticketdata) {
+                return response()->json(['status'=>1,'message'=>'success','data'=>$ticketdata],$this->successStatus);
+        } else {
+            return response()->json(['status'=>0,'message'=>'data not found'],$this->errorStatus);
+        }
+    }
+
     public function myticketDetail(Request $request) {
         $main_array =array();
         $user = Auth::user();
