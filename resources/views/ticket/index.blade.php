@@ -1,5 +1,7 @@
 @extends('layouts.header')
 @section('content')
+<!-- for datepicker -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
 <style type="text/css">
 	
   .input-container input {
@@ -773,7 +775,7 @@ select#servicename {
 	   
 	   <div class="col-md-12 mb-3">
 	   	<label style="position: relative;left: 12px;margin-bottom: 11px;">ETC</label>
-	   <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;" required>
+	   <input type="text" class="form-control etc" placeholder="mm/dd/yyyy" name="etc" id="etc" onkeydown="return false" style="position: relative;" required>
 	   </div>
 	   <div class="col-md-12 mb-3">
 		   <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required></textarea>
@@ -950,7 +952,7 @@ select#servicename {
 	</div>
 		<div class="col-md-6 mb-3 date" style="display:none;">
 	     <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
-	      <input type="date" class="form-control etc" placeholder="Date" name="date" id="date" onkeydown="return false" style="position: relative;">
+	      <input type="text" class="form-control etc" placeholder="mm/dd/yyyy" name="date" id="date" onkeydown="return false" style="position: relative;">
 	     </div>
 		<div class="col-md-12 mb-3">
 		   <div class="align-items-center justify-content-lg-between d-flex services-list">
@@ -995,7 +997,7 @@ select#servicename {
 	   
 	   <div class="col-md-12 mb-3">
 	   	<label style="position: relative;left: 12px;margin-bottom: 11px;">ETC</label>
-	   <input type="date" value="" class="form-control etc" placeholder="ETC" name="etc" id="etc1" onkeydown="return false" style="position: relative;" required>
+	   <input type="text" value="" class="form-control etc" placeholder="mm/dd/yyyy" name="etc" id="etc1" onkeydown="return false" style="position: relative;" required>
 	   </div>
 	   <div class="col-md-12 mb-3">
 		   <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required></textarea>
@@ -1778,6 +1780,8 @@ select#servicename {
 </div>
 @endsection
 @section('script')
+<!-- for datepicker -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
 $('.dropify').dropify();
 
@@ -2708,7 +2712,8 @@ $(document).on('change','#productid',function(e) {
 	  	$('select.selectpicker1').find('option:selected').each(function() {
 			   	frequency = $(this).data('frequency');
 			});
-		$("#frequency option[value='"+frequency+"']").attr('selected', 'selected').change();
+
+	  	$("#frequency option[value='"+frequency+"']").attr('selected', 'selected').change();
 	}
 
 	$(document).on('change','#servicenamet1',function(e) {
@@ -2985,7 +2990,22 @@ $("#minute10").val(0);
 $('#date').change(function() {
 	var datev = $("#date").val();
     $("#etc1").val(datev);
-}); 
+});
+
+
+$("#date").datepicker({ 
+   autoclose: true, 
+   todayHighlight: true
+});
+$("#etc1").datepicker({ 
+   autoclose: true, 
+   todayHighlight: true
+});
+
+$("#etc").datepicker({ 
+   autoclose: true, 
+   todayHighlight: true
+});
 
 </script>
 @endsection

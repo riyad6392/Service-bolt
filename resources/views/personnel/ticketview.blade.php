@@ -1394,7 +1394,7 @@ Save
      });
 
    //for hours onclick function
-    $(document).on('change','#hours',function(e) {
+    $(document).on('blur','#hours',function(e) {
         $.ajax({
             url:'{{route('worker.calculatepricewithtimewise')}}',
             data: $('#form').serialize(),
@@ -1410,7 +1410,7 @@ Save
     });
 
     //for minutes onclick function
-    $(document).on('change','#minutes',function(e) {
+    $(document).on('blur','#minutes',function(e) {
         $.ajax({
             url:'{{route('worker.calculatepricewithtimewise')}}',
             data: $('#form').serialize(),

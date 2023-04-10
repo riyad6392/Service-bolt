@@ -2063,26 +2063,20 @@ class SchedulerController extends Controller
 
             }
             $ticket_status = "";
-
+            $extraicon = "";
             if($row->ticket_status == 4) {
                 $ticket_status = "Picked";
             }
 
             if($row->ticket_status == 3) {
                 $ticket_status = "Completed";
+                $extraicon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="width: 30px;height: 20px;"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg>';
             }
 
             if($row->ticket_status == 2) {
                 $ticket_status = "Assigned";
             }
-
-            //echo $enddatetime; die;
-            //echo $startdatetime; 2022-09-15 08:00
-
-            //dd($enddatetime);2022-09-15 20:00
-            // echo $startdatetime;
-            // echo "break";
-            // echo $enddatetime; die;
+            
             foreach($pids as $key =>$value) {
                 $data[] = array (
                     'id'=>$ids,
@@ -2093,6 +2087,7 @@ class SchedulerController extends Controller
                     'backgroundColor'   => $row->color,
                     'status' => $ticket_status,
                     'address' => $row->address,
+                    'extra'=>$extraicon,
 
                 );
             }

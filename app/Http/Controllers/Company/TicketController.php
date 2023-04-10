@@ -188,7 +188,7 @@ class TicketController extends Controller
         // $totalvalue = $persvalue*$totalsecond;
         $data['price'] = $request->price;
         
-	      $data['etc'] = $request->etc;
+	      $data['etc'] = Carbon::createFromFormat('m/d/Y', $request->etc)->format('Y-m-d');
 	      $data['description'] = $request->description;
 	      $data['customername'] =  $customer->customername;
         $data['address'] = $request->address;
@@ -679,7 +679,7 @@ class TicketController extends Controller
         // $persvalue = $request->price/60;
         // $totalvalue = $persvalue*$totalsecond;
         $data['price'] = $request->price;
-        $data['etc'] = $request->etc;
+        $data['etc'] = Carbon::createFromFormat('m/d/Y', $request->etc)->format('Y-m-d');
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
         $data['address'] = $request->address;
@@ -722,11 +722,10 @@ class TicketController extends Controller
           //display the converted time
           $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->giventime)));
           $time = $request->giventime;
-         
-            $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
-            $newdate = $request->date;
-
           
+            $date = Carbon::createFromFormat('m/d/Y', $request->date)->format('l - F d, Y');
+            $newdate = Carbon::createFromFormat('m/d/Y', $request->date)->format('Y-m-d');
+
           /*Get Dayclose time*/
             $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
             $dayclosetime =$closingtime->closingtime;
@@ -748,7 +747,7 @@ class TicketController extends Controller
         $data['giventime'] = $time;
         $data['givenendtime'] = $endtime;
         $data['givendate'] = $date;
-        $data['givenstartdate'] = $request->date;
+        $data['givenstartdate'] = Carbon::createFromFormat('m/d/Y', $request->date)->format('Y-m-d');
         $data['givenenddate'] = $givenenddate;
         $data['ticket_status'] = 2;
         $data['primaryname'] = $request->personnelid;
