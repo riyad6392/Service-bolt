@@ -2595,7 +2595,7 @@ function gethours() {
 $(document).on('change','#servicename',function(e) {
 	
 	//gethours();
-	getfrequency();
+	//getfrequency();
 	var serviceid = $('#servicename').val();
 	var productid = $('#productname').val(); 
     var qid = "";
@@ -2639,7 +2639,7 @@ $(document).on('change','#serviceid',function(e) {
 	
 	gethours();
 	//getprice();
-	getfrequency();
+	//getfrequency();
 	var serviceid = $('#serviceid').val();
 	var productid = $('#productid').val(); 
     var qid = "";
@@ -2712,14 +2712,14 @@ $(document).on('change','#productid',function(e) {
 	  	$('select.selectpicker1').find('option:selected').each(function() {
 			   	frequency = $(this).data('frequency');
 			});
-
+	  	
 	  	$("#frequency option[value='"+frequency+"']").attr('selected', 'selected').change();
 	}
 
 	$(document).on('change','#servicenamet1',function(e) {
 	
 	//gethours1();
-	getfrequency1();
+	//getfrequency1();
 	var serviceid = $('#servicenamet1').val();
     var productid = $('#productnamet1').val(); 
     var qid = "";

@@ -1296,7 +1296,10 @@ class CustomerController extends Controller
     public function viewinvoice(Request $request)
     {
       $tdata = Quote::where('id', $request->ticketid)->get()->first();
-      $tdata->duedate = date('Y-m-d', strtotime($request->duedate));
+      if($request->duedate!=null) {
+        $tdata->duedate = date('Y-m-d', strtotime($request->duedate));
+      }
+      //$tdata->duedate = date('Y-m-d', strtotime($request->duedate));
       $tdata->invoicenote = $request->description;
       $tdata->save();
 

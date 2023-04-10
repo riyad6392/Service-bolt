@@ -39,7 +39,11 @@
             <tr>
                 <td style=" width: %;">
                     <p style="margin: 0px 0 0px 0;color: #605252; font-size: 16px; ">Date:<br>
-            <span style="color: #605252;">{{date('m-d-Y', strtotime($date))}} </span>
+            <span style="color: #605252;">
+                @if($date!="" || $date!=null)
+                    {{date('m-d-Y', strtotime($date))}}
+                @endif 
+        </span>
         </p>
                 </td>
 
@@ -103,11 +107,11 @@
         </p>
         <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice due date:<br>
             <span style="color: black;">
-            @if($duedate!="")
-                {{date('m-d-Y', strtotime($duedate))}}
-            @else
-                Due on reciept
-            @endif    
+                @if($duedate!="" || $duedate!=null)
+                    {{date('m-d-Y', strtotime($duedate))}}
+                @else
+                    Due on reciept
+                @endif    
         </span>
         </p>
     </h4>
