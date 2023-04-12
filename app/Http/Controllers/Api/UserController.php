@@ -1345,9 +1345,9 @@ class UserController extends Controller
             $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
           }
             $finalsumprice = $pricetotal+$sum2;
-            DB::table('quote')->where('id','=',$request->id)->update([ 
-                "price"=>$finalsumprice
-            ]);
+            // DB::table('quote')->where('id','=',$request->id)->update([ 
+            //     "price"=>$finalsumprice
+            // ]);
         }
         return response()->json(['status'=>1,'message'=>'Invoice has been save successfully'],$this->successStatus); 
    } else {
@@ -1400,9 +1400,9 @@ class UserController extends Controller
                     $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
                   }
                     $finalsumprice = $pricetotal+$sum2;
-                    DB::table('quote')->where('id','=',$request->id)->update([ 
-                        "price"=>$finalsumprice
-                    ]);
+                    // DB::table('quote')->where('id','=',$request->id)->update([ 
+                    //     "price"=>$finalsumprice
+                    // ]);
                 }
           return response()->json(['status'=>1,'message'=>'Invoice has been send successfully'],$this->successStatus); 
         }

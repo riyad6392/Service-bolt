@@ -995,9 +995,9 @@ class WorkerTicketController extends Controller
               $productprice = $request->productprice;
           }
             $finalsumprice = $pricetotal+$productprice;
-            DB::table('quote')->where('id','=',$request->qid)->update([ 
-                "price"=>$finalsumprice
-            ]);
+            // DB::table('quote')->where('id','=',$request->qid)->update([ 
+            //     "price"=>$finalsumprice
+            // ]);
         }
         $paynowurl = url('personnel/myticket/paynow/').'/'.$request->id;
         return redirect($paynowurl);
@@ -1032,9 +1032,9 @@ class WorkerTicketController extends Controller
               $productprice = $request->productprice;
           }
             $finalsumprice = $pricetotal+$productprice;
-            DB::table('quote')->where('id','=',$request->qid)->update([ 
-                "price"=>$finalsumprice
-            ]);            
+            // DB::table('quote')->where('id','=',$request->qid)->update([ 
+            //     "price"=>$finalsumprice
+            // ]);            
         }
         $request->session()->flash('success', 'Invoice has been Save successfully');
         return redirect()->back();
@@ -1069,9 +1069,9 @@ class WorkerTicketController extends Controller
               $productprice = $request->productprice;
           }
             $finalsumprice = $pricetotal+$productprice;
-            DB::table('quote')->where('id','=',$request->qid)->update([ 
-                "price"=>$finalsumprice
-            ]);
+            // DB::table('quote')->where('id','=',$request->qid)->update([ 
+            //     "price"=>$finalsumprice
+            // ]);
         }
           DB::table('quote')->where('id','=',$request->id)->orWhere('parentid','=',$request->id)
           ->update([ 
