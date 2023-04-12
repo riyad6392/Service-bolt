@@ -58,7 +58,7 @@ class ReportController extends Controller
        ;
         @$pdata = PaymentSetting::where('uid',$auth_id)->groupBy('pid')->get()->pluck('pid')->toArray();
         
-        if(empty($request->all()) || $request->pid == 'All') {
+        if(empty($request->all()) || $request->frequencyid == 'All') {
             $tickedata = [];
             $personnelid = [];
             $tickedatadetails = "";
@@ -90,7 +90,7 @@ class ReportController extends Controller
             }
            
         } else {
-            $personnelid = @$request->pid;
+            $personnelid = @$request->frequencyid;
             $tickerdatas = Quote::select('primaryname')->where('personnelid',$personnelid)->whereColumn('personnelid','primaryname')->where('ticket_status','3')->get();  
 
             @$percentall=PaymentSetting::where('pid',$personnelid)->where('paymentbase','commission')->where('type','percent')->get();

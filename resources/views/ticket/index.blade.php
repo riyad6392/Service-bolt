@@ -748,6 +748,7 @@ select#servicename {
 	    </div>
 	   
 	   <div class="col-md-6 mb-2">
+	   	<label>Select Frequency</label><br>
 	  	<select class="form-select" name="frequency" id="frequency" required="">
 		  <option value="">Service Frequency</option>
 		  @foreach($tenture as $key=>$value)
@@ -972,6 +973,7 @@ select#servicename {
 	    </div>
 	   
 	   <div class="col-md-6 mb-2">
+	   	<label>Select Frequency</label><br>
 	  	<select class="form-select" name="frequency" id="frequency" required="">
 		  <option value="">Service Frequency</option>
            @foreach($tenture as $key=>$value)

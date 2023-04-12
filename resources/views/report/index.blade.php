@@ -417,7 +417,7 @@
         </div>
       <div class="col-md-3">
       <div class="side-h3">
-        <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
+        <button type="submit" class="btn btn-block button" style="width:45%;height: 40px;">Run</button>
       </div>
     </div>
     </div>
@@ -767,7 +767,7 @@
  <input type="hidden" name="phiddenid" id="phiddenid" value="">
     <div class="col-md-3">
        <div class="side-h3">
-        <select class="form-select puser" name="pid" id="pid" required="">
+        <select class="form-select puser" name="frequencyid" id="pid" required="">
            <option value="All"> All </option>
            @foreach($pdata1 as $key => $value)
                 <option value="{{$value->id}}" @if(@$personnelid ==  $value->id) selected @endif> {{$value->personnelname}}</option>
@@ -778,7 +778,7 @@
   
     <div class="col-md-3">
       <div class="side-h3">
-        <button type="submit" class="btn btn-block button" style="width:50%;height: 40px;">Run</button>
+        <button type="submit" class="btn btn-block button" style="width:45%;height: 40px;">Run</button>
       </div>
     </div>
 </form>
