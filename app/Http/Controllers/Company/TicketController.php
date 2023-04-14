@@ -202,8 +202,8 @@ class TicketController extends Controller
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
         //print_r($output->results[0]->geometry->location->lat); die;
-        $latitude  = $output->results[0]->geometry->location->lat; 
-        $longitude = $output->results[0]->geometry->location->lng;
+        $latitude  = @$output->results[0]->geometry->location->lat; 
+        $longitude = @$output->results[0]->geometry->location->lng;
 
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;

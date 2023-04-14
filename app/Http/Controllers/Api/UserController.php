@@ -1320,7 +1320,7 @@ class UserController extends Controller
               "description"=>"$description","serviceid"=>"$serviceid","servicename"=>"$servicenames","product_id"=>"$productid","price"=>"$request->price","tickettotal"=>"$request->ticketprice","tax"=>"$totaltax"
       ]);
    if($request->type=="save") {
-        if(count($request->pricearray)>0) {
+        if(count(@$request->pricearray)>0) {
           DB::table('hourlyprice')->where('ticketid',$request->id)->delete();
           $pricetotal = 0;
           foreach($request->pricearray as $key =>$value) {
@@ -1375,7 +1375,7 @@ class UserController extends Controller
 
               //$message->from($app_email,$app_name);
             });
-              if(count($request->pricearray)>0) {
+              if(count(@$request->pricearray)>0) {
                   DB::table('hourlyprice')->where('ticketid',$request->id)->delete();
                   $pricetotal = 0;
                   foreach($request->pricearray as $key =>$value) {

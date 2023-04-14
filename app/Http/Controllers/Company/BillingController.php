@@ -225,7 +225,7 @@ class BillingController extends Controller
          $url = url('/').'/company/billing/downloadinvoice/'.@$billingData[$datacount]->id;
         $url_pay = url('/').'/company/billing/paynow/'.@$billingData[$datacount]->customerid;
 
-      if($billingData[$datacount]->image!=null) {
+      if(@$billingData[$datacount]->image!=null) {
         $imagepath = url('/').'/uploads/services/'.$billingData[$datacount]->image;
       } else {
         $imagepath = url('/').'/uploads/servicebolt-noimage.png';

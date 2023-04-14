@@ -773,7 +773,7 @@ class CustomerController extends Controller
         $countdata = count($quoteData);
          $datacount = $countdata-1;
 
-      if($quoteData[$datacount]->serviceimage!=null) {
+      if(@$quoteData[$datacount]->serviceimage!=null) {
         $imagepath = url('/').'/uploads/services/'.$quoteData[$datacount]->serviceimage;
       } else {
         $imagepath = url('/').'/uploads/servicebolt-noimage.png';
