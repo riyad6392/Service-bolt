@@ -225,7 +225,7 @@ class ReportController extends Controller
          @$sincerecur = $request->sincerecur;
          @$untilrecur = $request->untilrecur;
 
-         
+         //dd($frequencyid);
 
         return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','frequencyid','sincerecur','untilrecur','sincesale','untilsale','sinceservice','untilservice','sinceproduct','untilproduct'));
     }

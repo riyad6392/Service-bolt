@@ -738,7 +738,7 @@
   </div>
   <div class="tab-pane fade" id="commission" role="tabpanel" aria-labelledby="commission-tab">
 
-  <form method="post" action="{{route('company.report') }}" class="row pe-0">
+  <form id="commission" method="post" action="{{route('company.report') }}" class="row pe-0" id="text">
       @csrf
 
   <div class="row">

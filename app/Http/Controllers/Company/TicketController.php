@@ -104,7 +104,6 @@ class TicketController extends Controller
 
     public function quotecreate(Request $request)
     {
-        
         $serviceid = implode(',', $request->servicename);
         $productid = "";
         if(isset($request->productname)) {
@@ -208,7 +207,54 @@ class TicketController extends Controller
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
 
-	      $quotelastid = Quote::create($data);
+          //for new feature
+            if($request->time == null || $request->time == "" || $request->time == 00 || $request->time == 0) {
+                  $hours = 0;
+            } else {
+                $hours = preg_replace("/[^0-9]/", '', $request->time);    
+            }
+
+            if($request->minute == null || $request->minute == "" || $request->minute == 00 || $request->minute == 0) {
+                $minutes = 0;
+            } else {
+                $minutes = preg_replace("/[^0-9]/", '', $request->minute);    
+            }
+
+            if($request->personnelid!="") {
+              //display the converted time
+              $endtime = date('h:i a',strtotime("+{$hours} hour +{$minutes} minutes",strtotime($request->giventime)));
+              $time = $request->giventime;
+              
+                $date = Carbon::createFromFormat('m/d/Y', $request->date)->format('l - F d, Y');
+                $newdate = Carbon::createFromFormat('m/d/Y', $request->date)->format('Y-m-d');
+
+              /*Get Dayclose time*/
+                $closingtime = DB::table('users')->select('closingtime')->where('id',$auth_id)->first();
+                $dayclosetime =$closingtime->closingtime;
+
+                $tstarttime = explode(':',$time);
+                $ticketstarttime = $tstarttime[0];
+                $ticketdifferncetime = $dayclosetime - $ticketstarttime;
+                // echo $ticketdifferncetime; die;
+                $givenenddate = $newdate;
+                if($hours != null || $hours != "" || $hours != 00 || $hours != 0) {
+                    if($hours > $ticketdifferncetime) {
+                        $nextdaytime = $hours - $ticketdifferncetime; 
+                        //echo $nextdaytime; die;
+                        $givenenddate = $this->getenddatecalculation($newdate,$nextdaytime);
+                    } else {
+                        $givenenddate = $newdate; 
+                    }
+                }
+            $data['giventime'] = $time;
+            $data['givenendtime'] = $endtime;
+            $data['givendate'] = $date;
+            $data['givenstartdate'] = Carbon::createFromFormat('m/d/Y', $request->date)->format('Y-m-d');
+            $data['givenenddate'] = $givenenddate;
+            $data['primaryname'] = $request->personnelid;
+          }
+
+	    $quotelastid = Quote::create($data);
         $quoteee = Quote::where('id', $quotelastid->id)->first();
         $randomid = 100;
         $quoteee->invoiceid = $randomid.''.$quotelastid->id;

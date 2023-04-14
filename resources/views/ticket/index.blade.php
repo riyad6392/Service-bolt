@@ -721,14 +721,51 @@ select#servicename {
         </div>
 	  </div>
 	   
-	   <div class="col-md-6 mb-3" style="display: none;">
-	  	<select class="form-select {{$wname}}" name="personnelid" id="personnelid">
-			<option selected="" value="">Select a Personnel </option>
-			@foreach($worker as $key => $value)
-				<option value="{{$value->id}}">{{$value->personnelname}}</option>
-			@endforeach
-		</select>
-	   </div>
+	    <div class="col-md-12 mb-3">
+		  <select class="form-select" name="personnelid" id="personnelid1">
+		    <option selected="" value="">Select Personnel</option>
+		    @foreach($worker as $key => $value) {
+		      <option value="{{$value->id}}">{{$value->personnelname}}</option>
+		     @endforeach
+		  </select>
+		</div>
+		@php
+		  if($userData->openingtime!="" || $userData->openingtime!=null) {
+		       if($userData->openingtime<$userData->closingtime) {
+		          $mintime = $userData->openingtime;
+		          $maxtime = $userData->closingtime; 
+		       } else {
+		          $maxtime = $userData->openingtime;
+		          $mintime = $userData->closingtime;
+		       }
+
+		        $mintime = date('h a', strtotime($mintime.':00'));
+		        $maxtime = date('h a', strtotime($maxtime.':00'));
+		  } else {
+		        $mintime= "12 am";
+		        $maxtime= "11 pm";
+		  }
+		  $inc   = 30 * 60;
+		    $start = (strtotime($mintime));
+		    $end   = (strtotime($maxtime)); 
+		@endphp
+
+		<div class="form-group col-md-6 mb-3 time" style="display:none;">
+	      	<label style="position: relative;left: 12px;margin-bottom: 11px;">Time</label>
+	      	<select class="form-control selectpicker" aria-label="Default select example" data-placeholder="Select Time" data-live-search="true" name="giventime" id="timedefault1" style="height:auto;">
+	        @for( $i = $start; $i <= $end; $i += $inc)
+	          @php
+	            $range = date( 'h:i a', $i);
+	          @endphp
+	          <option value="{{$range}}">{{$range}}</option>
+	        @endfor
+	    	</select>
+		</div>
+
+		<div class="col-md-6 mb-3 date" style="display:none;">
+		 <label style="position: relative;left: 12px;margin-bottom: 11px;">Date</label>
+		  <input type="text" class="form-control etc" placeholder="mm/dd/yyyy" name="date" id="date1" onkeydown="return false" style="position: relative;">
+		</div>
 		
 		<div class="col-md-12 mb-3">
 		   <div class="align-items-center justify-content-lg-between d-flex services-list">
@@ -2775,6 +2812,21 @@ $(document).on('change','#personnelid',function(e) {
     }
   });
 
+$(document).on('change','#personnelid1',function(e) {
+    var pvalue = $(this).val();
+    if(pvalue=="") {
+     $(".time").hide();
+     $(".date").hide();
+     $("#timedefault1").attr('required',false);
+     $("#date1").attr('required',false);
+    } else {
+     $(".time").show();
+     $(".date").show();
+     $("#timedefault1").attr('required',true);
+     $("#date1").attr('required',true);
+    }
+  });
+
 
 // $('.popfields').change(function() { 
 // 	var hiddenprice = $("#hiddenprice").val();
@@ -2999,6 +3051,12 @@ $("#date").datepicker({
    autoclose: true, 
    todayHighlight: true
 });
+
+$("#date1").datepicker({ 
+   autoclose: true, 
+   todayHighlight: true
+});
+
 $("#etc1").datepicker({ 
    autoclose: true, 
    todayHighlight: true
