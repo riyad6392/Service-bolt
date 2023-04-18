@@ -1985,6 +1985,80 @@ class UserController extends Controller
         return response()->json(['status'=>1,'message'=>'Success','data'=>$data],$this->successStatus);
     }
 
+    public function timesheetexport(Request $request) {
+        
+        $validator = Validator::make(request()->all(), [
+            'fromdate' => 'required',
+            'todate' => 'required'
+        ]);
+
+        if ($validator->fails()) { 
+            $errors = $validator->errors()->toArray();
+            $msg_err = '';
+            if(isset($errors['fromdate'])) {
+                foreach($errors['fromdate'] as $e){
+                    $msg_err .= $e;
+                }
+            }
+            if(isset($errors['todate'])) {
+                foreach($errors['todate'] as $e){
+                    $msg_err .= $e;
+                }
+            }
+            return response()->json(['status'=>1,'message'=>$msg_err],$this->successStatus);
+        }
+
+            $fromdate = date('Y-m-d', strtotime($request->fromdate));
+            $todate = date('Y-m-d', strtotime($request->todate));
+            
+            $auth_id = auth()->user()->id;
+            $worker = DB::table('users')->select('workerid')->where('id',$auth_id)->first();
+
+            $timesheetdata = DB::table('workerhour')->where('workerid',$worker->workerid)->whereDate('date1','>=', $fromdate)->whereDate('date1','<=', $todate)->orderBy('id','desc')->get();
+
+            $data = array();
+            if(count($timesheetdata)>0) {
+                foreach($timesheetdata as $key => $value) {
+                    $data[] = array (
+                     'starttime' =>$value->starttime,
+                     'endtime' => $value->endtime,
+                     'totalhours' => $value->totalhours,
+                     'date' =>$value->date1,
+                    );
+                }
+            }
+
+            $fileName = 'timesheetreport.csv';
+            $headers = array(
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            );
+            $columns = array('Satrttime','Endtime','totalhours','date');
+            $filename =  public_path(date('d-m-Y').'_timesheet.csv');
+
+            $callback = function() use($timesheetdata, $columns) {
+                
+            $filename =  public_path('timesheetreport.csv');
+
+               
+                $file = fopen($filename,'w'); //by default it uses public folder
+
+                fputcsv($file, $columns);
+                
+                foreach ($timesheetdata as $key =>$value) {
+                  fputcsv($file, array($value->starttime, $value->endtime, $value->totalhours, $value->date1));
+                  //file_put_contents($path, $file);
+
+                }
+                
+                fclose($file);
+            };
+            return response()->stream($callback, 200, $headers);
+    }
+
     public function getbalancesheet(Request $request) {
       $auth_id = auth()->user()->id;
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
