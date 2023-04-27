@@ -119,7 +119,7 @@ class WorkerHomeController extends Controller
         //dd($serviceinfo);
 
         $todaydate = date('l - F d, Y');
-        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->join('services', 'services.id', '=', 'quote.serviceid')->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->join('services', 'services.id', '=', 'quote.serviceid')->whereIn('quote.ticket_status',[0,2,3,4])->where('quote.personnelid',$worker->workerid)->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
 
         $completedticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"3")->where('givendate', $todaydate)->count();
         

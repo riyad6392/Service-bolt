@@ -978,7 +978,7 @@ class SchedulerController extends Controller
         DB::table('quote')->where('id','=',$ticketid)
           ->update([ 
               "ticket_status"=>"$tstatus",
-              "primaryname"=>null              
+              "primaryname"=>null,             
           ]);
         
         DB::table('quote')->where('parentid',$ticketid)->delete();
@@ -1990,7 +1990,7 @@ class SchedulerController extends Controller
         $newdate = Carbon::createFromFormat('l - F d, Y', $fulldate)->format('Y-m-d');
         //echo $newdate; die;
         //\DB::enableQueryLog(); 
-        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givenenddate','>=',$newdate)->where('quote.givenstartdate','<=',$newdate)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[0,2,3,4])->where('quote.personnelid','!=',null)->where('quote.givenenddate','>=',$newdate)->where('quote.givenstartdate','<=',$newdate)->orderBy('quote.id','ASC')->get();
         //dd(\DB::getQueryLog());
 
         //($scheduleData);
@@ -2075,6 +2075,10 @@ class SchedulerController extends Controller
 
             if($row->ticket_status == 2) {
                 $ticket_status = "Assigned";
+            }
+
+            if($row->ticket_status == 0) {
+                $ticket_status = "Quote pending";
             }
             
             foreach($pids as $key =>$value) {

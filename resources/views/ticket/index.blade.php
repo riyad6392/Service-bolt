@@ -304,7 +304,7 @@ select#servicename {
     border-radius: 15px;
     width: 114px!important;
 ">Ticket +</a></td>
-	  <td><a href="{{url('company/quote/ticketdetail/')}}/{{$quote->id}}&q" class="btn btn-edit p-2 w-auto" target="_blank">View</a><a class=" btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$quote->id}}">Edit</a>
+	  <td><a href="{{url('company/quote/ticketdetail/')}}/{{$quote->id}}&q" class="btn btn-edit p-2 w-auto" target="_blank">View</a><a class=" btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$quote->id}}" data-pid="{{$quote->personnelid}}">Edit</a>
 	  <a href="javascript:void(0);" class="info_link1 btn btn-edit p-2 w-auto" dataval="{{$quote->id}}">Delete</a>
 	  
 	  <a class=" btn btn-edit p-2 w-auto emailinvoice" data-id="{{$quote->id}}" data-email="{{$quote->email}}" data-bs-toggle="modal" data-bs-target="#edit-address">Share</a>
@@ -2419,6 +2419,8 @@ $('#serviceform').on('submit', function(event) {
  $(document).on('click','#editTickets',function(e) {
    $('.selectpicker2').selectpicker();
    var id = $(this).data('id');
+
+   var pvalue = $(this).data('pid');
    
    var type = $(this).data('type');
    if(type==undefined) {
@@ -2439,8 +2441,21 @@ $('#serviceform').on('submit', function(event) {
               $(".selectpickerp1").selectpicker();
               var hiddenprice = $("#priceticketedit").val();
               $("#edithiddenprice").val(hiddenprice);
-
-            }
+       //        if(type == "quote") {
+       //        	$("#personnelid2").show()
+       //        	if(pvalue=="") {
+       //        	 $(".time").hide();
+			    //  $(".date").hide();
+			    //  $("#timedefault2").attr('required',false);
+			    //  $("#date2").attr('required',false);
+			    // } else {
+			    //  $(".time").show();
+			    //  $(".date").show();
+			    //  $("#timedefault2").attr('required',true);
+			    //  $("#date2").attr('required',true);
+			    // }
+       //        }
+			}
         })
   });
 
@@ -2824,6 +2839,22 @@ $(document).on('change','#personnelid1',function(e) {
      $(".date").show();
      $("#timedefault1").attr('required',true);
      $("#date1").attr('required',true);
+    }
+  });
+
+$(document).on('change','#personnelid2',function(e) {
+    var pvalue = $(this).val();
+    alert(pvalue);
+    if(pvalue=="") {
+     $(".time").hide();
+     $(".date").hide();
+     $("#timedefault2").attr('required',false);
+     $("#date2").attr('required',false);
+    } else {
+     $(".time").show();
+     $(".date").show();
+     $("#timedefault2").attr('required',true);
+     $("#date2").attr('required',true);
     }
   });
 

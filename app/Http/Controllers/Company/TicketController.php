@@ -971,26 +971,11 @@ class TicketController extends Controller
                 $html .='<option value="'.$value->id.'" '.@$selectedp.' data-price="'.$value->price.'">'.$value->productname.'</option>';
               }
         $html .='</select>
-          </div>
+          </div>';
 
-          <div class="col-md-12 mb-2" style="display:none;">
-            <label>Select a Personnel</label>
-            <select class="form-select" name="personnelid" id="personnelid">
-              <option value="">Select a Personnel</option>';
+          
 
-              foreach($allworker as $key => $value) {
-                  if($value->id == $quotedetails[0]->personnelid) {
-                    $selectedp1 = "selected";
-                  } else {
-                    $selectedp1 = "";
-                }
-                $html .='<option value="'.$value->id.'" '.@$selectedp1.'>'.$value->personnelname.'</option>';
-              }
-        $html .='</select>
-          </div>
-
-
-          <div class="col-md-12 mb-2">
+          $html.='<div class="col-md-12 mb-2">
             <div class="align-items-center justify-content-lg-between d-flex services-list">
                <p>
                 <input type="radio" id="test4" name="radiogroup" value="perhour" '.@$checked.' class="radiogroupedit">

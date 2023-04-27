@@ -59,7 +59,7 @@ if(count($serviceids)>0) {
       $servicedetails = array();
     }
       $todaydate = date('l - F d, Y');
-        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->join('services', 'services.id', '=', 'quote.serviceid')->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->join('services', 'services.id', '=', 'quote.serviceid')->whereIn('quote.ticket_status',[0,2,3,4])->where('quote.personnelid',$worker->workerid)->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
       
       //$workerh = DB::table('workerhour')->where('workerid',$worker->workerid)->where('date', $todaydate)->first();
       $workerh = DB::table('workerhour')->where('workerid',$worker->workerid)->whereDate('created_at', DB::raw('CURDATE()'))->orderBy('id','desc')->first();

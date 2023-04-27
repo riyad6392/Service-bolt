@@ -139,8 +139,8 @@ label.credit img {
   </span>
 </div>
 <div class="col-lg-12 mb-3">
-  <label>Invoice Footer content</label><br>
-  <textarea class="form-control height-110" placeholder="Description" name="description" id="description">{{$userData->footercontent}}</textarea>
+  <label>Invoice Footer content (255 Words)</label><br>
+  <textarea class="form-control height-110 words-left" placeholder="Description" name="description" id="description" onkeyup="checkWordLen(this);">{{$userData->footercontent}}</textarea>
 </div>
 <div class="col-lg-12 mb-3">
   <label>Invoice Email Subject</label><br>
@@ -544,6 +544,20 @@ $('#service_products').click(function() {
   $("#p2").attr("disabled", false);
 });
 
-
+var wordLen = 255,
+    len; // Maximum word length
+$('#description').keydown(function(event) {  
+  len = $('#description').val().split(/[\s]+/);
+  if (len.length > wordLen) { 
+    if ( event.keyCode == 46 || event.keyCode == 8 ) {// Allow backspace and delete buttons
+    } else if (event.keyCode < 48 || event.keyCode > 57 ) {//all other buttons
+      event.preventDefault();
+    }
+  }
+  console.log(len.length + " words are typed out of an available " + wordLen);
+  wordsLeft = (wordLen) - len.length;
+  $('.words-left').html(wordsLeft+ ' words left');
+  
+});
 </script>
 @endsection
