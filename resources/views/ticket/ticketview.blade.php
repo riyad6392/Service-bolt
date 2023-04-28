@@ -617,7 +617,7 @@ section.promo_section {
 </div>
 <div class="col-md-6">
     <div>
-        <p>@if($addressnote->notes!=null) Address Notes: {{$addressnote->notes}} @endif</p>
+        <p>@if(@$addressnote->notes!=null) Address Notes: {{@$addressnote->notes}} @endif</p>
     </div>
 </div>
 

@@ -44,16 +44,16 @@ class TicketFrequency extends Command
        $dateE = Carbon::now();
         $currentdate = date('Y-m-d', strtotime($dateE));
         //start logic for cron jobs
-          $ticketData = Quote::select('quote.*','customer.email')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.parentid',0)->whereIn('quote.ticket_status',['1','2','3','4'])->where('quote.frequency', '!=',"One Time")->where('quote.flag',1)->orderBy('quote.id','DESC')->get();
+          $ticketData = Quote::select('quote.*','customer.email')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.parentid',0)->whereIn('quote.ticket_status',['2','3','4'])->where('quote.frequency', '!=',"One Time")->where('quote.flag',1)->orderBy('quote.id','DESC')->get();
          
         foreach ($ticketData as $key => $value) {
             if($value['frequency'] == "Monthly") {
                 if($value['count']==12){
 
                 } else {
-                    $newTime = strtotime('30 days'. $value['created_at']);
+                    $newTime = strtotime('30 days'. $value['givenstartdate']);
                     $newDate = date('Y-m-d', $newTime);
-                    if($newDate == $currentdate) {
+                    if($value['givenstartdate'] == $currentdate) {
                        $data['userid'] = $value['userid'];
                        $data['workerid'] = $value['workerid'];
                        $data['customerid'] = $value['customerid'];
@@ -71,6 +71,15 @@ class TicketFrequency extends Command
                        $data['frequency'] = $value['frequency'];
                        $data['time'] = $value['time'];
                        $data['minute'] = $value['minute'];
+
+                       $data['giventime'] = $value['giventime'];
+                       $data['givenendtime'] = $value['givenendtime'];
+                       $data['givendate'] =  Carbon::createFromFormat('Y-m-d', $newDate)->format('l - F d, Y');
+                       $data['givenenddate'] = $newDate;
+                       $data['givenstartdate'] = $newDate;
+                       $data['tickettotal'] = $value['tickettotal'];
+                       $data['etc'] = $newDate;
+
                        $data['price'] = $value['price'];
                        $data['tax'] = "0.00";
                        $data['description'] = $value['description'];
@@ -87,9 +96,9 @@ class TicketFrequency extends Command
                 }
             }
             if($value['frequency'] == "Bi-Monthly") {
-                $newTime = strtotime('60 days'. $value['created_at']);
+                $newTime = strtotime('60 days'. $value['givenstartdate']);
                     $newDate = date('Y-m-d', $newTime);
-                    if($newDate == $currentdate) {
+                    if($value['givenstartdate'] == $currentdate) {
                         if($value['count']==6) {
                         } else {
                            $data['userid'] = $value['userid'];
@@ -109,6 +118,15 @@ class TicketFrequency extends Command
                            $data['frequency'] = $value['frequency'];
                            $data['time'] = $value['time'];
                            $data['minute'] = $value['minute'];
+
+                           $data['giventime'] = $value['giventime'];
+                           $data['givenendtime'] = $value['givenendtime'];
+                           $data['givendate'] =  Carbon::createFromFormat('Y-m-d', $newDate)->format('l - F d, Y');
+                           $data['givenenddate'] = $newDate;
+                           $data['givenstartdate'] = $newDate;
+                           $data['tickettotal'] = $value['tickettotal'];
+                           $data['etc'] = $newDate;
+
                            $data['price'] = $value['price'];
                            $data['tax'] = "0.00";
                            $data['description'] = $value['description'];
@@ -125,9 +143,9 @@ class TicketFrequency extends Command
                     }
             }
             if($value['frequency'] == "Weekly") {
-                $newTime = strtotime('7 days'. $value['created_at']);
+                $newTime = strtotime('7 days'. $value['givenstartdate']);
                 $newDate = date('Y-m-d', $newTime);
-                if($newDate == $currentdate) {
+                if($value['givenstartdate'] == $currentdate) {
                     if($value['count']==52) {
 
                     } else {
@@ -148,6 +166,23 @@ class TicketFrequency extends Command
                        $data['frequency'] = $value['frequency'];
                        $data['time'] = $value['time'];
                        $data['minute'] = $value['minute'];
+
+                       $data['giventime'] = $value['giventime'];
+                       $data['givenendtime'] = $value['givenendtime'];
+                       $data['givendate'] =  Carbon::createFromFormat('Y-m-d', $newDate)->format('l - F d, Y');
+                       $data['givenenddate'] = $newDate;
+                       $data['givenstartdate'] = $newDate;
+                       $data['tickettotal'] = $value['tickettotal'];
+                       $data['etc'] = $newDate;
+
+                       $data['giventime'] = $value['giventime'];
+                       $data['givenendtime'] = $value['givenendtime'];
+                       $data['givendate'] =  Carbon::createFromFormat('Y-m-d', $newDate)->format('l - F d, Y');
+                       $data['givenenddate'] = $newDate;
+                       $data['givenstartdate'] = $newDate;
+                       $data['tickettotal'] = $value['tickettotal'];
+                       $data['etc'] = $newDate;
+
                        $data['price'] = $value['price'];
                        $data['tax'] = "0.00";
                        $data['description'] = $value['description'];
@@ -164,9 +199,9 @@ class TicketFrequency extends Command
                 }
             }
             if($value['frequency'] == "Bi-Weekly") {
-                $newTime = strtotime('15 days'. $value['created_at']);
+                $newTime = strtotime('15 days'. $value['givenstartdate']);
                     $newDate = date('Y-m-d', $newTime);
-                    if($newDate == $currentdate) {
+                    if($value['givenstartdate'] == $currentdate) {
                         if($value['count']==24) {
 
                         } else {
@@ -187,6 +222,15 @@ class TicketFrequency extends Command
                        $data['frequency'] = $value['frequency'];
                        $data['time'] = $value['time'];
                        $data['minute'] = $value['minute'];
+
+                       $data['giventime'] = $value['giventime'];
+                       $data['givenendtime'] = $value['givenendtime'];
+                       $data['givendate'] =  Carbon::createFromFormat('Y-m-d', $newDate)->format('l - F d, Y');
+                       $data['givenenddate'] = $newDate;
+                       $data['givenstartdate'] = $newDate;
+                       $data['tickettotal'] = $value['tickettotal'];
+                       $data['etc'] = $newDate;
+
                        $data['price'] = $value['price'];
                        $data['tax'] = "0.00";
                        $data['description'] = $value['description'];
@@ -203,9 +247,9 @@ class TicketFrequency extends Command
                 }
             }
             if($value['frequency'] == "Quarterly") {
-                $newTime = strtotime('90 days'. $value['created_at']);
+                $newTime = strtotime('90 days'. $value['givenstartdate']);
                 $newDate = date('Y-m-d', $newTime);
-                if($newDate == $currentdate) {
+                if($value['givenstartdate'] == $currentdate) {
                     if($value['count']==4) {
 
                     } else {
@@ -226,6 +270,15 @@ class TicketFrequency extends Command
                        $data['frequency'] = $value['frequency'];
                        $data['time'] = $value['time'];
                        $data['minute'] = $value['minute'];
+
+                       $data['giventime'] = $value['giventime'];
+                       $data['givenendtime'] = $value['givenendtime'];
+                       $data['givendate'] =  Carbon::createFromFormat('Y-m-d', $newDate)->format('l - F d, Y');
+                       $data['givenenddate'] = $newDate;
+                       $data['givenstartdate'] = $newDate;
+                       $data['tickettotal'] = $value['tickettotal'];
+                       $data['etc'] = $newDate;
+                       
                        $data['price'] = $value['price'];
                        $data['tax'] = "0.00";
                        $data['description'] = $value['description'];

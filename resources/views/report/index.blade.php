@@ -339,7 +339,7 @@
               }
             @endphp
 	    <tr>
-    	  <td>#{{$ticket->id}}</td>
+    	  <td><a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" target="_blank">#{{$ticket->id}}</a></td>
     	  <td style="white-space: initial;">{{$ticket->customername}}</td>
     	  <td style="white-space: initial;">{{$ticket->address}}</td>
     	  <td>{{$ticket->personnelname}}</td>
@@ -450,8 +450,8 @@
         <tbody>
         @foreach($recurringreport as $key => $ticket)
         <tr>
-          <td><a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}">#{{$ticket->id}}</a></td>
-          <td>{{$ticket->created_at}}</td>
+          <td><a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" target="_blank">#{{$ticket->id}}</a></td>
+          <td>{{$ticket->givenstartdate}}</td>
           <td>{{$ticket->frequency}}</td>
           <td style="">{{$ticket->address}}</td>
         </tr>

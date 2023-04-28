@@ -1194,6 +1194,11 @@ background: transparent!important;
             // },
 
             eventRender: function(event, element, view) {
+                if(event.status=="Quote pending") {
+                    var style = "display:none";
+                } else {
+                    var style = "display:block"; 
+                }
                 var hourwithtime = event.start._i.slice(11,16);
                 hourwithtime=hourwithtime.toString();
                 var hours = hourwithtime.slice(0, -3);
@@ -1227,7 +1232,7 @@ background: transparent!important;
                   placement: 'right',
                   html:true,
                   sanitize:false,
-                  content: '<div class="popover-design"><div class="row"><div class="col-md-7"><p>'+event.status+'</p><p>'+event.title+'</p><p>'+event.address+'</p></div><div class="col-md-5 text-center"><p>'+startendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center"><div class="text-end"><span class=" icon-btn" id="closeonDelete" data-id="'+event.id+'"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
+                  content: '<div class="popover-design"><div class="row"><div class="col-md-7"><p>'+event.status+'</p><p>'+event.title+'</p><p>'+event.address+'</p></div><div class="col-md-5 text-center"><p>'+startendtime+'</p></div><div class="col-md-4"><div class="text-start"><span class="icon-btn"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#exampleModal" id="editsticket" data-id="'+event.id+'"></i></span></div></div><div class="col-md-4 text-center" style="'+style+'"><div class="text-end"><span class=" icon-btn" id="closeonDelete" data-id="'+event.id+'"><i class="fa fa-trash" > </i></span></div></div> <div class="col-md-4 text-center" style="'+style+'"><div class="text-start"><span class="icon-btn" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id=" '+event.id+'"><i class="fa fa-user-plus"></i></span></div></div></div>',
                   container:'body',
                   trigger:'click',
                 });

@@ -202,14 +202,14 @@ class ReportController extends Controller
             $startDate = date('Y-m-d', strtotime($request->sincerecur));
             $endDate = date('Y-m-d', strtotime($request->untilrecur));
             if($request->frequencyid == null) {
-                $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->orWhereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])->orderBy('quote.id','DESC')->get();
+                $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->orWhereBetween(DB::raw('DATE(givenstartdate)'), [$startDate, $endDate])->orderBy('quote.id','DESC')->get();
 
            } elseif($request->frequencyid == 'All') {
                 $frequencyid = [];
                 if($request->sincerecur!=null && $request->untilrecur!=null) {
                     $startDate = date('Y-m-d', strtotime($request->sincerecur));
                     $endDate = date('Y-m-d', strtotime($request->untilrecur));
-                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])->orderBy('quote.id','DESC')->get();
+                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->whereBetween(DB::raw('DATE(givenstartdate)'), [$startDate, $endDate])->orderBy('quote.id','DESC')->get();
                 } else {
                     $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->orderBy('quote.id','DESC')->get();
 
@@ -219,7 +219,7 @@ class ReportController extends Controller
                 if($request->sincerecur!=null && $request->untilrecur!=null) {
                     $startDate = date('Y-m-d', strtotime($request->sincerecur));
                     $endDate = date('Y-m-d', strtotime($request->untilrecur));
-                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate])->where('quote.frequency',$request->frequencyid)->orderBy('quote.id','DESC')->get();
+                    $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->whereBetween(DB::raw('DATE(givenstartdate)'), [$startDate, $endDate])->where('quote.frequency',$request->frequencyid)->orderBy('quote.id','DESC')->get();
                 } else {
                     $recurringreport = Quote::where('quote.userid',$auth_id)->where('quote.count','!=',0)->where('quote.frequency',$request->frequencyid)->orderBy('quote.id','DESC')->get();
                 }

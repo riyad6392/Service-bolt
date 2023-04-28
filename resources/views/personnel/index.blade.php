@@ -272,7 +272,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	@endphp
 	   <div class="col-md-12 mb-3">
 	  	<div class="multbox-modal">
-			<select class="form-control selectpicker " multiple="" data-placeholder="Select Permissions" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="ticketid[]" id="ticketid" required="">
+			<select class="form-control selectpicker ticketid" multiple="" data-placeholder="Select Permissions" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="ticketid[]" id="ticketid" required="" >
 				@foreach($permission as $key =>$value)
                  <option value="{{$value}}">@if($value=="Unclose Ticket") Reopen Ticket @else {{$value}}@endif</option>
                 @endforeach
@@ -667,7 +667,7 @@ $(document).on('click','#editPersonnel',function(e) {
   });
   $('table tr').each(function(a,b) {
     $(b).click(function() {
-         $(this).addClass('selectedrow').siblings().removeClass('selectedrow');
+      $(this).addClass('selectedrow').siblings().removeClass('selectedrow');
     });
   });
 
@@ -776,19 +776,11 @@ $('html').on('click','#reject',function() {
    $('#ids').val(id);
 });
 
-// $('html').on('click','#reject',function() {
-//    var id = $(this).data('id');
-//    var dataString =  'id='+ id;
-//    $.ajax({
-//             url:'{{route('company.rejecttime')}}',
-//             data: dataString,
-//             method: 'post',
-//             dataType: 'json',
-//             refresh: true,
-//             success:function(data) {
-//                swal("Done!","It was succesfully Rejected!","success");
-//             }
-//         })
-//   });
+$(document).on('change','#ticketid',function(e) {
+  var type = this.value;
+  if(type == "Administrator") {
+    $('.selectpicker').selectpicker('val', ['Administrator','Create Quote' , 'Create Ticket','Unclose Ticket','Add Customer','Edit Customer','View All Customers','See Previous Tickets','See Price of Previous Tickets','Add Service','Add Product','Create Invoice for payment','Generate PDF for invoice']);
+  }
+});
 </script>
 @endsection

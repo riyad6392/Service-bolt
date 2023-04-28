@@ -1870,7 +1870,7 @@ class SchedulerController extends Controller
         //dd($wids);
         $auth_id = auth()->user()->id;
         //->where('personnel.id','15')
-        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','personnel.color as bgcolor','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[2,3,4])->where(function($q) use($wids) {
+        $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','personnel.color as bgcolor','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[0,2,3,4])->where(function($q) use($wids) {
             foreach($wids as $k => $v) {
                 $q->orwhereRaw("FIND_IN_SET({$v}, quote.personnelid)");
             }
@@ -1954,10 +1954,26 @@ class SchedulerController extends Controller
 
             if($row->ticket_status == 2) {
                 $ticket_status = "Assigned";
-            }   
-            //echo $startdatetime; 2022-09-15 08:00
+            }
+            
+            if($row->ticket_status == 0) {
+                $ticket_status = "Quote pending";
+            }
+            $rectype = "";
+            if($row->count!=0) {
+                $rectype = "Reoccuring Ticket";
+               $data[] = array (
+                    'id'=>$ids,
+                    'title'   =>$rectype."\n".'#'.$ids." (".$ticket_status.")"."\n".$row->customername."\n".$row->servicename,
+                    'start'   => $startdatetime,
+                    'end' => $enddatetime,
+                    'resourceId'=>$row->personnelid,
+                    'backgroundColor'   => $row->bgcolor,
+                    'status'   => $ticket_status,
+                    'address'   => $row->address,
 
-            //dd($enddatetime);2022-09-15 20:00
+                );
+            } else {
                 $data[] = array (
                     'id'=>$ids,
                     'title'   =>'#'.$ids." (".$ticket_status.")"."\n".$row->customername."\n".$row->servicename,
@@ -1969,7 +1985,7 @@ class SchedulerController extends Controller
                     'address'   => $row->address,
 
                 );
-            //}
+            }
         }
         //dd($data);
       echo json_encode($data);
@@ -2080,7 +2096,25 @@ class SchedulerController extends Controller
             if($row->ticket_status == 0) {
                 $ticket_status = "Quote pending";
             }
-            
+            $rectype = "";
+            if($row->count!=0) {
+                $rectype = "Reoccuring Ticket";
+                 foreach($pids as $key =>$value) {
+                $data[] = array (
+                    'id'=>$ids,
+                    'title'   =>$rectype."\n".'#'.$ids." (".$ticket_status.")"."\n".$row->customername."\n".$row->servicename,
+                    'start'   => $startdatetime,
+                    'end' => $enddatetime,
+                    'resourceId'=>$value,
+                    'backgroundColor'   => $row->color,
+                    'status' => $ticket_status,
+                    'address' => $row->address,
+                    'extra'=>$extraicon,
+                    'rectype'=>$rectype,
+
+                );
+            }
+        } else {
             foreach($pids as $key =>$value) {
                 $data[] = array (
                     'id'=>$ids,
@@ -2092,9 +2126,13 @@ class SchedulerController extends Controller
                     'status' => $ticket_status,
                     'address' => $row->address,
                     'extra'=>$extraicon,
+                    'rectype'=>$rectype,
 
                 );
-            }
+            } 
+        }
+            
+           
         }
       //dd($data);
       echo json_encode($data);
