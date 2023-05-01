@@ -1770,6 +1770,7 @@ class SchedulerController extends Controller
           $quote->givenstartdate = $request->date;
           $quote->givenenddate = $givenenddate;
           $quote->ticket_status = 2;
+          $quote->personnelid = $request->personnelid;
           $quote->primaryname = $request->personnelid;
         }
       }
