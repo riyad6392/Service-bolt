@@ -83,7 +83,8 @@ class TicketFrequency extends Command
                        $data['price'] = $value['price'];
                        $data['tax'] = "0.00";
                        $data['description'] = $value['description'];
-                       $data['ticket_status'] = 1;
+                       $data['ticket_status'] = 2;
+                       $data['primaryname'] = $value['personnelid'];
                        $data['checklist'] = $value['checklist'];
                        $data['customernotes'] = $value['customernotes'];
                        $data['count'] = $value['count']+1;
@@ -130,7 +131,8 @@ class TicketFrequency extends Command
                            $data['price'] = $value['price'];
                            $data['tax'] = "0.00";
                            $data['description'] = $value['description'];
-                           $data['ticket_status'] = 1;
+                           $data['ticket_status'] = 2;
+                           $data['primaryname'] = $value['personnelid'];
                            $data['checklist'] = $value['checklist'];
                            $data['customernotes'] = $value['customernotes'];
                            $data['count'] = $value['count']+1;
@@ -186,10 +188,12 @@ class TicketFrequency extends Command
                        $data['price'] = $value['price'];
                        $data['tax'] = "0.00";
                        $data['description'] = $value['description'];
-                       $data['ticket_status'] = 1;
+                       $data['ticket_status'] = 2;
+                       $data['primaryname'] = $value['personnelid'];
                        $data['checklist'] = $value['checklist'];
                        $data['customernotes'] = $value['customernotes'];
                        $data['count'] = $value['count']+1;
+
                        $quotedata = Quote::create($data);
                         DB::table('quote')->where('id','=',$value['id'])
                           ->update([ 
@@ -234,7 +238,8 @@ class TicketFrequency extends Command
                        $data['price'] = $value['price'];
                        $data['tax'] = "0.00";
                        $data['description'] = $value['description'];
-                       $data['ticket_status'] = 1;
+                       $data['ticket_status'] = 2;
+                       $data['primaryname'] = $value['personnelid'];
                        $data['checklist'] = $value['checklist'];
                        $data['customernotes'] = $value['customernotes'];
                        $data['count'] = $value['count']+1;
@@ -282,7 +287,8 @@ class TicketFrequency extends Command
                        $data['price'] = $value['price'];
                        $data['tax'] = "0.00";
                        $data['description'] = $value['description'];
-                       $data['ticket_status'] = 1;
+                       $data['ticket_status'] = 2;
+                       $data['primaryname'] = $value['personnelid'];
                        $data['checklist'] = $value['checklist'];
                        $data['customernotes'] = $value['customernotes'];
                        $data['count'] = $value['count']+1;
