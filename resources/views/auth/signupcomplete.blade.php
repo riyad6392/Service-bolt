@@ -28,6 +28,9 @@
     color: #dc3545;
     margin: -15px 0px 12px;
 }
+.hide {
+    display: none!important;
+  }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
     background: transparent;
@@ -63,7 +66,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <h4 class="text-white">Sign Up</h4>
     <p class="text-white"></p>
 </div>
-<form method="POST" action="{{ route('signupcomplete1') }}">
+<form method="POST" action="{{ route('signupcomplete1') }}" role="form" class="require-validation"
+                            data-cc-on-file="false"
+                            data-stripe-publishable-key="{{ env('STRIPE_KEY') }}"
+                            id="payment-form">
     @csrf 
     <div class="row">
          
@@ -125,23 +131,25 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <div class="col-md-6">
           <div class="mb-3 position-relative">
            <i class="fa fa-credit-card" aria-hidden="true"></i>
-            <input type="text" class="form-control padding @error('cardnumber') is-invalid @enderror" name="cardnumber" id="cardnumber" value="{{ old('cardnumber') }}" required autocomplete="cardnumber" autofocus  placeholder="Credit Card Number" onkeypress="return checkDigit(event)">
+            <input type="text" class="form-control padding card-number @error('cardnumber') is-invalid @enderror " name="cardnumber" id="cardnumber" value="{{ old('cardnumber') }}" required autocomplete="cardnumber" autofocus  placeholder="Credit Card Number" onkeypress="return checkDigit(event)">
           </div>
         </div>
-        
         <div class="col-md-6">
-          <div class="mb-3 position-relative">
-            <i class="fa fa-calendar" ></i>
-            <input type="text" class="form-control padding @error('date') is-invalid @enderror" name="date" value="{{ old('date') }}" placeholder="Exp. Date" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" onkeydown="return false;">
-            <!-- <input type="text" placeholder="Exp. Date"
-          onfocus="(this.type='date')"> -->
+          <div class="position-relative">
+            <input type="text" class="form-control padding card-expiry-month @error('expmonth') is-invalid @enderror" name="expmonth" value="{{ old('expmonth') }}" required autocomplete="expmonth" autofocus  placeholder="Expiration Month (MM)" maxlength="2" style="padding:0px 0px 0px 10px;" onkeypress="return checkDigit1(event)">
            
           </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3 position-relative">
+            <input type="text" class="form-control padding card-expiry-year @error('expyear') is-invalid @enderror" name="expyear" value="{{ old('expyear') }}" required autocomplete="expyear" autofocus  placeholder="Expiration Year (YY)" maxlength="2" onkeypress="return checkDigit1(event)"  style="padding:0px 0px 0px 10px;">
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="mb-3 position-relative">
             <i class="fa fa-lock" aria-hidden="true"></i>
-            <input type="text" class="form-control padding @error('securitycode') is-invalid @enderror" name="securitycode" value="{{ old('securitycode') }}" placeholder="Security Code" maxlength="3" onkeypress="return checkDigit1(event)">
+            <input type="text" class="form-control padding card-cvc @error('securitycode') is-invalid @enderror" name="securitycode" value="{{ old('securitycode') }}" placeholder="Security Code" maxlength="3" required onkeypress="return checkDigit1(event)">
           </div>
         </div>
           <div class="mb-3 form-check" style="margin: 0 14px;">
@@ -150,6 +158,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           @error('accept_terms_conditions')
               <div class="invalid-feedback">{{ $message }}</div>
            @enderror
+          </div>
+          <div class='form-row row'>
+              <div class='col-md-12 error form-group hide'>
+                  <div class='alert-danger alert'></div>
+              </div>
           </div>
           <div class="col-md-12">
          <button type="submit" class="btn btn-primary subit" >Sign Up</button>
@@ -282,6 +295,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <script type="text/javascript">
   function cc_format(value) {
   var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
@@ -332,4 +346,70 @@ function checkPhone(event) {
 
     return true;
 }
+
+$(function() {
+  
+    /*------------------------------------------
+    --------------------------------------------
+    Stripe Payment Code
+    --------------------------------------------
+    --------------------------------------------*/
+    
+    var $form = $(".require-validation");
+     
+    $('form.require-validation').bind('submit', function(e) {
+        var $form = $(".require-validation"),
+        inputSelector = ['input[type=email]', 'input[type=password]',
+                         'input[type=text]', 'input[type=file]',
+                         'textarea'].join(', '),
+        $inputs = $form.find('.required').find(inputSelector),
+        $errorMessage = $form.find('div.error'),
+        valid = true;
+        $errorMessage.addClass('hide');
+    
+        $('.has-error').removeClass('has-error');
+        $inputs.each(function(i, el) {
+          var $input = $(el);
+          if ($input.val() === '') {
+            $input.parent().addClass('has-error');
+            $errorMessage.removeClass('hide');
+            e.preventDefault();
+          }
+        });
+     
+        if (!$form.data('cc-on-file')) {
+          e.preventDefault();
+          Stripe.setPublishableKey($form.data('stripe-publishable-key'));
+          Stripe.createToken({
+            number: $('.card-number').val(),
+            cvc: $('.card-cvc').val(),
+            exp_month: $('.card-expiry-month').val(),
+            exp_year: $('.card-expiry-year').val()
+          }, stripeResponseHandler);
+        }
+    
+    });
+      
+    /*------------------------------------------
+    --------------------------------------------
+    Stripe Response Handler
+    --------------------------------------------
+    --------------------------------------------*/
+    function stripeResponseHandler(status, response) {
+        if (response.error) {
+            $('.error')
+                .removeClass('hide')
+                .find('.alert')
+                .text(response.error.message);
+        } else {
+            /* token contains id, last4, and card type */
+            var token = response['id'];
+                 
+            $form.find('input[type=text]').empty();
+            $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+            $form.get(0).submit();
+        }
+    }
+     
+});
 </script>

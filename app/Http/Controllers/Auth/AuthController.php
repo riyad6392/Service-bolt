@@ -12,6 +12,8 @@ use Mail;
 use App\Models\Managefield;
 use Illuminate\Validation\Rule;
 use DB;
+use Session;
+use Stripe;
 
 class AuthController extends Controller
 {
@@ -73,7 +75,6 @@ class AuthController extends Controller
     }
 
     public function signupcomplete1(Request $request) {
-        
         $request->validate([
             'firstname' => 'required|string|max:255',
             'email' => [
@@ -91,9 +92,22 @@ class AuthController extends Controller
             'accept_terms_conditions' => 'required',
         ]);
 
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
+        try {    
+            $customer = Stripe\Customer::create(array(
+                "email" => $request['email'],
+                "name" => $request['firstname'],
+                "source" => $request->stripeToken
+            ));
+            
+            Stripe\Charge::create ([
+                    "amount" => $request['price']*100,
+                    "currency" => "usd",
+                    "customer" => $customer->id,
+                    "description" => "Payment from servicebolt." 
+            ]);
 
-        //$password = Str::random(8);
         $password = $request->password;
         $data1 = User::create([
             'firstname' => $request->firstname,
@@ -111,6 +125,8 @@ class AuthController extends Controller
             'openingtime' => 0,
             'closingtime' => 23,
             'paymenttype'=>"Cash,Credit Card,Check,Invoice (Pay later)",
+            'expmonth' => $request->expmonth,
+            'expyear' => $request->expyear,
         ]);
 
         $userid = $data1->id;
@@ -210,6 +226,7 @@ class AuthController extends Controller
         });
 
         $credentials = array('email'=>$request->email,'password'=>$request->password);
+
           if (Auth::attempt($credentials)) {
             if(auth()->user()->role == "company") {
                 return redirect(route('company.home'));
@@ -217,6 +234,27 @@ class AuthController extends Controller
           } else {
             return redirect('login')->with('success', 'Please check your email for the email and password you can use to login.');
           }
+      } catch (\Stripe\Exception\CardException $e) {
+            // Since it's a decline, \Stripe\Exception\CardException will be caught
+            return view('payment-error')->with('errors', $e->getError()->message);
+        } catch (\Stripe\Exception\RateLimitException $e) {
+            // Too many requests made to the API too quickly
+            return view('payment-error')->with('errors', $e->getError()->message);
+        } catch (\Stripe\Exception\InvalidRequestException $e) {
+            // Invalid parameters were supplied to Stripe's API
+            return view('payment-error')->with('errors', $e->getError()->message);
+        } catch (\Stripe\Exception\AuthenticationException $e) {
+            // Authentication with Stripe's API failed
+            // (maybe you changed API keys recently)
+            return view('payment-error')->with('errors', $e->getError()->message);
+        } catch (\Stripe\Exception\ApiConnectionException $e) {
+            // Network communication with Stripe failed
+            return view('payment-error')->with('errors', $e->getError()->message);
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            // Display a very generic error to the user, and maybe send
+            // yourself an email
+            return view('payment-error')->with('errors', $e->getError()->message);
+        }
     }
 
     public function login()

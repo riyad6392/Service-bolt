@@ -46,6 +46,8 @@ class User extends Authenticatable
         'closingtime',
         'paymenttype',
         'color',
+        'expmonth',
+        'expyear',
     ];
 
     /**
