@@ -609,7 +609,12 @@ class SchedulerController extends Controller
         $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
 
         $workerid = $request->workerid;
-        $tstatus = 2;
+        if($defaultitme->ticket_status == 0) {
+        $tstatus = 0;
+
+        } else {
+            $tstatus = 2;
+        }
         $created_at = Carbon::now();
 
         $newdate = $request->date;
@@ -881,8 +886,8 @@ class SchedulerController extends Controller
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
        // dd($output->results); 
-        $latitude  = $output->results[0]->geometry->location->lat; 
-        $longitude = $output->results[0]->geometry->location->lng;
+        $latitude  = @$output->results[0]->geometry->location->lat; 
+        $longitude = @$output->results[0]->geometry->location->lng;
 
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
@@ -1719,8 +1724,8 @@ class SchedulerController extends Controller
       $placekey = custom_userinfo($auth_id);
       $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$placekey); 
       $output = json_decode($geocodeFromAddr);
-      $latitude  = $output->results[0]->geometry->location->lat; 
-      $longitude = $output->results[0]->geometry->location->lng;
+      $latitude  = @$output->results[0]->geometry->location->lat; 
+      $longitude = @$output->results[0]->geometry->location->lng;
 
       $quote->latitude = $latitude;
       $quote->longitude = $longitude;

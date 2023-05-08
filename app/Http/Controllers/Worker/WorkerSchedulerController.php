@@ -74,7 +74,7 @@ if(count($serviceids)>0) {
       $auth_id = auth()->user()->id;
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
       $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
-      $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->join('services', 'services.id', '=', 'quote.serviceid')->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
+      $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->join('services', 'services.id', '=', 'quote.serviceid')->whereIn('quote.ticket_status',[0,2,3,4])->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
       $json = array();
       $countsdata = count($scheduleData);
       $datacount = $countsdata;
@@ -90,6 +90,23 @@ if(count($serviceids)>0) {
           $times = $i.":00";
           $html .='<li><div class="ev-calender-hours">'.strtoupper(date("h:i a", strtotime($times))).'</span></div></li>';
           foreach($scheduleData as $key => $value) {
+             $ticket_status = "";
+
+            if($value->ticket_status == 4) {
+                $ticket_status = "Picked";
+            }
+
+            if($value->ticket_status == 3) {
+                $ticket_status = "Completed";
+            }
+
+            if($value->ticket_status == 2) {
+                $ticket_status = "Assigned";
+            }
+            
+            if($value->ticket_status == 0) {
+                $ticket_status = "Quote pending";
+            }
               $ticketid = $value->id;
               if(!empty($value->parentid))
               {
@@ -121,7 +138,7 @@ if(count($serviceids)>0) {
                               <img src="'.$imagepath.'" alt=""/>
                             </div>
                             <input type="hidden" name="customerid" id="customerid" value="'.$value->customerid.'">
-                            <input type="hidden" name="quoteid" id="quoteid_'.$ticketid.'" value="'.$ticketid.'"><span style="color: #fff;">#'.$ticketid.'</span>
+                            <input type="hidden" name="quoteid" id="quoteid_'.$ticketid.'" value="'.$ticketid.'"><span style="color: #fff;">#'.$ticketid.'</span>  ('.$ticket_status.')
                             <h5 style="color: #fff;">'.$value->customername.'</h5>
                             <p>'.$value->servicename.'</p>
                             <p>Time : '.$value->giventime.' '.$givntime.'</p>

@@ -161,7 +161,7 @@ class WorkerHomeController extends Controller
 
         $worker = DB::table('users')->select('userid','workerid')->where('id',$personnelid)->first();
         //dd($worker);
-        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->join('services', 'services.id', '=', 'quote.serviceid')->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
+        $scheduleData = DB::table('quote')->select('quote.*', 'customer.image','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.personnelid',$worker->workerid)->join('services', 'services.id', '=', 'quote.serviceid')->whereIn('quote.ticket_status',[0,2,3,4])->where('quote.givendate',$fulldate)->orderBy('quote.id','ASC')->get();
         $userData = User::select('openingtime','closingtime')->where('id',$worker->userid)->first();
       //dd($userData);
       $json = array();
@@ -185,6 +185,23 @@ class WorkerHomeController extends Controller
           $html .='<ul>
     <li><div class="ev-calender-hours">'.strtoupper(date("h:i a", strtotime($times))).'</div></li>';
           foreach($scheduleData as $key => $value) {
+              $ticket_status = "";
+
+            if($value->ticket_status == 4) {
+                $ticket_status = "Picked";
+            }
+
+            if($value->ticket_status == 3) {
+                $ticket_status = "Completed";
+            }
+
+            if($value->ticket_status == 2) {
+                $ticket_status = "Assigned";
+            }
+            
+            if($value->ticket_status == 0) {
+                $ticket_status = "Quote pending";
+            }
               $f= $i+1;
               $m =   ":00";
               $settimes = date("h:i a", strtotime($times));
@@ -208,7 +225,7 @@ class WorkerHomeController extends Controller
                               <img src="'.$imagepath.'" alt=""/>
                             </div>
                             <input type="hidden" name="customerid" id="customerid" value="'.$value->customerid.'">
-                            <input type="hidden" name="quoteid" id="quoteid_'.$value->id.'" value="'.$value->id.'"><span style="color: #fff;">#'.$value->id.'</span>
+                            <input type="hidden" name="quoteid" id="quoteid_'.$value->id.'" value="'.$value->id.'"><span style="color: #fff;">#'.$value->id.'</span> ('.$ticket_status.')
                             <h5 style="color: #fff;">'.$value->customername.'</h5><a href="javascript:void(0);" class="info_link1" dataval="'.$value->id.'"></a>
                             <p>'.$value->servicename.'</p>
                             <p>Time : '.$value->giventime.' '.$givntime.'</p>
