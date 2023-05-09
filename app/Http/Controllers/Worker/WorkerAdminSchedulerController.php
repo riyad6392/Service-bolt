@@ -655,8 +655,8 @@ class WorkerAdminSchedulerController extends Controller
         $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$placekey); 
         $output = json_decode($geocodeFromAddr);
         
-        $latitude  = $output->results[0]->geometry->location->lat; 
-        $longitude = $output->results[0]->geometry->location->lng;
+        $latitude  = @$output->results[0]->geometry->location->lat; 
+        $longitude = @$output->results[0]->geometry->location->lng;
 
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
@@ -1082,8 +1082,8 @@ class WorkerAdminSchedulerController extends Controller
       $placekey = custom_userinfo($auth_id);
       $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$placekey); 
       $output = json_decode($geocodeFromAddr);
-      $latitude  = $output->results[0]->geometry->location->lat; 
-      $longitude = $output->results[0]->geometry->location->lng;
+      $latitude  = @$output->results[0]->geometry->location->lat; 
+      $longitude = @$output->results[0]->geometry->location->lng;
 
       $quote->latitude = $latitude;
       $quote->longitude = $longitude;

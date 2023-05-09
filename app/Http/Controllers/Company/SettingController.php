@@ -89,8 +89,8 @@ class SettingController extends Controller
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
         if($output->results!=NULL) {
-            $user->latitude  = $output->results[0]->geometry->location->lat; 
-            $user->longitude = $output->results[0]->geometry->location->lng;
+            $user->latitude  = @$output->results[0]->geometry->location->lat; 
+            $user->longitude = @$output->results[0]->geometry->location->lng;
         }
         else {
           $user->latitude  = 0; 

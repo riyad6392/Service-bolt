@@ -630,8 +630,8 @@ class ServicesController extends Controller
       //Get latitude and longitute from json data
       //print_r($output->results[0]->geometry->location->lat); die;
       if($output->results!=NULL) {
-        $latitude  = $output->results[0]->geometry->location->lat; 
-        $longitude = $output->results[0]->geometry->location->lng;
+        $latitude  = @$output->results[0]->geometry->location->lat; 
+        $longitude = @$output->results[0]->geometry->location->lng;
       }
       else {
         $latitude  = 0; 

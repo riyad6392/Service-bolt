@@ -17,6 +17,7 @@ use App\Models\Managefield;
 use App\Models\Tenture;
 use App\Models\User;
 use PDF;
+use App\Models\AppNotification;
 
 class TicketController extends Controller
 {
@@ -255,6 +256,33 @@ class TicketController extends Controller
           }
 
 	    $quotelastid = Quote::create($data);
+
+        if($request->personnelid!="") {
+            $appnotifiction = AppNotification::where('pid',$request->personnelid)->where('ticketid',$quotelastid->id)->get(); 
+
+            $notification = new AppNotification;
+            $notification->uid = $auth_id;
+            $notification->pid = $request->personnelid;
+            $notification->ticketid = $quotelastid->id;
+            $notification->message =  "Quote #" .$quotelastid->id. " has been assigned";
+            $notification->save();
+
+            $puser = Personnel::select('device_token')->where("id", $request->personnelid)->first();
+
+            $msgarray = array (
+                'title' => "Quote #" .$quotelastid->id. " has been assigned",
+                'msg' => "Quote #" .$quotelastid->id. " has been assigned",
+                'type' => 'quoteassign',
+            );
+
+            $fcmData = array(
+                'message' => $msgarray['msg'],
+                'body' => $msgarray['title'],
+            );
+
+            $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+        }
+
         $quoteee = Quote::where('id', $quotelastid->id)->first();
         $randomid = 100;
         $quoteee->invoiceid = $randomid.''.$quotelastid->id;
@@ -740,8 +768,8 @@ class TicketController extends Controller
         $output = json_decode($geocodeFromAddr);
         //Get latitude and longitute from json data
         if($output->results!=NULL) {
-        $latitude  = $output->results[0]->geometry->location->lat; 
-        $longitude = $output->results[0]->geometry->location->lng;
+        $latitude  = @$output->results[0]->geometry->location->lat; 
+        $longitude = @$output->results[0]->geometry->location->lng;
         }
         else {
           $latitude  = 0; 
@@ -803,6 +831,32 @@ class TicketController extends Controller
         //end new feature here
 
       $quotelastid = Quote::create($data);
+
+       if($request->personnelid!="") {
+            $appnotifiction = AppNotification::where('pid',$request->personnelid)->where('ticketid',$quotelastid->id)->get(); 
+
+            $notification = new AppNotification;
+            $notification->uid = $auth_id;
+            $notification->pid = $request->personnelid;
+            $notification->ticketid = $quotelastid->id;
+            $notification->message =  "Ticket #" .$quotelastid->id. " has been assigned";
+            $notification->save();
+
+            $puser = Personnel::select('device_token')->where("id", $request->personnelid)->first();
+
+            $msgarray = array (
+                'title' => "Ticket #" .$quotelastid->id. " has been assigned",
+                'msg' => "Ticket #" .$quotelastid->id. " has been assigned",
+                'type' => 'ticketassign',
+            );
+
+            $fcmData = array(
+                'message' => $msgarray['msg'],
+                'body' => $msgarray['title'],
+            );
+
+            $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+        }
       $quoteee = Quote::where('id', $quotelastid->id)->first();
       $randomid = 100;
       $quoteee->invoiceid = $randomid.''.$quotelastid->id;
@@ -1175,8 +1229,8 @@ class TicketController extends Controller
       $output = json_decode($geocodeFromAddr);
 
       if($output->results!=NULL) {
-        $latitude  = $output->results[0]->geometry->location->lat; 
-        $longitude = $output->results[0]->geometry->location->lng;
+        $latitude  = @$output->results[0]->geometry->location->lat; 
+        $longitude = @$output->results[0]->geometry->location->lng;
         }
         else {
           $latitude  = 0; 
@@ -1587,5 +1641,51 @@ class TicketController extends Controller
       return json_encode(['totalprice' =>$totalprice]);
       die;
   }
+
+    public function sendFirebaseNotification($puser, $msgarray, $fcmData) 
+    {
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $admin = User::select('firebase')->where('role','superadmin')->first();
+        
+        $fcmApiKey = $admin->firebase;
+
+        $fcmMsg = array(
+            'title' => $msgarray['title'],
+            'text' => $msgarray['msg'],
+            'type' => $msgarray['type'],
+            'vibrate' => 1,
+            "date_time" => date("Y-m-d H:i:s"),
+            'message' => $msgarray['msg'],
+            "badge"=>1,
+            "sound"=>"default"
+        );
+
+        $fcmFields = array(
+            'registration_ids' => [$puser->device_token],
+            'priority' => 'high',
+            'notification' => $fcmMsg,
+            'data' => $fcmMsg,
+        );
+
+        $headers = array(
+        'Authorization: key=' . $fcmApiKey,
+        'Content-Type: application/json',
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmFields));
+        $result = curl_exec($ch);
+       
+        if ($result === false) {
+
+        }
+        curl_close($ch);
+        return $result;
+    }
 
 }
