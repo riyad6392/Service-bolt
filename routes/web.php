@@ -225,6 +225,9 @@ Route::group([
 
     Route::any('/personnel/deleterequest', [PersonnelController::class, 'deleterequest'])->name('deleterequest');
 
+    Route::get('/personnel/timesheetdatafilter', [PersonnelController::class, 'timesheetdatafilter'])->name('timesheetdatafilter');
+
+
     //Inventory Create
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory');
     Route::any('/inventory/create', [InventoryController::class, 'create'])->name('inventorycreate');

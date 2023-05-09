@@ -65,8 +65,33 @@ class TicketController extends Controller
     }
 
     public function updateticket(Request $request) {
-      $quoteid = $request->quoteid;
-      $quote = Quote::where('id', $quoteid)->get()->first();
+       $auth_id = auth()->user()->id;
+       $quoteid = $request->quoteid;
+       $quote = Quote::where('id', $quoteid)->get()->first();
+
+        $message = "A ticket #" .$quoteid. " has been reopened";
+        $notification = new AppNotification;
+        $notification->uid = $auth_id;
+        $notification->pid = $quote->personnelid;
+        $notification->ticketid = $quoteid;
+        $notification->message =  $message;
+        $notification->save();
+
+        $puser = Personnel::select('device_token')->where("id", $quote->personnelid)->first();
+
+        $msgarray = array (
+            'title' => $message,
+            'msg' => $message,
+            'type' => 'ticketreopen',
+        );
+
+        $fcmData = array(
+            'message' => $msgarray['msg'],
+            'body' => $msgarray['title'],
+        );
+
+        $this->sendFirebaseNotification($puser, $msgarray, $fcmData);
+
       if($request->name!="") {
         $quote->ticket_status = "4";
         $quote->save();
@@ -75,6 +100,7 @@ class TicketController extends Controller
         $quote->ticket_status = "2";
         $quote->save();
         echo "1";
+
         if(!empty($quote->product_id)) {
           $pidarray = explode(',', $quote->product_id);
           foreach($pidarray as $key => $pid) {
@@ -84,7 +110,8 @@ class TicketController extends Controller
               $productd->save();  
             }
           }
-        } 
+        }
+
        } else {
           $quote->ticket_status = "1";
           $quote->save();

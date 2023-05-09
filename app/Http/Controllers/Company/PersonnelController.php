@@ -117,8 +117,8 @@ class PersonnelController extends Controller
               $request->session()->flash('error', 'This address not found.');
               return redirect()->back();
             }
-            $latitude  = $output->results[0]->geometry->location->lat; 
-            $longitude = $output->results[0]->geometry->location->lng;
+            $latitude  = @$output->results[0]->geometry->location->lat; 
+            $longitude = @$output->results[0]->geometry->location->lng;
 
             $data['latitude'] = $latitude;
             $data['longitude'] = $longitude;
@@ -472,8 +472,8 @@ class PersonnelController extends Controller
         $request->session()->flash('error', 'This address not found.');
         return redirect()->back();
       }
-      $latitude  = $output->results[0]->geometry->location->lat; 
-      $longitude = $output->results[0]->geometry->location->lng;
+      $latitude  = @$output->results[0]->geometry->location->lat; 
+      $longitude = @$output->results[0]->geometry->location->lng;
 
       $personnel->latitude = $latitude;
       $personnel->longitude = $longitude;
@@ -658,7 +658,7 @@ class PersonnelController extends Controller
       $html = "";
       $html .='<div class="time-sheet-box">
     <div class="row">
-      <div class="col-lg-3 mb-3">
+      <div class="col-lg-2 mb-2">
       <select class="form-select">
         <option selected>'.$pdata->personnelname.'</option>
         </select>
@@ -678,10 +678,13 @@ class PersonnelController extends Controller
       <input type="date" id="until" value="'.$currentdate.'" name="until" id="until" class="form-control">
       </div>';
       }
-      $html .='<div class="col-lg-3 mb-3">
+      $html .='<div class="col-lg-2 mb-2">
        <button class="btn btn-block button" type="submit" id="search" data-id="'.$personnelid.'"">Search</button>
-      </div>
-  </div>
+      </div>';
+      $html .='
+            <div class="col-lg-2 mb-2">
+            <button class="btn btn-block button" type="submit" id="export" data-id="'.$personnelid.'"" name="export" value="export">Export</button>
+            </div>
   <div class="table-responsive">
     <table class="table no-wrap table-new table-list align-items-center blue-a">
       <thead>
@@ -734,6 +737,31 @@ class PersonnelController extends Controller
           return json_encode(['html' =>$html,'countsdata'=>$countsdata]);
     }
 
+  public function timesheetdatafilter(Request $request) 
+  {
+      $csvData = "Name, Date,Time In,Time Out,Hours\n";
+        
+      if(isset($request->from)) {
+        $stimesheetData  = DB::table('workerhour')->where('workerid',$request->id)->whereBetween('date1', [$request->from, $request->to])->get();
+      } else {
+        $stimesheetData  = DB::table('workerhour')->where('workerid',$request->id)->whereDate('date1', DB::raw('CURDATE()'))->orderBy('id','desc')->get();
+      }
+        
+      foreach ($stimesheetData as $ticket) {
+        $pdata = DB::table('personnel')->select('personnelname')->where('id',$request->id)->first();
+        $pname = @$pdata->personnelname;
+         $csvData .= $pname . ',' . $ticket->date1 . ',' . $ticket->starttime . ',' . $ticket->endtime . ',' . $ticket->totalhours . "\n";
+      }
+
+      // Force file download
+      $headers = array(
+        'Content-Type' => 'text/csv',
+        'Content-Disposition' => 'attachment; filename="timesheetreport.csv"',
+      );
+
+      return response()->make($csvData, 200, $headers);
+    }
+
     public function timesheetupdate(Request $request)
     {
       $personnel = Personnel::where('id', $request->personnelid)->get()->first();
@@ -748,8 +776,8 @@ class PersonnelController extends Controller
       $output = json_decode($geocodeFromAddr);
       //Get latitude and longitute from json data
       //print_r($output->results[0]->geometry->location->lat); die;
-      $latitude  = $output->results[0]->geometry->location->lat; 
-      $longitude = $output->results[0]->geometry->location->lng;
+      $latitude  = @$output->results[0]->geometry->location->lat; 
+      $longitude = @$output->results[0]->geometry->location->lng;
 
       $personnel->latitude = $latitude;
       $personnel->longitude = $longitude;

@@ -622,6 +622,32 @@ $(document).on('click','#editPersonnel',function(e) {
         })
   });
 
+  $(document).on('click','#export',function(e) {
+ var id = $(this).data('id');
+ var since = $("#since").val();
+ var until = $("#until").val();
+ $.ajax({
+      url:"{{route('company.timesheetdatafilter')}}",
+      data: {
+       id: id,
+       from: since,
+       to: until,
+       _token: "{{csrf_token()}}"
+   },
+      type: 'get',
+      refresh: true,
+      success:function(data) {
+       // Trigger download
+        var blob = new Blob([data]);
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'timesheetreport.csv';
+        link.click();
+       
+      }
+    })
+ });
+
   $(document).on('click','#seetimesheet',function(e) {
    var id = $(this).data('id');
    	var today = new Date();

@@ -426,6 +426,15 @@ class WorkerTicketController extends Controller
           $ticket->ticket_status = 4;
           $ticket->save();
 
+          $ticketsub = "Ticket Re-opened by ($personeldata->personnelname)";
+          $data1['uid'] = $worker->userid;
+          $data1['pid'] = $worker->workerid;
+          $data1['ticketid'] = $request->ticketid;
+          $data1['message'] = $ticketsub;
+
+          Notification::create($data1);
+          event(new MyEvent($data1));
+
           $ticket1 = Quote::where('parentid', $request->ticketid)->get();
           if(count($ticket1)>0) {
             foreach($ticket1 as $key => $value){
