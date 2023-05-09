@@ -267,7 +267,7 @@ class UserController extends Controller
                                 \DB::raw('(CASE 
                                     WHEN quote.parentid = "0" THEN quote.id 
                                     ELSE quote.parentid 
-                                    END) AS id'))->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
+                                    END) AS id'))->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[0,2,3,4])->where('quote.givendate',$todaydate)->orderBy('quote.id','ASC')->get();
         
         $completedticketcount = DB::table('quote')->where('quote.personnelid',$worker->workerid)->where('quote.ticket_status',"3")->where('givendate', $todaydate)->count();
         
@@ -747,7 +747,7 @@ class UserController extends Controller
             \DB::raw('(CASE 
                 WHEN quote.parentid = "0" THEN quote.id 
                 ELSE quote.parentid 
-                END) AS id'))->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[2,3,4])->where('quote.givendate',$date)->orderBy('quote.id','ASC')->get();
+                END) AS id'))->join('customer', 'customer.id', '=', 'quote.customerid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->join('services', 'services.id', '=', 'quote.serviceid')->where('quote.personnelid',$worker->workerid)->whereIn('quote.ticket_status',[0,2,3,4])->where('quote.givendate',$date)->orderBy('quote.id','ASC')->get();
                 
         return response()->json(['status'=>1,'message'=>'success','scheduleData'=>$scheduleData],$this->successStatus);
     }
