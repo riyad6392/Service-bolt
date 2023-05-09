@@ -140,6 +140,7 @@
         <th>Customer</th>
         <th>Ticket Total</th>
         <th>Personnel</th>
+        <th>Payment Status</th>
         <th></th>
     </tr>
     </thead>
@@ -160,6 +161,12 @@
             $ids=$value->parentid;
 
         }
+        $pstatus1 = "";
+        if($value->payment_status==null && $value->payment_mode==null) {
+          $pstatus1 = 'Pending';           
+        } else {
+          $pstatus1 = 'Completed'; 
+        }
       @endphp
       <tr class="user-hover showSingle" target="{{$i}}" data-id="{{$value->id}}">
         <input type="hidden" name="personnelid" id="personnelid" value="{{$value->personnelid}}">
@@ -173,6 +180,7 @@
             --
           @endif
         </td>
+        <td>{{$pstatus1}}</td>
         <td>
           View
         </td>

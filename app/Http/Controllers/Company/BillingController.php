@@ -173,7 +173,7 @@ class BillingController extends Controller
          $sdate = strtotime($date);
          $datef = date('l - F d, Y',$sdate);
          DB::enableQueryLog();
-        $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.serviceid','quote.product_id','quote.price','quote.tickettotal','quote.givendate','quote.etc','quote.payment_status','quote.personnelid','quote.primaryname','quote.tax', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['3','5','4'])->whereBetween('quote.givenstartdate', [$date, $todate]);
+        $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.serviceid','quote.product_id','quote.price','quote.tickettotal','quote.givendate','quote.etc','quote.payment_status','quote.payment_mode','quote.personnelid','quote.primaryname','quote.tax', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['3','5','4'])->whereBetween('quote.givenstartdate', [$date, $todate]);
 
         if(isset($request->pid)) {
             $pid = $request->pid;
