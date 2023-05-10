@@ -779,9 +779,10 @@ class UserController extends Controller
                 $ticket1->ticket_status = 3;
                 $ticket1->save();
            }
+           $personeldata =Quote::select('quote.personnelid','personnel.personnelname')->leftjoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id', $request->ticketId)->get()->first();
 
             $ticketid ='#'.$request->ticketId;
-            $ticketsub = "Ticket $ticketid has been closed";
+            $ticketsub = "Ticket $ticketid has been closed by $personeldata->personnelname";
 
             $data1['uid'] = $quoteData->userid;
             $data1['pid'] = $quoteData->personnelid;
