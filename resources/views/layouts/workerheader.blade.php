@@ -18,9 +18,13 @@
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css'>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap5.min.css">
 <link rel='stylesheet' href="{{ asset('css/dropify.css')}}">
+<link rel='stylesheet' href="{{ asset('css/jquery.typeahead.css')}}">
 <style type="text/css">
 	.wrapper {color: #555;cursor: help;position: relative;text-align: center;-webkit-transform: translateZ(0); /* webkit flicker fix */-webkit-font-smoothing: antialiased; /* webkit text rendering fix */display: inline-block;}
-
+.pac-container {
+    display: block;
+    z-index: 9999!important;
+}
 .wrapper .tooltip {
     background: #000000;
     bottom: 100%;
@@ -494,8 +498,28 @@ $googleplacekey = $userinfo->googleplace;
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path></svg>
 </a>
        <div class="search-1">
-        <i class="fa fa-search" aria-hidden="true"></i>
-         <input type="search" name="" placeholder="search" class="form-control srch">
+        <!-- <i class="fa fa-search" aria-hidden="true"></i>
+         <input type="search" name="" placeholder="search" class="form-control srch"> -->
+         <form>
+            <div class="typeahead__container">
+                <div class="typeahead__field">
+                    <div class="typeahead__query">
+                      <i class="fa fa-search" aria-hidden="true"></i>
+                        <input class="js-typeahead form-control srch"
+                               name="q" id="q" autofocus
+                               autocomplete="off" value="{{request()->q}}" placeholder="search">
+                    </div>
+                    @if(request()->q !=null)
+                      <i class="fa fa-close removesearch" aria-hidden="true"  style="margin-top: 10px;margin-left: 10px;"></i>
+                    @endif
+                    <!-- <div class="typeahead__button">
+                        <button type="submit">
+                            <span class="typeahead__search-icon"></span>
+                        </button>
+                    </div> -->
+                </div>
+            </div>
+        </form>
        </div>
 	   </div>
        <div class="flex-new">
@@ -563,6 +587,7 @@ $googleplacekey = $userinfo->googleplace;
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css'>
 <script src="{{ asset('js/jquery-ui.js')}}"></script>
    <script src="{{ asset('js/add-field.js')}}"></script>
+<script src="{{ asset('js/jquery.typeahead.js')}}"></script>
    
 @yield('script')
 <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $googleplacekey; ?>&callback=initAutocomplete&libraries=places"
@@ -595,6 +620,24 @@ $googleplacekey = $userinfo->googleplace;
        autocomplete2.addListener('place_changed', function() {
            var place2 = autocomplete2.getPlace();
             autocomplete2.setComponentRestrictions(
+        {'country': ['us','in']});
+      });
+
+       var input5 = document.getElementById('billingaddress');
+       var autocomplete5 = new google.maps.places.Autocomplete(input5);
+         
+       autocomplete5.addListener('place_changed', function() {
+            var place5 = autocomplete5.getPlace();
+             autocomplete5.setComponentRestrictions(
+         {'country': ['us','in']});
+       });
+
+       var input6 = document.getElementById('mailingaddress');
+      var autocomplete6 = new google.maps.places.Autocomplete(input6);
+        
+      autocomplete6.addListener('place_changed', function() {
+           var place6 = autocomplete6.getPlace();
+            autocomplete6.setComponentRestrictions(
         {'country': ['us','in']});
       });
     }
@@ -760,6 +803,51 @@ function initMap() {
       },1000);
    } 
 });
+
+      $.typeahead({
+        input: '.js-typeahead',
+        minLength: 1,
+        maxItem:25,
+        order: "asc",
+        dynamic: true,
+        delay: 100,debug: false ,
+        backdrop: {
+            "background-color": "#fff"
+        },
+        template: function (query, item) {
+          //console.log(item);
+            return item.customername;
+            //return item.id+'==>'+item.customername;
+        },
+        emptyTemplate: "No Result Found",
+        display: ["id","customername","address"],
+        source: {
+            item: [ {name: "customername"}],
+            ajax: function (query) {
+                return {
+                    type: "GET",
+                    url: "{{url('personnel/home/autocomplete')}}",
+                    data: {
+                        query: query,
+                        _token:$('input[name="_token"]').val()
+                    }
+                }
+            }
+        },
+        callback: {
+            onClickAfter:function(param1, param2, node, a, item, event,query){
+                //window.location.href="customer?q="+node.customername;
+                //window.location.href="{{ route('company.customer') }}/view/"+node.id+"?q="+node.customername;
+                window.location.href="{{ url('personnel/customer/detail') }}/"+node.id;
+                return false;
+            },
+        }
+    });
+
+    $(".removesearch").click(function(e) {
+     $('#q').val('');
+     window.location.href="customer";
+    });
     </script>
 
 

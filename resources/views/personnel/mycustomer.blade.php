@@ -187,6 +187,10 @@
      <input type="text" class="form-control" placeholder="Customer Full Name" name="customername" id="customername" required="">
   
      </div>
+
+     <div class="col-md-12 mb-3">
+      <input type="text" class="form-control" placeholder="Address" name="address" id="address" required="">
+    </div>
     
     <div class="col-md-12 mb-3">
       <input type="text" class="form-control" placeholder="Billing Address" name="billingaddress" id="billingaddress">
@@ -424,6 +428,7 @@
               $('.selectpicker').selectpicker({
                 size: 3
               });
+              initAutocomplete();
             }
         })
   });

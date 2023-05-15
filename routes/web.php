@@ -397,6 +397,9 @@ Route::group([
 
     Route::any('/home/workerclockhoursout', [WorkerHomeController::class, 'workerclockhoursout'])->name('workerclockhoursout');
 
+    Route::get('home/autocomplete', [WorkerHomeController::class, 'search'])->name('autocomplete');
+    
+
     Route::get('/myticket', [WorkerTicketController::class, 'index'])->name('myticket');
     
     Route::get('/myquote', [WorkerTicketController::class, 'myquote'])->name('myquote');

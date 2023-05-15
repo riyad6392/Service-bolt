@@ -371,7 +371,21 @@ class WorkerCustomerController extends Controller
       } else {
         $data['mailingaddress'] = null;
       }
-      Customer::create($data);
+      $cinfo = Customer::create($data);
+
+      $lastId = $cinfo->id;
+
+      $cid = $lastId;
+      $data['authid'] = $auth_id;
+      $data['customerid'] = $cid;
+      $data['address'] = $request->address;
+      if(isset($request->adminck)) {
+        $data['checklistid'] = implode(',', $request->adminck);
+      } else {
+        $data['checklistid'] = null;
+      }
+      Address::create($data);
+      
       $request->session()->flash('success', 'Customer added successfully');
       return redirect()->route('worker.customer');
     }

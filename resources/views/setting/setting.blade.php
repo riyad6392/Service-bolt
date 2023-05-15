@@ -349,18 +349,28 @@ label.credit img {
     $ccX           .= $last4Digits;
   @endphp
 <label class="form-label">Credit Card Number</label>
-<input type="text" class="form-control form-control-2" placeholder="2598 xxxx xxxx 1073" value="{{$ccX}}" name="cardnumber" id="cardnumber" required="" onkeypress="return checkDigit(event)">
+<input type="text" class="form-control form-control-2" placeholder="2598 xxxx xxxx 1073" value="{{$ccX}}" name="cardnumber" id="cardnumber" required="" onkeypress="return checkDigit(event)" readonly>
 
 
 </div>
 
 <div class="col-lg-6 mb-3">
+<label class="form-label">Expiration Month (MM)</label>
+<input type="text" class="form-control form-control-2" name="expmonth" value="{{$userData->expmonth}}" autocomplete="expmonth" autofocus  placeholder="Expiration Month (MM)" maxlength="2" style="padding:0px 0px 0px 10px;" onkeypress="return checkDigit1(event)" readonly>
+</div>
+
+<div class="col-lg-6 mb-3">
+<label class="form-label">Expiration Year (YY)</label>
+<input type="text" class="form-control form-control-2" name="expyear" value="{{$userData->expyear}}" autocomplete="expyear" autofocus  placeholder="Expiration Year (YY)" maxlength="2" style="padding:0px 0px 0px 10px;" onkeypress="return checkDigit1(event)" readonly>
+</div>
+
+<div class="col-lg-6 mb-3" style="display:none">
 <label class="form-label">Expiration Date</label>
-<input type="date" class="form-control form-control-2 date1" placeholder="Exp. Date" value="{{$userData->date}}" name="date" id="date" required="" onkeydown="return false;" style="    position: relative;">
+<input type="date" class="form-control form-control-2 date1" placeholder="Exp. Date" value="{{$userData->date}}" name="date" id="date" onkeydown="return false;" style="    position: relative;">
 </div>
 <div class="col-lg-6 mb-3">
 <label class="form-label">Security Code</label>
-<input type="text" class="form-control form-control-2" placeholder="xxx" value="{{$userData->securitycode}}" name="securitycode" required="" maxlength="3" onkeypress="return checkDigit1(event)">
+<input type="text" class="form-control form-control-2" placeholder="xxx" value="{{$userData->securitycode}}" name="securitycode" required="" maxlength="3" onkeypress="return checkDigit1(event)" readonly>
 </div>
 
 </div>

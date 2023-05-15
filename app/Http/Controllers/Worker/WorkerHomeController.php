@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\AppNotification;
 use App\Models\Personnel;
 use App\Events\SendLocation;
+use App\Models\Customer;
 
 class WorkerHomeController extends Controller
 {
@@ -332,5 +333,26 @@ class WorkerHomeController extends Controller
         }
         curl_close($ch);
         return $result;
+    }
+
+    public function search(Request $request)
+    {
+
+      @$workersdata = Personnel::where('id',auth()->user()->workerid)->first();
+      @$permissonarray = explode(',',$workersdata->ticketid);
+      
+        $auth_id = auth()->user()->id;
+      $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
+
+
+      $search = $request->get('query');
+      DB::enableQueryLog();  
+      if(in_array("View All Customers", $permissonarray)) {
+         $result = Customer::select('customer.id','customer.userid','customer.customername','adds.address','adds.authid')->orWhere('customer.customername', 'LIKE', '%'. $search)->join('address as adds', 'adds.customerid', '=', 'customer.id')->where('adds.address', 'LIKE', '%'. $search)->where('customer.userid',$worker->userid)->orWhere('adds.authid',$worker->userid)->get();
+          return response()->json($result);
+      } else {
+        $result = Customer::select('customer.id','customer.userid','customer.customername','adds.address','adds.authid')->orWhere('customer.customername', 'LIKE', '%'. $search)->join('address as adds', 'adds.customerid', '=', 'customer.id')->where('adds.address', 'LIKE', '%'. $search)->where('customer.workerid',auth()->user()->workerid)->orWhere('adds.authid',$auth_id)->get();
+          return response()->json($result);
+      }
     }
 }
