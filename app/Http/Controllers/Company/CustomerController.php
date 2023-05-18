@@ -308,13 +308,22 @@ class CustomerController extends Controller
         $wclass = "active-focus";
        }
 
-      
+      if($request->type=="quote") {
+        $title = "Create New Quote";
+        $footertitle = "Add a Quote";
+      } 
+      if($request->type=="ticket") {
+        $title = "Create New Ticket";
+        $footertitle = "Add a Ticket";
+
+      }
+
       $html ='<div class="add-customer-modal">
-                <h5>Create New Ticket</h5>
-               </div>';
+                <h5>'.$title.'</h5>
+              </div>';
          
              
-      $html  .='<div class="row customer-form"><div class="col-md-12 mb-2">';
+      $html  .='<div class="row customer-form"><div class="col-md-12 mb-2"><input type="hidden" name="tickettype" id="tickettype" value="'.$request->type.'">';
 
         $html .='<input type="hidden" name="tickettotal" id="tickettotal" value=""><input type="hidden" name="customername" id="customername" value="'.$customer[0]->customername.'"><div class="input_fields_wrap">
           <div class="mb-3">
@@ -414,7 +423,7 @@ class CustomerController extends Controller
      </div> <div class="col-lg-6 mb-3">
       <button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
     </div><div class="col-lg-6 mb-3">
-      <button class="btn btn-add btn-block" type="submit" name="ticket" value="ticket">Add a Ticket</button>
+      <button class="btn btn-add btn-block" type="submit" name="ticket" value="ticket">'.$footertitle.'</button>
     </div><div class="col-lg-12">
      <button class="btn btn-dark btn-block btn-lg p-2" type="submit" name="share" value="share"><img src="images/share-2.png"  alt=""/> Share</button>
     </div></div>';
@@ -585,9 +594,19 @@ class CustomerController extends Controller
         $data['givendate'] = $date;
         $data['givenstartdate'] = $request->date;
         $data['givenenddate'] = $givenenddate;
-        $data['ticket_status'] = 2;
+        if($request->tickettype=="quote") {
+          $data['ticket_status'] = 0;
+        }
+        if($request->tickettype=="ticket") {
+          $data['ticket_status'] = 2;
+        }
        } else {
-        $data['ticket_status'] = 1;
+          if($request->tickettype=="quote") {
+            $data['ticket_status'] = 0;
+          }
+          if($request->tickettype=="ticket") {
+            $data['ticket_status'] = 1;
+          }
       }
         //end new feature here
         //dd($data);
@@ -608,16 +627,41 @@ class CustomerController extends Controller
           //$message->from($app_email,$app_name);
         });
     }
+
       if($request->share =='share') {
-          $request->session()->flash('success', 'Ticket share successfully');
+      if($request->tickettype=="quote") {
+          $request->session()->flash('success', 'Quote share successfully');
           return redirect()->route('company.quote'); 
       }
+      if($request->tickettype=="ticket") {
+        $request->session()->flash('success', 'Ticket share successfully');
+          return redirect()->route('company.quote'); 
+      }
+    }
+
+      // if($request->share =='share') {
+      //     $request->session()->flash('success', 'Ticket share successfully');
+      //     return redirect()->route('company.quote'); 
+      // }
       if($request->date!="") {
+        if($request->tickettype=="quote") {
+            $request->session()->flash('success', 'Quote scheduled successfully');
+          return redirect()->route('company.scheduler');
+        }
+        if($request->tickettype=="ticket") {
           $request->session()->flash('success', 'Ticket scheduled successfully');
           return redirect()->route('company.scheduler');
+        }
+          
       } else {
-          $request->session()->flash('success', 'Ticket created successfully');
+          if($request->tickettype=="quote") {
+           $request->session()->flash('success', 'Quote created successfully');
           return redirect()->route('company.quote');  
+          }
+          if($request->tickettype=="ticket") {
+            $request->session()->flash('success', 'Ticket created successfully');
+            return redirect()->route('company.quote');  
+          }
       }
     }
 

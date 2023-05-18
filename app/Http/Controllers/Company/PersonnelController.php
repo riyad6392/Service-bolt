@@ -589,6 +589,23 @@ class PersonnelController extends Controller
                 $givntime = "";
               }
 
+              $ticket_status = "";
+
+              if($value->ticket_status == 4) {
+                  $ticket_status = "Picked";
+              }
+
+              if($value->ticket_status == 3) {
+                  $ticket_status = "Completed";
+              }
+
+              if($value->ticket_status == 2) {
+                  $ticket_status = "Assigned";
+              }
+
+              if($value->ticket_status == 0) {
+                  $ticket_status = "Quote pending";
+              }
 
             if($giventime == $settimes) {
               $imagepath = url('/').'/uploads/customer/'.$value->image;
@@ -599,7 +616,7 @@ class PersonnelController extends Controller
                             <img src="'.$imagepath.'" alt=""/>
                           </div>
                           <input type="hidden" name="customerid" id="customerid" value="'.$value->customerid.'">
-                          <input type="hidden" name="quoteid" id="quoteid_'.$ticketid.'" value="'.$ticketid.'"><span>#'.$ticketid.'</span>
+                          <input type="hidden" name="quoteid" id="quoteid_'.$ticketid.'" value="'.$ticketid.'"><span>#'.$ticketid.'</span> ('.$ticket_status.')
                           <h5>'.$value->customername.'</h5><a href="javascript:void(0);" class="info_link1" dataval="'.$ticketid.'" style="display:none;"><i class="fa fa-trash" style="position: absolute;right: 56px;top: 30px;"></i></a>
                           <p>'.$value->servicename.'</p>
                           <p>Personnel Name - '.$value->personnelname.'</p>
@@ -926,7 +943,7 @@ class PersonnelController extends Controller
           <td>
             <span class="date-edit">'.$value->date1.'</span> <input type="text" class="form-control input-editable"/>
           </td>
-          <td>'.$value->notes.'</td>';
+          <td style="white-space-unset;">'.$value->notes.'</td>';
           if($value->status!=null) {
             $vstatus = $value->status;
         
