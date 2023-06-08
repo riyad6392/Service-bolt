@@ -16,6 +16,17 @@
     border-radius: 10px;
     height: 100%;
   }
+
+.relativeDiv{
+  position: relative;
+}
+
+.eyeIcon{
+    position: absolute;
+    left: -25px;
+    top: 11px;
+}
+
 </style>
 
    <div class="content-page">
@@ -58,28 +69,43 @@
     <div class="manage-home">
       <h3>Other Settings</h3>
     </div>
+
     <div class="col-md-12">
      <div class="mb-3">
       <label class="form-label"> Firebase Key </label>
-        <input type="text" name="firebase" id="firebase" class="form-control" placeholder="Firebase Key" value="{{$userData->firebase}}">
+       <div class="relativeDiv">
+          <input type="password" name="firebase" id="firebase" class="form-control" placeholder="Firebase Key" value="{{$userData->firebase}}">
+        <span id="toggle_pwd_fk" class="fa fa-fw fa-eye-slash field_icon eyeIcon"></span>
+       </div>
       </div>
     </div>
+
     <div class="col-md-12">
      <div class="mb-3">
       <label class="form-label"> Google Place Key </label>
-        <input type="text" name="googleplace" id="googleplace" class="form-control" placeholder="Google Place Key" value="{{$userData->googleplace}}">
+      <div class="relativeDiv">
+        <input type="password" name="googleplace" id="googleplace" class="form-control" placeholder="Google Place Key" value="{{$userData->googleplace}}">
+        <span id="toggle_pwd_pk" class="fa fa-fw fa-eye-slash field_icon eyeIcon"></span>
+      </div>
+        
       </div>
     </div>
     <div class="col-md-12">
      <div class="mb-3">
       <label class="form-label"> Stripe Public Key </label>
-        <input type="text" name="spublickey" id="spublickey" class="form-control" placeholder="Stripe Public Key" value="{{$userData->spublickey}}">
+        <div class="relativeDiv">
+          <input type="password" name="spublickey" id="spublickey" class="form-control" placeholder="Stripe Public Key" value="{{$userData->spublickey}}">
+        <span id="toggle_pwd_sk" class="fa fa-fw fa-eye-slash field_icon eyeIcon" style=""></span>
+        </div>
       </div>
     </div>
     <div class="col-md-12">
      <div class="mb-3">
       <label class="form-label"> Stripe Secret Key </label>
-        <input type="text" name="ssecretkey" id="ssecretkey" class="form-control" placeholder="Stripe Secret Key" value="{{$userData->ssecretkey}}">
+      <div class="relativeDiv">
+        <input type="password" name="ssecretkey" id="ssecretkey" class="form-control" placeholder="Stripe Secret Key" value="{{$userData->ssecretkey}}">
+        <span id="toggle_pwd_ssk" class="fa fa-fw fa-eye-slash field_icon eyeIcon"></span>
+        </div>
       </div>
     </div>
     <div class="col-md-6">
@@ -123,5 +149,29 @@
      e.preventDefault();
   }
 }
+$(document).ready(function() {
+  $("#toggle_pwd_fk").click(function () {
+    $(this).toggleClass("fa-eye fa-eye-slash");
+    var type = $(this).hasClass("fa-eye") ? "text" : "password";
+    $("#firebase").attr("type", type);
+  });
+  $("#toggle_pwd_sk").click(function () {
+    $(this).toggleClass("fa-eye fa-eye-slash");
+    var type = $(this).hasClass("fa-eye") ? "text" : "password";
+    $("#spublickey").attr("type", type);
+  });
+
+  $("#toggle_pwd_ssk").click(function () {
+    $(this).toggleClass("fa-eye fa-eye-slash");
+    var type = $(this).hasClass("fa-eye") ? "text" : "password";
+    $("#ssecretkey").attr("type", type);
+  });
+  $("#toggle_pwd_pk").click(function () {
+    $(this).toggleClass("fa-eye fa-eye-slash");
+    var type = $(this).hasClass("fa-eye") ? "text" : "password";
+    $("#googleplace").attr("type", type);
+  });
+  
+})
 </script>
      

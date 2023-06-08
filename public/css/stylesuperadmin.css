@@ -322,11 +322,12 @@ input.form-control.padding {
     margin-right: 10px;
 }
 .sidebar {
-    background: black;
+background: black;
     height: 100%;
     padding: 0px 0;
     position: fixed;
     width: 253px;
+    overflow: scroll;
     
 }
 

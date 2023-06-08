@@ -1,50 +1,58 @@
-<!-- <section>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="text-p">
-                    <p>{{$errors}}</p>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-</section>
- -->
+<link href="http://localhost/servicebolt/css/bootstrap.min.css" rel="stylesheet">
 <style type="text/css">
-    
+    .back-btn{
+            background: green;
+    color: #fff;
+    text-transform: capitalize;
+    padding: 8px 20px;
+    border-radius: 100px;
+    border: none;
+    }
 
-body{ background: #6BA1CA; }
-
-.error-500{
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: 'VT323';
-  color: #1E4B6D;
-  text-shadow: 1px 1px 1px rgba(255, 255, 255, .3);
+.errowMessage {
+    margin-top: 100px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.error-500:after{
-  content: attr(data-text);
-  display: block;
-  margin-top: calc(var(--height) / 10 + 15px);
-  font-size: 28pt;
-  text-align: center;
+.mainbox{
+    background: #fffdd7;
+    height: 100vh;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
-.back-btn {
-    display: flex;
-    margin-top: 15px;
-    /*color: #232322;*/
-    text-decoration: none;
-    align-items: center;
+.card{
+        height: 80vh;
 }
 
 </style>
+
+<section class="mainbox">
 <div class="container">
+    <div class="card">
+          <div class="card-body">
+           <div class="row">
+  
+           <div class="col-md-5" >
+            <div>
+                <button type="button btn btn-primary" class="back-btn">
+                 <a href="{{ url()->previous() }}" class="back-btn" style="color:#fff;">Try Again</a>
+                </button>
 
-    <div class="error-500" data-text="{{$errors}}"><h2><a href="{{ url()->previous() }}" class="back-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>Back</a></h2></div>
-</div>
+            <div class="errowMessage">
+              {{$errors}}
+            </div>
+            </div>
+            </div>
 
-
+          <div class="col-md-7" style="text-align:center;">
+              <img src="{{ asset('uploads/payment-error.jpg')}}" class="img-fluid">
+          </div>
+  
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+</section>

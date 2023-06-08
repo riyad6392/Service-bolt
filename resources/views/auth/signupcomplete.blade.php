@@ -109,18 +109,30 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             <input type="password" class="form-control padding @error('password') is-invalid @enderror" name="password" id="password" value="{{ old('password') }}" placeholder="Password" required="">
           </div>
         </div>
-        @error('password')
-          <div class="invalid-feedback" style="display: block;">{{ $message }}</div>
-        @enderror
+       
         <div class="col-md-6">
           <div class="mb-3 position-relative">
            <i class="fa fa-lock" aria-hidden="true"></i>
             <input type="password" class="form-control padding @error('confirmpassword') is-invalid @enderror" name="confirmpassword" id="confirmpassword" value="{{ old('confirmpassword') }}" placeholder="Confirm Password" required="">
           </div>
         </div>
-        @error('confirmpassword')
-          <div class="invalid-feedback" style="display: block;">{{ $message }}</div>
-        @enderror
+        
+        <div class="col-md-6">
+          <div class="mb-3 position-relative">
+            @error('password')
+                  <div class="invalid-feedback" style="display: block;">{{ $message }}</div>
+                @enderror
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="mb-3 position-relative">
+            @error('confirmpassword')
+                  <div class="invalid-feedback" style="display: block;">{{ $message }}</div>
+                @enderror
+          </div>
+        </div>
+
         <div class="col-md-6">
           <div class="mb-3 position-relative">
             <i class="fa fa-phone"></i>
