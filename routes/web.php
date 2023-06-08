@@ -640,9 +640,13 @@ Route::any('/checklist/updatechecklist', [WorkerAdminChecklistController::class,
 });
 
 // superadmin start
-Route::get('/superadmin', [App\Http\Controllers\Auth\AuthController::class, 'superadminlogin'])->name('superadmin');
-Route::post('/superadmin', [App\Http\Controllers\Auth\LoginController::class, 'superadminLogin'])->name('superadmin');
+Route::get('/superadmin/login', [App\Http\Controllers\Auth\AuthController::class, 'superadminlogin'])->name('superadmin');
+Route::post('/superadmin/login', [App\Http\Controllers\Auth\LoginController::class, 'superadminLogin'])->name('superadmin');
 Route::get('superadminlogout', [App\Http\Controllers\Auth\AuthController::class,'superadminlogout'])->name('superadminlogout');
+
+Route::get('/superadmin', function () {
+    return redirect('/superadmin/login');
+});
 
 Route::group([
     'prefix' => 'superadmin',
