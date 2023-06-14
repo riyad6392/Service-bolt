@@ -26,6 +26,12 @@
 
 @php
     $featureData = App\Models\ProductFeature::where('status','Active')->get();
+    $pimage = App\Models\User::where('role','superadmin')->first();
+    if($pimage->feature_img!=null) {
+        $imagepath = url('/').'/uploads/featureimg/thumbnail/'.$pimage->feature_img;
+     } else {
+      $imagepath = url('/').'/uploads/servicebolt-noimage.png';
+    }
 @endphp
 <section class="pt-100 pb-5" style="background-image: url(images/bg.png);
     background-repeat: no-repeat; background-size: contain; background-position: inherit;">
@@ -45,7 +51,7 @@
             </div>
             <div class="col-md-6">
                 <div>
-                    <img src="images/Group233.png" class="Img-fix">
+                    <img src="{{$imagepath}}" class="Img-fix">
                 </div>
             </div>
         </div>
@@ -77,28 +83,26 @@
 </ul><!-- Tab panes -->
 <div class="tab-content">
     <div class="tab-pane active" id="tabs-1" role="tabpanel">
-         <div class="slider">
-    
-    <div class="item">
-      <img src="images/r5.png" alt="">
-    </div>
-    <div class="item">
-      <img src="images/r4.png" alt="">
-    </div>
-    <div class="item">
-      <img src="images/r5.png" alt="">
-    </div>
-    <div class="item">
-      <img src="images/r4.png" alt="">
-    </div>
-    <div class="item">
-      <img src="images/video-1.png" alt="">
-      <div class="play-icon-modal">
-      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="play-circle" class="svg-inline--fa fa-play-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z"></path></svg>
-      </div>
-    </div>
-    
-  </div>
+        <div class="slider">
+            <div class="item">
+              <img src="images/r5.png" alt="">
+            </div>
+            <div class="item">
+              <img src="images/r4.png" alt="">
+            </div>
+            <div class="item">
+              <img src="images/r5.png" alt="">
+            </div>
+            <div class="item">
+              <img src="images/r4.png" alt="">
+            </div>
+            <div class="item">
+              <img src="images/video-1.png" alt="">
+              <div class="play-icon-modal">
+              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="play-circle" class="svg-inline--fa fa-play-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z"></path></svg>
+              </div>
+            </div>
+        </div>
     </div>
 
     <div class="tab-pane" id="tabs-2" role="tabpanel">

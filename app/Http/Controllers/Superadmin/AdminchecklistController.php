@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\manageChecklist;
 use DB;
+use Image;
 
 class AdminchecklistController extends Controller
 {

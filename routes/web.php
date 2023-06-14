@@ -58,6 +58,7 @@ use App\Http\Controllers\Superadmin\AdminCmspageController;
 use App\Http\Controllers\Superadmin\AdminfeatureController;
 use App\Http\Controllers\Superadmin\SuperadminChangepasswordController;
 use App\Http\Controllers\Superadmin\AdminchecklistController;
+use App\Http\Controllers\Superadmin\AdminfeatureimgController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -318,6 +319,7 @@ Route::group([
     Route::any('/checklist/leftbarchecklistdata', [ChecklistController::class, 'leftbarchecklistdata'])->name('leftbarchecklistdata');
     Route::any('/checklist/deleteChecklist', [ChecklistController::class, 'deleteChecklist'])->name('deleteChecklist');
     Route::any('/checklist/editChecklist', [ChecklistController::class, 'editChecklist'])->name('editChecklist');
+    
     Route::any('/checklist/vieweditchecklistmodal', [ChecklistController::class, 'vieweditchecklistmodal'])->name('vieweditchecklistmodal');
     Route::any('/checklist/updatechecklist', [ChecklistController::class, 'updatechecklist'])->name('updatechecklist');
 
@@ -331,6 +333,7 @@ Route::group([
     Route::any('/scheduler/getworkerweekview', [SchedulerController::class, 'getworkerweekview'])->name('getworkerweekview');
     
     Route::any('/scheduler/geteventdata', [SchedulerController::class, 'geteventdata'])->name('geteventdata');
+
 
     Route::any('/report', [ReportController::class, 'index'])->name('report');
     Route::any('/servicefilter', [ReportController::class, 'servicefilter'])->name('servicefilter');
@@ -682,6 +685,12 @@ Route::group([
 
     Route::any('/manageChecklist/updatechecklist', [AdminchecklistController::class, 'updatechecklist'])->name('updatechecklist');
     Route::any('/manageChecklist/ckdelete', [AdminchecklistController::class, 'ckdelete'])->name('ckdelete');
+
+    Route::get('/manageProductimg', [AdminfeatureimgController::class, 'index'])->name('manageProductimg');
+    Route::any('/manageProductimg/vieweditmodal', [AdminfeatureimgController::class, 'vieweditmodal'])->name('vieweditmodal');
+    Route::any('/manageProductimg/updatepimage', [AdminfeatureimgController::class, 'updatepimage'])->name('updatepimage');
+    
+
 
     Route::get('/manageCmspages', [AdminCmspageController::class, 'index'])->name('manageCmspages');
     Route::any('/cmspagestatus', [AdminCmspageController::class, 'cmspagestatus'])->name('cmspagestatus');
