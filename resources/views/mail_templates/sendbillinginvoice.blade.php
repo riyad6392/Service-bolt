@@ -38,10 +38,12 @@
         <tbody>
             <tr>
                 <td style=" width: %;">
-                    <p style="margin: 0px 0 0px 0;color: #605252; font-size: 16px; ">Date:<br>
+                    <p style="margin: 0px 0 0px 0;color: #605252; font-size: 16px; ">Invoice due date:<br>
             <span style="color: #605252;">
-                @if($date!="" || $date!=null)
-                    {{date('m-d-Y', strtotime($date))}}
+                @if($duedate!="" || $duedate!=null)
+                    {{date('m/d/Y', strtotime($duedate))}}
+                @else
+                    Due on reciept
                 @endif 
         </span>
         </p>
@@ -99,13 +101,13 @@
         @endif
     </td>
     <td style="vertical-align: top; padding: 17px">
-        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice:<br>
+       <!--  <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice:<br>
             <span style="color: black;">#{{ $invoiceId }} </span>
-        </p>
+        </p> -->
         <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Service Address:<br>
             <span style="color: black;">{{$address}} </span>
         </p>
-        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice due date:<br>
+       <!--  <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice due date:<br>
             <span style="color: black;">
                 @if($duedate!="" || $duedate!=null)
                     {{date('m-d-Y', strtotime($duedate))}}
@@ -113,7 +115,7 @@
                     Due on reciept
                 @endif    
         </span>
-        </p>
+        </p> -->
     </h4>
     </td>
  </tr>
@@ -191,6 +193,31 @@
 
       $i=0;
         @endphp
+<!-- new section start -->
+    <table class="table table-striped no-wrap table-new table-list align-items-center" style="width: 100%;background: #a4a0a0;">
+    <thead style="width: 100%; background-color: #ccc;padding: 12px;">
+        <tr>
+            <th style="padding: 15px; width: 25%;font-size: 13px;border-bottom: 1px solid #ccc;">Date</th>
+            <th style="padding: 15px; width: 25%;font-size: 13px;border-bottom: 1px solid #ccc;">Invoice #</th>
+            <th style="font-size: 15px;width: 25%;border-bottom: 1px solid #ccc;">Terms</th>
+            <th style="padding: 15px; width: 25%;font-size: 13px;border-bottom: 1px solid #ccc;">Date of Service</th>
+        </tr>
+    </thead>
+    
+    <tbody style="padding: 12px; text-align: center;">
+        <tr style="background-color:#fff;">
+            <td style="padding: 15px;width: 25%;">@if($date!="" || $date!=null)
+                    {{date('m/d/Y', strtotime($date))}}
+                @endif </td>
+            <td style="padding: 15px;width: 25%;">{{ $invoiceId }}</td>
+            <td style="padding: 15px;width: 25%;">Due on receipt</td>
+            <td style="padding: 15px;width: 25%;">@if($date!="" || $date!=null)
+                    {{date('m/d/Y', strtotime($date))}}
+                @endif </td></td>
+        </tr>
+    </tbody>
+</table>
+<!-- new section end -->
     <table class="table table-striped no-wrap table-new table-list align-items-center" style="width: 100%;background: #a4a0a0;">
     <thead style="width: 100%; background-color: #ccc;padding: 12px;">
         <tr>
