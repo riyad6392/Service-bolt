@@ -528,16 +528,16 @@
         <tbody>
         @foreach($productinfo as $key => $ticket)
          @php
-            $pinfo = App\Models\Personnel::select('personnelname')->where('id',$personnelids[$key])->first();
+            $pinfo = App\Models\Personnel::select('personnelname')->where('id',@$personnelids[$key])->first();
             $lastdate = App\Models\Quote::whereRaw('FIND_IN_SET("'.$ticket->id.'",product_id)')->where('quote.userid',$auth_id)->whereIn('ticket_status',array('2','3','4'))->where('payment_status','!=',null)->where('payment_mode','!=',null)->where('parentid', '=',"")->orderBy('id','desc')->first();
          @endphp 
         <tr>
-          <td>{{$ticket->productname}}</td>
-          <td>{{$numerickey[$key]}}</td>
-          <td>{{$lastdate->updated_at}}</td>
-          <td>{{$ticket->quantity}}</td>
-          <td>{{$ticket->price*$numerickey[$key]}}</td>
-          <td>{{$pinfo->personnelname}}</td>
+          <td>{{@$ticket->productname}}</td>
+          <td>{{@$numerickey[$key]}}</td>
+          <td>{{@$lastdate->updated_at}}</td>
+          <td>{{@$ticket->quantity}}</td>
+          <td>{{@$ticket->price*$numerickey[$key]}}</td>
+          <td>{{@$pinfo->personnelname}}</td>
       </tr>
     @endforeach
       </tbody>
