@@ -40,10 +40,14 @@
                 <td style=" width: %;">
                     <p style="margin: 0px 0 0px 0;color: #605252; font-size: 16px; ">Invoice due date:<br>
             <span style="color: #605252;">
-                @if($duedate!="" || $duedate!=null)
-                    {{date('m/d/Y', strtotime($duedate))}}
+                @if($duedate=="1969-12-31")
+                    Due on receipt
                 @else
-                    Due on reciept
+                    @if($duedate!="" || $duedate!=null)
+                        {{date('m/d/Y', strtotime($duedate))}}
+                    @else
+                        Due on receipt
+                    @endif
                 @endif 
         </span>
         </p>

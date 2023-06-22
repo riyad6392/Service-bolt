@@ -4,16 +4,6 @@
     <br>
     Service Name: {{ $servicename }}
     <br>
-    Product Name: {{ @$productname }}
-    <br>
-    Type: {{ $type }}
-    <br>
-    Frequency: {{ $frequency }}
-    <br>
-    Time: {{ @$time }} {{ @$minute }}
-    <br>
-    Price: {{ $price }}
-    <br>
     ETC: {{ $etc }}
     <br>
     Description: {{ $description }}

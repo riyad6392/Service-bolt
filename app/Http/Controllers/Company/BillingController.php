@@ -807,7 +807,7 @@ class BillingController extends Controller
                 </div>
             </div>
           </div>
-          <div class="col-md-12 mb-2">
+          <div class="col-md-12 mb-2" style="display:none;">
              <div class="input_fields_wrap">
                 <div class="mb-3">
                   <label>Invoice Notes</label>
@@ -1081,6 +1081,7 @@ class BillingController extends Controller
     public function downloadinvoiceview(Request $request)
     {
         $tdata = Quote::where('id', $request->ticketid)->get()->first();
+        
         $tdata->duedate = date('Y-m-d', strtotime($request->duedate));
         $tdata->invoicenote = $request->description;
         $tdata->save();

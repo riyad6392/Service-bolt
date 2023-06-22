@@ -215,7 +215,7 @@ i.fa.fa-plus.third {
         <a class="btn btn-save confirm" data-bs-toggle="modal" data-bs-target="#create-ctickets" id="createctickets" data-id="{{$value->customerid}}" data-address="{{$value->address}}" data-type="quote" style="width: auto;font-size: 15px;white-space: nowrap;">Create Quote</a>
 
         <a class="btn btn-save confirm" data-bs-toggle="modal" data-bs-target="#create-ctickets" id="createctickets" data-id="{{$value->customerid}}" data-address="{{$value->address}}" data-type="ticket" style="width: auto;font-size: 15px;white-space: nowrap;">Create Ticket</a>
-        <a href="{{url('company/customer/ticketviewall/')}}/{{$value->customerid}}/{{$value->address}}" class="btn btn-save confirm" style="width: auto;font-size: 15px;white-space: nowrap;">View Tickets</a>
+        <a href="{{url('company/customer/ticketviewall/')}}/{{$value->customerid}}/{{encrypt($value->address)}}" class="btn btn-save confirm" style="width: auto;font-size: 15px;white-space: nowrap;">View Tickets</a>
     	   </div>
   	   </div>
      </td>

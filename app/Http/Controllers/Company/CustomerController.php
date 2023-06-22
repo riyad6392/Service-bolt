@@ -248,13 +248,14 @@ class CustomerController extends Controller
            return redirect()->back();
         }
         $customerData = Customer::where('id',$id)->get(); 
-        $customerAddress = Address::where('customerid',$id)->get();
+        $customerAddress = Address::where('customerid',$id)->orderBy('id','desc')->get();
         $recentTicket = Quote::where('customerid',$id)->where('ticket_status','!=',"5")->orderBy('id','DESC')->get();
         $adminchecklist = DB::table('checklist')->select('serviceid','checklistname')->where('userid',$auth_id)->groupBy('serviceid')->get();
         return view('customer.view',compact('customerData','customerAddress','recentTicket','adminchecklist'));
     }
 
     public function viewall(Request $request ,$id,$address) {
+       $address = decrypt($address);
        $auth_id = auth()->user()->id;
         if(auth()->user()->role == 'company') {
             $auth_id = auth()->user()->id;
@@ -263,6 +264,7 @@ class CustomerController extends Controller
         }
         $customerData = Customer::where('id',$id)->get(); 
         $customerAddress = Address::where('customerid',$id)->get();
+        // dd($customerAddress);
         $recentTicket = Quote::where('customerid',$id)->where('address',$address)->orderBy('id','DESC')->get();
         $customeridv = $id;
         return view('customer.viewall',compact('customerData','customerAddress','recentTicket','customeridv','address'));
@@ -534,6 +536,8 @@ class CustomerController extends Controller
       $data['tax'] = $totaltax; 
        
       $formattedAddr = str_replace(' ','+',$request->address);
+      $formattedAddr = str_replace('#', '', $formattedAddr);
+
         //Send request and receive json data by address
         $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$placekey); 
         $output = json_decode($geocodeFromAddr);
@@ -541,11 +545,15 @@ class CustomerController extends Controller
         //Get latitude and longitute from json data
         //print_r($output->results[0]->geometry->location->lat); die;
         if(empty($output->results)) {
-          $request->session()->flash('error', 'This address not found.');
-          return redirect()->back();
+           $latitude  = 0;
+           $longitude = 0;
+           //$request->session()->flash('error', 'This address not found.');
+          //return redirect()->back();
+        } else {
+          $latitude  = @$output->results[0]->geometry->location->lat; 
+          $longitude = @$output->results[0]->geometry->location->lng;  
         }
-        $latitude  = @$output->results[0]->geometry->location->lat; 
-        $longitude = @$output->results[0]->geometry->location->lng;
+        
 
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
@@ -1453,7 +1461,7 @@ class CustomerController extends Controller
                 </div>
             </div>
           </div>
-          <div class="col-md-12 mb-2">
+          <div class="col-md-12 mb-2" style="display:none;">
              <div class="input_fields_wrap">
                 <div class="mb-3">
                   <label>Invoice Notes</label>
@@ -1469,7 +1477,7 @@ class CustomerController extends Controller
             <button class="btn btn-add btn-block" type="submit" name="invoicetype" value="downloadinvoice">Download</button>
           </div>
           <div class="col-lg-4 mb-3 mx-auto">
-            <a class="btn btn-add btn-block sendtocustomer" data-email="'.$cinfoemail->email.'" data-id="'.$request->id.'" data-bs-toggle="modal" data-bs-target="#send-emailinvoice" data-invoicenote='.$invoicenote.' data-duedate='.$duedate.'>Send to Customer</a>
+            <a class="btn btn-add btn-block sendtocustomer" data-email="'.$cinfoemail->email.'" data-id="'.$request->id.'" data-bs-toggle="modal" data-bs-target="#send-emailinvoice" data-invoicenote="'.$invoicenote.'" data-duedate="'.$duedate.'">Send to Customer</a>
           </div>
         </div>';
         return json_encode(['html' =>$html]);
@@ -1502,7 +1510,7 @@ class CustomerController extends Controller
                 </div>
             </div>
           </div>
-          <div class="col-md-12 mb-2">
+          <div class="col-md-12 mb-2" style="display:none;">
              <div class="input_fields_wrap">
                 <div class="mb-3">
                   <label>Invoice Notes</label>

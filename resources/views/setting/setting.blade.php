@@ -43,6 +43,10 @@ label.credit img {
     margin: 28px 0px;
     width: 160px;
 }
+
+.note-popover.popover {
+    display: none;
+}
 </style>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.css" rel="stylesheet">
 <div class="">
