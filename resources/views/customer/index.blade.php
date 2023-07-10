@@ -336,7 +336,7 @@ a.yelloIcon {
     <div class="col-md-12 mb-2">
       <div class="input_fields_wrap">
         <select class="form-control selectpicker" data-placeholder="Select Terms" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="term" id="term">
-          <option>Select Term</option> 
+          <option value="">Select Term</option> 
           @foreach($termchecklist as $key =>$value1)
             <option value="{{$value1->term_name}}">{{$value1->term_name}}</option>';
           @endforeach
