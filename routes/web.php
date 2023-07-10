@@ -21,6 +21,7 @@ use App\Http\Controllers\Company\PaymentsettingController;
 use App\Http\Controllers\Company\CommissionController;
 use App\Http\Controllers\Company\NotificationController;
 use App\Http\Controllers\Company\ComissionController;
+use App\Http\Controllers\Company\TermsController;
 
 use App\Http\Controllers\Worker\WorkerHomeController;
 use App\Http\Controllers\Worker\WorkerTicketController;
@@ -384,6 +385,17 @@ Route::group([
     Route::any('/categories/delete', [CategoriesController::class, 'deleteCategory'])->name('deleteCategory');
 
     Route::any('/categories/viewcategorymodal', [CategoriesController::class, 'viewcategorymodal'])->name('viewcategorymodal');
+    
+    // Manage terms start
+    Route::get('/terms', [TermsController::class, 'index'])->name('terms');
+
+    Route::any('/terms/create', [TermsController::class, 'create'])->name('termscreate');
+
+    Route::any('/terms/update', [TermsController::class, 'update'])->name('termsupdate');
+
+    Route::any('/terms/delete', [TermsController::class, 'deleteTerm'])->name('deleteTerm');
+
+    Route::any('/terms/viewtermmodal', [TermsController::class, 'viewtermmodal'])->name('viewtermmodal');
 });
 
 Route::group([

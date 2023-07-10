@@ -63,7 +63,8 @@ class CustomerController extends Controller
         $productData = Inventory::where('user_id',$auth_id)->orderBy('id','ASC')->get();
         $tenture = Tenture::where('status','Active')->get();   
         $adminchecklist = DB::table('checklist')->select('serviceid','checklistname')->where('userid',$auth_id)->groupBy('serviceid')->get();
-        return view('customer.index',compact('auth_id','services','customerData','products','customerAddress','fields','serviceData','productData','tenture','adminchecklist'));
+        $termchecklist = DB::table('terms')->select('id','term_name')->where('userid',$auth_id)->get();
+        return view('customer.index',compact('auth_id','services','customerData','products','customerAddress','fields','serviceData','productData','tenture','adminchecklist','termchecklist'));
     }
 
     public function create(Request $request)
@@ -111,6 +112,11 @@ class CustomerController extends Controller
             $data['mailingaddress'] = $request->mailingaddress;
           } else {
             $data['mailingaddress'] = null;
+          }
+          if(isset($request->term)) {
+            $data['term_name'] = $request->term;
+          } else {
+            $data['term_name'] = null;
           }
       $cinfo = Customer::create($data);
 
@@ -1103,6 +1109,9 @@ class CustomerController extends Controller
        $ckid  =Address::select('checklistid')->where('customerid',$request->id)->get();
 
        $adminchecklist = DB::table('checklist')->select('serviceid','checklistname')->where('userid',$auth_id)->groupBy('serviceid')->get();
+       
+       $terminfo = DB::table('terms')->select('id','term_name')->where('userid',$auth_id)->get();
+
 
        $html ='<div class="add-customer-modal">
                   <h5>Edit Customer</h5>
@@ -1131,10 +1140,23 @@ class CustomerController extends Controller
       </div>
     </div> 
 
+    <div class="col-md-12 mb-2">
+      <div class="input_fields_wrap">
+        <label>Select Term</label>
+        <select class="form-control selectpicker " data-placeholder="Select Term" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="term" id="term">';
+            foreach($terminfo as $key => $value) {
+               if(in_array($value->term_name, array($customer[0]->term_name))) {
+                $selecteterm = "selected";
+               } else {
+                $selecteterm = "";
+               }
+              $html .='<option value="'.$value->term_name.'" '.@$selecteterm.'>'.$value->term_name.'</option>';
+          }
+          $html .='</select>
+      </div>
+    </div>
 
-
-
-          <div class="col-md-12 mb-2">
+    <div class="col-md-12 mb-2">
            <label>Billing Address</label>
             <input type="text" class="form-control" placeholder="Billing Address" name="billingaddress" id="billingaddress1" value="'.$customer[0]->billingaddress.'">
           </div>
@@ -1262,6 +1284,13 @@ class CustomerController extends Controller
            $imageName = custom_fileupload1($new_file,$path,$thumbnailpath,$old_file_name);
            $customer->image = $imageName;
       }
+
+      if(isset($request->term)) {
+        $customer->term_name = $request->term;
+      } else {
+        $customer->term_name = null;
+      }
+
       $customer->save();
 
       $addresscklist = Address::where('customerid', $request->customerid)->get()->first();
@@ -1355,7 +1384,7 @@ class CustomerController extends Controller
       $tdata->invoicenote = $request->description;
       $tdata->save();
 
-      $cinfo = Customer::select('customername','phonenumber','email','companyname','billingaddress')->where('id',$tdata->customerid)->first();
+      $cinfo = Customer::select('customername','phonenumber','email','companyname','billingaddress','term_name')->where('id',$tdata->customerid)->first();
       $serviceid = explode(',', $tdata->serviceid);
 
       $servicedetails = Service::select('servicename','productid','description')->whereIn('id', $serviceid)->get();
@@ -1389,11 +1418,11 @@ class CustomerController extends Controller
       $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
       $givendate = $tdata->givendate;
       if($request->invoicetype == "viewinvoice") {
-        return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode]); 
+        return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode,'term_name'=>$cinfo->term_name]); 
       }
 
       if($request->invoicetype == "downloadinvoice") {
-        $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode]);
+        $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode,'term_name'=>$cinfo->term_name]);
           return $pdf->download($tdata->id .'_invoice.pdf');
       }
 
@@ -1415,7 +1444,7 @@ class CustomerController extends Controller
           $tdata1->save();
           //$user_exist = Customer::where('email', $cinfo->email)->first();
 
-            $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode]);
+            $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->customernotes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode,'term_name'=>$cinfo->term_name]);
 
             Mail::send('mail_templates.sendbillinginvoice1', ['body'=>$company->bodytext,'type'=>"sendinvoice"], function($message) use ($cemail,$app_name,$app_email,$pdf,$subject) {
             $message->to($cemail);

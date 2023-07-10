@@ -214,7 +214,7 @@
                     {{date('m/d/Y', strtotime($date))}}
                 @endif </td>
             <td style="padding: 15px;width: 25%;">{{ $invoiceId }}</td>
-            <td style="padding: 15px;width: 25%;">--</td>
+            <td style="padding: 15px;width: 25%;">@if(isset($term_name) || $term_name!=null){{$term_name}} @else -- @endif</td>
             <td style="padding: 15px;width: 25%;">@if($date!="" || $date!=null)
                     {{date('m/d/Y', strtotime($date))}}
                 @endif </td>

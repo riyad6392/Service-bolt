@@ -1575,7 +1575,7 @@ class TicketController extends Controller
   {
     $tdata = Quote::where('id', $request->ticketid)->get()->first();
 
-    $cinfo = Customer::select('customername','phonenumber','email','companyname','billingaddress')->where('id',$tdata->customerid)->first();
+    $cinfo = Customer::select('customername','phonenumber','email','companyname','billingaddress','term_name')->where('id',$tdata->customerid)->first();
 
     $serviceid = explode(',', $tdata->serviceid);
     //dd($serviceid);
@@ -1626,7 +1626,7 @@ class TicketController extends Controller
       //if($cinfo->email!=null) {
         $user_email = $request->to;
 
-          $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'invoicenote'=>$tdata->customernotes,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode]);
+          $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'invoicenote'=>$tdata->customernotes,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode,'term_name'=>$cinfo->term_name]);
 
           Mail::send('mail_templates.sendbillinginvoice1', ['body'=>$company->bodytext,'type'=>"sendinvoice"], function($message) use ($user_email,$app_name,$app_email,$pdf,$subject) {
           $message->to($user_email);
