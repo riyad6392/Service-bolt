@@ -183,7 +183,14 @@ tr.accepted-row:after {
               <td>
                 @if($value->status!=null)
                   @if($value->status == 'Accepted')
+                  
                   <a class="btn btn-edit accept-btn p-3 w-auto" id="accept" data-id="{{$value->ids}}" style="pointer-events:none;">{{$value->status}}</a>
+
+                  <a class="btn btn-edit reject-btn p-3 w-auto" data-bs-toggle="modal" data-bs-target="#date-list-edit" id="date_list_edit" data-id="{{$value->ids}}" data-dates="{{$value->selectdates}}" data-notes="{{$value->notes}}" data-workeid="{{$value->workerid}}">Edit</a>
+
+                  <a class="btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->ids}}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+
+                  
                   @else
                 <a class="btn btn-edit reject-btn p-3 w-auto" id="accept" data-id="{{$value->ids}}" style="pointer-events:none;">{{$value->status}}</a>
                   @endif
@@ -193,7 +200,7 @@ tr.accepted-row:after {
                   <a  class="btn btn-edit reject-btn p-3 w-auto" id="rejectpop" data-id="{{$value->ids}}">Reject</a>
                   <!-- <a class="123 btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->ids}}">Delete</a> -->
                   
-                  <a class="123 btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->ids}}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                  <a class="btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->ids}}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
 
                 @endif
               </td>
@@ -295,6 +302,21 @@ tr.accepted-row:after {
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="date-list-edit" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+      <form method="post" action="{{ route('company.updatetimeoff') }}">
+        @csrf
+        <input type="hidden" name="workerid" id="workerid" value="">
+        <div id="vieweditform"></div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @section('script')
@@ -468,6 +490,37 @@ $(function () {
         todayHighlight: true
   });
 });
+
+$('html').on('click','#date_list_edit',function() {
+   var id = $(this).data('id');
+   var dates = $(this).data('dates');
+   var notes = $(this).data('notes');
+   var workeid = $(this).data('workeid');
+   $("#workerid").val(workeid);
+   $.ajax({
+        url:"{{url('personnel/edittimeoff')}}",
+        data: {
+              id: id,
+              dates: dates,
+              notes: notes 
+
+            },
+        method: 'post',
+        dataType: 'json',
+        refresh: true,
+      success:function(data) {
+        $('#vieweditform').html(data.html);
+          $("#datepicker3").datepicker({
+            format: 'yyyy-mm-dd',
+            inline: false,
+            lang: 'en',
+            //step: 5,
+            multidate: true,
+            closeOnDateSelect: true,
+          });
+      }
+      })
+  });
 </script>
 @endsection
 

@@ -296,11 +296,23 @@
             
             if(count($paymentdata)>0) {
                 foreach($paymentdata as $key=>$value) {
-                     if($value->type == "hourly") {
-                       $hchecked = "checked";
-                       $hvalue =json_decode($value->content);
-                       $hvalue = $hvalue[0]->hourly; 
+                    if($value->paymentbase == "hourly") {
+                        $hourly = "checked";
+                         if($value->type == "hourly") {
+                           $hchecked = "checked";
+                           $hvalue =json_decode($value->content);
+                           $hvalue = @$hvalue[0]->hourly; 
+                         }
+
+                         if($value->type == "overtime") {
+                           $overtimechecked = "checked";
+                           $ovalue =json_decode($value->content);
+                           $ovalue = @$ovalue[0]->overtime; 
+                         }
+                    } else {
+                        $hourly = "";
                      }
+
                      if($value->paymentbase == "fixedsalary") {
                        $fixedchecked = "checked"; 
                        if($value->type=="monthlysalaryamount") {
@@ -337,20 +349,33 @@
         @endphp
         <div class="first-section">
           <label class="radio-div11 active container-checkbox me-4">Hourly Payments 
-            <input type="checkbox" checked="checked" name="hourly" class="custom-radio firstradio">
+            <input type="checkbox" checked="checked" name="hourly" class="custom-radio firstradio" {{@$hourly}}>
             <span class="checkmark"></span>
           </label>
           <ul class="selection-div">
+
             <li class="d-flex">
-              <label class="radio-div me-2">Amount Per Hour : 
-                <input type="radio" name="hourlypayment" class="custom-radio firstradio"  {{@$hchecked}}>
+              <label class="radio-div me-2">Amount Per Hour :
+                <input type="radio" name="hourlytype" class="custom-radio firstradio" value="hourlypaymentamount"  {{@$hchecked}}>
                 <span class="checkmark"></span>
               </label>
-               <div class="input-group mb-3">
-  <span class="input-group-text">$</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="hourlypaymentamount" value="{{@$hvalue}}">
-</div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$</span>
+                  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="hourlypaymentamount" value="{{@$hvalue}}">
+                </div>
             </li>
+
+            <li class="d-flex">
+              <label class="radio-div me-2">Overtime Rate :  
+                <input type="radio" name="hourlytype" class="custom-radio firstradio" value="overtimeypayment" {{@$overtimechecked}}>
+                <span class="checkmark"></span>
+              </label>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$</span>
+                  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" onkeypress="return (event.charCode >= 48 &amp;&amp; event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" name="overtimeypayment" value="{{@$ovalue}}">
+                </div>
+            </li>
+
           </ul>
         </div>
         <hr>

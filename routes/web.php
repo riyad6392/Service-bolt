@@ -143,6 +143,7 @@ Route::group([
      Route::any('/searchtimeoff', [TimeoffController::class, 'searchtimeoff'])->name('searchtimeoff');
 
      Route::any('/timeoffpto', [TimeoffController::class, 'timeoffpto'])->name('timeoffpto');
+      Route::any('/updatetimeoff', [TimeoffController::class, 'updatetimeoff'])->name('updatetimeoff');
      Route::any('/viewdatepopup', [TimeoffController::class, 'viewdatepopup'])->name('viewdatepopup');
      Route::get('/notification', [NotificationController::class, 'index'])->name('notification');
      Route::any('/notification/deletenotification', [NotificationController::class, 'deletenotification'])->name('deletenotification');
@@ -255,6 +256,8 @@ Route::group([
     //Quote/Ticket Listing
     Route::get('/quote', [TicketController::class, 'index'])->name('quote');
     Route::any('/quote/updateticket', [TicketController::class, 'updateticket'])->name('updateticket');
+    Route::any('/quote/updatetoquote', [TicketController::class, 'updatetoquote'])->name('updatetoquote');
+
     Route::any('/quote/quotecreate', [TicketController::class, 'quotecreate'])->name('quotecreate');
     Route::any('/quote/getaddressbyid', [TicketController::class, 'getaddressbyid'])->name('getaddressbyid');
 

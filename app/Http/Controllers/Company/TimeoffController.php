@@ -67,7 +67,7 @@ use Image;
       }
       //$stimesheetData  = DB::table('timeoff')->where('workerid',$pid)->get();
       //$stimesheetData  = DB::table('timeoff')->where('userid',$auth_id)->get();
-      $stimesheetData = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('COUNT(timeoff.id) as counttotal'),'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->groupBy('timeoff.created_at')->get();
+      $stimesheetData = Workertimeoff::select(DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('GROUP_CONCAT(timeoff.date1 ORDER BY timeoff.date1) AS selectdates'),DB::raw('COUNT(timeoff.id) as counttotal'),'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->groupBy('timeoff.created_at')->get();
 
       //$stimesheetData  = DB::table('timeoff')->select('timeoff.*','GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids',DB::raw('COUNT(timeoff.id) as counttotal'),'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->groupBy('timeoff.created_at')->get();
       //dd($stimesheetData);
@@ -212,6 +212,31 @@ use Image;
       return json_encode(['html' =>$html]);
         die;
        
+  }
+
+  public function updatetimeoff(Request $request)
+  {
+
+      $ids = explode(",",$request->ids);
+      $workerinfo = Workertimeoff::select('userid','status')->whereIn('id',$ids)->first();
+      $timeoff = Workertimeoff::whereIn('id',$ids)->where('workerid',$request->workerid)->delete(); 
+
+      $dates = explode(',',$request->datepicker3);
+      $notes = $request->notes;
+      foreach($dates as $key => $value) {
+          $old_date_timestamp = strtotime($value);
+          $fulldate = date('l - F d, Y', $old_date_timestamp);   
+          $data['workerid'] = $request->workerid;
+          $data['userid'] = $workerinfo->userid;
+          $data['date'] = $fulldate;
+          $data['date1'] = $value;
+          $data['notes'] = $notes;
+          $data['status'] = $workerinfo->status;
+          Workertimeoff::create($data);
+        }
+
+      $request->session()->flash('success', 'PTO updated successfully');
+      return redirect()->back();
   }
   
 }

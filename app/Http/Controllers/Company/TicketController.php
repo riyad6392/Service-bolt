@@ -130,6 +130,14 @@ class TicketController extends Controller
         
     }
 
+    public function updatetoquote(Request $request)
+    {
+        $quote = Quote::where('id', $request->quoteid)->first();
+        $quote->ticket_status = 0;
+        $quote->save();
+        echo "1";
+    }
+
     public function quotecreate(Request $request)
     {
         $serviceid = implode(',', $request->servicename);

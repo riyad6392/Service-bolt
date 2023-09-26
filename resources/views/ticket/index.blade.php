@@ -191,16 +191,17 @@ select#servicename {
 	  <table id="example" class="table no-wrap table-new table-list align-items-center">
 	  <thead>
 	  <tr>
-		  <th>Quote number</th>
+		  <th>Quote #</th>
+		  <th>Address</th>
 		@if($cpagedta==0)
-		  <th>Customer Name</th>
+		  <th>Customer <br>Name</th>
 		  <th>Frequency</th>
 		  <th>Price</th>
-		  <th>Service Name</th>
+		  <th>Service <br>Name</th>
 		@else
 		@foreach($pagedata as $key => $pagecolumn)
           @if($pagecolumn->columname=="customername")
-            <th>Customer Name</th>
+            <th>Customer <br>Name</th>
           @endif
           @if($pagecolumn->columname=="frequency")
             <th>Frequency</th>
@@ -209,11 +210,11 @@ select#servicename {
             <th>Price</th>
           @endif
           @if($pagecolumn->columname=="servicename")
-            <th>Service Name</th>
+            <th>Service <br>Name</th>
           @endif
         @endforeach
 		@endif
-		  <th>Create ticket</th>
+		  <th>Create <br>ticket</th>
 		  <th>Action</th>
 		<div class="heading-dot pull-right" data-bs-toggle="modal" data-bs-target="#exampleModal">    
         	<i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
@@ -234,6 +235,7 @@ select#servicename {
 
 	  <tr>
 	  <td>#{{$quote->id}}</td>
+	  <td style="white-space:break-spaces;">{{$quote->address}}</td>
 	  @if($cpagedta==0)
 	  <td>{{$quote->customername}}</td>
 	  <td>{{$quote->frequency}}</td>
@@ -369,16 +371,17 @@ select#servicename {
 	  <table id="example1" class="table no-wrap table-new table-list align-items-center">
 	  <thead>
 	  <tr>
-	  <th>Ticket number</th>
+	  <th>Ticket #</th>
+	  <th>Address</th>
 	  	@if($cpagedta1==0)
-		  <th>Customer Name</th>
+		  <th>Customer <br>Name</th>
 		  <th>Frequency</th>
 		  <th>Price</th>
-		  <th>Service Name</th>
+		  <th>Service <br>Name</th>
 		@else
 		   @foreach($pagedata1 as $key => $pagecolumn)
 	          @if($pagecolumn->columname=="customername")
-	            <th>Customer Name</th>
+	            <th>Customer <br>Name</th>
 	          @endif
 	          @if($pagecolumn->columname=="frequency")
 	            <th>Frequency</th>
@@ -387,7 +390,7 @@ select#servicename {
 	            <th>Price</th>
 	          @endif
 	          @if($pagecolumn->columname=="servicename")
-	            <th>Service Name</th>
+	            <th>Service <br>Name</th>
 	          @endif
           @endforeach
 		@endif
@@ -410,6 +413,7 @@ select#servicename {
 			@endphp
 	  <tr>
 	  <td>#{{$ticket->id}}</td>
+	  <td style="white-space:break-spaces;">{{$ticket->address}}</td>
 	  @if($cpagedta1==0)
 		  <td>{{$ticket->customername}}</td>
 		  <td>{{$ticket->frequency}}</td>
@@ -482,6 +486,7 @@ select#servicename {
 	  <td><a class="btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$ticket->id}}" data-type="ticket">Edit</a>
 	  	<a href="javascript:void(0);" class="info_link1 btn btn-edit p-2 w-auto" dataval="{{$ticket->id}}">Delete</a>
 	  	<a class=" btn btn-edit p-2 w-auto emailinvoice" data-id="{{$ticket->id}}" data-email="{{$ticket->email}}" data-bs-toggle="modal" data-bs-target="#edit-address">Share</a>
+	  	<a class="btn btn-edit p-2 w-auto repoentoquote" data-id="{{$ticket->id}}">Back to quote</a>
 	  </td>
 	  
 	  </tr>
@@ -512,10 +517,11 @@ select#servicename {
 	  <thead>
 	  <tr>
 	  <th>Ticket #</th>
-	  <th>Customer Name</th>
+	  <th>Customer <br>Name</th>
+	  <th>Address</th>
 	  <th>Price</th>
-	  <th>Service Name</th>
-	  <th>Paid Status</th>
+	  <th>Service <br>Name</th>
+	  <th>Paid <br>Status</th>
 	  <th>Action</th>
 	  
 	  </tr>
@@ -548,6 +554,7 @@ select#servicename {
 	  <tr>
 	  <td>#{{$ticket->id}}</td>
 	  <td>{{$ticket->customername}}</td>
+	  <td style="white-space:break-spaces;">{{$ticket->address}}</td>
 	  <td>{{$ticket->price}}</td>
 	  <td>@php
 		  $i=0;
@@ -2230,6 +2237,52 @@ $('#serviceform').on('submit', function(event) {
           swal({
             title: "Success!",
             text: "The ticket has been reopen Successfully!",
+            type: "success"
+        }, function() {
+            location.reload();
+        });
+          
+          
+        }
+    })
+      } 
+      else {
+        location.reload(); //swal("Cancelled", "Your customer is safe :)", "error");
+      }
+    }
+  );
+	});
+
+    $(".repoentoquote").click(function() {
+   		var id = $(this).data('id');
+   		var name="reopen";
+   		swal({
+	      title: "Are you sure?",
+	      text: "Are you sure you want to back to a quote!",
+	      type: "warning",
+	      showCancelButton: true,
+	      confirmButtonColor: "#DD6B55",
+	      confirmButtonText: "Yes, back to quote!",
+	      cancelButtonText: "No!",
+	      closeOnConfirm: false,
+	      closeOnCancel: false
+	    },
+    function (isConfirm) {
+      if (isConfirm) {
+       $.ajax({
+        url:"{{url('company/quote/updatetoquote')}}",
+        data: {
+          quoteid: id,
+          name: name 
+        },
+        method: 'post',
+        dataType: 'json',
+        refresh: true,
+        success:function(data) {
+          
+          swal({
+            title: "Success!",
+            text: "The ticket has been back to quote Successfully!",
             type: "success"
         }, function() {
             location.reload();
