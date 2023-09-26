@@ -2108,7 +2108,7 @@ class SchedulerController extends Controller
                  foreach($pids as $key =>$value) {
                 $data[] = array (
                     'id'=>$ids,
-                    'title'   =>$rectype."\n".'#'.$ids." (".$ticket_status.")"."\n".$row->customername."\n".$row->servicename."\n".$row->address,
+                    'title'   =>$rectype."\n".'#'.$ids." (".$ticket_status.")"."\n".$row->address."\n".$row->customername."\n".$row->servicename,
                     'start'   => $startdatetime,
                     'end' => $enddatetime,
                     'resourceId'=>$value,
@@ -2124,7 +2124,7 @@ class SchedulerController extends Controller
             foreach($pids as $key =>$value) {
                 $data[] = array (
                     'id'=>$ids,
-                    'title'   =>'#'.$ids." (".$ticket_status.")"."\n".$row->customername."\n".$row->servicename."\n".$row->address,
+                    'title'   =>'#'.$ids." (".$ticket_status.")"."\n".$row->address."\n".$row->customername."\n".$row->servicename,
                     'start'   => $startdatetime,
                     'end' => $enddatetime,
                     'resourceId'=>$value,
