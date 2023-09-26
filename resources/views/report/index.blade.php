@@ -1179,7 +1179,7 @@
 <script type="text/javascript">
     $('.dropify').dropify();
     $(document).ready(function() {
-      $('#example').DataTable({
+      $('#example1').DataTable({
        "order": [[ 0, "desc" ]]
       });
       $('#exampleproduct').DataTable({

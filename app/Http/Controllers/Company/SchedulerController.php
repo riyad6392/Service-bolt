@@ -2015,7 +2015,7 @@ class SchedulerController extends Controller
         $scheduleData = DB::table('quote')->select('quote.*','personnel.phone','personnel.personnelname','services.color')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->join('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',[0,2,3,4])->where('quote.personnelid','!=',null)->where('quote.givenenddate','>=',$newdate)->where('quote.givenstartdate','<=',$newdate)->orderBy('quote.id','ASC')->get();
         //dd(\DB::getQueryLog());
 
-        //($scheduleData);
+        //dd($scheduleData);
         $data=[];
         foreach ($scheduleData as $key => $row) {
             $givenenddate = $row->givenenddate;
@@ -2108,7 +2108,7 @@ class SchedulerController extends Controller
                  foreach($pids as $key =>$value) {
                 $data[] = array (
                     'id'=>$ids,
-                    'title'   =>$rectype."\n".'#'.$ids." (".$ticket_status.")"."\n".$row->customername."\n".$row->servicename,
+                    'title'   =>$rectype."\n".'#'.$ids." (".$ticket_status.")"."\n".$row->customername."\n".$row->servicename."\n".$row->address,
                     'start'   => $startdatetime,
                     'end' => $enddatetime,
                     'resourceId'=>$value,
@@ -2124,7 +2124,7 @@ class SchedulerController extends Controller
             foreach($pids as $key =>$value) {
                 $data[] = array (
                     'id'=>$ids,
-                    'title'   =>'#'.$ids." (".$ticket_status.")"."\n".$row->customername."\n".$row->servicename,
+                    'title'   =>'#'.$ids." (".$ticket_status.")"."\n".$row->customername."\n".$row->servicename."\n".$row->address,
                     'start'   => $startdatetime,
                     'end' => $enddatetime,
                     'resourceId'=>$value,
