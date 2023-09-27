@@ -74,6 +74,24 @@ use Image;
       return view('timeoff.index',compact('auth_id','personnelUser','currentdate','name','stimesheetData'));
     }
 
+    public function report(Request $request)
+    {
+      $auth_id = auth()->user()->id;
+      if(auth()->user()->role == 'company') {
+          $auth_id = auth()->user()->id;
+      } else {
+         return redirect()->back();
+      }
+     
+      $stimesheetData = Workertimeoff::select(
+        DB::raw('timeoff.*, GROUP_CONCAT(timeoff.id ORDER BY timeoff.id) AS ids'),DB::raw('SUM(CASE WHEN timeoff.status = "Accepted" THEN 1 ELSE 0 END) AS accepted'),
+        DB::raw('SUM(CASE WHEN timeoff.status = "Rejected" THEN 1 ELSE 0 END) AS rejected'),
+        DB::raw('SUM(CASE WHEN timeoff.status IS NULL THEN 1 ELSE 0 END) AS assigned'),DB::raw('COUNT(timeoff.id) as counttotal'),DB::raw('COUNT(*) as count'),'personnel.personnelname','personnel.id as pid'
+      )->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.userid',$auth_id)->groupBy('timeoff.workerid')->get();
+      
+      return view('timeoff.report',compact('auth_id','stimesheetData'));
+    }
+
     public function searchtimeoff(Request $request) {
      //dd($request->all());
      if($request->pid == 'all') {
@@ -123,6 +141,8 @@ use Image;
       $pdata = DB::table('personnel')->select('personnelname','image')->where('id',$request->phiddenid)->first();
       if(isset($pdata)) {
         $name = $pdata->personnelname;
+      } else {
+        $name = "";
       }
      
       //$stimesheetData  = DB::table('timeoff')->select('timeoff.*', 'personnel.personnelname','personnel.id as pid')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.workerid',$request->phiddenid)->get();

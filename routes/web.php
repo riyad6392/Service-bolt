@@ -140,6 +140,7 @@ Route::group([
     Route::any('/home/mapdata', [CompanyHomeController::class, 'mapdata'])->name('homemapdata');
 
     Route::get('/timeoff', [TimeoffController::class, 'index'])->name('timeoff');
+    Route::get('/timeoff/ptoreport', [TimeoffController::class, 'report'])->name('timeoffptoreport');
      Route::any('/searchtimeoff', [TimeoffController::class, 'searchtimeoff'])->name('searchtimeoff');
 
      Route::any('/timeoffpto', [TimeoffController::class, 'timeoffpto'])->name('timeoffpto');
@@ -340,6 +341,7 @@ Route::group([
 
 
     Route::any('/report', [ReportController::class, 'index'])->name('report');
+    Route::any('/report/demo', [ReportController::class, 'demo'])->name('demo');
     Route::any('/servicefilter', [ReportController::class, 'servicefilter'])->name('servicefilter');
     Route::any('/productfilter', [ReportController::class, 'productfilter'])->name('productfilter');
     Route::any('/salesfilter', [ReportController::class, 'salesfilter'])->name('salesfilter');
