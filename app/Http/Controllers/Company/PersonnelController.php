@@ -381,10 +381,40 @@ class PersonnelController extends Controller
             </label>
           </span>
         </div>
-          <div class="col-md-12">
+          <div class="col-md-12" style="margin-bottom:16px;">
           <div style="color: #999999;margin-bottom: 6px;position: relative;">Approximate Image Size : 285 * 195</div>
           <input type="file" class="dropify" name="image" id="image" data-max-file-size="2M" data-allowed-file-extensions="jpg jpeg png gif svg bmp" accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg" data-default-file="'.$userimage.'" data-show-remove="false">
-         </div></div>';
+         </div>';
+        if($personnel[0]->imglist!="") 
+        {
+            $imglist = explode(',',$personnel[0]->imglist);
+             $html .='<div class="row">';
+               
+             foreach($imglist as $key =>$image) {
+              $html .='<div class="col-md-4 mb-3"><div class="removediv"><div class="images position-relative">';
+               $url = url('/uploads/personnel/images/').'/'.$image;
+               $html .='<img src="'.$url.'" class="img-fluid" style="width:100px;height:72px;">';
+               $html .=' <div class="delete-icon "><i class="fa fa-trash icon delete"></i><input type="hidden" name="oldimage[]" value="'.$image.'"></div></div></div>';
+               $html .='</div>';
+           }
+           $html .=' </div></div>';
+       }
+         $html .='<div class="col-md-12">
+         <div class="panel-body">
+              <div class="form-group">
+                <label for="images">Select Multiple Images</label>
+                <input type="file" name="pimages[]" id="pimages" multiple class="form-control" data-allowed-file-extensions="jpg jpeg png gif svg bmp" accept="image/png, image/gif, image/jpeg, image/bmp, image/jpg, image/svg">
+              </div>
+              <div class="form-group">
+                <div id="image_preview" style="width:100%;">
+                  
+                </div>
+              </div>
+          </div>
+         </div>';
+         $html .='<div class="col-lg-12 mb-2" style="margin-top:15px;">
+            <textarea class="form-control height-180" name="description" id="description" placeholder="Notes">'.@$personnel[0]['description'].'</textarea>
+          </div>';
          
          $html .= '<div class="row mt-3"><div class="col-lg-6 mb-2">
             <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
@@ -500,6 +530,50 @@ class PersonnelController extends Controller
 
           // Image::make(public_path('uploads/personnel/').$imageName)->fit(300,300)->save(public_path('uploads/personnel/thumbnail/').$imageName);
       }
+
+      //for multiple image upload
+        $files=array();
+        if(!empty($request->file('pimages'))) {
+          foreach ($request->file('pimages') as $media) {
+              if (!empty($media)) {
+                  $datetime = date('YmdHis');
+                  $image = $media->getClientOriginalName();
+                  $imageName = $datetime . '_' . $image;
+                  $media->move(public_path('uploads/personnel/images/'), $imageName);
+                  array_push($files,$imageName);
+              }
+          }
+        }
+          $olddataarray = explode(',',$personnel->imglist);
+          //dd($olddataarray);
+          if(!empty($personnel->imglist)) {
+            $oldnewarray = array();
+            if(!empty($request->oldimage)) {
+              $oldnewarray = $request->oldimage;
+            }
+            
+           // dd($oldnewarray);
+            $result=array_diff($olddataarray,$oldnewarray);
+
+            if(count($result)>0) {
+              foreach($result as $image)
+              {   
+                $path = 'uploads/personnel/images/';
+                
+                $stories_path=$path.$image;;
+                @unlink($stories_path);
+              }
+            }
+
+            foreach($oldnewarray as $name) {
+               array_push($files,$name);
+            }
+          }
+          
+          $newimagestring = implode(',',$files);
+          $personnel->imglist = $newimagestring;
+
+          $personnel->description = $request->description;
       $personnel->save();
 
       $users = User::where('workerid', $request->personnelid)->get()->first();
@@ -1107,7 +1181,6 @@ class PersonnelController extends Controller
 
     public function paymentsettingcreate(Request $request) {
       $auth_id = auth()->user()->id;
-      
       if(auth()->user()->role == 'company') {
           $auth_id = auth()->user()->id;
       } else {
@@ -1126,13 +1199,30 @@ class PersonnelController extends Controller
       $paymentSetting2->hiredate = $request->hiredate;
 
       if($request->hourly=="on") {
-        $datajson = array();
-        if($request->hourlypaymentamount!="") {
-          $paymentSetting2->paymentbase = "hourly";
 
+        $paymentSetting2->paymentbase = "hourly";
+        
+        $requesthtype = $request->hourlytype;
+
+        
+        if($requesthtype == "hourlypaymentamount") {
+          
+          $datajson = array();
           array_push($datajson,['hourly'=>$request->hourlypaymentamount]);
           $paymentSetting2->content=json_encode($datajson);
           $paymentSetting2->type="hourly";
+          if($request->hiredate!=null) {
+             $paymentSetting2->hiredate = $request->hiredate; 
+          }
+          $paymentSetting2->save();
+        }
+
+         if($requesthtype == "overtimeypayment") {
+          $datajson = array();
+
+          array_push($datajson,['overtime'=>$request->overtimeypayment]);
+          $paymentSetting2->content=json_encode($datajson);
+          $paymentSetting2->type="overtime";
           if($request->hiredate!=null) {
              $paymentSetting2->hiredate = $request->hiredate; 
           }

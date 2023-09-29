@@ -19,6 +19,44 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .inner.show {
     height: 102px;
 }
+
+     .img-div {
+    position: relative;
+    width: 46%;
+    float:left;
+    margin-right:5px;
+    margin-left:5px;
+    margin-bottom:10px;
+    margin-top:10px;
+}
+
+.image {
+    opacity: 1;
+    display: block;
+    width: 100%;
+    max-width: auto;
+    transition: .5s ease;
+    backface-visibility: hidden;
+}
+
+.middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.img-div:hover .image {
+    opacity: 0.3;
+}
+
+.img-div:hover .middle {
+    opacity: 1;
+}
 </style>
 <div class="">
 <div class="content">
@@ -550,10 +588,49 @@ $(document).on('click','#editPersonnel',function(e) {
               $('.selectpicker').selectpicker({
                 size: 5
               });
+          var fileArr = [];
+           $("#pimages").change(function(){
+              // check if fileArr length is greater than 0
+               if (fileArr.length > 0) fileArr = [];
+             
+                $('#image_preview').html("");
+                var total_file = document.getElementById("pimages").files;
+                if (!total_file.length) return;
+                for (var i = 0; i < total_file.length; i++) {
+                  if (total_file[i].size > 1048576) {
+                    return false;
+                  } else {
+                    fileArr.push(total_file[i]);
+                    $('#image_preview').append("<div class='img-div' id='img-div"+i+"'><img src='"+URL.createObjectURL(event.target.files[i])+"' class='img-responsive image img-thumbnail' title='"+total_file[i].name+"'><div class='middle'><button id='action-icon' value='img-div"+i+"' class='btn btn-danger' role='"+total_file[i].name+"'><i class='fa fa-trash'></i></button></div></div>");
+                  }
+                }
+           });
+          
+          $('body').on('click', '#action-icon', function(evt){
+              var divName = this.value;
+              var fileName = $(this).attr('role');
+              $(`#${divName}`).remove();
+            
+              for (var i = 0; i < fileArr.length; i++) {
+                if (fileArr[i].name === fileName) {
+                  fileArr.splice(i, 1);
+                }
+              }
+            document.getElementById('pimages').files = FileListItem(fileArr);
+              evt.preventDefault();
+          });
               initAutocomplete();
             }
         })
   });
+
+  function FileListItem(file) {
+    file = [].slice.call(Array.isArray(file) ? file : arguments)
+    for (var c, b = c = file.length, d = !0; b-- && d;) d = file[b] instanceof File
+    if (!d) throw new TypeError("expected argument to FileList is File or array of File objects")
+    for (b = (new ClipboardEvent("")).clipboardData || new DataTransfer; c--;) b.items.add(file[c])
+    return b.files
+  }
 
 	
 	 function readURL(input) {
@@ -808,5 +885,9 @@ $(document).on('change','#ticketid',function(e) {
     $('.selectpicker').selectpicker('val', ['Administrator','Create Quote' , 'Create Ticket','Unclose Ticket','Add Customer','Edit Customer','View All Customers','See Previous Tickets','See Price of Previous Tickets','Add Service','Add Product','Create Invoice for payment','Generate PDF for invoice']);
   }
 });
+
+$(document).on('click',".delete" ,function() {
+    $(this).closest(".removediv" ).parent().remove();
+  });
 </script>
 @endsection
