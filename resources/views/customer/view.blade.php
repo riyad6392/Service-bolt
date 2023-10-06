@@ -212,9 +212,9 @@ i.fa.fa-plus.third {
     	     <div class="d-flex align-items-center addressdata"><a href="javascript:void(0);" class="info_link1" dataval="{{$value->id}}"><i class="fa fa-trash"></i></a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="me-3"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z" fill="currentColor"></path></svg> <a class="" data-bs-toggle="modal" data-bs-target="#edit-address" id="editaddress" data-id="{{$value->id}}" data-address="{{$value->address}}">{{wordwrap($value->address, 10, "\n")}}</a></div>
            <a class="" data-bs-toggle="modal" data-bs-target="#edit-note" id="editnote" data-id="{{$value->id}}" data-note="{{$value->notes}}"><img src="{{url('/')}}/images/writing.png" style="width:30px;"></a>
     	  <!--  <button class="btn btn-save confirm">Service Ticket</button> -->
-        <a class="btn btn-save confirm" data-bs-toggle="modal" data-bs-target="#create-ctickets" id="createctickets" data-id="{{$value->customerid}}" data-address="{{$value->address}}" data-type="quote" style="width: auto;font-size: 15px;white-space: nowrap;">Create Quote</a>
+        <a class="btn btn-save confirm" data-bs-toggle="modal" data-bs-target="#create-ctickets" id="createctickets" data-id="{{$value->customerid}}" data-addressid="{{$value->id}}" data-address="{{$value->address}}" data-type="quote" style="width: auto;font-size: 15px;white-space: nowrap;">Create Quote</a>
 
-        <a class="btn btn-save confirm" data-bs-toggle="modal" data-bs-target="#create-ctickets" id="createctickets" data-id="{{$value->customerid}}" data-address="{{$value->address}}" data-type="ticket" style="width: auto;font-size: 15px;white-space: nowrap;">Create Ticket</a>
+        <a class="btn btn-save confirm" data-bs-toggle="modal" data-bs-target="#create-ctickets" id="createctickets" data-id="{{$value->customerid}}" data-addressid="{{$value->id}}" data-address="{{$value->address}}" data-type="ticket" style="width: auto;font-size: 15px;white-space: nowrap;">Create Ticket</a>
         <a href="{{url('company/customer/ticketviewall/')}}/{{$value->customerid}}/{{encrypt($value->address)}}" class="btn btn-save confirm" style="width: auto;font-size: 15px;white-space: nowrap;">View Tickets</a>
     	   </div>
   	   </div>
@@ -692,12 +692,14 @@ $(document).on('click','#createctickets',function(e) {
   $('.selectpicker').selectpicker();
    var cid = $(this).data('id');
    var address = $(this).data('address');
+   var addressid = $(this).data('addressid');
    var type = $(this).data('type'); 
    $.ajax({
             url:'{{route('company.viewcustomerquotemodal')}}',
             data: {
               'cid':cid,
               'address':address,
+              'addressid':addressid,
               'type':type,
             },
             method: 'post',

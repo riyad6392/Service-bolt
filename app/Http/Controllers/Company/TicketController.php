@@ -68,7 +68,7 @@ class TicketController extends Controller
        $auth_id = auth()->user()->id;
        $quoteid = $request->quoteid;
        $quote = Quote::where('id', $quoteid)->get()->first();
-
+       if($quote->personnelid!="") {
         $message = "A ticket #" .$quoteid. " has been reopened";
         $notification = new AppNotification;
         $notification->uid = $auth_id;
@@ -91,7 +91,7 @@ class TicketController extends Controller
         );
 
         $this->sendFirebaseNotification($puser, $msgarray, $fcmData);
-
+    }
       if($request->name!="") {
         $quote->ticket_status = "4";
         $quote->save();
@@ -226,10 +226,12 @@ class TicketController extends Controller
 	      $data['etc'] = Carbon::createFromFormat('m/d/Y', $request->etc)->format('Y-m-d');
 	      $data['description'] = $request->description;
 	      $data['customername'] =  $customer->customername;
-        $data['address'] = $request->address;
+          $addressinfo = explode("#id#",$request->address);
+        $data['address_id'] = $addressinfo[0];
+        $data['address'] = $addressinfo[1];
         $data['tickettotal'] = $request->ticketprice;
         $data['tax'] = $totaltax;
-        $formattedAddr = str_replace(' ','+',$request->address);
+        $formattedAddr = str_replace(' ','+',$addressinfo[1]);
         //Send request and receive json data by address
         $auth_id = auth()->user()->id;
         $placekey = custom_userinfo($auth_id);
@@ -330,7 +332,7 @@ class TicketController extends Controller
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
         
-      Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$request->address, 'servicename'=>$servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
+      Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$addressinfo[1], 'servicename'=>$servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Service Quote from ' . auth()->user()->companyname);
           //$message->from($app_email,$app_name);
@@ -791,11 +793,15 @@ class TicketController extends Controller
         $data['etc'] = Carbon::createFromFormat('m/d/Y', $request->etc)->format('Y-m-d');
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
-        $data['address'] = $request->address;
+
+        $addressinfo = explode("#id#",$request->address);
+        $data['address_id'] = $addressinfo[0];
+        $data['address'] = $addressinfo[1];
+
         $data['tickettotal'] = $request->ticketprice1;
         $data['tax'] = $totaltax;
 
-        $formattedAddr = str_replace(' ','+',$request->address);
+        $formattedAddr = str_replace(' ','+',$addressinfo[1]);
         //Send request and receive json data by address
         $auth_id = auth()->user()->id;
         $placekey = custom_userinfo($auth_id);
@@ -902,7 +908,7 @@ class TicketController extends Controller
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
         
-      Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$request->address, 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'productname'=>$productname,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
+      Mail::send('mail_templates.sharequote', ['name'=>'service ticket','address'=>$addressinfo[1], 'servicename'=>$servicename,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'productname'=>$productname,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Service Ticket from '. auth()->user()->companyname);
           //$message->from($app_email,$app_name);
@@ -1024,7 +1030,7 @@ class TicketController extends Controller
                   } else {
                     $selectecpa = "";
                 }
-                 $html .='<option value="'.$value->address.'" '.@$selectecpa.'>'.$value->address.'</option>';
+                 $html .='<option value="'.$value->id.'#id#'.$value->address.'" '.@$selectecpa.'>'.$value->address.'</option>';
               }
         $html .='</select>
               </div>
@@ -1253,10 +1259,13 @@ class TicketController extends Controller
       $quote->etc = $request->etc;
       $quote->description = $request->description;
       $quote->customername =  $customer->customername;
-      $quote->address = $request->address;
+
+      $addressinfo = explode("#id#",$request->address);
+      $quote->address_id = $addressinfo[0];
+      $quote->address = $addressinfo[1];
       $quote->tickettotal = $request->tickettotaledit;
       $quote->tax = $totaltax;
-      $formattedAddr = str_replace(' ','+',$request->address);
+      $formattedAddr = str_replace(' ','+',$addressinfo[1]);
         //Send request and receive json data by address
         $auth_id = auth()->user()->id;
         $placekey = custom_userinfo($auth_id);

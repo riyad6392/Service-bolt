@@ -725,7 +725,8 @@ $(document).on('click','#editService',function(e) {
           success: function(result) {
           $('#address_service').html('<option value="">Select Customer Address</option>'); 
             $.each(result.address,function(key,value) {
-              $("#address_service").append('<option value="'+value.address+'">'+value.address+'</option>');
+              var addressid = value.id+'#id#'+value.address;
+              $("#address_service").append('<option value="'+addressid+'">'+value.address+'</option>');
             });
             $('#addressicon').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address" id="hidequote1" class=""><i class="fa fa-plus true-condition"></i></a></div>');
           }

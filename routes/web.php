@@ -341,6 +341,8 @@ Route::group([
 
 
     Route::any('/report', [ReportController::class, 'index'])->name('report');
+    Route::any('/report/view/{id}/{address}', [ReportController::class, 'view'])->name('reportview');
+
     Route::any('/servicefilter', [ReportController::class, 'servicefilter'])->name('servicefilter');
     Route::any('/productfilter', [ReportController::class, 'productfilter'])->name('productfilter');
     Route::any('/salesfilter', [ReportController::class, 'salesfilter'])->name('salesfilter');

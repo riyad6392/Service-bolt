@@ -991,7 +991,8 @@ class UserController extends Controller
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
         $data['address'] = $request->address;
-        
+        $addresinfo = DB::table('address')->select('id')->where('customerid',$request->customerid)->where('address',$request->address)->first();
+        $data['address_id'] = $addresinfo->id;
 
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address
@@ -2924,7 +2925,8 @@ class UserController extends Controller
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
         $data['address'] = $request->address;
-        
+        $addresinfo = DB::table('address')->select('id')->where('customerid',$request->customerid)->where('address',$request->address)->first();
+        $data['address_id'] = $addresinfo->id;
 
         $formattedAddr = str_replace(' ','+',$request->address);
         //Send request and receive json data by address

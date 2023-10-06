@@ -170,7 +170,9 @@ $(document).on('change','#customerid1',function(e) {
           $("#address2").empty();
           $('#address2').html('<option value="">Select Customer Address</option>'); 
           $.each(result.address,function(key,value) {
-            $("#address2").append('<option value="'+value.address+'">'+value.address+'</option>');
+var addressid = value.id+'#id#'+value.address;
+            
+            $("#address2").append('<option value="'+addressid+'">'+value.address+'</option>');
           });
 
           $('#customerid').val(customerid);

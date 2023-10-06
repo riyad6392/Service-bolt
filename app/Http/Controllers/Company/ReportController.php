@@ -10,6 +10,8 @@ use App\Models\PaymentSetting;
 use Carbon\Carbon;
 use App\Models\Service;
 use App\Models\Inventory;
+use App\Models\Customer;
+use App\Models\Address;
 use DB;
 use Image;
 use PDF;
@@ -231,8 +233,32 @@ class ReportController extends Controller
          @$untilrecur = $request->untilrecur;
 
          //dd($frequencyid);
+         $customerData = Customer::select('id','customername')->orderBy('id','desc')->get();
+         $customerreport = [];
+         $cids = "";
+        if(isset($request->customerids)) {
+            $cids =$request->customerids;
+            // $customerreport = DB::table('customer')
+            //     ->select('customer.id','address.id as address_id','address.address',DB::raw('COUNT(quote.address_id) as counttotal'),DB::raw('SUM(quote.price) as quoteprice'))
+            //     ->join('address', 'customer.id', '=', 'address.customerid')
+            //     ->join('quote', 'address.id', '=', 'quote.address_id')
+            //     //->join('quote', 'address.address', '=', 'quote.address')
+            //     ->where('address.customerid',$request->customerids)
+            //     ->whereNull('quote.payment_status')
+            //     ->whereIn('ticket_status',['3','4'])
+            //     ->groupBy('quote.address_id')
+            //     ->get();
 
-        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','frequencyid','sincerecur','untilrecur','sincesale','untilsale','sinceservice','untilservice','sinceproduct','untilproduct'));
+            $customerreport = DB::table('quote')
+                ->select('quote.id','quote.address','quote.customerid',DB::raw('COUNT(quote.address) as counttotal'),DB::raw('SUM(quote.price) as quoteprice'))
+                ->where('quote.customerid',$request->customerids)
+                ->whereNull('quote.payment_status')
+                ->whereIn('ticket_status',['3','4'])
+                ->groupBy('quote.address')
+                ->get();
+               // dd($customerreport);
+        }
+        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','frequencyid','sincerecur','untilrecur','sincesale','untilsale','sinceservice','untilservice','sinceproduct','untilproduct','customerData','customerreport','cids'));
     }
 
     public function servicefilter(Request $request) 
@@ -873,6 +899,25 @@ class ReportController extends Controller
             fclose($file);
         };
         return response()->stream($callback, 200, $headers);    
+    }
+
+    public function view(Request $request ,$id,$address) {
+       $address = decrypt($address);
+       $auth_id = auth()->user()->id;
+        if(auth()->user()->role == 'company') {
+            $auth_id = auth()->user()->id;
+        } else {
+           return redirect()->back();
+        }
+        
+         $totalInvoiceData = DB::table('quote')
+        ->select(DB::raw('givenstartdate as date'),'customer.customername','personnel.personnelname','quote.id','quote.price','quote.payment_status','quote.payment_mode','quote.invoiceid','quote.invoiced','quote.duedate','quote.invoicenote','quote.personnelid','quote.primaryname','quote.parentid','quote.address')
+        ->join('customer', 'customer.id', '=', 'quote.customerid')
+        ->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')
+        ->where('quote.address',$address)->where('quote.customerid',$id)->whereNull('quote.payment_status')
+                ->whereIn('ticket_status',['3','4'])->orderBy('quote.id','desc')->get();
+
+        return view('report.view',compact('totalInvoiceData'));
     }
     
 }

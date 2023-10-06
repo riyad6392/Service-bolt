@@ -595,7 +595,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 					$("#address2").empty();
 					$('#address2').html('<option value="">Select Customer Address</option>'); 
 					$.each(result.address,function(key,value) {
-						$("#address2").append('<option value="'+value.address+'">'+value.address+'</option>');
+					var addressid = value.id+'#id#'+value.address;
+
+						$("#address2").append('<option value="'+addressid+'">'+value.address+'</option>');
 					});
 
 					$('#addressicon').html('<div class="d-flex align-items-center justify-content-end pe-3 mt-3"><a href="#"  data-bs-toggle="modal" data-bs-target="#add-address" class=""><i class="fa fa-plus"></i></a></div>');

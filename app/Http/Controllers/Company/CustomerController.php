@@ -348,6 +348,7 @@ class CustomerController extends Controller
        <div class="input_fields_wrap">
           <div class="mb-3">
             <input type="text" class="form-control" name="address" id="address" value="'.$request->address.'" required="" readonly="">
+            <input type="hidden" class="form-control" name="addressid" id="addressid" value="'.$request->addressid.'">
           </div>
       </div>
     </div>
@@ -538,6 +539,7 @@ class CustomerController extends Controller
       $data['etc'] = $request->etc;
       $data['description'] = $request->description;
       $data['address'] = $request->address;
+      $data['address_id'] = $request->addressid;
       $data['tickettotal'] = $request->tickettotal;
       $data['tax'] = $totaltax; 
        

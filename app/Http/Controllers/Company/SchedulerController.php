@@ -875,10 +875,12 @@ class SchedulerController extends Controller
         $data['etc'] = $request->etc;
         $data['description'] = $request->description;
         $data['customername'] =  $customer->customername;
-        $data['address'] = $request->address;
+        $addressinfo = explode("#id#",$request->address);
+        $data['address_id'] = $addressinfo[0];
+        $data['address'] = $addressinfo[1];
         $data['tickettotal'] = $request->tickettotal;
         $data['tax'] = $totaltax;
-        $formattedAddr = str_replace(' ','+',$request->address);
+        $formattedAddr = str_replace(' ','+',$addressinfo[1]);
         //Send request and receive json data by address
         $auth_id = auth()->user()->id;
         $placekey = custom_userinfo($auth_id);
@@ -956,7 +958,7 @@ class SchedulerController extends Controller
       $user_exist = Customer::where('email', $email)->first();
         $name = 'service ticket';
       Mail::send('mail_templates.sharequote',
-       ['address'=>$request->address,'name'=>$name, 'servicename'=>$servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description],
+       ['address'=>$addressinfo[1],'name'=>$name, 'servicename'=>$servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description],
         function($message) use ($user_exist,$app_name,$app_email) {
           $message->to($user_exist->email)
           ->subject('Service Quote from ' .  auth()->user()->companyname);
@@ -1468,7 +1470,7 @@ class SchedulerController extends Controller
                   } else {
                     $selectecpa = "";
                 }
-                 $html .='<option value="'.$value->address.'" '.@$selectecpa.'>'.$value->address.'</option>';
+                 $html .='<option value="'.$value->id.'#id#'.$value->address.'" '.@$selectecpa.'>'.$value->address.'</option>';
               }
         $html .='</select>
               </div>
@@ -1711,14 +1713,15 @@ class SchedulerController extends Controller
       } else {
         $quote->minute = null;
       }
-      $quote->address = $request->address;
       $quote->price = $request->price;
       $quote->etc = $request->etc;
       $quote->description = $request->description;
-      $quote->address = $request->address;
+      $addressinfo = explode("#id#",$request->address);
+      $quote->address_id = $addressinfo[0];
+      $quote->address = $addressinfo[1];
       $quote->tickettotal = $request->tickettotal;
       $quote->tax = $totaltax;
-      $formattedAddr = str_replace(' ','+',$request->address);
+      $formattedAddr = str_replace(' ','+',$addressinfo[1]);
         //Send request and receive json data by address
       $auth_id = auth()->user()->id;
       $placekey = custom_userinfo($auth_id);

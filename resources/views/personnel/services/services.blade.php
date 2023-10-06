@@ -511,7 +511,9 @@ $(document).on('click','#editService',function(e) {
           success: function(result) {
           $('#address_service').html('<option value="">Select Customer Address</option>'); 
             $.each(result.address,function(key,value) {
-              $("#address_service").append('<option value="'+value.address+'">'+value.address+'</option>');
+            var addressid = value.id+'#id#'+value.address;
+
+              $("#address_service").append('<option value="'+addressid+'">'+value.address+'</option>');
             });
           }
       });

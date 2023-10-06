@@ -1892,7 +1892,8 @@ a.addnew {
           success: function(result) {
           $('#address_scheduler').html('<option value="">Select Customer Address</option>'); 
             $.each(result.address,function(key,value) {
-              $("#address_scheduler").append('<option value="'+value.address+'">'+value.address+'</option>');
+                var addressid = value.id+'#id#'+value.address;
+              $("#address_scheduler").append('<option value="'+addressid+'">'+value.address+'</option>');
             });
 
             $('#addressicon').html('<div class="mainIcon"><a href="#" class="addnew"  data-bs-toggle="modal" data-bs-target="#add-address" id="hidequote1" class=""><i class="fa fa-plus select-customer yellowIcon first"></i></a></div>');

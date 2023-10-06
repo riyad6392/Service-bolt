@@ -617,11 +617,14 @@ class ServicesController extends Controller
       $data['price'] = $request->price;
       $data['etc'] = $request->etc;
       $data['description'] = $request->description;
-      $data['address'] = $request->address;
+      $addressinfo = explode("#id#",$request->address);
+      $data['address_id'] = $addressinfo[0];
+      $data['address'] = $addressinfo[1];
+
       $data['tickettotal'] = $totlticketprice;
       $data['tax'] = $totaltax;
       
-      $formattedAddr = str_replace(' ','+',$request->address);
+      $formattedAddr = str_replace(' ','+',$addressinfo[1]);
       //Send request and receive json data by address
       $auth_id = auth()->user()->id;
       $placekey = custom_userinfo($auth_id);
@@ -651,7 +654,7 @@ class ServicesController extends Controller
       $email = $customer->email;
       $user_exist = Customer::where('email', $email)->first();
       $subjetline ='Service Quote from ' . auth()->user()->companyname;
-      Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$request->address, 'servicename'=>$servicedetails->servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email,$subjetline) {
+      Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$addressinfo[1], 'servicename'=>$servicedetails->servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email,$subjetline) {
           $message->to($user_exist->email)
           ->subject($subjetline);
           //$message->from($app_email,$app_name);

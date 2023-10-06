@@ -254,6 +254,10 @@
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="recurring-tab" data-bs-toggle="tab" data-bs-target="#recurring" type="button" role="tab" aria-controls="recurring" aria-selected="false">Reoccuring Jobs Report</button>
   </li>
+
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="customer-tab" data-bs-toggle="tab" data-bs-target="#customer" type="button" role="tab" aria-controls="customer" aria-selected="false">Customer Report</button>
+  </li>
   
 </ul>
 <div class="tab-content" id="myTabContent">
@@ -454,6 +458,54 @@
           <td>{{$ticket->givenstartdate}}</td>
           <td>{{$ticket->frequency}}</td>
           <td style="">{{$ticket->address}}</td>
+        </tr>
+      
+    @endforeach
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <!-- end -->
+
+  <!-- Customer Report start -->
+    <div class="tab-pane fade show" id="customer" role="tabpanel" aria-labelledby="customer-tab">
+    <form id="customerreport" action="{{ route('company.report') }}" method="post">
+     @csrf
+     <input type="hidden" name="customerids" id="customerids" value="">
+    <div class="row">
+        <div class="col-md-3"><div class="side-h3">Customer Report</div></div><div class="col-md-3"></div>
+        <div class="col-md-3">
+           <div class="side-h3">
+            <select class="form-control customerreport selectpicker" data-placeholder="Select customer or Type in" data-live-search="true" name="customerid" id="customerid" required="">
+                @foreach($customerData as $key => $value)
+                    <option value="{{$value->id}}" @if(@$cids ==  $value->id) selected @endif> {{$value->customername}}</option>
+                @endforeach
+            </select>
+           </div>
+        </div>
+      <div class="col-md-3">
+      <div class="side-h3">
+        <button type="submit" class="btn btn-block button searchbtncustomer" style="width:45%;height: 40px;">Run</button>
+      </div>
+    </div>
+    </div>
+    </form>
+    <div class="table-responsive">
+        <table id="examplerecurring" class="table no-wrap table-new table-list align-items-center">
+            <thead>
+                <tr>
+                  <th>Connected Addresses<th>
+                  <th>Open Invoices</th>
+                  <th>Balance (amount owed)</th>
+                </tr>
+            </thead>
+        <tbody>
+        @foreach($customerreport as $key => $value)
+        <tr>
+          <td>{{$value->address}}</td>
+          <td></td>
+          <td><a href="{{url('company/report/view/')}}/{{$value->customerid}}/{{encrypt($value->address)}}" class="user-hover" target="_blank">{{$value->counttotal}}</a></td>
+          <td>{{$value->quoteprice}}</td>
         </tr>
       
     @endforeach
@@ -1237,6 +1289,12 @@
       // $("#fhiddenid").val(pid);
       $("#recurringreport").submit();
     });
+
+    $('.customerreport').on('change', function() {
+        cid = $("#customerid").val();
+        $("#customerids").val(cid);
+        $("#customerreport").submit();
+    });
     
     $(function() {
         var lastTab = localStorage.getItem('lastTab');
@@ -1384,6 +1442,12 @@ $("#since").datepicker({
         $("#sinceproducts").val(since);
         $("#untilproducts").val(until);
         $("#comsearchproduct").submit();
+    });
+
+    $(document).on('click','.searchbtncustomer',function(e) {
+        cid = $("#customerid").val();
+        $("#customerids").val(cid);
+        $("#customerreport").submit();
     });
 </script>
 @endsection
