@@ -258,6 +258,10 @@
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="customer-tab" data-bs-toggle="tab" data-bs-target="#customer" type="button" role="tab" aria-controls="customer" aria-selected="false">Customer Report</button>
   </li>
+
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="payroll-tab" data-bs-toggle="tab" data-bs-target="#payroll" type="button" role="tab" aria-controls="payroll" aria-selected="false">Payroll Report</button>
+  </li>
   
 </ul>
 <div class="tab-content" id="myTabContent">
@@ -509,6 +513,149 @@
         </tr>
       
     @endforeach
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <!-- end -->
+
+<!-- Payroll Report start -->
+    <div class="tab-pane fade show" id="payroll" role="tabpanel" aria-labelledby="payroll-tab">
+    <form id="payroll" method="post" action="{{route('company.report') }}" class="row pe-0" id="text">
+      @csrf
+
+  <div class="row">
+    @php
+    if($from!=null) {
+        $from = $from;
+    }  else {
+        $from = "";
+    }
+    if($to!=null) {
+        $to = $to;
+    }  else {
+        $to = "";
+    }
+    @endphp
+    <div class="col-md-3" style="padding:7px;">
+     <label style="visibility:hidden;">Select Date Range</label>
+     <input type="text" id="sincepayroll" name="sincepayroll" value="{{$sincepayroll}}" class="form-control date1" placeholder="mm/dd/yyyy" readonly>
+   </div>
+   <div class="col-md-3" style="padding:7px;">
+     <label style="visibility:hidden;">To Date</label>
+     <input type="text" id="untilpayroll" name="untilpayroll" value="{{$untilpayroll}}" class="form-control date2" placeholder="mm/dd/yyyy" readonly>
+   </div>
+   
+
+ <input type="hidden" name="pyrollhiddenid" id="pyrollhiddenid" value="">
+    <div class="col-md-3">
+       <div class="side-h3">
+        <select class="form-select pyrolluser" name="selectpayrollid" id="selectpayrollid" required="">
+           <option value="All"> All </option>
+           @foreach($pdata1 as $key => $value)
+                <option value="{{$value->id}}" @if(@$selectpayrollid ==  $value->id) selected @endif> {{$value->personnelname}}</option>
+                @endforeach
+        </select>
+       </div>
+    </div>
+  
+    <div class="col-md-3">
+      <div class="side-h3">
+        <button type="submit" class="btn btn-block button" style="width:45%;height: 40px;">Run</button>
+      </div>
+    </div>
+</div>
+</form> 
+
+<form id="payrollexport" action="{{ route('company.recuringfilter') }}" method="post">
+      @csrf
+      <input type="hidden" name="pyrollhiddenid1" id="pyrollhiddenid1" value="">
+      <input type="hidden" name="sincepayroll1" id="sincepayroll1" value="">
+      <input type="hidden" name="untilpayroll1" id="untilpayroll1" value="">
+
+      <div class="row">
+      <div class="col-md-4">
+      </div><div class="col-md-3">
+      </div><div class="col-md-3">
+      </div>
+      <div class="col-md-2" style="display:none;">
+      <button class="btn add-btn-yellow py-2 px-5 searchBtnDownPyroll" type="button" name="search" value="" style="margin-top:-127px;margin-left:47px;">{{ __('Export') }}</button>
+      </div>
+      </div>
+    </form>  
+    <div class="">
+        <table id="" class="table no-wrap table-new table-list align-items-center">
+            <thead>
+                <tr>
+                  <th>Personnel <br>Name<th>
+                  <th>Date<th>
+                  <th>Time In</th>
+                  <th>Time Out</th>
+                  <th>Hours</th>
+                  <th>OT Hours</th>
+                  <th>PTO Hours</th>
+                  <th>Commission Amount</th>
+                </tr>
+            </thead>
+        <tbody>
+        @foreach($resultsPyroll as $key => $value)
+            @php
+            if($sincepayroll!=null && $untilpayroll!=null) {
+                $startDatePayroll = date('Y-m-d', strtotime($sincepayroll));
+                $endDatePayroll = date('Y-m-d', strtotime($untilpayroll));
+                $pinfo = App\Models\Workerhour::select('workerhour.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'workerhour.workerid')->where('workerhour.workerid',$value->workerid)
+                ->whereBetween('workerhour.date1', [$startDatePayroll, $endDatePayroll])->orderBy('workerhour.id','desc')->get();
+            } else {
+                $pinfo = App\Models\Workerhour::select('workerhour.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'workerhour.workerid')->where('workerhour.workerid',$value->workerid)
+                ->orderBy('workerhour.id','desc')->get();
+            }
+                $totalHours = 0;
+                $totalMinutes = 0;
+             @endphp 
+            @foreach($pinfo as $key1 => $value1)
+                @php
+                    $parts = explode(' ', $value1->totalhours);
+                    $hours = 0;
+                    $minutes = 0;
+                    foreach ($parts as $part) {
+                        if (strpos($part, 'h') !== false) {
+                            $hours += (int) trim($part, 'h');
+                        } elseif (strpos($part, 'm') !== false) {
+                            $minutes += (int) trim($part, 'm');
+                        }
+                    }
+
+                    $totalHours += $hours;
+                    $totalMinutes += $minutes;
+                @endphp
+                <tr>
+                  <td>{{$value1->personnelname}}</td>
+                  <td></td>
+                  <td>{{$value1->date1}}</td>
+                  <td></td>
+                  <td>{{$value1->starttime}}</td>
+                  <td>{{$value1->endtime}}</td>
+                  <td>{{$value1->totalhours}}</td>
+                  <td>0h</td>
+                  <td>0h</td>
+                  <td>0</td>
+                </tr>
+            @endforeach
+             @php
+                // Convert any extra minutes to hours
+                $extraHours = floor($totalMinutes / 60);
+                $totalHours += $extraHours;
+                $totalMinutes %= 60;
+                @endphp
+             <tr>
+                <td></td>
+                <td></td>
+                <td><strong>Total</strong></td>
+                <td></td><td></td><td></td>
+                <td>{{ $totalHours }}h {{$totalMinutes}} m</td>
+            </tr>
+           
+        @endforeach
       </tbody>
     </table>
     </div>
@@ -1448,6 +1595,34 @@ $("#since").datepicker({
         cid = $("#customerid").val();
         $("#customerids").val(cid);
         $("#customerreport").submit();
+    });
+
+
+    $('.pyrolluser').on('change', function() {
+      var pid = this.value;
+      $("#pyrollhiddenid").val(pid);
+      this.form.submit();
+    });
+
+    $("#sincepayroll").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true
+      });
+
+      $("#untilpayroll").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true
+      });
+
+    $(document).on('click','.searchBtnDownPyroll',function(e) {
+        since = $("#sincepayroll").val();
+        until = $("#untilpayroll").val();
+        $("#sincepayroll1").val(since);
+        $("#untilpayroll1").val(until);
+
+        pid = $("#selectpayrollid").val();
+        $("#pyrollhiddenid1").val(pid);
+        $("#payrollexport").submit();
     });
 </script>
 @endsection

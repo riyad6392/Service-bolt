@@ -350,6 +350,8 @@ Route::group([
     Route::any('/commissiondownload', [ReportController::class, 'commissiondownload'])->name('commissiondownload');
     Route::any('/commissionreport', [ReportController::class, 'commissionreport'])->name('commissionreport');
 
+    Route::any('/payrollfilter', [ReportController::class, 'payrollfilter'])->name('payrollfilter');
+
     Route::get('/managecommission', [CommissionController::class, 'index'])->name('managecommission');
     Route::any('/personnel/managecommissioncreate', [CommissionController::class, 'commissioncreate'])->name('commissioncreate');
 

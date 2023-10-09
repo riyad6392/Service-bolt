@@ -12,6 +12,7 @@ use App\Models\Service;
 use App\Models\Inventory;
 use App\Models\Customer;
 use App\Models\Address;
+use App\Models\Workerhour;
 use DB;
 use Image;
 use PDF;
@@ -232,23 +233,12 @@ class ReportController extends Controller
          @$sincerecur = $request->sincerecur;
          @$untilrecur = $request->untilrecur;
 
-         //dd($frequencyid);
-         $customerData = Customer::select('id','customername')->orderBy('id','desc')->get();
+         $customerData = Customer::select('id','customername')->where('userid',$auth_id)->orderBy('id','desc')->get();
          $customerreport = [];
          $cids = "";
         if(isset($request->customerids)) {
             $cids =$request->customerids;
-            // $customerreport = DB::table('customer')
-            //     ->select('customer.id','address.id as address_id','address.address',DB::raw('COUNT(quote.address_id) as counttotal'),DB::raw('SUM(quote.price) as quoteprice'))
-            //     ->join('address', 'customer.id', '=', 'address.customerid')
-            //     ->join('quote', 'address.id', '=', 'quote.address_id')
-            //     //->join('quote', 'address.address', '=', 'quote.address')
-            //     ->where('address.customerid',$request->customerids)
-            //     ->whereNull('quote.payment_status')
-            //     ->whereIn('ticket_status',['3','4'])
-            //     ->groupBy('quote.address_id')
-            //     ->get();
-
+            
             $customerreport = DB::table('quote')
                 ->select('quote.id','quote.address','quote.customerid',DB::raw('COUNT(quote.address) as counttotal'),DB::raw('SUM(quote.price) as quoteprice'))
                 ->where('quote.customerid',$request->customerids)
@@ -256,9 +246,53 @@ class ReportController extends Controller
                 ->whereIn('ticket_status',['3','4'])
                 ->groupBy('quote.address')
                 ->get();
-               // dd($customerreport);
         }
-        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','frequencyid','sincerecur','untilrecur','sincesale','untilsale','sinceservice','untilservice','sinceproduct','untilproduct','customerData','customerreport','cids'));
+
+        $sincepayroll = $request->sincepayroll;
+        $untilpayroll = $request->untilpayroll;
+
+        if(empty($request->all()) || $request->selectpayrollid == 'All') {
+             $selectpayrollid = []; 
+            if($request->sincepayroll!=null && $request->untilpayroll!=null) {
+                    $startDatePayroll = date('Y-m-d', strtotime($request->sincepayroll));
+                    $endDatePayroll = date('Y-m-d', strtotime($request->untilpayroll));
+                $resultsPyroll = DB::table('workerhour')
+                ->select('workerhour.*','personnel.userid')
+                ->join('personnel','workerhour.workerid' ,'=', 'personnel.id')
+                ->where('personnel.userid',$auth_id)
+                ->whereBetween('workerhour.date1', [$startDatePayroll, $endDatePayroll])
+                ->groupBy('workerhour.workerid')->orderBy('workerhour.date1')->latest('workerhour.created_at')->get();
+            } else {
+                $resultsPyroll = DB::table('workerhour')
+                ->select('workerhour.*','personnel.userid')
+                ->join('personnel','workerhour.workerid' ,'=', 'personnel.id')
+                ->where('personnel.userid',$auth_id)
+                ->groupBy('workerhour.workerid')->orderBy('workerhour.date1')->latest('workerhour.created_at')->get();
+            }
+        }
+        else {
+            $selectpayrollid = @$request->selectpayrollid;
+            if($request->sincepayroll!=null && $request->untilpayroll!=null) {
+                    $startDatePayroll = date('Y-m-d', strtotime($request->sincepayroll));
+                    $endDatePayroll = date('Y-m-d', strtotime($request->untilpayroll));
+                $resultsPyroll = DB::table('workerhour')
+                ->select('workerhour.*','personnel.userid')
+                ->join('personnel','workerhour.workerid' ,'=', 'personnel.id')
+                ->where('personnel.userid',$auth_id)
+                ->where('workerhour.workerid',$selectpayrollid)
+                ->whereBetween('workerhour.date1', [$startDatePayroll, $endDatePayroll])
+                ->groupBy('workerhour.workerid')->orderBy('workerhour.date1')->latest('workerhour.created_at')->get();
+            } else {
+                $resultsPyroll = DB::table('workerhour')
+                ->select('workerhour.*','personnel.userid')
+                ->join('personnel','workerhour.workerid' ,'=', 'personnel.id')
+                ->where('personnel.userid',$auth_id)
+                ->where('workerhour.workerid',$selectpayrollid)
+                ->groupBy('workerhour.workerid')->orderBy('workerhour.date1')->latest('workerhour.created_at')->get();
+            }
+        }
+        
+        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','frequencyid','sincerecur','untilrecur','sincesale','untilsale','sinceservice','untilservice','sinceproduct','untilproduct','customerData','customerreport','cids','resultsPyroll','sincepayroll','untilpayroll','selectpayrollid'));
     }
 
     public function servicefilter(Request $request) 
@@ -315,7 +349,7 @@ class ReportController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    public function recuringfilter(Request $request)
+    public function recuringfilter1(Request $request)
     {
         $auth_id = auth()->user()->id;
         $frequencytype = $request->frequencytype;
@@ -918,6 +952,37 @@ class ReportController extends Controller
                 ->whereIn('ticket_status',['3','4'])->orderBy('quote.id','desc')->get();
 
         return view('report.view',compact('totalInvoiceData'));
+    }
+
+    public function recuringfilter(Request $request)
+    {
+        $auth_id = auth()->user()->id;
+        $pid = $request->pyrollhiddenid1;
+        $resultsPyroll = array(
+            "personnelname"=>'aAAsa',
+            "date1"=>'sasad',
+         
+        );
+
+        $fileName = date('d-m-Y').'_payrollreport.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+        $columns = array('Personnel Name','Date');
+
+        $callback = function() use($resultsPyroll, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+            foreach ($resultsPyroll as $key =>$value) {
+                fputcsv($file, array($value->personnelname, $value->date1));
+                }
+           fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
     }
     
 }
