@@ -609,6 +609,17 @@
                 $pinfo = App\Models\Workerhour::select('workerhour.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'workerhour.workerid')->where('workerhour.workerid',$value->workerid)
                 ->orderBy('workerhour.id','desc')->get();
             }
+            if($sincepayroll!=null && $untilpayroll!=null) {
+                $startDatePayroll = date('Y-m-d', strtotime($sincepayroll));
+                $endDatePayroll = date('Y-m-d', strtotime($untilpayroll));
+            $timeOff = App\Models\Workertimeoff::select('timeoff.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.workerid',$value->workerid)
+                ->whereBetween('timeoff.date1', [$startDatePayroll, $endDatePayroll])
+                ->orderBy('timeoff.id','desc')->get();
+            } else {
+               $timeOff = App\Models\Workertimeoff::select('timeoff.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.workerid',$value->workerid)
+                ->orderBy('timeoff.id','desc')->get(); 
+            }
+           
                 $totalHours = 0;
                 $totalMinutes = 0;
              @endphp 
@@ -636,11 +647,25 @@
                   <td>{{$value1->starttime}}</td>
                   <td>{{$value1->endtime}}</td>
                   <td>{{$value1->totalhours}}</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td>0h</td>
+                  <td>0h</td>
+                  <td>0</td>
                 </tr>
             @endforeach
+             @foreach($timeOff as $key2 => $value2)
+                <tr>
+                  <td>{{$value2->personnelname}}</td>
+                  <td></td>
+                  <td>{{$value2->date1}}</td>
+                  <td></td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td>0h</td>
+                  <td>0h</td>
+                  <td>8h</td>
+                  <td>0</td>
+                </tr>
+               @endforeach 
              @php
                 // Convert any extra minutes to hours
                 $extraHours = floor($totalMinutes / 60);
@@ -653,6 +678,8 @@
                 <td><strong>Total</strong></td>
                 <td></td><td></td><td></td>
                 <td>{{ $totalHours }}h {{$totalMinutes}} m</td>
+                <td></td>
+                <td>{{ count($timeOff)*8 }}h</td>
             </tr>
            
         @endforeach

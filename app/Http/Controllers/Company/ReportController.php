@@ -13,6 +13,7 @@ use App\Models\Inventory;
 use App\Models\Customer;
 use App\Models\Address;
 use App\Models\Workerhour;
+use App\Models\Workertimeoff;
 use DB;
 use Image;
 use PDF;
@@ -1030,6 +1031,18 @@ class ReportController extends Controller
                 $pinfo = Workerhour::select('workerhour.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'workerhour.workerid')->where('workerhour.workerid',$value->workerid)
                 ->orderBy('workerhour.id','desc')->get();
             }
+
+            if($sincepayroll1!=null && $untilpayroll1!=null) {
+                $startDatePayroll = date('Y-m-d', strtotime($sincepayroll1));
+                $endDatePayroll = date('Y-m-d', strtotime($untilpayroll1));
+            $timeOff = Workertimeoff::select('timeoff.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.workerid',$value->workerid)
+                ->whereBetween('timeoff.date1', [$startDatePayroll, $endDatePayroll])
+                ->orderBy('timeoff.id','desc')->get();
+            } else {
+               $timeOff = Workertimeoff::select('timeoff.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'timeoff.workerid')->where('timeoff.workerid',$value->workerid)
+                ->orderBy('timeoff.id','desc')->get(); 
+            }
+
             $totalHours = 0;
             $totalMinutes = 0;
                 foreach($pinfo as $key1 => $value1) {
@@ -1047,6 +1060,10 @@ class ReportController extends Controller
                     // $totalHours += $hours;
                     // $totalMinutes += $minutes;
                      fputcsv($file, array($value1['personnelname'], $value1['date1'], $value1['starttime'], $value1['endtime'],$value1['totalhours'],0,0,0));
+                }
+
+                foreach($timeOff as $key2 => $value2) {
+                     fputcsv($file, array($value2['personnelname'], $value2['date1'], "--", "--","0h",0,"8h",0));
                 }
             }
             fclose($file);
