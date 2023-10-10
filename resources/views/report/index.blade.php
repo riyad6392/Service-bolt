@@ -567,7 +567,7 @@
 </div>
 </form> 
 
-<form id="payrollexport" action="{{ route('company.recuringfilter') }}" method="post">
+<form id="payrollexport" action="{{ route('company.payrollfilter') }}" method="post">
       @csrf
       <input type="hidden" name="pyrollhiddenid1" id="pyrollhiddenid1" value="">
       <input type="hidden" name="sincepayroll1" id="sincepayroll1" value="">
@@ -578,8 +578,8 @@
       </div><div class="col-md-3">
       </div><div class="col-md-3">
       </div>
-      <div class="col-md-2" style="display:none;">
-      <button class="btn add-btn-yellow py-2 px-5 searchBtnDownPyroll" type="button" name="search" value="" style="margin-top:-127px;margin-left:47px;">{{ __('Export') }}</button>
+      <div class="col-md-2">
+      <button class="btn add-btn-yellow py-2 px-5 searchBtnDownPyroll" type="button" name="search" value="" style="margin-top:-127px;margin-left:10px;">{{ __('Export') }}</button>
       </div>
       </div>
     </form>  
@@ -594,7 +594,7 @@
                   <th>Hours</th>
                   <th>OT Hours</th>
                   <th>PTO Hours</th>
-                  <th>Commission Amount</th>
+                  <th>Commission</th>
                 </tr>
             </thead>
         <tbody>
@@ -636,9 +636,9 @@
                   <td>{{$value1->starttime}}</td>
                   <td>{{$value1->endtime}}</td>
                   <td>{{$value1->totalhours}}</td>
-                  <td>0h</td>
-                  <td>0h</td>
-                  <td>0</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                 </tr>
             @endforeach
              @php

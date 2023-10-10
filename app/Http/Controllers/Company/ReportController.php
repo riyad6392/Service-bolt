@@ -349,7 +349,7 @@ class ReportController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    public function recuringfilter1(Request $request)
+    public function recuringfilter(Request $request)
     {
         $auth_id = auth()->user()->id;
         $frequencytype = $request->frequencytype;
@@ -954,16 +954,59 @@ class ReportController extends Controller
         return view('report.view',compact('totalInvoiceData'));
     }
 
-    public function recuringfilter(Request $request)
+    public function payrollfilter(Request $request)
     {
         $auth_id = auth()->user()->id;
         $pid = $request->pyrollhiddenid1;
-        $resultsPyroll = array(
-            "personnelname"=>'aAAsa',
-            "date1"=>'sasad',
-         
-        );
+        if($pid == "All") {
+            if($request->sincepayroll1!=null && $request->untilpayroll1!=null) { 
+              $startDatePayroll = date('Y-m-d', strtotime($request->sincepayroll1));
+              $endDatePayroll = date('Y-m-d', strtotime($request->untilpayroll1));
 
+                $resultsPyroll = DB::table('workerhour')
+                ->select('workerhour.*','personnel.userid')
+                ->join('personnel','workerhour.workerid' ,'=', 'personnel.id')
+                ->where('personnel.userid',$auth_id)
+                ->whereBetween('workerhour.date1', [$startDatePayroll, $endDatePayroll])
+                ->groupBy('workerhour.workerid')->orderBy('workerhour.date1')->latest('workerhour.created_at')->get();
+            } else {
+                $resultsPyroll = DB::table('workerhour')
+                ->select('workerhour.*','personnel.userid')
+                ->join('personnel','workerhour.workerid' ,'=', 'personnel.id')
+                ->where('personnel.userid',$auth_id)
+                ->groupBy('workerhour.workerid')->orderBy('workerhour.date1')->latest('workerhour.created_at')->get();
+            }
+        } else {
+         
+            $selectpayrollid = @$request->pyrollhiddenid1;
+            if($request->sincepayroll1!=null && $request->untilpayroll1!=null) {  
+              $startDatePayroll = date('Y-m-d', strtotime($request->sincepayroll1));
+              $endDatePayroll = date('Y-m-d', strtotime($request->untilpayroll1));
+
+               $resultsPyroll = DB::table('workerhour')
+                ->select('workerhour.*','personnel.userid')
+                ->join('personnel','workerhour.workerid' ,'=', 'personnel.id')
+                ->where('personnel.userid',$auth_id)
+                ->where('workerhour.workerid',$selectpayrollid)
+                ->whereBetween('workerhour.date1', [$startDatePayroll, $endDatePayroll])
+                ->groupBy('workerhour.workerid')->orderBy('workerhour.date1')->latest('workerhour.created_at')->get();
+            } else {
+                $resultsPyroll = DB::table('workerhour')
+                ->select('workerhour.*','personnel.userid')
+                ->join('personnel','workerhour.workerid' ,'=', 'personnel.id')
+                ->where('personnel.userid',$auth_id)
+                ->where('workerhour.workerid',$selectpayrollid)
+                ->groupBy('workerhour.workerid')->orderBy('workerhour.date1')->latest('workerhour.created_at')->get();
+            } 
+             //dd($resultsPyroll);       
+        }
+
+       $sincepayroll1 = $request->sincepayroll1;
+       $untilpayroll1 = $request->untilpayroll1;
+
+        
+       
+        //dd($pinfo);
         $fileName = date('d-m-Y').'_payrollreport.csv';
         $headers = array(
             "Content-type"        => "text/csv",
@@ -972,15 +1015,41 @@ class ReportController extends Controller
             "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
             "Expires"             => "0"
         );
-        $columns = array('Personnel Name','Date');
-
-        $callback = function() use($resultsPyroll, $columns) {
+        $columns = array('Personnel Name','Date','Time In','Time Out','Hours','OT Hours','PTO Hours','Commission');
+        
+        $callback = function() use($resultsPyroll, $columns, $sincepayroll1, $untilpayroll1) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
             foreach ($resultsPyroll as $key =>$value) {
-                fputcsv($file, array($value->personnelname, $value->date1));
+            if($sincepayroll1!=null && $untilpayroll1!=null) {
+                $startDatePayroll = date('Y-m-d', strtotime($sincepayroll1));
+                $endDatePayroll = date('Y-m-d', strtotime($untilpayroll1));
+                $pinfo = Workerhour::select('workerhour.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'workerhour.workerid')->where('workerhour.workerid',$value->workerid)
+                ->whereBetween('workerhour.date1', [$startDatePayroll, $endDatePayroll])->orderBy('workerhour.id','desc')->get();
+            } else {
+                $pinfo = Workerhour::select('workerhour.*','personnel.personnelname')->join('personnel', 'personnel.id', '=', 'workerhour.workerid')->where('workerhour.workerid',$value->workerid)
+                ->orderBy('workerhour.id','desc')->get();
+            }
+            $totalHours = 0;
+            $totalMinutes = 0;
+                foreach($pinfo as $key1 => $value1) {
+                    $parts = explode(' ', $value1['totalhours']);
+                    $hours = 0;
+                    $minutes = 0;
+                    foreach ($parts as $part) {
+                        if (strpos($part, 'h') !== false) {
+                            $hours += (int) trim($part, 'h');
+                        } elseif (strpos($part, 'm') !== false) {
+                            $minutes += (int) trim($part, 'm');
+                        }
+                    }
+
+                    // $totalHours += $hours;
+                    // $totalMinutes += $minutes;
+                     fputcsv($file, array($value1['personnelname'], $value1['date1'], $value1['starttime'], $value1['endtime'],$value1['totalhours'],0,0,0));
                 }
-           fclose($file);
+            }
+            fclose($file);
         };
         return response()->stream($callback, 200, $headers);
     }
