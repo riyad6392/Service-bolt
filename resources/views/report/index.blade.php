@@ -561,7 +561,7 @@
   
     <div class="col-md-3">
       <div class="side-h3">
-        <button type="submit" class="btn btn-block button" style="width:45%;height: 40px;">Run</button>
+        <button type="submit" class="btn btn-block button" style="width:45%;height: 40px;">Run</button><br>
       </div>
     </div>
 </div>
@@ -582,7 +582,8 @@
       <button class="btn add-btn-yellow py-2 px-5 searchBtnDownPyroll" type="button" name="search" value="" style="margin-top:-127px;margin-left:10px;">{{ __('Export') }}</button>
       </div>
       </div>
-    </form>  
+    </form>
+      
     <div class="">
         <table id="" class="table no-wrap table-new table-list align-items-center">
             <thead>
@@ -622,7 +623,15 @@
            
                 $totalHours = 0;
                 $totalMinutes = 0;
-             @endphp 
+           
+               $ticketdata = DB::table('quote')
+                ->select('quote.id as qid','quote.serviceid','quote.product_id','quote.price','quote.personnelid')
+                ->whereDate('quote.givenstartdate','=', $value->date1)
+                ->where('quote.ticket_status','3')
+                ->where('quote.personnelid',$selectpayrollid)->get();
+            
+            @endphp 
+            
             @foreach($pinfo as $key1 => $value1)
                 @php
                     $parts = explode(' ', $value1->totalhours);
@@ -649,7 +658,137 @@
                   <td>{{$value1->totalhours}}</td>
                   <td>0h</td>
                   <td>0h</td>
-                  <td>0</td>
+                  @php
+                    $ticketdata = DB::table('quote')
+                        ->select('quote.id as qid','quote.serviceid','quote.product_id','quote.price','quote.personnelid')
+                        ->whereDate('quote.givenstartdate','=', $value1->date1)
+                        ->where('quote.ticket_status','3')
+                        ->where('quote.personnelid',$value1->workerid)->get();
+
+                        if(count($ticketdata)>0) {
+                            foreach($ticketdata as $keyt => $valuet) {
+                                        $ttlflat = 0;
+                                      $ptamounttotal = 0;
+                                      $explode_id = explode(',', $valuet->serviceid);
+                                      $pexplode_id = 0;
+                                      $servicedata = App\Models\Service::select('servicename','price')
+                                        ->whereIn('services.id',$explode_id)->get();
+                                        if($valuet->product_id!=null || $valuet->product_id!="") {
+                                            $pexplode_id = explode(',', $valuet->product_id);
+                                        }
+                                      if($pexplode_id!=0) {
+                                        $pdata = App\Models\Inventory::select('id','price')
+                                        ->whereIn('products.id',$pexplode_id)->get();
+                                      }
+                                      
+
+                                         $ttlflat=0;
+                                         
+                                         $ttlflat2 = 0;
+
+                                        @$percentall=App\Models\PaymentSetting::where('pid',$valuet->personnelid)->where('paymentbase','commission')->where('type','percent')->get();
+
+                                        @$amountall=App\Models\PaymentSetting::where('pid',$valuet->personnelid)->where('paymentbase','commission')->where('type','amount')->get();
+
+                                        if(count($amountall)>0) {
+                                            if($amountall[0]->allspvalue==null) {
+                                                foreach($explode_id as $servicekey =>$servicevalue) {
+
+                                                  foreach($comisiondataamount->service as $key=>$sitem)
+                                                  {
+                                                    if($sitem->id==$servicevalue && $sitem->price!=0)
+                                                    {
+                                                        //echo $servicevalue."==={$sitem->id} price==".  $sitem->price."<br>";
+                                                        $ttlflat2 += $sitem->price;
+                                                    }
+
+                                                  }
+                                                } 
+                                                
+                                                $ttlflat1 = 0;
+                                                if($pexplode_id!=0) {
+                                                    foreach($pexplode_id as $servicekey =>$servicevalue) {
+                                                        foreach($comisiondataamount->product as $key=>$sitem1)
+                                                        {
+                                                            if($sitem1->id==$servicevalue && $sitem1->price!=0)
+                                                            {
+                                                                       //echo  $servicevalue."==={$sitem1->id} price==".  $sitem1->price."<br>";
+                                                                $ttlflat1 += $sitem1->price;
+                                                            }
+                                                        }  
+                                                    } 
+                                                } 
+                                                 $ttlflat =$ttlflat1+$ttlflat2;
+                                            } else {
+                                                $flatvalue = $amountall[0]->allspvalue;
+
+                                                $flatv = $flatvalue*count($explode_id);
+
+                                                if($valuet->product_id!=null || $valuet->product_id!="") {
+                                                    $pvalue = $flatvalue *count($pexplode_id);
+                                                } else {
+                                                    $pvalue = 0;
+                                                }
+                                                $ttlflat = $flatv+$pvalue;
+
+                                            }
+                                        }
+
+                                        if(count($percentall)>0) {
+                                            $ptamount = 0;
+                                            $ptamount1 = 0;
+                                            if($percentall[0]->allspvalue==null) {
+                                                foreach($explode_id as $servicekey =>$servicevalue) {
+                                                    foreach($comisiondatapercent->service as $key=>$sitem)
+                                                    {
+                                                      if($sitem->id==$servicevalue && $sitem->price!=0)
+                                                      {
+                                                        //echo $servicevalue."==={$sitem->id}price==".  $sitem->price."<br>";
+
+                                                        $servicedata = App\Models\Service::select('servicename','price')
+                                                        ->where('services.id',$sitem->id)->first();
+
+                                                        $ptamount += $servicedata->price*$sitem->price/100;               
+                                                      }
+                                                    }
+                                                } 
+                                              if($pexplode_id!=0) { 
+                                                foreach($pexplode_id as $key=>$pid) {
+                                                    foreach($comisiondatapercent->product as $key=>$sitem)
+                                                    {
+                                                      if($sitem->id==$pid && $sitem->price!=0)
+                                                      {
+                                                        $pdata = App\Models\Inventory::select('id','price')->where('products.id',$sitem->id)->first();
+                                                        
+                                                        @$ptamount1 += @$pdata->price*@$sitem->price/100;               
+                                                      }
+                                                    }
+                                                }
+                                             }
+                                            } else {
+                                                foreach($explode_id as $key=>$serviceid) {
+                                                    $servicedata = App\Models\Service::select('servicename','price')
+                                                    ->where('services.id',$serviceid)->first();
+                                                    $ptamount += $servicedata->price*$percentall[0]->allspvalue/100;               
+                                                 }   
+                                                $ptamount1 = 0;
+                                                if($pexplode_id!=0) {
+                                                    foreach($pexplode_id as $key=>$pid) {
+                                                        $pdata = App\Models\Inventory::select('id','price')->where('products.id',$pid)->first();
+                                                        @$ptamount1 += @$pdata->price*@$percentall[0]->allspvalue/100;               
+                                                    } 
+                                                }
+                                               
+                                            }  
+                                            $ptamounttotal =$ptamount+$ptamount1;
+                                         }
+                                    }
+                        } else {
+                           $ptamounttotal = "0";
+                           $ttlflat = "0"; 
+                        }
+                   @endphp
+                  <td>${{@$ttlflat+@$ptamounttotal}}</td>
                 </tr>
             @endforeach
              @foreach($timeOff as $key2 => $value2)

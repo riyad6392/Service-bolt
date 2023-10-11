@@ -270,6 +270,7 @@ class ReportController extends Controller
                 ->where('personnel.userid',$auth_id)
                 ->groupBy('workerhour.workerid')->orderBy('workerhour.date1')->latest('workerhour.created_at')->get();
             }
+           
         }
         else {
             $selectpayrollid = @$request->selectpayrollid;
@@ -1057,14 +1058,145 @@ class ReportController extends Controller
                         }
                     }
 
-                    // $totalHours += $hours;
-                    // $totalMinutes += $minutes;
-                     fputcsv($file, array($value1['personnelname'], $value1['date1'], $value1['starttime'], $value1['endtime'],$value1['totalhours'],0,0,0));
+                    $totalHours += $hours;
+                    $totalMinutes += $minutes;
+
+                    $ticketdata = DB::table('quote')
+                            ->select('quote.id as qid','quote.serviceid','quote.product_id','quote.price','quote.personnelid')
+                            ->whereDate('quote.givenstartdate','=', $value1->date1)
+                            ->where('quote.ticket_status','3')
+                            ->where('quote.personnelid',$value1->workerid)->get();
+                            if(count($ticketdata)>0) {
+                                foreach($ticketdata as $keyt => $valuet) {
+                                            $ttlflat = 0;
+                                          $ptamounttotal = 0;
+                                          $explode_id = explode(',', $valuet->serviceid);
+                                          $pexplode_id = 0;
+                                          $servicedata = Service::select('servicename','price')
+                                            ->whereIn('services.id',$explode_id)->get();
+                                            if($valuet->product_id!=null || $valuet->product_id!="") {
+                                                $pexplode_id = explode(',', $valuet->product_id);
+                                            }
+                                          if($pexplode_id!=0) {
+                                            $pdata = Inventory::select('id','price')
+                                            ->whereIn('products.id',$pexplode_id)->get();
+                                          }
+                                          
+
+                                             $ttlflat=0;
+                                             
+                                             $ttlflat2 = 0;
+
+                                            @$percentall=PaymentSetting::where('pid',$valuet->personnelid)->where('paymentbase','commission')->where('type','percent')->get();
+
+                                            @$amountall=PaymentSetting::where('pid',$valuet->personnelid)->where('paymentbase','commission')->where('type','amount')->get();
+
+                                            if(count($amountall)>0) {
+                                                if($amountall[0]->allspvalue==null) {
+                                                    foreach($explode_id as $servicekey =>$servicevalue) {
+
+                                                      foreach($comisiondataamount->service as $key=>$sitem)
+                                                      {
+                                                        if($sitem->id==$servicevalue && $sitem->price!=0)
+                                                        {
+                                                            //echo $servicevalue."==={$sitem->id} price==".  $sitem->price."<br>";
+                                                            $ttlflat2 += $sitem->price;
+                                                        }
+
+                                                      }
+                                                    } 
+                                                    
+                                                    $ttlflat1 = 0;
+                                                    if($pexplode_id!=0) {
+                                                        foreach($pexplode_id as $servicekey =>$servicevalue) {
+                                                            foreach($comisiondataamount->product as $key=>$sitem1)
+                                                            {
+                                                                if($sitem1->id==$servicevalue && $sitem1->price!=0)
+                                                                {
+                                                                           //echo  $servicevalue."==={$sitem1->id} price==".  $sitem1->price."<br>";
+                                                                    $ttlflat1 += $sitem1->price;
+                                                                }
+                                                            }  
+                                                        } 
+                                                    } 
+                                                     $ttlflat =$ttlflat1+$ttlflat2;
+                                                } else {
+                                                    $flatvalue = $amountall[0]->allspvalue;
+
+                                                    $flatv = $flatvalue*count($explode_id);
+
+                                                    if($valuet->product_id!=null || $valuet->product_id!="") {
+                                                        $pvalue = $flatvalue *count($pexplode_id);
+                                                    } else {
+                                                        $pvalue = 0;
+                                                    }
+                                                    $ttlflat = $flatv+$pvalue;
+
+                                                }
+                                            }
+
+                                            if(count($percentall)>0) {
+                                                $ptamount = 0;
+                                                $ptamount1 = 0;
+                                                if($percentall[0]->allspvalue==null) {
+                                                    foreach($explode_id as $servicekey =>$servicevalue) {
+                                                        foreach($comisiondatapercent->service as $key=>$sitem)
+                                                        {
+                                                          if($sitem->id==$servicevalue && $sitem->price!=0)
+                                                          {
+                                                            //echo $servicevalue."==={$sitem->id}price==".  $sitem->price."<br>";
+
+                                                            $servicedata = Service::select('servicename','price')
+                                                            ->where('services.id',$sitem->id)->first();
+
+                                                            $ptamount += $servicedata->price*$sitem->price/100;               
+                                                          }
+                                                        }
+                                                    } 
+                                                  if($pexplode_id!=0) { 
+                                                    foreach($pexplode_id as $key=>$pid) {
+                                                        foreach($comisiondatapercent->product as $key=>$sitem)
+                                                        {
+                                                          if($sitem->id==$pid && $sitem->price!=0)
+                                                          {
+                                                            $pdata = Inventory::select('id','price')->where('products.id',$sitem->id)->first();
+                                                            
+                                                            @$ptamount1 += @$pdata->price*@$sitem->price/100;               
+                                                          }
+                                                        }
+                                                    }
+                                                 }
+                                                } else {
+                                                    foreach($explode_id as $key=>$serviceid) {
+                                                        $servicedata = Service::select('servicename','price')
+                                                        ->where('services.id',$serviceid)->first();
+                                                        $ptamount += $servicedata->price*$percentall[0]->allspvalue/100;               
+                                                     }   
+                                                    $ptamount1 = 0;
+                                                    if($pexplode_id!=0) {
+                                                        foreach($pexplode_id as $key=>$pid) {
+                                                            $pdata = Inventory::select('id','price')->where('products.id',$pid)->first();
+                                                            @$ptamount1 += @$pdata->price*@$percentall[0]->allspvalue/100;               
+                                                        } 
+                                                    }
+                                                   
+                                                }  
+                                                $ptamounttotal =$ptamount+$ptamount1;
+                                            }
+                                        }
+                            } else {
+                               $ptamounttotal = "0";
+                               $ttlflat = "0"; 
+                            }
+                     fputcsv($file, array($value1['personnelname'], $value1['date1'], $value1['starttime'], $value1['endtime'],$value1['totalhours'],0,0,@$ttlflat+@$ptamounttotal));
                 }
 
                 foreach($timeOff as $key2 => $value2) {
                      fputcsv($file, array($value2['personnelname'], $value2['date1'], "--", "--","0h",0,"8h",0));
                 }
+
+                fputcsv($file, array("", "Total", "--", "--",$totalHours.'h' .$totalMinutes.'m',0,count($timeOff)*8 .'h',""));
+
             }
             fclose($file);
         };
