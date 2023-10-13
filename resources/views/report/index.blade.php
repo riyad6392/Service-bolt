@@ -673,9 +673,9 @@
 
                         // Calculate total minutes worked
                         $totalMinutesWorked = ($hours * 60) + $minutes;
-
+                        
                         // Standard workday is 8 hours (480 minutes)
-                        $standardWorkdayMinutes = 480;
+                        $standardWorkdayMinutes = $workdayhour*60;
 
                         // Calculate overtime in minutes
                         $overtimeMinutes = $totalMinutesWorked - $standardWorkdayMinutes;

@@ -43,6 +43,8 @@ class ReportController extends Controller
         } else {
            return redirect()->back();
         }
+        $workdayh =DB::table('users')->select('per_day_hours')->where('id',$auth_id)->first();
+        $workdayhour = $workdayh->per_day_hours;
 
         @$sinceservice = $request->sinceservice;
         @$untilservice = $request->untilservice;
@@ -294,7 +296,7 @@ class ReportController extends Controller
             }
         }
         
-        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','frequencyid','sincerecur','untilrecur','sincesale','untilsale','sinceservice','untilservice','sinceproduct','untilproduct','customerData','customerreport','cids','resultsPyroll','sincepayroll','untilpayroll','selectpayrollid'));
+        return view('report.index',compact('auth_id','pdata1','tickedata','percentall','amountall','tickedatadetails','personnelid','comisiondataamount','comisiondatapercent','currentdate','from','to','servicereport','productinfo','numerickey','personnelids','salesreport','recurringreport','frequency','frequencyid','sincerecur','untilrecur','sincesale','untilsale','sinceservice','untilservice','sinceproduct','untilproduct','customerData','customerreport','cids','resultsPyroll','sincepayroll','untilpayroll','selectpayrollid','workdayhour'));
     }
 
     public function servicefilter(Request $request) 
@@ -960,6 +962,8 @@ class ReportController extends Controller
     {
         $auth_id = auth()->user()->id;
         $pid = $request->pyrollhiddenid1;
+        $workdayh =DB::table('users')->select('per_day_hours')->where('id',$auth_id)->first();
+        $workdayhour = $workdayh->per_day_hours;
         if($pid == "All") {
             if($request->sincepayroll1!=null && $request->untilpayroll1!=null) { 
               $startDatePayroll = date('Y-m-d', strtotime($request->sincepayroll1));
@@ -1075,8 +1079,12 @@ class ReportController extends Controller
                         // Calculate total minutes worked
                         $totalMinutesWorked = ($hours * 60) + $minutes;
 
+                        $auth_id = auth()->user()->id;
+
+                        $workdayh =DB::table('users')->select('per_day_hours')->where('id',$auth_id)->first();
+                        $workdayhour = $workdayh->per_day_hours;
                         // Standard workday is 8 hours (480 minutes)
-                        $standardWorkdayMinutes = 480;
+                        $standardWorkdayMinutes = $workdayhour*60;
 
                         // Calculate overtime in minutes
                         $overtimeMinutes = $totalMinutesWorked - $standardWorkdayMinutes;

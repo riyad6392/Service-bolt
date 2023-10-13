@@ -48,7 +48,8 @@ class SettingController extends Controller
         //$user->cardnumber = $request->cardnumber;
         $user->date = $request->date;
         $user->securitycode = $request->securitycode;
-
+        $user->per_day_hours = $request->per_day_hours;
+        
         if(isset($request->paymenttype)) {
           $user->paymenttype = implode(',', $request->paymenttype);
         } else {

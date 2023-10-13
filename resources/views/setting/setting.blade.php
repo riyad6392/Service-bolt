@@ -105,6 +105,24 @@ label.credit img {
   <input type="email" class="form-control form-control-2" placeholder="Email Id" value="{{$userData->email}}" name="email" readonly="">
 </div>
 
+<div class="col-lg-6 mb-3">
+<label class="form-label">Select Workday hour</label>
+  <select class="form-control" name="per_day_hours">
+    <option value="1" {{ ($userData->per_day_hours) == '1' ? 'selected' : '' }}>1 hour</option>
+    <option value="2" {{ ($userData->per_day_hours) == '2' ? 'selected' : '' }}>2 hour</option>
+    <option value="3" {{ ($userData->per_day_hours) == '3' ? 'selected' : '' }}>3 hour</option>
+    <option value="4" {{ ($userData->per_day_hours) == '4' ? 'selected' : '' }}>4 hour</option>
+    <option value="5" {{ ($userData->per_day_hours) == '5' ? 'selected' : '' }}>5 hour</option>
+    <option value="6" {{ ($userData->per_day_hours) == '6' ? 'selected' : '' }}>6 hour</option>
+    <option value="7" {{ ($userData->per_day_hours) == '7' ? 'selected' : '' }}>7 hour</option>
+    <option value="8" {{ ($userData->per_day_hours) == '8' ? 'selected' : '' }}>8 hour</option>
+    <option value="9" {{ ($userData->per_day_hours) == '9' ? 'selected' : '' }}>9 hour</option>
+    <option value="10" {{ ($userData->per_day_hours) == '10' ? 'selected' : '' }}>10 hour</option>
+     <option value="11" {{ ($userData->per_day_hours) == '11' ? 'selected' : '' }}>11 hour</option>
+    <option value="12" {{ ($userData->per_day_hours) == '12' ? 'selected' : '' }}>12 hour</option>
+  </select>
+</div>
+
 <!-- <div class="col-lg-6 mb-3">
 <label class="form-label">password</label>
   <input type="password" class="form-control form-control-2" placeholder="password" value="" name="password">
