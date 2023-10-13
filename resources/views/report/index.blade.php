@@ -623,6 +623,12 @@
            
                 $totalHours = 0;
                 $totalMinutes = 0;
+
+                $totalHours1 = 0;
+                $totalMinutes1 = 0;
+
+                $totalamount = 0;
+                $totalamount1 = 0;
            
                $ticketdata = DB::table('quote')
                 ->select('quote.id as qid','quote.serviceid','quote.product_id','quote.price','quote.personnelid')
@@ -656,7 +662,52 @@
                   <td>{{$value1->starttime}}</td>
                   <td>{{$value1->endtime}}</td>
                   <td>{{$value1->totalhours}}</td>
-                  <td>0h</td>
+                  @php
+                    // Extract hours and minutes
+                    $matches = [];
+                    preg_match('/(\d+)h (\d+)m/', $value1->totalhours, $matches);
+                    
+                    if (count($matches) == 3) {
+                        $hours = (int)$matches[1];
+                        $minutes = (int)$matches[2];
+
+                        // Calculate total minutes worked
+                        $totalMinutesWorked = ($hours * 60) + $minutes;
+
+                        // Standard workday is 8 hours (480 minutes)
+                        $standardWorkdayMinutes = 480;
+
+                        // Calculate overtime in minutes
+                        $overtimeMinutes = $totalMinutesWorked - $standardWorkdayMinutes;
+
+                        // Convert overtime back to hours and minutes
+                        $overtimeHours = floor($overtimeMinutes / 60);
+                        $overtimeMinutes = $overtimeMinutes % 60;
+
+                        // Output overtime as "Xh Ym" format
+                        if ($overtimeHours >= 0 && $overtimeMinutes >= 0) {
+                            $overtime = $overtimeHours.'h ' .$overtimeMinutes.'m';
+                        } else {
+                            $overtime = '0h';
+                        }
+                        
+                    }
+                   
+                        $parts1 = explode(' ', $overtime);
+                        $hours1 = 0;
+                        $minutes1 = 0;
+                        foreach ($parts1 as $part) {
+                            if (strpos($part, 'h') !== false) {
+                                $hours1 += (int) trim($part, 'h');
+                            } elseif (strpos($part, 'm') !== false) {
+                                $minutes1 += (int) trim($part, 'm');
+                            }
+                        }
+
+                        $totalHours1 += $hours1;
+                        $totalMinutes1 += $minutes1;
+                   @endphp
+                  <td>{{$overtime}}</td>
                   <td>0h</td>
                   @php
                     $ticketdata = DB::table('quote')
@@ -787,6 +838,8 @@
                            $ptamounttotal = "0";
                            $ttlflat = "0"; 
                         }
+                    $totalamount += $ttlflat;
+                    $totalamount1 += $ptamounttotal;
                    @endphp
                   <td>${{@$ttlflat+@$ptamounttotal}}</td>
                 </tr>
@@ -810,6 +863,14 @@
                 $extraHours = floor($totalMinutes / 60);
                 $totalHours += $extraHours;
                 $totalMinutes %= 60;
+
+                // Convert any extra minutes to hours
+                $extraHours1 = floor($totalMinutes1 / 60);
+                $totalHours1 += $extraHours1;
+                $totalMinutes1 %= 60;
+
+                 $totalamount += $ttlflat;
+                 $totalamount1 += $ptamounttotal;
                 @endphp
              <tr>
                 <td></td>
@@ -817,8 +878,9 @@
                 <td><strong>Total</strong></td>
                 <td></td><td></td><td></td>
                 <td>{{ $totalHours }}h {{$totalMinutes}} m</td>
-                <td></td>
+                <td>{{ $totalHours1 }}h {{$totalMinutes1}} m</td>
                 <td>{{ count($timeOff)*8 }}h</td>
+                <td>${{$totalamount+$totalamount1}}</td>
             </tr>
            
         @endforeach

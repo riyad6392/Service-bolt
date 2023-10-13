@@ -1046,6 +1046,13 @@ class ReportController extends Controller
 
             $totalHours = 0;
             $totalMinutes = 0;
+
+            $totalHours1 = 0;
+            $totalMinutes1 = 0;
+
+            $totalamount = 0;
+            $totalamount1 = 0;
+
                 foreach($pinfo as $key1 => $value1) {
                     $parts = explode(' ', $value1['totalhours']);
                     $hours = 0;
@@ -1057,6 +1064,49 @@ class ReportController extends Controller
                             $minutes += (int) trim($part, 'm');
                         }
                     }
+
+                    $matches = [];
+                    preg_match('/(\d+)h (\d+)m/', $value1['totalhours'], $matches);
+                    
+                    if (count($matches) == 3) {
+                        $hours = (int)$matches[1];
+                        $minutes = (int)$matches[2];
+
+                        // Calculate total minutes worked
+                        $totalMinutesWorked = ($hours * 60) + $minutes;
+
+                        // Standard workday is 8 hours (480 minutes)
+                        $standardWorkdayMinutes = 480;
+
+                        // Calculate overtime in minutes
+                        $overtimeMinutes = $totalMinutesWorked - $standardWorkdayMinutes;
+
+                        // Convert overtime back to hours and minutes
+                        $overtimeHours = floor($overtimeMinutes / 60);
+                        $overtimeMinutes = $overtimeMinutes % 60;
+
+                        // Output overtime as "Xh Ym" format
+                        if ($overtimeHours >= 0 && $overtimeMinutes >= 0) {
+                            $overtime = $overtimeHours.'h ' .$overtimeMinutes.'m';
+                        } else {
+                            $overtime = '0h';
+                        }
+                        
+                    }
+                   
+                        $parts1 = explode(' ', $overtime);
+                        $hours1 = 0;
+                        $minutes1 = 0;
+                        foreach ($parts1 as $part) {
+                            if (strpos($part, 'h') !== false) {
+                                $hours1 += (int) trim($part, 'h');
+                            } elseif (strpos($part, 'm') !== false) {
+                                $minutes1 += (int) trim($part, 'm');
+                            }
+                        }
+
+                        $totalHours1 += $hours1;
+                        $totalMinutes1 += $minutes1;
 
                     $totalHours += $hours;
                     $totalMinutes += $minutes;
@@ -1188,14 +1238,25 @@ class ReportController extends Controller
                                $ptamounttotal = "0";
                                $ttlflat = "0"; 
                             }
-                     fputcsv($file, array($value1['personnelname'], $value1['date1'], $value1['starttime'], $value1['endtime'],$value1['totalhours'],0,0,@$ttlflat+@$ptamounttotal));
+
+                            $totalamount += $ttlflat;
+                            $totalamount1 += $ptamounttotal;
+
+                     fputcsv($file, array($value1['personnelname'], $value1['date1'], $value1['starttime'], $value1['endtime'],$value1['totalhours'],$overtime,"0h",$ttlflat+@$ptamounttotal));
                 }
 
                 foreach($timeOff as $key2 => $value2) {
-                     fputcsv($file, array($value2['personnelname'], $value2['date1'], "--", "--","0h",0,"8h",0));
+                     fputcsv($file, array($value2['personnelname'], $value2['date1'], "--", "--","0h","0h","8h","0"));
                 }
 
-                fputcsv($file, array("", "Total", "--", "--",$totalHours.'h' .$totalMinutes.'m',0,count($timeOff)*8 .'h',""));
+                $extraHours1 = floor($totalMinutes1 / 60);
+                $totalHours1 += $extraHours1;
+                $totalMinutes1 %= 60;
+
+                $totalamount += $ttlflat;
+                $totalamount1 += $ptamounttotal;
+
+                fputcsv($file, array("", "Total", "--", "--",$totalHours.'h ' .$totalMinutes.'m',$totalHours1.'h ' .$totalMinutes1.'m',count($timeOff)*8 .'h',$totalamount+$totalamount1));
 
             }
             fclose($file);
