@@ -17,6 +17,7 @@ use App\Http\Controllers\Company\ReportController;
 use App\Http\Controllers\Company\BillingController;
 use App\Http\Controllers\Company\CategoriesController;
 use App\Http\Controllers\Company\TimeoffController;
+use App\Http\Controllers\Company\ExcelController;
 use App\Http\Controllers\Company\PaymentsettingController;
 use App\Http\Controllers\Company\CommissionController;
 use App\Http\Controllers\Company\NotificationController;
@@ -154,6 +155,10 @@ Route::group([
      Route::get('/notification', [NotificationController::class, 'index'])->name('notification');
      Route::any('/notification/deletenotification', [NotificationController::class, 'deletenotification'])->name('deletenotification');
 
+
+    Route::get('/import-form', [ExcelController::class, 'importForm'])->name('importForm');
+
+    Route::post('/import', [ExcelController::class, 'import'])->name('import');
 
     //customer create
     Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
