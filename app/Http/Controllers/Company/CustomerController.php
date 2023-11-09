@@ -1130,7 +1130,7 @@ class CustomerController extends Controller
         <label>Select Checklist</label>
         <select class="form-control selectpicker " multiple="" data-placeholder="Select Checklist" data-live-search="true" style="width: 100%;" tabindex="-1" aria-hidden="true" name="adminck[]" id="adminck">';
             foreach($adminchecklist as $key => $value) {
-              $ckids =explode(",", $ckid[0]->checklistid);
+              $ckids =explode(",", @$ckid[0]->checklistid);
                if(in_array($value->serviceid, $ckids)) {
                 $selectedp = "selected";
                } else {
@@ -1296,13 +1296,18 @@ class CustomerController extends Controller
       $customer->save();
 
       $addresscklist = Address::where('customerid', $request->customerid)->get()->first();
-       if(isset($request->adminck)) {
-        $addresscklist->checklistid = implode(',', $request->adminck);
-      } else {
-        $addresscklist->checklistid = null;
-      }
+      if($addresscklist==null) {
 
-      $addresscklist->save();
+      } else {
+           if($request->adminck!=null) {
+            $addresscklist->checklistid = implode(',', $request->adminck);
+        } else {
+          $addresscklist->checklistid = null;
+        }
+
+        $addresscklist->save();
+      }
+      
       
       $request->session()->flash('success', 'Customer Updated successfully');
       return redirect()->route('company.customer');
