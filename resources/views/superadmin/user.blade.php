@@ -50,7 +50,7 @@
         $time = strtotime($user->created_at);
        @endphp
        <td>{{date("j M Y", strtotime("+1 year", $time))}}</td>
-       <td><a href="{{url('superadmin/manageUser/userlogin/')}}/{{$user->id}}" title="login" class="btn btn-primary">Account Login</a></td>
+       <td><a href="{{url('superadmin/manageUser/userlogin/')}}/{{$user->id}}" title="login" class="btn btn-primary">Customer Login</a></td>
        <td>Active</td>
        <td>
       <div class="form-switch">
