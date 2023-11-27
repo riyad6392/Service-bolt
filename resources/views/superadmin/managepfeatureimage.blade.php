@@ -22,25 +22,84 @@
 	  	@php
 	  		$i=1;
 	  	@endphp
-	  	@foreach($featureData as $key => $value)
 	  	@php
-	  	if($value->feature_img!=null) {
-            $imagepath = url('/').'/uploads/featureimg/thumbnail/'.$value->feature_img;
+     	if($featureData[0]->feature_img!=null) {
+            $imagepath = url('/').'/uploads/featureimg/thumbnail/'.$featureData[0]->feature_img;
          } else {
           $imagepath = url('/').'/uploads/servicebolt-noimage.png';
+        }
+        if($featureData[0]->tab1!=null) {
+            $imagepathtab1 = url('/').'/uploads/featureimg/thumbnail/'.$featureData[0]->tab1;
+         } else {
+          $imagepathtab1 = url('/').'/uploads/servicebolt-noimage.png';
+        }
+
+        if($featureData[0]->tab2!=null) {
+            $imagepathtab2 = url('/').'/uploads/featureimg/thumbnail/'.$featureData[0]->tab2;
+         } else {
+          $imagepathtab2 = url('/').'/uploads/servicebolt-noimage.png';
+        }
+
+        if($featureData[0]->tab3!=null) {
+            $imagepathtab3 = url('/').'/uploads/featureimg/thumbnail/'.$featureData[0]->tab3;
+          } else {
+            $imagepathtab3 = url('/').'/uploads/servicebolt-noimage.png';
+        }
+
+        if($featureData[0]->tab4!=null) {
+            $imagepathtab4 = url('/').'/uploads/featureimg/thumbnail/'.$featureData[0]->tab4;
+          } else {
+            $imagepathtab4 = url('/').'/uploads/servicebolt-noimage.png';
+        }
+
+         if($featureData[0]->tab5!=null) {
+            $imagepathtab5 = url('/').'/uploads/featureimg/thumbnail/'.$featureData[0]->tab5;
+          } else {
+            $imagepathtab5 = url('/').'/uploads/servicebolt-noimage.png';
         }
         @endphp
 	  <tr>
 	  <td>Product Feature Image</td>
-	  <td><img src="{{$imagepath}}" style="width:100px;height:100px;"></td>
+	  <td><img src="{{$imagepath}}" style="width:151px;height:151px;"></td>
 	  <td>
-	  	<a class="" data-bs-toggle="modal" data-bs-target="#edit-pfeatureimg" id="editpfeatureimg" data-name="{{$value->feature_img}}"><i class="fa fa-edit"></i></a>
+	  	<a class="" data-bs-toggle="modal" data-bs-target="#edit-pfeatureimg" id="editpfeatureimg" data-name="{{$featureData[0]->feature_img}}"><i class="fa fa-edit"></i></a>
 	  </td>
-	  </tr>
-	  	@php
-	  		$i++;
-	  	@endphp
-	  @endforeach
+  </tr>
+  <tr>
+    <td>{{$featureData[0]->tab1title}}</td>
+    <td><img src="{{$imagepathtab1}}" style="width:151px;height:151px;"></td>
+    <td>
+      <a class="" data-bs-toggle="modal" data-bs-target="#edit-tab1" id="edittab1" data-id="tab1"><i class="fa fa-edit"></i></a>
+    </td>
+  </tr>
+  <tr>
+    <td>{{$featureData[0]->tab2title}}</td>
+    <td><img src="{{$imagepathtab2}}" style="width:151px;height:151px;"></td>
+    <td>
+      <a class="" data-bs-toggle="modal" data-bs-target="#edit-tab1" id="edittab2" data-id="tab2"><i class="fa fa-edit"></i></a>
+    </td>
+  </tr>
+  <tr>
+    <td>{{$featureData[0]->tab3title}}</td>
+    <td><img src="{{$imagepathtab3}}" style="width:151px;height:151px;"></td>
+    <td>
+      <a class="" data-bs-toggle="modal" data-bs-target="#edit-tab1" id="edittab3" data-id="tab3"><i class="fa fa-edit"></i></a>
+    </td>
+  </tr>
+  <tr>
+    <td>{{$featureData[0]->tab4title}}</td>
+    <td><img src="{{$imagepathtab4}}" style="width:151px;height:151px;"></td>
+    <td>
+      <a class="" data-bs-toggle="modal" data-bs-target="#edit-tab1" id="edittab4" data-id="tab4"><i class="fa fa-edit"></i></a>
+    </td>
+  </tr>
+  <tr>
+    <td>{{$featureData[0]->tab5title}}</td>
+    <td><img src="{{$imagepathtab5}}" style="width:151px;height:151px;"></td>
+    <td>
+      <a class="" data-bs-toggle="modal" data-bs-target="#edit-tab1" id="edittab5" data-id="tab5"><i class="fa fa-edit"></i></a>
+    </td>
+	 </tr>
 	  </tbody>
 	  </table>
 	 </div>
@@ -78,6 +137,20 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="edit-tab1" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content customer-modal-box">
+          <div class="modal-body">
+            <form method="post" action="{{ route('superadmin.updatetabimage') }}" enctype="multipart/form-data">
+            @csrf
+              <div id="viewtab1"></div>
+            </form>
+          </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 @endsection
 <script src="{{ asset('js/jquery.min.js')}}"></script>  
@@ -107,6 +180,91 @@ $(document).on('click','#editpfeatureimg',function() {
             refresh: true,
             success:function(data) {
               $('#vieweditaddressmodaldata').html(data.html);
+            }
+        })
+    });
+
+    $(document).on('click','#edittab1',function() {
+      var tabname = $(this).data('id');
+        $.ajax({
+            url:'{{route('superadmin.viewtab1modal')}}',
+            data: {
+              'cname':tabname,
+              '_token': '{{csrf_token()}}',
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#viewtab1').html(data.html);
+            }
+        })
+    });
+
+     $(document).on('click','#edittab2',function() {
+      var tabname = $(this).data('id');
+        $.ajax({
+            url:'{{route('superadmin.viewtab1modal')}}',
+            data: {
+              'cname':tabname,
+              '_token': '{{csrf_token()}}',
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#viewtab1').html(data.html);
+            }
+        })
+    });
+
+     $(document).on('click','#edittab3',function() {
+      var tabname = $(this).data('id');
+        $.ajax({
+            url:'{{route('superadmin.viewtab1modal')}}',
+            data: {
+              'cname':tabname,
+              '_token': '{{csrf_token()}}',
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#viewtab1').html(data.html);
+            }
+        })
+    });
+
+     $(document).on('click','#edittab4',function() {
+      var tabname = $(this).data('id');
+        $.ajax({
+            url:'{{route('superadmin.viewtab1modal')}}',
+            data: {
+              'cname':tabname,
+              '_token': '{{csrf_token()}}',
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#viewtab1').html(data.html);
+            }
+        })
+    });
+
+     $(document).on('click','#edittab5',function() {
+      var tabname = $(this).data('id');
+        $.ajax({
+            url:'{{route('superadmin.viewtab1modal')}}',
+            data: {
+              'cname':tabname,
+              '_token': '{{csrf_token()}}',
+            },
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#viewtab1').html(data.html);
             }
         })
     });

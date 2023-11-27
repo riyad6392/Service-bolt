@@ -719,6 +719,9 @@ Route::group([
     Route::get('/manageProductimg', [AdminfeatureimgController::class, 'index'])->name('manageProductimg');
     Route::any('/manageProductimg/vieweditmodal', [AdminfeatureimgController::class, 'vieweditmodal'])->name('vieweditmodal');
     Route::any('/manageProductimg/updatepimage', [AdminfeatureimgController::class, 'updatepimage'])->name('updatepimage');
+
+    Route::any('/manageProductimg/viewtab1modal', [AdminfeatureimgController::class, 'viewtab1modal'])->name('viewtab1modal');
+    Route::any('/manageProductimg/updatetabimage', [AdminfeatureimgController::class, 'updatetabimage'])->name('updatetabimage');
     
 
 

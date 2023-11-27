@@ -38,7 +38,8 @@ class AdminfeatureimgController extends Controller
            return redirect()->back();
         }
 
-        $featureData = DB::table('users')->select('feature_img')->where('role','superadmin')->get();
+        $featureData = DB::table('users')->select('feature_img','tab1','tab2','tab3','tab4','tab5','tab1title','tab2title','tab3title','tab4title','tab5title')->where('role','superadmin')->get();
+
         return view('superadmin.managepfeatureimage',compact('featureData'));
     }
 
@@ -92,6 +93,96 @@ class AdminfeatureimgController extends Controller
       $request->session()->flash('success', 'Image has been updated successfully');
       return redirect()->route('superadmin.manageProductimg');
     }
+
+    public function viewtab1modal(Request $request)
+    {
+      $json = array();
+      $auth_id = auth()->user()->id;
+      $cname = $request->cname;
+      $checklist = User::where('role', 'superadmin')->get()->first();
+        if($checklist->$cname != null) {
+           $userimage = url('uploads/featureimg/thumbnail/'.$checklist->$cname);
+        } else {
+           $userimage = url('/').'/uploads/servicebolt-noimage.png';
+        }  
+        if($cname=="tab1") {
+            $tabtitle = $checklist->tab1title;
+        }
+        if($cname=="tab2") {
+            $tabtitle = $checklist->tab2title;
+        } 
+        if($cname=="tab3") {
+            $tabtitle = $checklist->tab3title;
+        } 
+        if($cname=="tab4") {
+            $tabtitle = $checklist->tab4title;
+        } 
+        if($cname=="tab5") {
+            $tabtitle = $checklist->tab5title;
+        }  
+      $html ='<div class="add-customer-modal">
+                  <h5>Edit Image</h5>
+                 </div>
+                 <input type="hidden" name="tabname" id="tabname" value="'.$cname.'">
+                  <div class="col-md-11 mb-3">
+                    Title <br>
+                    <input type="text" name="tabvalue" id="tabvalue" value="'.$tabtitle.'" class="form-control" style="margin-left:10px;" required>
+                    </div>
+            <div class="col-md-11 mb-2">
+             <div class="input_fields_wrap">
+                    <div class="mb-3">
+                    <input type="file" class="form-control" style="margin-bottom: 5px;margin-left:10px;" name="image" id="image" accept="image/png, image/gif, image/jpeg">
+                </div>
+                <div class="mb-3 text-center">
+                    <img src="'.$userimage.'" class="defaultimage" style="width:30%;height:100px;">
+                </div>
+            </div>
+          </div>
+        <div class="col-lg-6 mb-3" style="display:none;">
+          <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
+        </div><div class="col-lg-6 mb-3 mx-auto">
+          <button class="btn btn-add btn-block" type="submit">Update</button>
+        </div>';
+        return json_encode(['html' =>$html]);
+          die;
+    }
+
+    public function updatetabimage(Request $request)
+    {
+      $tabname = $request->tabname;  
+      $fimage = User::where('role', 'superadmin')->get()->first();
+      
+      $logofile = $request->file('image');
+      if(isset($logofile)) {
+        $datetime = date('YmdHis');
+        $image = $request->image->getClientOriginalName();
+        $imageName = $datetime . '_' . $image;
+        $logofile->move(public_path('uploads/featureimg/'), $imageName);
+        $fimage->$tabname = $imageName;
+
+        Image::make(public_path('uploads/featureimg/').$imageName)->fit(540,450)->save(public_path('uploads/featureimg/thumbnail/').$imageName);
+      }
+        if($tabname=="tab1") {
+            $fimage->tab1title = $request->tabvalue;
+        }
+        if($tabname=="tab2") {
+            $fimage->tab2title = $request->tabvalue;
+        }
+        if($tabname=="tab3") {
+            $fimage->tab3title = $request->tabvalue;
+        }
+        if($tabname=="tab4") {
+            $fimage->tab4title = $request->tabvalue;
+        }
+        if($tabname=="tab5") {
+            $fimage->tab5title = $request->tabvalue;
+        }
+
+      $fimage->save();
+      $request->session()->flash('success', 'Image has been updated successfully');
+      return redirect()->route('superadmin.manageProductimg');
+    }
+
 
     public function create(Request $request)
     {
