@@ -8,7 +8,7 @@
 <div class="content-page">
 <div class="content p-3">
      <div class="row">
-      <h5>Manage Product Feature Image</h5>
+      <h5>Manage Images</h5>
      	<div class="col-md-12">
 	   <table class="table no-wrap table-new table-list align-items-center">
 	  <thead>

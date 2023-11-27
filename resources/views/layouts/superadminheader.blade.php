@@ -119,7 +119,7 @@
 <rect width="18" height="21.3534" fill="white" transform="matrix(-1 0 0 1 18 0.300323)"/>
 </clipPath>
 </defs>
-</svg>Manage Product Feature Image</a></li>
+</svg>Manage Images</a></li>
 
 <li class="link">
        <a href="{{ route('superadmin.managehomepagecontent') }}" >
