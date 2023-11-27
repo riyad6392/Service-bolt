@@ -17,17 +17,18 @@
      <div class="table-responsive">
         <table id="example" class="table no-wrap table-new table-list" style="position: relative;">
           <thead>
-            <tr>
-  <th style="display: none;"></th>      
-  <th>Reg.Date</th>
-  <th>Company Name</th>
-   <th>Email</th>
-   <th>Phone</th>
-   <th>Expiring on</th>
-    <th>Subscription</th>
-    <th>Status</th>
-    </tr>
-    </thead>
+          <tr>
+            <th style="display: none;"></th>      
+            <th>Reg.Date</th>
+            <th>Company Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Expiring on</th>
+            <th></th>
+            <th>Subscription</th>
+            <th>Status</th>
+            </tr>
+        </thead>
      <tbody>
     @foreach($users as $user)  
  <tr>
@@ -43,14 +44,14 @@
   </div>
      </a>
   </td>
-   <td><a href="{{url('superadmin/manageUser/userlogin/')}}/{{$user->id}}" title="login">{{$user->email}}</a></td>
-       <td>{{$user->phone}}</td>
+    <td>{{$user->email}}</td>
+    <td>{{$user->phone}}</td>
        @php
         $time = strtotime($user->created_at);
        @endphp
        <td>{{date("j M Y", strtotime("+1 year", $time))}}</td>
+       <td><a href="{{url('superadmin/manageUser/userlogin/')}}/{{$user->id}}" title="login" class="btn btn-primary">Account Login</a></td>
        <td>Active</td>
-       
        <td>
       <div class="form-switch">
         @if($user->status == "Active")

@@ -690,7 +690,8 @@
                         } else {
                             $overtime = '0h';
                         }
-                        
+                    } else {
+                        $overtime = '0h';     
                     }
                    
                         $parts1 = explode(' ', $overtime);
