@@ -445,7 +445,12 @@ $googleplacekey = $userinfo->googleplace;
   <div class="collapse" id="collapseExample1" style="">
     <li class="menu">
       <li class="link" style="margin-left:32px;">
-        <a href="{{route('company.billing')}}">Billing / Payments</a>
+        <a href="{{route('company.billing')}}">Collect Payments</a>
+      </li>
+    </li>
+    <li class="menu">
+      <li class="link" style="margin-left:32px;">
+        <a href="{{route('company.receivepayment')}}">Receive Payments</a>
       </li>
     </li>
     <li class="menu">

@@ -85,7 +85,7 @@ class BillingController extends Controller
         return view('billing.index1',compact('auth_id','billingData','fields','totalbillingData','customer','services','worker','productData'));
     }
 
-    public function paynow(Request $request) {
+    public function paynowbackup(Request $request) {
       if( $request->ticketid) {
       Session::put('ticketid', $request->ticketid);
       }
@@ -149,9 +149,159 @@ class BillingController extends Controller
     if($quoteData->tax!="") {
       $tax = $quoteData->tax;
     }
-  
     
-      return view('billing.paynow',compact('ticketID','quoteData','paymentpaid','customerid','customername','customer','price','servicename','productname','tax','ticketIDnumber','personnelid')); 
+    $id = $request->id;
+
+    $allinvoices = DB::table('quote')->select('*')->where('customerid',$customerid)->get();
+
+      return view('billing.paynow',compact('ticketID','quoteData','paymentpaid','customerid','customername','customer','price','servicename','productname','tax','ticketIDnumber','personnelid','id', 'allinvoices')); 
+    }
+
+    public function paynow(Request $request) {
+          if(empty($request->id)) {
+          if( $request->ticketid) {
+          Session::put('ticketid', $request->ticketid);
+          }
+
+          if( $request->amount) {
+          Session::put('amount', $request->amount);
+          } 
+
+          if( $request->customername) {
+          Session::put('customername',$request->customername);
+          }
+          if($request->personnelid) {
+            Session::put('personnelid',$request->personnelid);
+          }
+          $ticketID = $request->ticketid;
+
+          $personnelid = $request->personnelid;
+
+          $customer = Customer::select('id','customername')->where('id',$request->customerid)->first();
+          //dd($request->all());
+          //$ticketID = $request->ticketid;
+          $price = Session::get('amount');
+          $customername = Session::get('customername');
+          $customerid = $request->customerid;
+          if(isset($request->servicename)){
+          $serviceidarray = $request->servicename;
+          $servicedetails = Service::select('servicename')->whereIn('id', $serviceidarray)->get();
+          foreach ($servicedetails as $key => $value) {
+            $sname[] = $value['servicename'];
+          } 
+          
+          $servicename = implode(',', $sname);
+        } else {
+          $servicename = "";
+        }
+        if(isset($request->productname)){
+          $pidarray = $request->productname;
+          $pdetails = Inventory::select('productname','id')->whereIn('id', $pidarray)->get();
+          foreach ($pdetails as $key => $value) {
+            $pname[] = $value['productname'];
+          }
+
+          $productname = implode(',', $pname);
+        } else {
+          $productname = "";
+        }
+
+        $quoteData = DB::table('quote')->select('*')->where('id',$ticketID)->first();
+
+        if($quoteData->parentid!=0) {
+          $ticketIDnumber = $quoteData->parentid;
+        } else {
+          $ticketIDnumber = $ticketID;
+        }
+        //dd($quoteData);
+        if($quoteData->payment_status !=""){
+          $paymentpaid = "1";
+        } else {
+          $paymentpaid = "0";
+        }
+        $tax = 0;
+        if($quoteData->tax!="") {
+          $tax = $quoteData->tax;
+        }
+        $id = $ticketID;
+        $price = "0";
+        $quoteDataprice  = DB::table('quote')->select('price','amount_paid')->where('id',$ticketID)->first();
+        $price += $quoteDataprice->price - $quoteDataprice->amount_paid;
+        $allinvoices = DB::table('quote')->select('*')->where('customerid',$quoteData->customerid)->whereIn('ticket_status',['3','5','4'])->get();
+
+        $customer = Customer::select('id','customername')->where('id',$quoteData->customerid)->first();
+        $customername = $customer->customername;
+        $customerid = $quoteData->customerid;
+        $personnelid = $quoteData->personnelid;
+
+        $ticketids= Quote::where('customerid',$quoteData->customerid)->pluck('id')->toArray();
+         $balancesheet = array();
+
+         $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$ticketids)->orderBy('id','desc')->get();
+        $auth_id = auth()->user()->id;
+        $customerData = Quote::select('customerid','customername')->where('userid',$auth_id)->where('ticket_status',['3','4','5'])->groupBy('customerid')->get();
+        //$customerData = Customer::where('userid',$auth_id)->get(); 
+        return view('billing.paynownew1',compact('ticketID','quoteData','paymentpaid','customerid','customername','customer','price','servicename','productname','tax','ticketIDnumber','personnelid','id', 'allinvoices','balancesheet','ticketids','customerData')); 
+      } else {
+
+        $id = $request->id;
+        $price = "0";
+        $ticketID =explode(',',$request->id);
+        
+        $quoteData = DB::table('quote')->select('*')->whereIn('id',$ticketID)->get();
+        foreach($quoteData as $key =>$value) {
+          $price += $value->price - $value->amount_paid;
+        }
+        $customerid = $quoteData[0]->customerid;
+        $allinvoices = DB::table('quote')->select('*')->where('customerid',$quoteData[0]->customerid)->whereIn('ticket_status',['3','5','4'])->get();
+
+        $customer = Customer::select('id','customername')->where('id',$quoteData[0]->customerid)->first();
+        $customername = $customer->customername;
+        $personnelid = $quoteData[0]->personnelid;
+
+         $ticketids= Quote::where('customerid',$quoteData[0]->customerid)->pluck('id')->toArray();
+         $balancesheet = array();
+
+         $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$ticketids)->orderBy('id','desc')->get();
+        
+        $auth_id = auth()->user()->id;
+        $customerData = Quote::select('customerid','customername')->where('userid',$auth_id)->where('ticket_status',['3','4','5'])->groupBy('customerid')->get();
+
+        $overpaidData = DB::table('quote')->select('*')->where('customerid',$quoteData[0]->customerid)->whereIn('ticket_status',['3','5','4'])->where('over_paid','!=',0)->get();
+        //dd($overpaidData);
+        //$customerData = Customer::where('userid',$auth_id)->get(); 
+          return view('billing.paynownew1',compact('ticketID','quoteData','customerid','price','id', 'allinvoices','customername','personnelid','balancesheet','ticketids','customerData','overpaidData')); 
+      }
+    }
+
+    public function billingexport(Request $request) {
+        $tids = $request->exportids;
+        $tids = explode(",",$tids);
+        $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$tids)->orderBy('id','desc')->get();
+
+        $fileName = date('d-m-Y').'_export.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+        $columns = array('Transaction#','TicketId','Date of Payment','Invoice Paid  ','Method', 'Customer');
+
+        $callback = function() use($balancesheet, $columns) {
+        $file = fopen('php://output', 'w');
+        fputcsv($file, $columns);
+
+        foreach ($balancesheet as $key =>$value) {
+              
+              $newdate  = date("M, d Y", strtotime($value->created_at));
+              fputcsv($file, array($value->id, $value->ticketid, $newdate, $value->amount,$value->paymentmethod, $value->customername));
+        }
+          fclose($file);
+      };
+      return response()->stream($callback, 200, $headers);
+
     }
 
     
@@ -702,6 +852,99 @@ class BillingController extends Controller
       }
       
     }
+
+    public function updatenew(Request $request)
+    {
+      $auth_id = auth()->user()->id;
+      if(isset($request->ticketid)) {
+        $method = $request->method;
+      } else {
+        $method = $request->method1;
+      }
+      
+      if(isset($request->ticketid)) {
+        $tids = $request->ticketid;
+        $tids = explode(',',$tids); 
+        $check_no = ""; 
+        if($method=="Check") {
+         $check_no = $request->check_no;  
+        }
+      } else {
+          $check_no = "";
+          if($method=="Check") {
+           $check_no = $request->check_no1;  
+          }
+          $tids = $request->ids;
+          $amounts = $request->amount;
+          $combinedArray = array_combine($tids, $amounts);
+      }
+
+
+    if(isset($request->ticketid)) {
+      foreach($tids as $key => $value) {
+        if($value!=0) {
+          $getprice =DB::table('quote')->select('price','personnelid','amount_paid')->where('id',$value)->first();
+          if($getprice->amount_paid!="" || $getprice->amount_paid!="0") {
+            $remainingamount = $getprice->price - $getprice->amount_paid;
+          } else {
+            $remainingamount = $getprice->price;
+          }
+          $id = DB::table('balancesheet')->insertGetId([
+              'userid' => $auth_id,
+              'workerid' => $getprice->personnelid,
+              'ticketid' => $value,
+              'amount' => $remainingamount,
+              'customername' => $request->customername,
+              'paymentmethod' => $method,
+              'status' => "Completed"
+            ]);
+
+          DB::table('quote')->where('id','=',$value)
+          ->update([ 
+              "payment_status"=>"Completed","amount_paid"=>"$getprice->price","payment_amount"=>"$getprice->price","payment_mode"=>"$method","checknumber"=>"$check_no"
+          ]);  
+        }
+      }
+    } else {
+      foreach($combinedArray as $key => $value) {
+        if($value!=0) {
+          $getpid =DB::table('quote')->select('price','personnelid','amount_paid','payment_amount')->where('id',$key)->first();
+          $getamountpaid = 0;
+          $over_paid = 0;
+          if (is_numeric($getpid->amount_paid) && is_numeric($value)) {
+            $getamountpaid = $getpid->amount_paid+$value;
+            if($getamountpaid>$getpid->price) {
+              $over_paid = $getamountpaid - $getpid->price;
+              $getamountpaid = $getpid->price;
+            }
+          }
+          
+          $getpaymentamount = $getpid->payment_amount+$value;
+          if($getpaymentamount > $getpid->price) {
+              $getpaymentamount = $getpid->price;
+          }
+          
+
+          $id = DB::table('balancesheet')->insertGetId([
+              'userid' => $auth_id,
+              'workerid' => $getpid->personnelid,
+              'ticketid' => $key,
+              'amount' => $value,
+              'customername' => $request->customername,
+              'paymentmethod' => $method,
+              'status' => "Completed"
+            ]);
+
+          DB::table('quote')->where('id','=',$key)
+          ->update([ 
+              "payment_status"=>"Completed","amount_paid"=>"$getamountpaid","over_paid"=>"$over_paid","payment_amount"=>"$getpaymentamount","payment_mode"=>"$method","checknumber"=>"$check_no"
+          ]);  
+        }  
+      }
+    } 
+    $request->session()->flash('success', 'Payment Completed Successfully');
+            return redirect()->back();
+  }
 
     public function savefieldbilling(Request $request)
     {
@@ -1277,4 +1520,53 @@ class BillingController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
+    public function getticketData(Request $request) {
+       // Fetch data based on the $id
+        $ticketids =$request->ticketid;
+        $ticketids = explode(',',$ticketids);
+        $data = Quote::whereIn('id',$ticketids)->get();
+
+        $customerid = $data[0]->customerid;
+
+        $customer = Customer::select('id','customername')->where('id',$data[0]->customerid)->first();
+
+        $customername = $customer->customername;
+
+        $personnelid = $data[0]->personnelid;
+
+        // Create HTML table
+        $tableHtml = '<table class="table modal_table">';
+        foreach ($data as $key => $value) {
+            $tableHtml .= '<tr><input type="hidden" name="ids[]" value="' . $value->id . '"><input type="hidden" name="customerid" value="' . $customerid . '"><input type="hidden" name="customername" value="' . $customername . '"><input type="hidden" name="personnelid" value="' . $personnelid . '"><td>#' . $value->id . '</td><td>' . $value->givenstartdate . '</td><td>' .($value->price - $value->amount_paid). '&nbsp;&nbsp;</td><td><input type="text" class="input_item form-control formamount" placeholder="Payment Amount" id="amount_'.$value->id.'" name="amount[]">
+                  </td></tr>';
+        }
+        $tableHtml .= '</table>';
+
+        // Include HTML table in the JSON response
+        return response()->json(['html' => $tableHtml]);
+    }
+
+    public function receivepayment(Request $request)
+    {
+      $auth_id = auth()->user()->id;
+
+      $customerids = Quote::where('userid',$auth_id)->where('ticket_status',['3','4','5'])->groupBy('customerid')->get();
+      if(count($customerids)>0) {
+        $qinfo = Quote::select('id')->where('customerid',$customerids[0]->customerid)->where('ticket_status',['3','4','5'])->first();
+
+        $ticketid = $qinfo->id;
+       return redirect('company/billing/paynow?id='.$ticketid.'&cid='.$customerids[0]->customerid);
+     }
+     else {
+         return redirect()->back();
+      }
+   }
+
+    public function getreceivepayment(Request $request)
+    {
+      $cid = $request->cid;
+      $qinfo = Quote::select('id')->where('customerid',$cid)->where('ticket_status',['3','4','5'])->first();
+      $ticketid = $qinfo->id;
+      return response()->json(['cid' => $cid,'tid' => $ticketid]);    
+    }
 }

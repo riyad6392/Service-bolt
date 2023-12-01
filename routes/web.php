@@ -373,11 +373,22 @@ Route::group([
 
     Route::any('/billing/viewallticketfilter', [BillingController::class, 'viewallticketfilter'])->name('viewallticketfilter');
 
-    Route::any('/billing/paynow/', [BillingController::class, 'paynow'])->name('paynow');
+    Route::any('/billing/paynow', [BillingController::class, 'paynow'])->name('paynow');
+    Route::any('/billing/paynow/{id}', [BillingController::class, 'paynow'])->name('paynow');
 
+    Route::post('/billing/billingexport', [BillingController::class, 'billingexport'])->name('billingexport');
+
+    Route::any('/billing/receivepayment', [BillingController::class, 'receivepayment'])->name('receivepayment');
+
+    Route::any('/billing/getreceivepayment', [BillingController::class, 'getreceivepayment'])->name('getreceivepayment');
+   
     Route::any('/billing/directpaynow/', [BillingController::class, 'directpaynow'])->name('directpaynow');
 
     Route::any('/billing/update', [BillingController::class, 'update'])->name('mybillingupdate');
+
+    Route::any('/billing/updatenew', [BillingController::class, 'updatenew'])->name('mybillingupdatenew');
+
+    Route::any('/billing/getticketData', [BillingController::class, 'getticketData'])->name('getticketData');
 
     Route::any('/billing/directicketsave', [BillingController::class, 'directicketsave'])->name('mybillingdirecticketsave');
 
