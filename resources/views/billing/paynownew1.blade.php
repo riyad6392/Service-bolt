@@ -58,7 +58,6 @@ select option {
   .input_item{
     border: 2px solid #d4d4d4;
     border-radius: 3px;
-    font-weight: 600;
     padding: 7px;
   }
   .input_item:focus{
@@ -68,13 +67,27 @@ select option {
   label{
     font-weight: 600;
   }
+  table tbody tr {
+    border-radius: 8px;
+    margin-bottom: 20px;
+    position: relative;
+}
   table tr td,table tr th{
     border: none !important;
     color:rgb(41,56,69) !important;
+    padding: 15px 30px;
+    background: lightgray;
+}
+  table tr th{
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 300;
+    color: #b0b7c3;
+    color:b0b7c3;
   }
   table tr td{
     padding: 0 !important;
-    font-weight: 600;
+    /*font-weight: 600;*/
   }
   .middle_box .d-flex{
     gap: 10px;
@@ -148,7 +161,7 @@ select option {
                 </select>
               </div>
               <div class="mt-5">
-                <button type="button" class="btn save_btn1">Save Payment</button>
+                <button type="button" class="btn add-btn-yellow save_pay">Save Payment</button>
               </div>
               
             </div>
@@ -238,22 +251,24 @@ select option {
                     </tr>
                     @endforeach
                   </table>
-                  @if(count($overpaidData)>0)
-                      <h6 class="text_center">Over Paid Invoices</h6>
-                      <table class="table">
-                        <tr>
-                          <th>Invoice #</th>
-                          <th>Date</th>
-                          <th>Over Paid</th>
-                        </tr>
-                        @foreach($overpaidData as $key=>$value)
-                        <tr>
-                          <td>#{{$value->id}}</td>
-                          <td>{{$value->givenstartdate}}</td>
-                          <td class="text_center">{{$value->over_paid}}</td>
-                        </tr>
-                        @endforeach
-                      </table>
+                  @if(isset($overpaidData))
+                    @if(count($overpaidData)>0)
+                        <h6 class="text_center">Over Paid Invoices</h6>
+                        <table class="table">
+                          <tr>
+                            <th>Invoice #</th>
+                            <th>Date</th>
+                            <th>Over Paid</th>
+                          </tr>
+                          @foreach($overpaidData as $key=>$value)
+                          <tr>
+                            <td>#{{$value->id}}</td>
+                            <td>{{$value->givenstartdate}}</td>
+                            <td class="text_center">{{$value->over_paid}}</td>
+                          </tr>
+                          @endforeach
+                        </table>
+                    @endif
                   @endif
                 </div>
               </div>
@@ -271,11 +286,11 @@ select option {
           <input type="hidden" name="exportids" id="exportids" value="{{$exportids}}">
           <div class="d-flex justify-content-between align-items-center mb-1">
             <h6 class="mb-0">Customer Payments</h6>
-            <button class="btn save_btn" type="submit" name="search" value="excel">Export to CSV</button>
+            <button class="btn add-btn-yellow" type="submit" name="search" value="excel">Export to CSV</button>
           </div>
         </form>
           <div class="box">
-            <table class="table">
+            <table class="table table-new1">
               <tr>
                 <th>Ticket #</th>
                 <th>Date of Payment</th>
@@ -327,7 +342,7 @@ select option {
               <div id="modalContent"></div>
             </div>
             <div class="modal-footer float-left">
-              <button type="button" class="btn save_btn d-inline" id="modalhide">Apply</button>
+              <button type="button" class="btn  d-inline add-btn-yellow" id="modalhide">Apply</button>
             </div>
           </form>
           </div>
@@ -425,7 +440,7 @@ $("#modalhide").click(function() {
     return false;
  });
 
-$(".save_btn1").click(function() {
+$(".save_pay").click(function() {
   var selectedValue = $("#mySelect").val();
   if(selectedValue=="Check") {
     var cnumber = $("#check_no").val();

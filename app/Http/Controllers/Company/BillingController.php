@@ -268,7 +268,6 @@ class BillingController extends Controller
         $customerData = Quote::select('customerid','customername')->where('userid',$auth_id)->where('ticket_status',['3','4','5'])->groupBy('customerid')->get();
 
         $overpaidData = DB::table('quote')->select('*')->where('customerid',$quoteData[0]->customerid)->whereIn('ticket_status',['3','5','4'])->where('over_paid','!=',0)->get();
-        //dd($overpaidData);
         //$customerData = Customer::where('userid',$auth_id)->get(); 
           return view('billing.paynownew1',compact('ticketID','quoteData','customerid','price','id', 'allinvoices','customername','personnelid','balancesheet','ticketids','customerData','overpaidData')); 
       }
