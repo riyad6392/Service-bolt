@@ -144,7 +144,6 @@ select option {
             <div class="payment_left">
               <h4>Collect Payments Screen</h4>
 
-              <h6>({{$customername}})</h6>
               <select class="form-select input_item puser" aria-label="Default select example" id="cid">
                 @foreach($customerData as $key => $value)
                   <option value="{{$value->customerid}}" @if(@$customerid ==  $value->customerid) selected @endif>{{$value->customername}}</option>
@@ -174,7 +173,7 @@ select option {
               <form method="put" action="{{ url('company/billing/updatenew') }}" enctype="multipart/form-data" id="saveform">
                   @csrf
                
-                  <div class="middle_box ps-lg-5" style="margin-top: 130px;">
+                  <div class="middle_box ps-lg-5" style="margin-top: 100px;">
                     <div class="row">
                       <div class="col-lg-5">
                         <div class="form-group">
