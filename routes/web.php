@@ -381,6 +381,8 @@ Route::group([
     Route::any('/billing/receivepayment', [BillingController::class, 'receivepayment'])->name('receivepayment');
 
     Route::any('/billing/getreceivepayment', [BillingController::class, 'getreceivepayment'])->name('getreceivepayment');
+
+    Route::any('/billing/receivepayments', [BillingController::class, 'receivepayments'])->name('receivepayments');
    
     Route::any('/billing/directpaynow/', [BillingController::class, 'directpaynow'])->name('directpaynow');
 

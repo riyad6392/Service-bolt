@@ -276,7 +276,7 @@ class BillingController extends Controller
     public function billingexport(Request $request) {
         $tids = $request->exportids;
         $tids = explode(",",$tids);
-        $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$tids)->orderBy('id','desc')->get();
+        $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$tids)->orderBy('id','asc')->get();
 
         $fileName = date('d-m-Y').'_export.csv';
         $headers = array(
@@ -1568,4 +1568,31 @@ class BillingController extends Controller
       $ticketid = $qinfo->id;
       return response()->json(['cid' => $cid,'tid' => $ticketid]);    
     }
+
+
+    public function receivepayments(Request $request)
+    {
+      
+      $auth_id = auth()->user()->id;
+      $customerData = Customer::where('userid',$auth_id)->get();
+      
+
+      if(isset($request->cid)) {
+        $customerid = $request->cid;
+      } else {
+        $customerid = $customerData[0]->id;
+      }
+
+      $customerids = Customer::where('userid',$auth_id)->pluck('id')->toArray();
+      if(isset($request->cid)) {
+        $ticketids= Quote::where('customerid',$request->cid)->pluck('id')->toArray();
+      } else {
+        $ticketids= Quote::where('customerid',$customerids[0])->pluck('id')->toArray();
+      }
+
+      $balancesheet = array();
+
+      $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$ticketids)->orderBy('id','desc')->get();
+      return view('billing.receivepayment',compact('auth_id','balancesheet','ticketids','customerData','customerid'));
+   }
 }

@@ -290,6 +290,12 @@ if(strpos(Request::url(), 'billing') !== false || strpos(Request::url(), 'manage
   $manage_bill = "";
 }
 
+if(strpos(Request::url(), 'receivepayments') !== false || strpos(Request::url(), 'receivepayments') !== false) {
+  $receivepayments = "active";
+} else {
+  $receivepayments = "";
+}
+
 $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest()->offset(0)->limit(5)->get();
 
 $userinfo = App\Models\User::select('googleplace')->where('role','superadmin')->first();
@@ -449,8 +455,8 @@ $googleplacekey = $userinfo->googleplace;
       </li>
     </li>
     <li class="menu">
-      <li class="link" style="margin-left:32px;">
-        <a href="{{route('company.receivepayment')}}">Receive Payments</a>
+      <li class="link {{$receivepayments}}" style="margin-left:32px;">
+        <a href="{{route('company.receivepayments')}}">Receive Payments</a>
       </li>
     </li>
     <li class="menu">

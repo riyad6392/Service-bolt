@@ -103,6 +103,7 @@
         <th>#</th>
         <th>Invoice Id</th>
         <th>Date</th>
+        <th>Due Date</th>
         <th>Customer Name</th>
         <th>Service Address</th>
         <th>Personnel Name</th>
@@ -136,6 +137,14 @@
           <td>#{{$ids}}</td>
           <td><a class="btn add-btn-yellow w-100 viewinvoice" data-id="{{$value->id}}" data-duedate="{{$value->duedate}}" data-invoicenote="{{$value->invoicenote}}" data-bs-toggle="modal" data-bs-target="#view-invoice">#{{$value->invoiceid}}</a></td>
           <td>{{date('m-d-Y', strtotime($value->date))}}</td>
+          @php
+            if($value->duedate!=null || $value->duedate!='') {
+              $duedate = date('m-d-Y', strtotime($value->duedate));
+            } else {
+              $duedate = "--";
+            }
+          @endphp
+          <td>{{$duedate}}</td>
           <td>{{$value->customername}}</td>
           <td>{{$value->address}}</td>
           <td>{{$value->personnelname}}</td>
@@ -244,19 +253,19 @@
         })
     });
 
-    $.ajax({
-            url:"{{url('company/billing/leftbarbillingdata')}}",
-            data: {
-              targetid: 0,
-              serviceid: 0 
-            },
-            method: 'post',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-              $('#viewleftbarbillingdata').html(data.html);
-            }
-        })
+    // $.ajax({
+    //         url:"{{url('company/billing/leftbarbillingdata')}}",
+    //         data: {
+    //           targetid: 0,
+    //           serviceid: 0 
+    //         },
+    //         method: 'post',
+    //         dataType: 'json',
+    //         refresh: true,
+    //         success:function(data) {
+    //           $('#viewleftbarbillingdata').html(data.html);
+    //         }
+    //     })
   });
 
   // $('table tr').each(function(a,b) {
@@ -353,6 +362,10 @@
       refresh: true,
       success:function(data) {
         $('#viewdueinvoicemodaldata').html(data.html);
+        $("#duedate").datepicker({ 
+          autoclose: true, 
+          todayHighlight: true
+        });
         
       }
     });
