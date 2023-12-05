@@ -671,7 +671,7 @@ $googleplacekey = $userinfo->googleplace;
 @yield('script')
  <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $googleplacekey; ?>&callback=initAutocomplete&libraries=places" async></script>
  <!-- for datepicker -->
-<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
  
  <!-- AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc -->
  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOi1ruL06YUktpnX-qRJlTtXxPL6RUzcg&callback=initAutocomplete&libraries=places" async></script> -->

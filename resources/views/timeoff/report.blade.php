@@ -162,7 +162,7 @@ tr.accepted-row:after {
 @endsection
 
 @section('script')
-<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
     $('#example').DataTable({

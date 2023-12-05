@@ -1827,7 +1827,7 @@ select#servicename {
 @endsection
 @section('script')
 <!-- for datepicker -->
-<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
 $('.dropify').dropify();
 
