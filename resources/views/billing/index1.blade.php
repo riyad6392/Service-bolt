@@ -30,7 +30,7 @@
 
       <div class="col-md-12">
         <div class="side-h3">
-       <h3>Collect Payments</h3>
+       <h3>List Payments</h3>
        <!-- <p style="color: #B0B7C3;">Lorem ipsum dolor sit amet</p> -->
      </div>
      </div>

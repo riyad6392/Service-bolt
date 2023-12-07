@@ -296,6 +296,12 @@ if(strpos(Request::url(), 'receivepayments') !== false || strpos(Request::url(),
   $receivepayments = "";
 }
 
+if(strpos(Request::url(), 'paynow') !== false || strpos(Request::url(), 'paynow') !== false) {
+  $paynow = "active";
+} else {
+  $paynow = "";
+}
+
 $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest()->offset(0)->limit(5)->get();
 
 $userinfo = App\Models\User::select('googleplace')->where('role','superadmin')->first();
@@ -451,12 +457,17 @@ $googleplacekey = $userinfo->googleplace;
   <div class="collapse" id="collapseExample1" style="">
     <li class="menu">
       <li class="link" style="margin-left:32px;">
-        <a href="{{route('company.billing')}}">Collect Payments</a>
+        <a href="{{route('company.billing')}}">List Payments</a>
+      </li>
+    </li>
+    <li class="menu">
+      <li class="link {{$paynow}}" style="margin-left:32px;">
+        <a href="{{route('company.receivepayment')}}">Collect Payments</a>
       </li>
     </li>
     <li class="menu">
       <li class="link {{$receivepayments}}" style="margin-left:32px;">
-        <a href="{{route('company.receivepayments')}}">Receive Payments</a>
+        <a href="{{route('company.receivepayments')}}">Received Payments</a>
       </li>
     </li>
     <li class="menu">

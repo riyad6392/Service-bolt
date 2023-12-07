@@ -322,7 +322,7 @@ class BillingController extends Controller
          $sdate = strtotime($date);
          $datef = date('l - F d, Y',$sdate);
          DB::enableQueryLog();
-        $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.serviceid','quote.product_id','quote.price','quote.tickettotal','quote.givendate','quote.etc','quote.payment_status','quote.payment_mode','quote.personnelid','quote.primaryname','quote.tax', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['3','5','4'])->whereBetween('quote.givenstartdate', [$date, $todate]);
+        $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.serviceid','quote.product_id','quote.price','quote.partial','quote.tickettotal','quote.givendate','quote.etc','quote.payment_status','quote.payment_mode','quote.personnelid','quote.primaryname','quote.tax', 'customer.customername', 'customer.email','personnel.personnelname','services.servicename')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['3','5','4'])->whereBetween('quote.givenstartdate', [$date, $todate]);
 
         if(isset($request->pid)) {
             $pid = $request->pid;
@@ -357,7 +357,7 @@ class BillingController extends Controller
 
       if($targetid == 0) {
         $auth_id = auth()->user()->id;
-        $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.customerid','quote.price','quote.tickettotal','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.invoicenote','quote.personnelid','quote.primaryname','quote.ticket_status','quote.duedate','quote.tax', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['3','4','5'])->whereBetween('quote.givenstartdate', [$date, $todate]);
+        $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.customerid','quote.price','quote.amount_paid','quote.partial','quote.tickettotal','quote.givendate','quote.payment_mode','quote.payment_status','quote.invoiceid','quote.invoicenote','quote.personnelid','quote.primaryname','quote.ticket_status','quote.duedate','quote.tax', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereColumn('quote.personnelid','quote.primaryname')->whereIn('quote.ticket_status',['3','4','5'])->whereBetween('quote.givenstartdate', [$date, $todate]);
 
 
 
@@ -405,7 +405,11 @@ class BillingController extends Controller
       if($billingData[$datacount]->payment_status==null && $billingData[$datacount]->payment_mode==null) {
         $pstatus1 = 'Pending';           
       } else {
-        $pstatus1 = 'Completed'; 
+        if($billingData[$datacount]->partial==1) {
+          $pstatus1 = 'Partial Completed';          
+        } else {
+          $pstatus1 = 'Completed';          
+        }
       }
            
       if($pstatus1 =='Completed')  {
@@ -481,7 +485,7 @@ class BillingController extends Controller
           </div>
         </div>';
       } else {
-        $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.customerid','quote.price','quote.tickettotal','quote.givendate','quote.payment_status','quote.payment_mode','quote.ticket_status','quote.invoiceid','quote.personnelid','quote.duedate','quote.invoicenote','quote.tax','quote.primaryname', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
+        $billingData = DB::table('quote')->select('quote.id','quote.parentid','quote.customerid','quote.price','quote.amount_paid','quote.partial','quote.tickettotal','quote.givendate','quote.payment_status','quote.payment_mode','quote.ticket_status','quote.invoiceid','quote.personnelid','quote.duedate','quote.invoicenote','quote.tax','quote.primaryname', 'customer.customername','customer.email','personnel.personnelname','services.servicename','services.image')->join('customer', 'customer.id', '=', 'quote.customerid')->join('services', 'services.id', '=', 'quote.serviceid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id',$request->serviceid)->get();
 
         $ids = $billingData[0]->id;
         if(!empty($billingData[0]->parentid))
@@ -524,7 +528,11 @@ class BillingController extends Controller
       if($billingData[0]->payment_status==null && $billingData[0]->payment_mode==null) {
           $pstatus = 'Pending';           
       } else {
-        $pstatus = 'Completed';  
+        if($billingData[0]->partial==1) {
+          $pstatus = 'Partial Completed';  
+        } else {
+          $pstatus = 'Completed';  
+        }
       }
            
       if($pstatus =='Completed')  {
@@ -900,7 +908,7 @@ class BillingController extends Controller
 
           DB::table('quote')->where('id','=',$value)
           ->update([ 
-              "payment_status"=>"Completed","amount_paid"=>"$getprice->price","payment_amount"=>"$getprice->price","payment_mode"=>"$method","checknumber"=>"$check_no"
+              "payment_status"=>"Completed","amount_paid"=>"$getprice->price","payment_amount"=>"$getprice->price","payment_mode"=>"$method","checknumber"=>"$check_no","partial"=>0
           ]);  
         }
       }
@@ -936,7 +944,7 @@ class BillingController extends Controller
 
           DB::table('quote')->where('id','=',$key)
           ->update([ 
-              "payment_status"=>"Completed","amount_paid"=>"$getamountpaid","over_paid"=>"$over_paid","payment_amount"=>"$getpaymentamount","payment_mode"=>"$method","checknumber"=>"$check_no"
+              "payment_status"=>"Completed","amount_paid"=>"$getamountpaid","over_paid"=>"$over_paid","payment_amount"=>"$getpaymentamount","payment_mode"=>"$method","checknumber"=>"$check_no","partial"=>1
           ]);  
         }  
       }
@@ -1575,24 +1583,27 @@ class BillingController extends Controller
       
       $auth_id = auth()->user()->id;
       $customerData = Customer::where('userid',$auth_id)->get();
-      
+      if(count($customerData)>0) {
+          if(isset($request->cid)) {
+          $customerid = $request->cid;
+        } else {
+          $customerid = $customerData[0]->id;
+        }
 
-      if(isset($request->cid)) {
-        $customerid = $request->cid;
-      } else {
-        $customerid = $customerData[0]->id;
+        $customerids = Customer::where('userid',$auth_id)->pluck('id')->toArray();
+        if(isset($request->cid)) {
+          $ticketids= Quote::where('customerid',$request->cid)->pluck('id')->toArray();
+        } else {
+          $ticketids= Quote::where('customerid',$customerids[0])->pluck('id')->toArray();
+        }
+
+        $balancesheet = array();
+
+        $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$ticketids)->orderBy('id','desc')->get();
+        return view('billing.receivepayment',compact('auth_id','balancesheet','ticketids','customerData','customerid'));
+        }
+        else {
+           return redirect()->back();
+        }
       }
-
-      $customerids = Customer::where('userid',$auth_id)->pluck('id')->toArray();
-      if(isset($request->cid)) {
-        $ticketids= Quote::where('customerid',$request->cid)->pluck('id')->toArray();
-      } else {
-        $ticketids= Quote::where('customerid',$customerids[0])->pluck('id')->toArray();
-      }
-
-      $balancesheet = array();
-
-      $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$ticketids)->orderBy('id','desc')->get();
-      return view('billing.receivepayment',compact('auth_id','balancesheet','ticketids','customerData','customerid'));
-   }
 }

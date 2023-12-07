@@ -124,9 +124,23 @@
         }
         if($value->payment_status!="" || $value->payment_mode!="") {
           $pstatus = "Paid";
+          $randomid = 100;
+          $invoiceids = $randomid.''.$value->id;
+
+          $invoidedata = App\Models\Quote::where('id','=',$value->id)
+          ->update([ 
+              "invoiceid"=>"$invoiceids"
+          ]);
         } 
         elseif($value->invoiced=="1") {
           $pstatus = "Invoiced";
+          $randomid = 100;
+          $invoiceids = $randomid.''.$value->id;
+
+          $invoidedata = App\Models\Quote::where('id','=',$value->id)
+          ->update([ 
+              "invoiceid"=>"$invoiceids"
+          ]);
         }
         elseif($value->invoiced=="0" && ($value->payment_mode=="" || $value->payment_status=="")) {
           $pstatus = "Pending";
@@ -389,7 +403,10 @@
           refresh: true,
           success:function(data) {
             $('#viewinvoicemodaldatainvoiced').html(data.html);
-            
+            $("#duedate").datepicker({ 
+              autoclose: true, 
+              todayHighlight: true
+            });
           }
         });
        return false;

@@ -29,7 +29,7 @@
      <div class="row">
       <div class="col-md-12">
         <div class="side-h3">
-       <h3 class="align-items-center d-flex justify-content-between">Receive Payments</h3>
+       <h3 class="align-items-center d-flex justify-content-between">Received Payments</h3>
         @if(Session::has('success'))
 
               <div class="alert alert-success" id="selector">
@@ -155,7 +155,6 @@
 
 @endsection
 
-@section('script')
 @section('script')
 <script type="text/javascript">
   $(document).ready(function() {

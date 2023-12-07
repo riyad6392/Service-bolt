@@ -39,6 +39,15 @@
     outline: 0;
     box-shadow: none;
 }
+.dataTables_length{
+  display: none;
+}
+.dataTables_info{
+  display: none;
+}
+.dataTables_filter{
+  display: none;
+}
 select option {
     background-color: #fff; /* Background color for options */
     color: #333; /* Text color for options */
@@ -169,13 +178,13 @@ select option {
           <div class="col-lg-9 col-md-9">
             <div class="payment_right payment_left">
               <div class="row">
-                <div class="col-lg-7 col-md-7 pl-0">
+                <div class="col-lg-6 col-md-6 pl-0">
               <form method="put" action="{{ url('company/billing/updatenew') }}" enctype="multipart/form-data" id="saveform">
                   @csrf
                
                   <div class="middle_box ps-lg-5" style="margin-top: 100px;">
                     <div class="row">
-                      <div class="col-lg-5">
+                      <div class="col-lg-6">
                         <div class="form-group">
                           <h6>Payment Amount</h6>
                           <input type="text" class="form-control input_item" name="amount" id="amount" value="{{$price}}" readonly>
@@ -210,25 +219,30 @@ select option {
               </form>
                 </div>
 
-                <div class="col-lg-5 col-md-5">
+                <div class="col-lg-6 col-md-6" style="overflow:hidden;overflow-x: auto;">
                   <h6 class="text_center">Open Invoices</h6>
-                  <table class="table">
-                    <tr>
-                      <th>Invoice #</th>
-                      <th>Date</th>
-                      <th>Amount Owned</th>
-                    </tr>
-                    @foreach($allinvoices as $key=>$value)
-                    @php
-                      $ids = explode(',',$id);
-                      if(in_array($value->id,$ids)) {
-                          $checked="checked";
-                      } else {
-                          $checked="";
-                      }
-                    @endphp
-                    <tr>
-                      <td>
+                    <table id="example" class="table">
+                      <thead>
+                          <tr>
+                              <th>Invoice #</th>
+                              <th>Date</th>
+                              <th>Amount Owned</th>
+                              
+                          </tr>
+                      </thead>
+                        <tbody>
+                          @foreach($allinvoices as $key=>$value)
+                           @php
+                              $ids = explode(',',$id);
+                              if(in_array($value->id,$ids)) {
+                                  $checked="checked";
+                              } else {
+                                  $checked="";
+                              }
+                            @endphp
+                            @if($value->price - $value->amount_paid !=0)
+                            <tr>
+                                <td>
                         <div class="form-check">
                           <input class="form-check-input input_item invoicecheck"
                             type="checkbox" id="radio-{{$value->id}}"
@@ -242,16 +256,17 @@ select option {
                           </label>
                         </div>
                       </td>
-                      <td>{{$value->givenstartdate}}</td>
-                      @php
-
-                      @endphp
-                      <td class="text_center">{{$value->price - $value->amount_paid}}</td>
-                    </tr>
-                    @endforeach
+                                <td>{{$value->givenstartdate}}</td>
+                                <td class="text_center">{{$value->price - $value->amount_paid}}</td>
+                                
+                            </tr>
+                            @endif
+                          @endforeach  
+                         </tbody>
                   </table>
                   @if(isset($overpaidData))
                     @if(count($overpaidData)>0)
+                    <br>
                         <h6 class="text_center">Over Paid Invoices</h6>
                         <table class="table">
                           <tr>
@@ -356,7 +371,11 @@ select option {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
    });
-  
+  $(document).ready(function() {
+    $('#example').DataTable( {
+        "order": [[ 0, "desc" ]]
+    } );
+  });
 	$(document).ready(function () {
         var search = $(location).attr('search');
         var customerid = $("#customerid").val();

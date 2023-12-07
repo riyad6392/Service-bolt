@@ -165,7 +165,11 @@
         if($value->payment_status==null && $value->payment_mode==null) {
           $pstatus1 = 'Pending';           
         } else {
-          $pstatus1 = 'Completed'; 
+          if($value->partial==1) {
+            $pstatus1 = 'Partial Completed'; 
+          } else {
+            $pstatus1 = 'Completed';   
+          }
         }
       @endphp
       <tr class="user-hover showSingle" target="{{$i}}" data-id="{{$value->id}}">
