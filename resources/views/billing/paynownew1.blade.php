@@ -174,8 +174,18 @@
     height: 20px !important;
     border-color: #fee200 !important;
   }
+
+  tr.tableHover {
+    border: 1px solid #dee2e6;
+    height: 65px;
+    vertical-align: middle;
+  }
+
+  .tableHover:hover .tableColorHover {
+    color: #29dbba !important;
+  }
 </style>
-<div class="container mt-5">
+<div class="container mt-3">
   <div class="row">
     @if(Session::has('success'))
     <div class="alert alert-success" id="selector">
@@ -187,12 +197,12 @@
       {{Session::get('error')}}
     </div>
     @endif
-    <div class="col-lg-3 col-md-3">
+    <h3 class="mb-3">Collect Payments</h3>
+    <div class="col-lg-4 col-md-4">
       <div class="card">
-        <div class="card-body p-3">
+        <div class="card-body p-3 py-5">
           <div class="payment_left">
-            <h4>Collect Payments Screen</h4>
-
+            <h6>Select Customer</h6>
             <select class="form-select input_item puser" aria-label="Default select example" id="cid">
               @foreach($customerData as $key => $value)
               <option value="{{$value->customerid}}" @if(@$customerid==$value->customerid) selected @endif>{{$value->customername}}</option>
@@ -242,7 +252,7 @@
                 </div>
               </div>
 
-              <div class="mt-5">
+              <div class="mt-2">
                 <button type="button" class="btn add-btn-yellow save_pay">Save Payment</button>
               </div>
             </form>
@@ -252,7 +262,7 @@
       </div>
     </div>
 
-    <div class="col-lg-9 col-md-9 ps-0">
+    <div class="col-lg-8 col-md-8 ps-0">
       <div class="payment_right payment_left">
         <div class="card">
           <div class="card-body">
@@ -329,7 +339,7 @@
 
   </div>
 
-  <div class="bottom_item mt-5">
+  <div class="bottom_item mt-3">
     <form action="{{ route('company.billingexport') }}" method="post">
       @csrf
       @php
@@ -347,20 +357,20 @@
       <div class="card-body p-4">
         <div class="box">
           <table class="table table-new1">
-            <tr>
+            <tr class="tableHover">
               <th>Ticket #</th>
               <th>Date of Payment</th>
               <th>Invoice Paid</th>
               <th>Method</th>
             </tr>
             @foreach($balancesheet as $key => $value)
-            <tr>
+            <tr class="tableHover">
               @php
               $newdate = date("M, d Y", strtotime($value->created_at));
               @endphp
-              <td>#{{$value->ticketid}}</td>
-              <td>{{$newdate}}</td>
-              <td>{{$value->amount}}</td>
+              <td class="tableColorHover">#{{$value->ticketid}}</td>
+              <td class="tableColorHover">{{$newdate}}</td>
+              <td class="tableColorHover">{{$value->amount}}</td>
               @php
               $checkinfo = App\Models\Quote::select('checknumber')->where('id',$value->ticketid)->first();
               if($checkinfo->checknumber!=0 && $checkinfo->checknumber!="") {
@@ -369,7 +379,7 @@
               $checknumber = "";
               }
               @endphp
-              <td>{{$value->paymentmethod}} {{$checknumber}}</td>
+              <td class="tableColorHover">{{$value->paymentmethod}} {{$checknumber}}</td>
             </tr>
             @endforeach
           </table>
