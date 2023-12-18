@@ -40,11 +40,7 @@
     color: #6558F5;
   }
 
-  .form-select:focus {
-    border-color: none;
-    outline: 0;
-    box-shadow: none;
-  }
+
 
   .dataTables_length {
     display: none;
@@ -83,11 +79,6 @@
     border: 2px solid #d4d4d4;
     border-radius: 3px;
     padding: 7px;
-  }
-
-  .input_item:focus {
-    box-shadow: none;
-    outline: none;
   }
 
   label {
@@ -184,6 +175,15 @@
   .tableHover:hover .tableColorHover {
     color: #29dbba !important;
   }
+
+  .input_item {
+    border: 1px solid #f3f3f3;
+    box-sizing: border-box;
+    border-radius: 15px;
+    height: 50px;
+    outline: none;
+  }
+
 </style>
 <div class="container mt-3">
   <div class="row">
@@ -395,7 +395,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Partial Payment</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Partial Payment</h5> <br>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form method="put" action="{{ url('company/billing/updatenew') }}" enctype="multipart/form-data" id="modalpost">

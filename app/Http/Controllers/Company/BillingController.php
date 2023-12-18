@@ -1543,8 +1543,14 @@ class BillingController extends Controller
 
         // Create HTML table
         $tableHtml = '<table class="table modal_table">';
+        $tableHtml .= '   
+              <tr>       
+              <th class="tableHeads">INVOICE </th>
+              <th class="tableHeads">date</th>
+              <th class="tableHeads">amount </th>
+              </tr>';
         foreach ($data as $key => $value) {
-            $tableHtml .= '<tr><input type="hidden" name="ids[]" value="' . $value->id . '"><input type="hidden" name="customerid" value="' . $customerid . '"><input type="hidden" name="customername" value="' . $customername . '"><input type="hidden" name="personnelid" value="' . $personnelid . '"><td>#' . $value->id . '</td><td>' . $value->givenstartdate . '</td><td>' .($value->price - $value->amount_paid). '&nbsp;&nbsp;</td><td><input type="text" class="input_item form-control formamount" placeholder="Payment Amount" id="amount_'.$value->id.'" name="amount[]">
+            $tableHtml .= '<tr style="vertical-align: middle; white-space: nowrap;"><input type="hidden" name="ids[]" value="' . $value->id . '"><input type="hidden" name="customerid" value="' . $customerid . '"><input type="hidden" name="customername" value="' . $customername . '"><input type="hidden" name="personnelid" value="' . $personnelid . '"><td>#' . $value->id . '</td><td>' . $value->givenstartdate . '</td><td style="padding-left:10px !important">' .($value->price - $value->amount_paid). '&nbsp;&nbsp;</td><td><input type="text" class="input_item form-control formamount" placeholder="Payment Amount" id="amount_'.$value->id.'" name="amount[]">
                   </td></tr>';
         }
         $tableHtml .= '</table>';
