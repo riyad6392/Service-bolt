@@ -362,6 +362,7 @@
               <th>Date of Payment</th>
               <th>Invoice Paid</th>
               <th>Method</th>
+              <th>Action</th>
             </tr>
             @foreach($balancesheet as $key => $value)
             <tr class="tableHover">
@@ -380,6 +381,7 @@
               }
               @endphp
               <td class="tableColorHover">{{$value->paymentmethod}} {{$checknumber}}</td>
+              <td><a class="btn btn-edit reject-btn p-3 w-auto" id="delete" data-id="{{$value->id}}"><i class="fa fa-trash-o" aria-hidden="true" style="color:red;"></i></a></td>
             </tr>
             @endforeach
           </table>
@@ -576,5 +578,39 @@
       return value
     }
   }
+
+  $('html').on('click','#delete',function() {
+   var id = $(this).data('id');
+   var dataString =  'id='+ id;
+  swal({
+    title: "Are you sure!",
+    text: "Are you sure? you want to delete it!",
+    type: "error",
+    confirmButtonClass: "btn-danger",
+    confirmButtonText: "Yes!",
+    showCancelButton: true,
+},
+function() {
+    $.ajax({
+          url:'{{route('company.deleteamount')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+         success:function()
+         {
+          swal({
+             title: "Done!", 
+             text: "Deleted Successfully!", 
+             type: "success"
+          },
+          function() { 
+                 location.reload();
+              }
+          );
+         }
+        })
+  });
+  });
 </script>
 @endsection

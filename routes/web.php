@@ -407,6 +407,8 @@ Route::group([
 
      Route::post('/billing/downloadinvoiceview', [BillingController::class, 'downloadinvoiceview'])->name('downloadinvoiceview');
 
+     Route::any('/billing/deleteamount', [BillingController::class, 'deleteamount'])->name('deleteamount');
+
     Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
 
     Route::any('/categories/create', [CategoriesController::class, 'create'])->name('categoriescreate');

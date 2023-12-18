@@ -237,7 +237,7 @@ class BillingController extends Controller
         $ticketids= Quote::where('customerid',$quoteData->customerid)->pluck('id')->toArray();
          $balancesheet = array();
 
-         $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$ticketids)->orderBy('id','desc')->get();
+         $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$ticketids)->where('is_delete',0)->orderBy('id','desc')->get();
         $auth_id = auth()->user()->id;
         $customerData = Quote::select('customerid','customername')->where('userid',$auth_id)->where('ticket_status',['3','4','5'])->groupBy('customerid')->get();
         //$customerData = Customer::where('userid',$auth_id)->get(); 
@@ -262,7 +262,7 @@ class BillingController extends Controller
          $ticketids= Quote::where('customerid',$quoteData[0]->customerid)->pluck('id')->toArray();
          $balancesheet = array();
 
-         $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$ticketids)->orderBy('id','desc')->get();
+         $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$ticketids)->where('is_delete',0)->orderBy('id','desc')->get();
         
         $auth_id = auth()->user()->id;
         $customerData = Quote::select('customerid','customername')->where('userid',$auth_id)->where('ticket_status',['3','4','5'])->groupBy('customerid')->get();
@@ -1611,5 +1611,15 @@ class BillingController extends Controller
         else {
            return redirect()->back();
         }
+      }
+
+      public function deleteamount(Request $request)
+      {
+         DB::table('balancesheet')->where('id','=',$request->id)
+                      ->update([ 
+                          "is_delete"=> 1
+                    ]);
+
+      return response()->json(['delete' => 'yes']); 
       }
 }

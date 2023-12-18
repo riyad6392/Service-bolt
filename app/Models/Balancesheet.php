@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Balancesheet extends Model
 {
     protected $table = 'balancesheet';
-    protected $fillable = ['userid','ticketid','amount','paymentmethod','customername','status'];
+    protected $fillable = ['userid','ticketid','amount','paymentmethod','customername','status','is_delete'];
 }
