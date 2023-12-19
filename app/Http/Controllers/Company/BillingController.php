@@ -276,7 +276,7 @@ class BillingController extends Controller
     public function billingexport(Request $request) {
         $tids = $request->exportids;
         $tids = explode(",",$tids);
-        $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$tids)->orderBy('id','asc')->get();
+        $balancesheet = DB::table('balancesheet')->whereIn('ticketid',$tids)->where('is_delete',0)->orderBy('id','asc')->get();
 
         $fileName = date('d-m-Y').'_export.csv';
         $headers = array(
