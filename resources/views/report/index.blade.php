@@ -284,11 +284,11 @@
         <div class="row">
             <div class="col-md-3" style="padding:7px;">
               <label style="visibility:hidden;">Select Date Range</label>
-              <input type="text" id="sinceservice" name="sinceservice" value="{{$sinceservice}}" class="form-control date1" placeholder="mm/dd/yyyy" readonly>
+              <input type="text" id="sinceservice" name="sinceservice" value="{{$sinceservice}}" class="form-control date1" placeholder="mm/dd/yyyy" required oninput="onlySpecialCharacters(event)">
             </div>
             <div class="col-md-3" style="padding:7px;">
               <label style="visibility:hidden;">To Date</label>
-              <input type="text" id="untilservice" name="untilservice" value="{{$untilservice}}" class="form-control date2" placeholder="mm/dd/yyyy" readonly>
+              <input type="text" id="untilservice" name="untilservice" value="{{$untilservice}}" class="form-control date2" placeholder="mm/dd/yyyy" required oninput="onlySpecialCharacters(event)">
             </div>
             <div class="col-md-3">
               <div class="side-h3">
@@ -317,10 +317,11 @@
 </div>
      <br>
     <div class="table-responsive">
-	    <table id="example" class="table no-wrap table-new table-list align-items-center">
+	    <table id="exampleService" class="table no-wrap table-new table-list align-items-center">
     	    <thead>
         	    <tr>
-            	  <th>Ticket number</th>
+                  <th>Date</th>
+                  <th>Ticket number</th>
             	  <th>Customer Name</th>
             	  <th>Service location</th>
             	  <th>Personnel</th>
@@ -345,10 +346,12 @@
               } else {
                 $paid_status = "";
               }
+              $datecreated = date('Y-m-d', strtotime($ticket->created_at));
             @endphp
 	    <tr>
-    	  <td><a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" target="_blank">#{{$ticket->id}}</a></td>
-    	  <td style="white-space: initial;">{{$ticket->customername}}</td>
+    	  <td>{{$datecreated}}</td>
+          <td><a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" target="_blank">#{{$ticket->id}}</a></td>
+          <td style="white-space: initial;">{{$ticket->customername}}</td>
     	  <td style="white-space: initial;">{{$ticket->address}}</td>
     	  <td>{{$ticket->personnelname}}</td>
     	  <td>@php
@@ -910,11 +913,11 @@
         <div class="row">
         <div class="col-md-3" style="padding:7px;">
           <label style="visibility:hidden;">Select Date Range</label>
-          <input type="text" id="sinceproduct" name="sinceproduct" value="{{$sinceproduct}}" class="form-control date1" placeholder="mm/dd/yyyy" readonly>
+          <input type="text" id="sinceproduct" name="sinceproduct" value="{{$sinceproduct}}" class="form-control date1" placeholder="mm/dd/yyyy" required oninput="onlySpecialCharacters(event)">
         </div>
         <div class="col-md-3" style="padding:7px;">
           <label style="visibility:hidden;">To Date</label>
-          <input type="text" id="untilproduct" name="untilproduct" value="{{$untilproduct}}" class="form-control date2" placeholder="mm/dd/yyyy" readonly>
+          <input type="text" id="untilproduct" name="untilproduct" value="{{$untilproduct}}" class="form-control date2" placeholder="mm/dd/yyyy" required oninput="onlySpecialCharacters(event)">
         </div>
         <div class="col-md-3">
           <div class="side-h3">
@@ -990,11 +993,11 @@
         <div class="row">
             <div class="col-md-3" style="padding:7px;">
               <label style="visibility:hidden;">Select Date Range</label>
-              <input type="text" id="sincesale" name="sincesale" value="{{$sincesale}}" class="form-control date1" placeholder="mm/dd/yyyy" readonly>
+              <input type="text" id="sincesale" name="sincesale" value="{{$sincesale}}" class="form-control date1" placeholder="mm/dd/yyyy" required oninput="onlySpecialCharacters(event)">
             </div>
             <div class="col-md-3" style="padding:7px;">
               <label style="visibility:hidden;">To Date</label>
-              <input type="text" id="untilsale" name="untilsale" value="{{$untilsale}}" class="form-control date2" placeholder="mm/dd/yyyy" readonly>
+              <input type="text" id="untilsale" name="untilsale" value="{{$untilsale}}" class="form-control date2" placeholder="mm/dd/yyyy" required oninput="onlySpecialCharacters(event)">
             </div>
         <div class="col-md-3">
           <div class="side-h3">
@@ -1619,6 +1622,9 @@
       $("#examplerecurring").DataTable({
        "order": [[ 0, "desc" ]] 
       });
+      $("#exampleService").DataTable({
+       "order": [[ 0, "desc" ]] 
+      });
     });
 
     $.ajaxSetup({
@@ -1853,6 +1859,17 @@ $("#since").datepicker({
         $("#pyrollhiddenid1").val(pid);
         $("#payrollexport").submit();
     });
+
+     function onlySpecialCharacters(event) {
+        var input = event.target;
+        var inputValue = input.value;
+
+        // Remove non-special characters from the input value
+        var filteredValue = inputValue.replace(/[^:]/g, '');
+
+        // Update the input field with the filtered value
+        input.value = filteredValue;
+    }
 </script>
 @endsection
 

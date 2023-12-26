@@ -51,9 +51,9 @@ class ReportController extends Controller
         if($request->sinceservice!=null && $request->untilservice!=null) {
             $startDate = date('Y-m-d', strtotime($request->sinceservice));
             $endDate = date('Y-m-d', strtotime($request->untilservice)); 
-            $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->whereBetween(DB::raw('DATE(quote.created_at)'), [$startDate, $endDate])->orderBy('quote.id','DESC')->get();
+            $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->whereBetween(DB::raw('DATE(quote.created_at)'), [$startDate, $endDate])->orderBy('quote.created_at','DESC')->get();
         } else {
-           $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->orderBy('quote.id','DESC')->get(); 
+           $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->orderBy('quote.created_at','DESC')->get(); 
         }
         
        @$pdata1 = Personnel::where('userid',$auth_id)->get();
@@ -305,9 +305,9 @@ class ReportController extends Controller
       if($request->sinceservices!=null && $request->untilservices!=null) {
         $startDate = date('Y-m-d', strtotime($request->sinceservices));
         $endDate = date('Y-m-d', strtotime($request->untilservices));
-        $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->whereBetween(DB::raw('DATE(quote.created_at)'), [$startDate, $endDate])->orderBy('quote.id','DESC')->get();
+        $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->whereBetween(DB::raw('DATE(quote.created_at)'), [$startDate, $endDate])->orderBy('quote.created_at','DESC')->get();
         } else {
-           $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->orderBy('quote.id','DESC')->get(); 
+           $servicereport = Quote::select('quote.*','customer.email','personnel.personnelname')->join('customer', 'customer.id', '=', 'quote.customerid')->leftJoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.userid',$auth_id)->whereIn('quote.ticket_status',array('2','3','4'))->where('quote.payment_status','!=',null)->where('quote.payment_mode','!=',null)->where('quote.parentid', '=',"")->orderBy('quote.created_at','DESC')->get(); 
         }
         $fileName = date('d-m-Y').'_servicereport.csv';
         $headers = array(
@@ -317,7 +317,7 @@ class ReportController extends Controller
             "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
             "Expires"             => "0"
         );
-        $columns = array('Ticket #','Customer Name','Service location','Personnel','Service Provided', 'Cost','Status');
+        $columns = array('Date','Ticket #','Customer Name','Service location','Personnel','Service Provided', 'Cost','Status');
 
         $callback = function() use($servicereport, $columns) {
             $file = fopen('php://output', 'w');
@@ -336,6 +336,7 @@ class ReportController extends Controller
               } else {
                 $paid_status = "";
               }
+              $datecreated = date('Y-m-d', strtotime($ticket->created_at));
               $statusfinal = $payment_status.$paid_status;
                $i=0;
                foreach($servicedata as $servicename) {
@@ -346,7 +347,7 @@ class ReportController extends Controller
                   }
                   $i=1; break;
                }
-              fputcsv($file, array($ticket->id, $ticket->customername, $ticket->address, $ticket->personnelname,$servicename, $ticket->price, $statusfinal));
+              fputcsv($file, array($datecreated,$ticket->id, $ticket->customername, $ticket->address, $ticket->personnelname,$servicename, $ticket->price, $statusfinal));
             }
             fclose($file);
         };
