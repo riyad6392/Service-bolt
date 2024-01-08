@@ -89,6 +89,11 @@ Route::get('/contact', function () {
 Route::get('/disclaimer', function () {
     return view('disclaimer');
 });
+
+Route::get('/deletion', function () {
+    return view('deletion');
+});
+
 Route::get('/home', function () {
     return view('company/home');
 });
