@@ -32,14 +32,15 @@ $aboutus = App\Models\CMSpage::where('pagename','Privacy Policy')->where('status
     <p><strong>Last updated: [09 November 2023]</strong></p>
 
     <p>ServiceBolt is committed to protecting the privacy of its users. This Privacy Policy outlines how your personal information is collected, used, and shared when you use the ServiceBolt companion application.</p>
+    <div style="display:none;">
+        <h2>Information We Collect</h2>
 
-    <h2>Information We Collect</h2>
+        <p><strong>Personal Information:</strong> This may include your name, email address, phone number, and other contact information.</p>
 
-    <p><strong>Personal Information:</strong> This may include your name, email address, phone number, and other contact information.</p>
+        <p><strong>Usage Information:</strong> We collect information about how you use the application, including the features you interact with and the time spent on each.</p>
 
-    <p><strong>Usage Information:</strong> We collect information about how you use the application, including the features you interact with and the time spent on each.</p>
-
-    <p><strong>Device Information:</strong> We may collect information about the device you're using, including the device type, operating system, and unique device identifiers.</p>
+        <p><strong>Device Information:</strong> We may collect information about the device you're using, including the device type, operating system, and unique device identifiers.</p>
+    </div>
 
     <h2>How We Use Your Information</h2>
 
