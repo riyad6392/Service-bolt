@@ -306,7 +306,7 @@ select#servicename {
     border-radius: 15px;
     width: 114px!important;
 ">Ticket +</a></td>
-	  <td><a href="{{url('company/quote/ticketdetail/')}}/{{$quote->id}}&q" class="btn btn-edit p-2 w-auto" target="_blank">View</a><a class=" btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$quote->id}}" data-pid="{{$quote->personnelid}}">Edit</a>
+	  <td><a href="{{url('company/quote/ticketdetail/')}}/{{$quote->id}}" class="btn btn-edit p-2 w-auto" target="_blank">View</a><a class=" btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$quote->id}}" data-pid="{{$quote->personnelid}}">Edit</a>
 	  <a href="javascript:void(0);" class="info_link1 btn btn-edit p-2 w-auto" dataval="{{$quote->id}}">Delete</a>
 	  
 	  <a class=" btn btn-edit p-2 w-auto emailinvoice" data-id="{{$quote->id}}" data-email="{{$quote->email}}" data-bs-toggle="modal" data-bs-target="#edit-address">Share</a>
@@ -372,6 +372,7 @@ select#servicename {
 	  <thead>
 	  <tr>
 	  <th>Ticket #</th>
+	  <th>Created Date</th>
 	  <th>Address</th>
 	  	@if($cpagedta1==0)
 		  <th>Customer <br>Name</th>
@@ -410,9 +411,15 @@ select#servicename {
 			  $explode_id = explode(',', $ticket->serviceid);
 			  $servicedata = App\Models\Service::select('servicename')
 			    ->whereIn('services.id',$explode_id)->get();
+			   if($ticket->ticket_created_date!=null) {
+			  		$created_at =  date('d M Y', strtotime($ticket->ticket_created_date));
+			   } else {
+			  		$created_at =  date('d M Y', strtotime($ticket->created_at));
+			   }
 			@endphp
 	  <tr>
 	  <td>#{{$ticket->id}}</td>
+	  <td>{{$created_at}}</td>
 	  <td style="white-space:break-spaces;">{{$ticket->address}}</td>
 	  @if($cpagedta1==0)
 		  <td>{{$ticket->customername}}</td>
@@ -483,7 +490,9 @@ select#servicename {
     width: 114px!important;
 ">
 @if($ticket->ticket_status == 2)  Assigned @elseif($ticket->ticket_status == 1) Schedule + @elseif($ticket->ticket_status == 4) Picked @endif </a></td>
-	  <td><a class="btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$ticket->id}}" data-type="ticket">Edit</a>
+	  <td>
+	  	<a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" class="btn btn-edit p-2 w-auto" target="_blank">View</a>
+	  	<a class="btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$ticket->id}}" data-type="ticket">Edit</a>
 	  	<a href="javascript:void(0);" class="info_link1 btn btn-edit p-2 w-auto" dataval="{{$ticket->id}}">Delete</a>
 	  	<a class=" btn btn-edit p-2 w-auto emailinvoice" data-id="{{$ticket->id}}" data-email="{{$ticket->email}}" data-bs-toggle="modal" data-bs-target="#edit-address">Share</a>
 	  	<a class="btn btn-edit p-2 w-auto repoentoquote" data-id="{{$ticket->id}}">Back to quote</a>
@@ -581,6 +590,9 @@ select#servicename {
 		<td>{{$payment_status}} {{$paid_status}} <br>({{$invoice_status}})</td>
 	  <td><a class="btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#view-tickets" id="viewTickets" data-id="{{$ticket->id}}" style="display: none;">View</a>
 	  	<a href="{{url('company/quote/ticketdetail/')}}/{{$ticket->id}}" class="btn btn-edit p-2 w-auto" target="_blank">View</a>
+	  	@if($ticket->payment_status==null || $ticket->payment_mode==null)
+	  		<a class="btn btn-edit p-2 w-auto" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$ticket->id}}" data-type="ticket">Edit</a>
+	  	@endif
 	  	@if($ticket->payment_mode==null && $invoice_status == "Not Invoiced")
 	  		<a class="btn btn-edit p-2 w-auto repoenticket" data-id="{{$ticket->id}}">Reopen</a>
 	  	@endif

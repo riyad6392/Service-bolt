@@ -98,6 +98,9 @@ class TicketController extends Controller
         echo "1";  
       } elseif($quote->personnelid!="") {
         $quote->ticket_status = "2";
+        $currentdate = Carbon::now();
+        $currentdate = date('Y-m-d', strtotime($currentdate));
+        $quote->ticket_created_date = $currentdate;
         $quote->save();
         echo "1";
 
@@ -114,6 +117,9 @@ class TicketController extends Controller
 
        } else {
           $quote->ticket_status = "1";
+          $currentdate = Carbon::now();
+          $currentdate = date('Y-m-d', strtotime($currentdate));
+          $quote->ticket_created_date = $currentdate;
           $quote->save();
           echo "1";
           if(!empty($quote->product_id)) {
