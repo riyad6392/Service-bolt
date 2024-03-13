@@ -165,6 +165,10 @@ Route::group([
 
     Route::post('/import', [ExcelController::class, 'import'])->name('import');
 
+    Route::get('/import-form-customer', [ExcelController::class, 'importFormCustomer'])->name('importFormCustomer');
+
+    Route::post('/importcustomer', [ExcelController::class, 'importcustomer'])->name('importcustomer');
+
     //customer create
     Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
     Route::any('/customer/create', [CustomerController::class, 'create'])->name('customercreate');
