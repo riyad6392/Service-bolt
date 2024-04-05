@@ -1319,7 +1319,7 @@ class UserController extends Controller
 
        DB::table('quote')->where('id','=',$request->id)->orWhere('parentid','=',$request->id)
           ->update([ 
-              "description"=>"$description","serviceid"=>"$serviceid","servicename"=>"$servicenames","product_id"=>"$productid","price"=>"$request->price","tickettotal"=>"$request->ticketprice","tax"=>"$totaltax"
+              "description"=>"$description","serviceid"=>"$serviceid","servicename"=>"$servicenames","product_id"=>"$productid","price"=>"$request->price","tickettotal"=>"$request->ticketprice","tax"=>"$totaltax","invoicenote"=>"$request->invoicenote"
       ]);
    if($request->type=="save") {
         if(count(@$request->pricearray)>0) {
@@ -1368,7 +1368,7 @@ class UserController extends Controller
           } else {
             $subject = 'Invoice details!';
           }
-          $pdf = PDF::loadView('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->customernotes,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid]);
+          $pdf = PDF::loadView('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'ticketid'=>$quote->id,'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->invoicenote,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid]);
 
           Mail::send('mail_templates.sendinvoice1', ['body'=>$userdetails->bodytext,'type'=>"sendinvoice"], function($message) use ($cemail,$app_name,$app_email,$pdf,$subject) {
               $message->to($cemail);

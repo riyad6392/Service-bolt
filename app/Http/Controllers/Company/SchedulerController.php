@@ -2140,8 +2140,6 @@ class SchedulerController extends Controller
                 );
             } 
         }
-            
-           
         }
       //dd($data);
       echo json_encode($data);

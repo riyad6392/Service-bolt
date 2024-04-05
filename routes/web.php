@@ -379,6 +379,7 @@ Route::group([
     Route::any('/billing/leftbarbillingdata', [BillingController::class, 'leftbarbillingdata'])->name('leftbarbillingdata');
 
     Route::any('/billing/viewallticket', [BillingController::class, 'viewallticket'])->name('viewallticket');
+    Route::any('/billing/billingvieweditticketmodal', [BillingController::class, 'billingvieweditticketmodal'])->name('billingvieweditticketmodal');
 
     Route::any('/billing/viewallticketfilter', [BillingController::class, 'viewallticketfilter'])->name('viewallticketfilter');
 

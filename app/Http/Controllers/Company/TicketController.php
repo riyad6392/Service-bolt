@@ -1003,9 +1003,13 @@ class TicketController extends Controller
       $time =  explode(" ", $quotedetails[0]->time);
       $minute =  explode(" ", $quotedetails[0]->minute);
 
-      $address = Address::select('id','address')->where("customerid",$quotedetails[0]->customerid)->get(); 
+      $address = Address::select('id','address')->where("customerid",$quotedetails[0]->customerid)->get();
+      $title = "Edit"; 
+      if(isset($request->view)){
+        $title = 'Edit Invoice';
+      }
        $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
-       <h5>Edit</h5>
+       <h5>'.$title.'</h5>
        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
        </div>';
        $html .='<input type="hidden" value="'.$quotedetails[0]->tickettotal.'" name="tickettotaledit" id="tickettotaledit"><div class="row customer-form" id="product-box-tabs">
@@ -1122,8 +1126,14 @@ class TicketController extends Controller
            <div class="col-md-12 mb-3">
             <label style="position: relative;left: 0px;margin-bottom: 11px;">ETC</label>
            <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;" value="'.$quotedetails[0]->etc.'" required>
-           </div>
-           <div class="col-md-12 mb-3">
+           </div>';
+            if(isset($request->view)) {
+               $html .='<div class="col-md-12 mb-3 position-relative">
+                <label>Invoice Note</label>
+                <input type="text" class="form-control" placeholder="Invoice Note" name="invoicenote" id="invoicenote" value="'.$quotedetails[0]->invoicenote.'">
+               </div>';
+            }
+           $html .='<div class="col-md-12 mb-3">
              <label>Description</label>
              <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required>'.$quotedetails[0]->description.'</textarea>
            </div>';
@@ -1247,8 +1257,9 @@ class TicketController extends Controller
 
       $quote->servicename = $servicedetails[0]->servicename;
       $quote->product_name = $productname;
-
-      $quote->personnelid = $request->personnelid;
+      if(isset($request->personnelid)) {
+        $quote->personnelid = $request->personnelid;
+      }
       $quote->radiogroup = $request->radiogroup;
       $quote->frequency = $request->frequency;
       if($request->time!=null || $request->time!=0) {
@@ -1288,10 +1299,12 @@ class TicketController extends Controller
         }
       $quote->latitude = $latitude;
       $quote->longitude = $longitude;
-
+      if(isset($request->invoicenote)) {
+        $quote->invoicenote = $request->invoicenote;
+      }
       $quote->save();
       $request->session()->flash('success', 'Updated successfully');
-      return redirect()->route('company.quote');
+      return redirect()->back();
     }
 
     public function deleteQuote(Request $request)
@@ -1649,7 +1662,7 @@ class TicketController extends Controller
       //if($cinfo->email!=null) {
         $user_email = $request->to;
 
-          $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'invoicenote'=>$tdata->customernotes,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode,'term_name'=>$cinfo->term_name]);
+          $pdf = PDF::loadView('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'invoicenote'=>$tdata->invoicenote,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode,'term_name'=>$cinfo->term_name]);
 
           Mail::send('mail_templates.sendbillinginvoice1', ['body'=>$company->bodytext,'type'=>"sendinvoice"], function($message) use ($user_email,$app_name,$app_email,$pdf,$subject) {
           $message->to($user_email);

@@ -857,7 +857,7 @@ Map / Directions</a>
 <div class="card">
 <div class="card-body">
 <div class="card-content">
-<h5 class="mb-4">Personnel Notes</h5>
+<h5 class="mb-4">Internal Notes</h5>
 
     
 <!-- <textarea name="cnotes" class="form-control customer-height mb-4" placeholder="Customer Notes" style="height: 280px;color: gray;">{{$quoteData->customernotes}}</textarea> -->
@@ -1362,7 +1362,7 @@ Save
           dataType: 'json',
           refresh: true,
           success:function(data) {
-
+            console.log(data);
             $('#price12').val(data.totalprice);
             $('#ticketprice').val(data.totalprice);
             $('#productprice').val(data.productprice);

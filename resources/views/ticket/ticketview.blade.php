@@ -565,6 +565,7 @@ section.promo_section {
 @endphp
   {{$quotedetails[0]->givendate}} - {{$quotedetails[0]->giventime}}</span>
   <a class="btn add-btn-yellow1 w-40 viewinvoice" data-id="{{$quotedetails[0]->id}}" data-bs-toggle="modal" data-bs-target="#view-invoice" style="margin-left: 70px;">Invoice</a>
+  <a class="btn add-btn-yellow1 w-40 sendtocustomer" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="{{$quotedetails[0]->id}}" data-pid="{{$quotedetails[0]->personnelid}}" data-view="showview"style="margin-left: 70px;">Edit Invoice</a>
 </h5>
 <div class="text-lead mb-3">
     <p>Customer name: {{$quotedetails[0]->customername}}</p>
@@ -730,6 +731,19 @@ section.promo_section {
   </div>
 </div>
 </div>
+
+<div class="modal fade" id="edit-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+      <form method="post" action="{{ route('company.ticketupdate') }}" enctype="multipart/form-data">
+        @csrf
+        <div id="viewmodaldata1"></div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
  @endsection
  @section('script')
  <script type="text/javascript">
@@ -757,5 +771,113 @@ section.promo_section {
         });
        return false;
     })
+
+    $(document).on('click','#editTickets',function(e) {
+   $('.selectpicker2').selectpicker();
+   var id = $(this).data('id');
+   var view = $(this).data('view');
+   var pvalue = $(this).data('pid');
+   
+   var type = $(this).data('type');
+   if(type==undefined) {
+    var type = "quote";
+   }
+   var dataString =  'id='+ id+ '&type='+ type+ '&view='+ view;
+   $.ajax({
+            url:'{{route('company.vieweditticketmodal')}}',
+            data: dataString,
+            method: 'post',
+            dataType: 'json',
+            refresh: true,
+            success:function(data) {
+              $('#viewmodaldata1').html(data.html);
+              $('.selectpicker').selectpicker({
+                size: 3
+              });
+              $(".selectpickerp1").selectpicker();
+              var hiddenprice = $("#priceticketedit").val();
+              $("#edithiddenprice").val(hiddenprice);
+            }
+        })
+  });
+
+ $(document).on('click','#customerid2',function(e) {
+    var customerid = this.value;
+      $("#address2").html('');
+        $.ajax({
+          url:"{{url('company/quote/getaddressbyid')}}",
+          type: "POST",
+          data: {
+          customerid: customerid,
+          _token: '{{csrf_token()}}' 
+          },
+          dataType : 'json',
+          success: function(result) {
+          $('#address3').html('<option value="">Select Customer Address or Begin Typing a Name</option>'); 
+            $.each(result.address,function(key,value) {
+              var addressid = value.id+'#id#'+value.address;
+              $("#address3").append('<option value="'+addressid+'">'+value.address+'</option>');
+            });
+          }
+      });
+  }); 
+
+  $(document).on('change','#serviceid',function(e) {
+  gethours();
+  var serviceid = $('#serviceid').val();
+  var productid = $('#productid').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            console.log(data.totalprice);
+            $('#priceticketedit').val(data.totalprice);
+            $('#tickettotaledit').val(data.totalprice);
+            $('#edithiddenprice').val(data.totalprice);
+        }
+      })
+
+
+})
+$(document).on('change','#productid',function(e) {
+  //getpricep1();
+  var serviceid = $('#serviceid').val();
+    var productid = $('#productid').val(); 
+    var qid = "";
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculateproductprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            $('#priceticketedit').val(data.totalprice);
+            $('#tickettotaledit').val(data.totalprice);
+            $('#edithiddenprice').val(data.totalprice);
+          }
+      })
+});
+
+function gethours() {
+    var h=0;
+    var m=0;
+    $('select.selectpicker1').find('option:selected').each(function() {
+      h += parseInt($(this).data('hour'));
+      m += parseInt($(this).data('min'));
+      
+    });
+    var realmin = m % 60;
+  var hours = Math.floor(m / 60);
+  h = h+hours;
+    
+  $("#time1").val(h);
+    $("#minute1").val(realmin);
+  }
  </script>
  @endsection

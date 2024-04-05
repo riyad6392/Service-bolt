@@ -714,10 +714,10 @@ class WorkerTicketController extends Controller
           $serviceids =explode(",", $quote->serviceid);
           $html .='<div class="row mt-4" id="testprice">';
           foreach($serviceids as $key1=>$value1) {
-             $serviceinfo = Service::select('id','servicename')->where('id',$value1)->first();
+             $serviceinfo = Service::select('id','servicename','description')->where('id',$value1)->first();
              $horalyp = Hourlyprice::where('ticketid',$request->id)->get();
              if(count($horalyp)>0) {
-              $hpinfo = Hourlyprice::select('hour','minute')->where('ticketid',$request->id)->whereIn('serviceid',array($value1))->first();
+              $hpinfo = Hourlyprice::select('hour','minute','servicedescription','productdescription')->where('ticketid',$request->id)->whereIn('serviceid',array($value1))->first();
              }
              if(@$hpinfo->hour!="") {
                 $hhour = @$hpinfo->hour;
@@ -728,6 +728,10 @@ class WorkerTicketController extends Controller
                 $hminute = @$hpinfo->minute;
              } else {
                 $hminute = "00";
+             }
+                $servicedescription = $serviceinfo->description;
+            if(@$hpinfo->servicedescription!="") {
+                $servicedescription = @$hpinfo->servicedescription;
              }
             $html .='
               <div class="col-md-12">
@@ -749,6 +753,13 @@ class WorkerTicketController extends Controller
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-4 mb-2">
+                  <div class="form-group">
+                    <input type="text" class="form-control servicedescription" placeholder="description" name="servicedescription[]" id="servicedescription" value="'.@$servicedescription.'">
+                  </div>
+                </div>
+              </div
               </div>
               ';
           }
@@ -787,8 +798,8 @@ class WorkerTicketController extends Controller
           </div>
           <div class="col-md-12 mb-2">
             <div class="form-group">
-            <label>Personnel Notes</label>
-            <input type="text" class="form-control" placeholder="Notes" name="customernotes" id="customernotes" value="'.strip_tags($quote->customernotes).'" readonly>
+            <label>Invoice Notes</label>
+            <input type="text" class="form-control" placeholder="Notes" name="invoicenote" id="invoicenote" value="'.strip_tags($quote->invoicenote).'">
           </div>
           </div><input type="hidden" name="id" id="id" value="'.$quote->id.'"><input type="hidden" name="productprice" id="productprice" value="">';
       $html .= '<div class="row">
@@ -961,10 +972,9 @@ class WorkerTicketController extends Controller
       } else {
         $description = null;
       }
-
       DB::table('quote')->where('id','=',$request->id)->orWhere('parentid','=',$request->id)
           ->update([ 
-              "description"=>"$description","serviceid"=>"$serviceid","servicename"=>"$servicenames","product_id"=>"$pids","price"=>"$request->price","tickettotal"=>"$request->ticketprice","tax"=>"$totaltax","address"=>"$request->address"
+              "description"=>"$description","serviceid"=>"$serviceid","servicename"=>"$servicenames","product_id"=>"$pids","price"=>"$request->price","tickettotal"=>"$request->ticketprice","tax"=>"$totaltax","address"=>"$request->address","invoicenote"=>"$request->invoicenote"
       ]);
 
       // $quote->serviceid = $serviceid;
@@ -1031,6 +1041,7 @@ class WorkerTicketController extends Controller
             $data['serviceid'] = $value;
             $data['hour'] = $request->hours[$key];
             $data['minute'] = $request->minutes[$key];
+            $data['servicedescription'] = $request->servicedescription[$key];
             $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
 
             Hourlyprice::create($data);
@@ -1043,7 +1054,7 @@ class WorkerTicketController extends Controller
             $finalsumprice = $pricetotal+$productprice;
             // DB::table('quote')->where('id','=',$request->qid)->update([ 
             //     "price"=>$finalsumprice
-            // ]);            
+            // ]);  
         }
         $request->session()->flash('success', 'Invoice has been Save successfully');
         return redirect()->back();
@@ -1098,7 +1109,7 @@ class WorkerTicketController extends Controller
           $cemail = $request->email;
           //$user_exist = Customer::where('email', $email)->first();
 
-          $pdf = PDF::loadView('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'billingaddress'=>$customer->billingaddress,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->customernotes,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid]);
+          $pdf = PDF::loadView('mail_templates.sendinvoice', ['invoiceId'=>$quote->invoiceid,'address'=>$quote->address,'billingaddress'=>$customer->billingaddress,'ticketid'=>$quote->id, 'customername'=>$customer->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$request->price,'time'=>$quote->giventime,'date'=>$quote->givenstartdate,'description'=>$quote->invoicenote,'companyname'=>$customer->companyname,'phone'=>$customer->phonenumber,'email'=>$customer->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productid,'duedate'=>$quote->duedate,'quoteuserid'=>$quote->userid]);
 
           Mail::send('mail_templates.sendinvoice1', ['body'=>$userdetails->bodytext,'type'=>"sendinvoice"], function($message) use ($cemail,$app_name,$app_email,$pdf,$subject) {
               $message->to($cemail);
@@ -1918,18 +1929,23 @@ class WorkerTicketController extends Controller
      public function calculatepricenew(Request $request) {
       $json = array();
       $serviceidarray = $request->serviceid;
-      $servicedetails = Service::select('servicename','price','id')->whereIn('id', $serviceidarray)->get();
+      $servicedetails = Service::select('servicename','price','id','description')->whereIn('id', $serviceidarray)->get();
       $sum = 0;
       $hourpricehtml = "";
       foreach ($servicedetails as $key => $value) {
         $horalyp = Hourlyprice::where('ticketid',$request->qid)->get();
         if(count($horalyp)>0) {
-          $hpinfo = Hourlyprice::select('hour','minute')->where('ticketid',$request->qid)->whereIn('serviceid',array($value['id']))->first();
+          $hpinfo = Hourlyprice::select('hour','minute','servicedescription','productdescription')->where('ticketid',$request->qid)->whereIn('serviceid',array($value['id']))->first();
+        }
+        $servicedescription = $value['description'];
+        if(@$hpinfo->servicedescription!="") {
+          $servicedescription = @$hpinfo->servicedescription;
         }
         $sname[] = $value['servicename'];
         $sum+= (float)$value['price'];
         $hourpricehtml .='<div class="col-md-12">
             <div class="row">
+
               <div class="col-md-4 mb-2">
                 <div class="form-group">
                   <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="'.$value['servicename'].'" required readonly>
@@ -1946,6 +1962,14 @@ class WorkerTicketController extends Controller
                   <input type="text" class="form-control" placeholder="Minute" name="minutes[]" id="minutes" value="'.@$hpinfo->minute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                 </div>
               </div>
+              
+              <div class="row">
+                <div class="col-md-4 mb-2">
+                  <div class="form-group">
+                    <input type="text" class="form-control servicedescription" placeholder="description" name="servicedescription[]" id="servicedescription" value="'.@$servicedescription.'">
+                  </div>
+                </div>
+              </div              
             </div>
             </div>';
       }
