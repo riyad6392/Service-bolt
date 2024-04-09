@@ -211,6 +211,7 @@ Route::group([
     Route::any('/customer/savefieldpage', [CustomerController::class, 'savefieldpage'])->name('savefieldpage');
 
     Route::any('/customer/calculateprice', [CustomerController::class, 'calculateprice'])->name('calculateprice');
+    Route::any('/customer/customeeditinvoicemodal', [CustomerController::class, 'customeeditinvoicemodal'])->name('customeeditinvoicemodal');
     
     //service Create
     Route::get('/services', [ServicesController::class, 'index'])->name('services');
@@ -377,6 +378,7 @@ Route::group([
     Route::get('/billing', [BillingController::class, 'index'])->name('billing');
     Route::any('/billing/billingview', [BillingController::class, 'billingview'])->name('billingview');
     Route::any('/billing/leftbarbillingdata', [BillingController::class, 'leftbarbillingdata'])->name('leftbarbillingdata');
+    Route::any('/billing/calculatebillingprice', [BillingController::class, 'calculatebillingprice'])->name('calculatebillingprice');
 
     Route::any('/billing/viewallticket', [BillingController::class, 'viewallticket'])->name('viewallticket');
     Route::any('/billing/billingvieweditticketmodal', [BillingController::class, 'billingvieweditticketmodal'])->name('billingvieweditticketmodal');

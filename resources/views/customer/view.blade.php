@@ -1203,7 +1203,7 @@ $(document).on('change','#productname',function(e) {
    }
    var dataString =  'id='+ id+ '&type='+ type;
      $.ajax({
-      url:'{{route('company.billingvieweditticketmodal')}}',
+      url:'{{route('company.customeeditinvoicemodal')}}',
       data: dataString,
       method: 'post',
       dataType: 'json',
@@ -1249,12 +1249,14 @@ $(document).on('change','#productname',function(e) {
       });
   }); 
 
-  $(document).on('change','#serviceid',function(e) {
+  $(document).on('change','#serviceid1',function(e) {
+    
   gethours();
-  var serviceid = $('#serviceid').val();
+  var serviceid = $('#serviceid1').val();
   var productid = $('#productid').val(); 
-    var qid = "";
+  var qid = $('#quoteid').val();
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $(document).find('#testprice').empty('');
     $.ajax({
           url:'{{route('company.calculateproductprice')}}',
           data: dataString,
@@ -1266,6 +1268,7 @@ $(document).on('change','#productname',function(e) {
             $('#priceticketedit').val(data.totalprice);
             $('#tickettotaledit').val(data.totalprice);
             $('#edithiddenprice').val(data.totalprice);
+            $('#testprice').append(data.hourpricehtml);
         }
       })
 
@@ -1273,10 +1276,13 @@ $(document).on('change','#productname',function(e) {
 })
 $(document).on('change','#productid',function(e) {
   //getpricep1();
-  var serviceid = $('#serviceid').val();
+  var qid = $('#quoteid').val();
+  
+  var serviceid = $('#serviceid1').val();
     var productid = $('#productid').val(); 
     var qid = "";
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $(document).find('#testprice1').empty('');
     $.ajax({
           url:'{{route('company.calculateproductprice')}}',
           data: dataString,
@@ -1287,6 +1293,7 @@ $(document).on('change','#productid',function(e) {
             $('#priceticketedit').val(data.totalprice);
             $('#tickettotaledit').val(data.totalprice);
             $('#edithiddenprice').val(data.totalprice);
+            $('#testprice1').append(data.hourproducthtml);
           }
       })
 });

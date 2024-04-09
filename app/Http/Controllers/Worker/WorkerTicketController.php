@@ -22,6 +22,7 @@ use App\Events\MyEvent;
 use Image;
 use PDF;
 use App\Models\Hourlyprice;
+use App\Models\ProductDescription;
 
 class WorkerTicketController extends Controller
 {
@@ -742,24 +743,22 @@ class WorkerTicketController extends Controller
                     <input type="hidden" name="serviceids[]" id="serviceids" value="'.$serviceinfo->id.'">
                   </div>
                 </div>
-                <div class="col-md-4 mb-2">
+                <div class="col-md-2 mb-2">
                   <div class="form-group">
                     <input type="text" class="form-control hours" placeholder="hh" name="hours[]" id="hours" value="'.@$hhour.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                   </div>
                 </div>
-                <div class="col-md-4 mb-2">
+                <div class="col-md-2 mb-2">
                   <div class="form-group">
                     <input type="text" class="form-control minutes" placeholder="mm" name="minutes[]" id="minutes" value="'.@$hminute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4 mb-2">
+                 <div class="col-md-4 mb-2">
                   <div class="form-group">
-                    <input type="text" class="form-control servicedescription" placeholder="description" name="servicedescription[]" id="servicedescription" value="'.@$servicedescription.'">
+                  <textarea class="form-control height-50" name="servicedescription[]" id="servicedescription" placeholder="Description">'.@$servicedescription.'</textarea>
                   </div>
                 </div>
-              </div
+              </div>
               </div>
               ';
           }
@@ -784,8 +783,42 @@ class WorkerTicketController extends Controller
               }
         $html .='</select>
         <a href="#" data-bs-toggle="modal" data-bs-target="#add-product" id="pclick"><i class="fa fa-plus"></i></a>
-          </div>
-          <div class="col-md-12 mb-2">
+          </div>';
+           $html .='<div class="row mt-4" id="testprice1">';
+          if($quote->product_id!="") {
+          $productids =explode(",", $quote->product_id);
+          foreach($productids as $key2=>$value2) {
+             $productinfo = Inventory::select('id','productname','description')->where('id',$value2)->first();
+             $horalyp = ProductDescription::where('ticketid',$request->id)->get();
+             if(count($horalyp)>0) {
+              $hpinfo = ProductDescription::select('productdescription')->where('ticketid',$request->id)->whereIn('productid',array($value2))->first();
+             }
+            
+            $productdescription = $productinfo->description;
+            if(@$hpinfo->productdescription!="") {
+                $productdescription = @$hpinfo->productdescription;
+             }
+            $html .='
+              <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-5 mb-2">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="" name="productnames[]" id="productnames" value="'.$productinfo->productname.'"required readonly>
+                    <input type="hidden" name="productids[]" id="productids" value="'.$productinfo->id.'">
+                  </div>
+                </div>
+                 <div class="col-md-7 mb-2">
+                  <div class="form-group">
+                  <textarea class="form-control height-50" name="productdescription[]" id="productdescription" placeholder="Description">'.@$productdescription.'</textarea>
+                  </div>
+                </div>
+              </div>
+              </div>
+              ';
+          }
+        }
+        $html .='</div>';
+          $html .='<div class="col-md-12 mb-2">
             <div class="form-group">
             <label>Price</label>
             <input type="text" class="form-control" placeholder="Price" name="price" id="price12" value="'.$request->price.'" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" required>
@@ -861,7 +894,6 @@ class WorkerTicketController extends Controller
 
     public function sendinvoice(Request $request)
     {
-      //dd($request->all());
       $auth_id = auth()->user()->id;
       $worker = DB::table('users')->select('userid','workerid')->where('id',$auth_id)->first();
 
@@ -1005,7 +1037,7 @@ class WorkerTicketController extends Controller
             $data['hour'] = $request->hours[$key];
             $data['minute'] = $request->minutes[$key];
             $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
-            
+            $data['servicedescription'] = $request->servicedescription[$key];
             Hourlyprice::create($data);
             $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
           }
@@ -1014,10 +1046,17 @@ class WorkerTicketController extends Controller
               $productprice = $request->productprice;
           }
             $finalsumprice = $pricetotal+$productprice;
-            // DB::table('quote')->where('id','=',$request->qid)->update([ 
-            //     "price"=>$finalsumprice
-            // ]);
         }
+
+        if($request->productid!=null) {
+            DB::table('productdescription')->where('ticketid',$request->qid)->delete();
+            foreach($request->productid as $key =>$value) {
+                $data['ticketid'] = $request->qid;
+                $data['productid'] = $value;
+                $data['productdescription'] = $request->productdescription[$key];
+                ProductDescription::create($data);
+            }
+          } 
         $paynowurl = url('personnel/myticket/paynow/').'/'.$request->id;
         return redirect($paynowurl);
       }
@@ -1052,9 +1091,16 @@ class WorkerTicketController extends Controller
               $productprice = $request->productprice;
           }
             $finalsumprice = $pricetotal+$productprice;
-            // DB::table('quote')->where('id','=',$request->qid)->update([ 
-            //     "price"=>$finalsumprice
-            // ]);  
+
+          if($request->productid!=null) {
+            DB::table('productdescription')->where('ticketid',$request->qid)->delete();
+            foreach($request->productid as $key =>$value) {
+                $data['ticketid'] = $request->qid;
+                $data['productid'] = $value;
+                $data['productdescription'] = $request->productdescription[$key];
+                ProductDescription::create($data);
+            }
+          } 
         }
         $request->session()->flash('success', 'Invoice has been Save successfully');
         return redirect()->back();
@@ -1080,7 +1126,7 @@ class WorkerTicketController extends Controller
             $data['hour'] = $request->hours[$key];
             $data['minute'] = $request->minutes[$key];
             $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
-
+            $data['servicedescription'] = $request->servicedescription[$key];
             Hourlyprice::create($data);
             $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', ''); 
           }
@@ -1089,9 +1135,15 @@ class WorkerTicketController extends Controller
               $productprice = $request->productprice;
           }
             $finalsumprice = $pricetotal+$productprice;
-            // DB::table('quote')->where('id','=',$request->qid)->update([ 
-            //     "price"=>$finalsumprice
-            // ]);
+            if($request->productid!=null) {
+              DB::table('productdescription')->where('ticketid',$request->qid)->delete();
+              foreach($request->productid as $key =>$value) {
+                  $data['ticketid'] = $request->qid;
+                  $data['productid'] = $value;
+                  $data['productdescription'] = $request->productdescription[$key];
+                  ProductDescription::create($data);
+              }
+            } 
         }
           DB::table('quote')->where('id','=',$request->id)->orWhere('parentid','=',$request->id)
           ->update([ 
@@ -1952,34 +2004,61 @@ class WorkerTicketController extends Controller
                     <input type="hidden" name="serviceids[]" id="serviceids" value="'.$value['id'].'">
                 </div>
               </div>
-              <div class="col-md-4 mb-2">
+              <div class="col-md-2 mb-2">
                 <div class="form-group">
                   <input type="text" class="form-control" placeholder="Hour" name="hours[]" id="hours" value="'.@$hpinfo->hour.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                 </div>
               </div>
-              <div class="col-md-4 mb-2">
+              <div class="col-md-2 mb-2">
                 <div class="form-group">
                   <input type="text" class="form-control" placeholder="Minute" name="minutes[]" id="minutes" value="'.@$hpinfo->minute.'" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                 </div>
               </div>
-              
-              <div class="row">
-                <div class="col-md-4 mb-2">
-                  <div class="form-group">
-                    <input type="text" class="form-control servicedescription" placeholder="description" name="servicedescription[]" id="servicedescription" value="'.@$servicedescription.'">
-                  </div>
+
+              <div class="col-md-4 mb-2">
+                <div class="form-group">
+                  <textarea class="form-control height-50" name="servicedescription[]" id="servicedescription" placeholder="Description">'.@$servicedescription.'</textarea>
                 </div>
-              </div              
+              </div>
+
             </div>
             </div>';
       }
       $sum1 = 0;
+      $hourproducthtml = "";
       if(isset($request->productid)) {
-         $pidarray = $request->productid;
-        $pdetails = Inventory::select('productname','id','price')->whereIn('id', $pidarray)->get();
+        $pidarray = $request->productid;
+
+        $pdetails = Inventory::select('productname','id','price','description')->whereIn('id', $pidarray)->get();
         foreach ($pdetails as $key => $value) {
           $pname[] = $value['productname'];
           $sum1+= (float)$value['price'];
+          $horalyp = ProductDescription::where('ticketid',$request->qid)->get();
+          if(count($horalyp)>0) {
+            $hpinfo = ProductDescription::select('productdescription')->where('ticketid',$request->qid)->whereIn('productid',array($value['id']))->first();
+          }
+          $productdescription = $value['description'];
+          if(@$hpinfo->productdescription!="") {
+            $productdescription = @$hpinfo->productdescription;
+          }
+          
+          $hourproducthtml .='<div class="col-md-12">
+            <div class="row">
+
+              <div class="col-md-5 mb-2">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="" name="productnames[]" id="productnames" value="'.$value['productname'].'" required readonly>
+                    <input type="hidden" name="productids[]" id="productids" value="'.$value['id'].'">
+                </div>
+              </div>
+              <div class="col-md-7 mb-2">
+                <div class="form-group">
+                  <textarea class="form-control height-50" name="productdescription[]" id="productdescription" placeholder="Description">'.@$productdescription.'</textarea>
+                </div>
+              </div>
+
+            </div>
+            </div>';
         }
       }
      
@@ -2017,7 +2096,7 @@ class WorkerTicketController extends Controller
         $finalsumprice = 0;
       }
       
-      return json_encode(['totalprice' =>$finalsumprice,'hourpricehtml'=>$hourpricehtml,'productprice'=>$sum1]);
+      return json_encode(['totalprice' =>$finalsumprice,'hourpricehtml'=>$hourpricehtml,'hourproducthtml' =>$hourproducthtml,'productprice'=>$sum1]);
         die;
     }
 

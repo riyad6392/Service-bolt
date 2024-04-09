@@ -15,6 +15,8 @@ use App\Models\Managefield;
 use App\Models\Tenture;
 use App\Models\User;
 use App\Models\Checklist;
+use App\Models\Hourlyprice;
+use App\Models\ProductDescription;
 use Mail;
 use Illuminate\Support\Str;
 use DB;
@@ -1596,5 +1598,263 @@ class CustomerController extends Controller
         }
         return json_encode(['duplicateaddress' =>$duplicateaddress]);
           die;
+    }
+
+     public function customeeditinvoicemodal(Request $request)
+    {
+       $json = array();
+       $auth_id = auth()->user()->id;
+       $allservices = Service::where('userid', $auth_id)->get();
+       $allproducts = Inventory::where('user_id', $auth_id)->get();
+       $allworker = Personnel::where('userid', $auth_id)->get();
+
+       $quotedetailsnew = Quote::where('id', $request->id)->get()->toArray();
+       $quotedetails = Quote::where('id', $request->id)->get();
+       
+       $allcustomer = Customer::where('userid', $auth_id)->get();
+        
+       $tenture = Tenture::where('status','Active')->get();
+        if($quotedetails[0]->radiogroup =='perhour') {
+            $checked = "checked";
+        }
+        if($quotedetails[0]->radiogroup =='recurring') {
+            $checked3 = "checked";
+        }
+        if($quotedetails[0]->radiogroup =='flatrate') {
+            $checked2 = "checked";
+        }
+
+        
+        if($quotedetails[0]->time =='15 Minutes') {
+            $selectedt1 = "selected";
+        }
+        if($quotedetails[0]->time =='30 Minutes') {
+            $selectedt2 = "selected";
+        }
+        if($quotedetails[0]->time =='45 Minutes') {
+            $selectedt3 = "selected";
+        }
+        if($quotedetails[0]->time =='1 Hours') {
+            $selectedt4 = "selected";
+        }
+
+      $time =  explode(" ", $quotedetails[0]->time);
+      $minute =  explode(" ", $quotedetails[0]->minute);
+
+      $address = Address::select('id','address')->where("customerid",$quotedetails[0]->customerid)->get(); 
+       $html ='<div class="add-customer-modal d-flex justify-content-between align-items-center">
+       <h5>Edit Invoice</h5>
+       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>';
+       $html .='<input type="hidden" value="'.$quotedetails[0]->tickettotal.'" name="tickettotaledit" id="tickettotaledit"><div class="row customer-form" id="product-box-tabs">
+       <input type="hidden" value="'.$request->id.'" name="quoteid">
+          <div class="col-md-12 mb-2">
+            <label>Select Customer</label>
+            <select class="form-select" name="customerid" id="customerid2" required="">
+              <option value="">Select a Customer</option>';
+
+              foreach($allcustomer as $key => $value) {
+                  if($value->id == $quotedetails[0]->customerid) {
+                    $selectecp = "selected";
+                  } else {
+                    $selectecp = "";
+                }
+                $html .='<option value="'.$value->id.'" '.@$selectecp.'>'.$value->customername.'</option>';
+              }
+        $html .='</select>
+          </div><input type="hidden" name="invoiceedit" id="invoiceedit" value="invoiceedit"><input type="hidden" name="customersiteedit" id="customersiteedit" value="customersiteedit">
+          <div class="col-md-12 mb-2">
+           <div class="input_fields_wrap">
+              <div class="mb-3">
+              <label>Select Customer Address</label>
+                <select class="form-select" name="address" id="address3" required>';
+                foreach($address as $key => $value) {
+                  if($value->address == $quotedetails[0]->address) {
+                    $selectecpa = "selected";
+                  } else {
+                    $selectecpa = "";
+                }
+                 $html .='<option value="'.$value->id.'#id#'.$value->address.'" '.@$selectecpa.'>'.$value->address.'</option>';
+              }
+        $html .='</select>
+              </div>
+          </div>
+        </div>
+          <div class="col-md-12 mb-2">
+            <label>Select a Service</label>
+            <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="serviceid1[]" id="serviceid1" style="height:auto;" required>';
+              foreach($allservices as $key => $value) {
+                $serviceids =explode(",", $quotedetails[0]->serviceid);
+                 if(in_array($value->id, $serviceids)){
+                  $selectedp = "selected";
+                 } else {
+                  $selectedp = "";
+                 }
+
+                $html .='<option value="'.$value->id.'" '.@$selectedp.' data-hour="'.$value->time.'" data-min="'.$value->minute.'" data-price="'.$value->price.'">'.$value->servicename.'</option>';
+              }
+        $html .='</select>
+          </div><input type="hidden" name="quoteid" id="quoteid" value="'.$request->id.'">';
+          $html .='<div class="row mt-4" id="testprice">';
+        if($quotedetails[0]->serviceid!="") {
+          $serviceids =explode(",", $quotedetails[0]->serviceid);
+          
+          foreach($serviceids as $key1=>$value1) {
+             $serviceinfo = Service::select('id','servicename','description')->where('id',$value1)->first();
+             $horalyp = Hourlyprice::where('ticketid',$request->id)->get();
+             if(count($horalyp)>0) {
+              $hpinfo = Hourlyprice::select('hour','minute','servicedescription','productdescription')->where('ticketid',$request->id)->whereIn('serviceid',array($value1))->first();
+             }
+            
+            $servicedescription = $serviceinfo->description;
+            if(@$hpinfo->servicedescription!="") {
+              $servicedescription = @$hpinfo->servicedescription;
+            }
+            
+            $html .='
+                <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-5 mb-2">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="'.$serviceinfo->servicename.'"required readonly>
+                      <input type="hidden" name="serviceids[]" id="serviceids" value="'.$serviceinfo->id.'">
+                    </div>
+                  </div>
+                   <div class="col-md-7 mb-2">
+                    <div class="form-group">
+                    <textarea class="form-control height-50" name="servicedescription[]" id="servicedescription" placeholder="Description">'.@$servicedescription.'</textarea>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                ';
+            }
+          }
+           $html .='</div>';
+          
+          $html .='<div class="col-md-12 mb-2">
+            <label>Select Products</label>
+            <select class="form-control selectpickerp1" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" style="height:auto;" data-placeholder="Select Products">';
+              foreach($allproducts as $key => $value) {
+                $productids =explode(",", $quotedetails[0]->product_id);
+                 if(in_array($value->id, $productids)){
+                  $selectedp = "selected";
+                 } else {
+                  $selectedp = "";
+                 }
+
+                $html .='<option value="'.$value->id.'" '.@$selectedp.' data-price="'.$value->price.'">'.$value->productname.'</option>';
+              }
+        $html .='</select>
+          </div>';
+         
+          $html .='<div class="row mt-4" id="testprice1">';
+           if($quotedetails[0]->product_id!="") {
+            $productids =explode(",", $quotedetails[0]->product_id);
+          foreach($productids as $key2=>$value2) {
+             $productinfo = Inventory::select('id','productname','description')->where('id',$value2)->first();
+             $horalyp = ProductDescription::where('ticketid',$request->id)->get();
+             if(count($horalyp)>0) {
+              $hpinfo = ProductDescription::select('productdescription')->where('ticketid',$request->id)->whereIn('productid',array($value2))->first();
+             }
+            
+            $productdescription = $productinfo->description;
+            if(@$hpinfo->productdescription!="") {
+                $productdescription = @$hpinfo->productdescription;
+             }
+            $html .='
+              <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-5 mb-2">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="" name="productnames[]" id="productnames" value="'.$productinfo->productname.'"required readonly>
+                    <input type="hidden" name="productids[]" id="productids" value="'.$productinfo->id.'">
+                  </div>
+                </div>
+                 <div class="col-md-7 mb-2">
+                  <div class="form-group">
+                  <textarea class="form-control height-50" name="productdescription[]" id="productdescription" placeholder="Description">'.@$productdescription.'</textarea>
+                  </div>
+                </div>
+              </div>
+              </div>
+              ';
+          }
+      
+          }
+          $html .='</div>';
+          
+          
+
+          $html.='<div class="col-md-12 mb-2">
+            <div class="align-items-center justify-content-lg-between d-flex services-list">
+               <p>
+                <input type="radio" id="test4" name="radiogroup" value="perhour" '.@$checked.' class="radiogroupedit">
+                <label for="test4">Per Hour</label>
+              </p>
+              <p>
+                <input type="radio" id="test5" name="radiogroup" value="flatrate" '.@$checked2.' class="radiogroupedit">
+                <label for="test5">Flate Rate</label>
+              </p>
+              <p>
+                <input type="radio" id="test6" name="radiogroup" value="recurring" '.@$checked3.' class="radiogroupedit">
+                <label for="test6">Recurring</label>
+              </p>
+            </div>
+          </div>
+         
+          <div class="col-md-6 mb-2">
+            <label>Service Frequency</label>
+            <select class="form-select" name="frequency" id="frequency" required="">
+              <option value="">Service Frequency</option>';
+          foreach ($tenture as $key => $value) {
+            if($value->tenturename== $quotedetailsnew[0]['frequency']) {
+                  $selectedsf = "selected";
+                } else {
+                  $selectedsf = "";
+                }
+                $html .='<option name="'.$value->tenturename.'" value="'.$value->tenturename.'" '.@$selectedsf.'>'.$value->tenturename.'</option>';
+            }
+            $html .='</select>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label>Default Service Time (hh:mm)</label><br>
+            <div class="timepicker timepicker1 form-control" style="display: flex;align-items: center;">
+           <input type="text" class="hh N popfieldsedit" min="0" max="100" placeholder="hh" maxlength="2" name="time" id="timeedit" value="'.$time[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">:
+            <input type="text" class="mm N popfieldsedit" min="0" max="59" placeholder="mm" maxlength="2" name="minute" id="minuteedit" value="'.$minute[0].'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false">
+            </div></div>
+          <div class="col-md-12 mb-3 position-relative">
+            <label>Price</label>
+<i class="fa fa-dollar" style="position: absolute;top: 41px;left: 27px;"></i>
+            <input type="text" class="form-control" placeholder="Price" name="price" id="priceticketedit" value="'.$quotedetails[0]->price.'" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
+            <input type="hidden" name="edithiddenprice" id="edithiddenprice">
+           </div>
+           <div class="col-md-12 mb-3">
+            <label style="position: relative;left: 0px;margin-bottom: 11px;">ETC</label>
+           <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;" value="'.$quotedetails[0]->etc.'" required>
+           </div>
+           <div class="col-md-12 mb-3 position-relative">
+            <label>Invoice Note</label>
+            <input type="text" class="form-control" placeholder="Invoice Note" name="invoicenote" id="invoicenote" value="'.$quotedetails[0]->invoicenote.'">
+           </div>
+           <div class="col-md-12 mb-3">
+             <label>Description</label>
+             <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required>'.$quotedetails[0]->description.'</textarea>
+           </div>';
+           if($request->type == "ticket") {
+              $updatev="ticket";
+           } else {
+              $updatev="quote";
+           }
+          $html .= '<div class="col-lg-6 mb-2">
+            <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
+          </div>
+          <div class="col-lg-6">
+            <button type="submit" class="btn btn-add btn-block" name="type" value="'.$updatev.'">Update</button>
+          </div>
+        </div>';
+        return json_encode(['html' =>$html]);
+        die;
+       
     }
 }

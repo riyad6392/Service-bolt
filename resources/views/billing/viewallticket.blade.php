@@ -503,34 +503,42 @@
 
   $(document).on('change','#serviceid',function(e) {
   gethours();
+  var qid = $('#quoteid').val();
+  if(qid==undefined) {
+      var qid = "";
+  }
   var serviceid = $('#serviceid').val();
   var productid = $('#productid').val(); 
-    var qid = "";
+    
+    $(document).find('#testprice').empty('');
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+
     $.ajax({
-          url:'{{route('company.calculateproductprice')}}',
+          url:'{{route('company.calculatebillingprice')}}',
           data: dataString,
           method: 'post',
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            console.log(data.totalprice);
+            console.log(data);
             $('#priceticketedit').val(data.totalprice);
             $('#tickettotaledit').val(data.totalprice);
             $('#edithiddenprice').val(data.totalprice);
+            $('#testprice').append(data.hourpricehtml);
         }
       })
-
-
 })
 $(document).on('change','#productid',function(e) {
-  //getpricep1();
-  var serviceid = $('#serviceid').val();
+    var serviceid = $('#serviceid').val();
     var productid = $('#productid').val(); 
-    var qid = "";
+    var qid = $('#quoteid').val();
+    if(qid==undefined) {
+      var qid = "";
+    }
+    $(document).find('#testprice1').empty('');
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
     $.ajax({
-          url:'{{route('company.calculateproductprice')}}',
+          url:'{{route('company.calculatebillingprice')}}',
           data: dataString,
           method: 'post',
           dataType: 'json',
@@ -539,6 +547,8 @@ $(document).on('change','#productid',function(e) {
             $('#priceticketedit').val(data.totalprice);
             $('#tickettotaledit').val(data.totalprice);
             $('#edithiddenprice').val(data.totalprice);
+            $('#testprice1').append(data.hourproducthtml);
+
           }
       })
 });

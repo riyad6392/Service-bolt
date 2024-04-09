@@ -258,11 +258,13 @@
 
         $horalyp = App\Models\Hourlyprice::where('ticketid',$ticketid)->get();
         if(count($horalyp)>0) {
-            $hpinfo = App\Models\Hourlyprice::select('hour','minute','price')->where('ticketid',$ticketid)->whereIn('serviceid',array($value['id']))->first();
+            $hpinfo = App\Models\Hourlyprice::select('hour','minute','price','servicedescription','productdescription')->where('ticketid',$ticketid)->whereIn('serviceid',array($value['id']))->first();
 
             $totalpricefinal = number_format((float)$hpinfo->price + (float)$txvalue, 2, '.', '');
+            $servicedescription = @$hpinfo->servicedescription;
         } else {
             $totalpricefinal = number_format((float)$value['price'] + (float)$txvalue, 2, '.', '');
+            $servicedescription = $value['description'];
         }
         @endphp
         @if($i % 2 == 0)
@@ -271,7 +273,7 @@
             <tr style="background-color:#ccc;">
         @endif        
         <td style="padding: 15px;width: 50%;">{{ $value['servicename'] }}</td>
-        <td style="padding: 15px;width: 50%;text-align: left;">{{ $value['description'] }}</td>
+        <td style="padding: 15px;width: 50%;text-align: left;">{{ $servicedescription }}</td>
         <td style="padding: 15px;width: 15%;">1</td>
         <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
         @if($taxprice=="0.00")
@@ -303,6 +305,13 @@
         if($txtpercentage1==null) {
            $txtpercentage1 = 0; 
         }
+        $pinfo = App\Models\ProductDescription::where('ticketid',$ticketid)->get();
+        if(count($pinfo)>0) {
+            $productinfo = App\Models\ProductDescription::select('productdescription')->where('ticketid',$ticketid)->whereIn('productid',array($value['id']))->first();
+            $productdescription = @$productinfo->productdescription;
+        } else {
+            $productdescription = $value['description'];
+        }
     @endphp
         @if($i % 2 == 0)
             <tr style="background-color:#fff;">
@@ -310,7 +319,7 @@
             <tr style="background-color:#ccc;">
         @endif 
         <td style="padding: 15px;width: 50%;">{{ $value['productname'] }}</td>
-        <td style="padding: 15px;width: 50%;text-align: left;">{{ $value['description'] }}</td>
+        <td style="padding: 15px;width: 50%;text-align: left;">{{ $productdescription }}</td>
         <td style="padding: 15px;width: 15%;">1</td>
         <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
         @if($taxprice=="0.00")

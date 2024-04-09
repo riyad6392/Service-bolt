@@ -1218,7 +1218,7 @@ Save
 
 <form id="form" method="post" action="{{route('worker.sendinvoice')}}">
   @csrf
-<div class="modal fade" id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
+    <div class="modal fade show" id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" data-bs-backdrop="static" aria-modal="true" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content customer-modal-box">
      <div class="modal-body">
@@ -1362,7 +1362,6 @@ Save
           dataType: 'json',
           refresh: true,
           success:function(data) {
-            console.log(data);
             $('#price12').val(data.totalprice);
             $('#ticketprice').val(data.totalprice);
             $('#productprice').val(data.productprice);
@@ -1378,6 +1377,7 @@ Save
           var qid = "";
         }
       var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+      $(document).find('#testprice1').empty('');
       $.ajax({
             url:'{{route('worker.calculatepricenew')}}',
             data: $('#form').serialize(),
@@ -1388,7 +1388,7 @@ Save
               $('#price12').val(data.totalprice); 
               $('#ticketprice').val(data.totalprice);
               $('#productprice').val(data.productprice);
-
+              $('#testprice1').append(data.hourproducthtml);
             }
         })
      });

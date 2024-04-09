@@ -784,7 +784,7 @@ section.promo_section {
    }
    var dataString =  'id='+ id+ '&type='+ type+ '&view='+ view;
    $.ajax({
-            url:'{{route('company.vieweditticketmodal')}}',
+            url:'{{route('company.billingvieweditticketmodal')}}',
             data: dataString,
             method: 'post',
             dataType: 'json',
@@ -828,6 +828,7 @@ section.promo_section {
   var productid = $('#productid').val(); 
     var qid = "";
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $(document).find('#testprice').empty('');
     $.ajax({
           url:'{{route('company.calculateproductprice')}}',
           data: dataString,
@@ -839,6 +840,8 @@ section.promo_section {
             $('#priceticketedit').val(data.totalprice);
             $('#tickettotaledit').val(data.totalprice);
             $('#edithiddenprice').val(data.totalprice);
+            $('#testprice').append(data.hourpricehtml);
+
         }
       })
 
@@ -846,7 +849,8 @@ section.promo_section {
 })
 $(document).on('change','#productid',function(e) {
   //getpricep1();
-  var serviceid = $('#serviceid').val();
+    $(document).find('#testprice1').empty('');
+    var serviceid = $('#serviceid').val();
     var productid = $('#productid').val(); 
     var qid = "";
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
@@ -860,6 +864,7 @@ $(document).on('change','#productid',function(e) {
             $('#priceticketedit').val(data.totalprice);
             $('#tickettotaledit').val(data.totalprice);
             $('#edithiddenprice').val(data.totalprice);
+            $('#testprice1').append(data.hourproducthtml);
           }
       })
 });

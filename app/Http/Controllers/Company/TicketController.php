@@ -18,6 +18,8 @@ use App\Models\Tenture;
 use App\Models\User;
 use PDF;
 use App\Models\AppNotification;
+use App\Models\Hourlyprice;
+use App\Models\ProductDescription;
 
 class TicketController extends Controller
 {
@@ -1159,8 +1161,11 @@ class TicketController extends Controller
       $customer = Customer::select('customername','email')->where('id', $request->customerid)->first();
 
       $userdetails = User::select('taxtype','taxvalue','servicevalue','productvalue')->where('id', auth()->user()->id)->first();
-
-      $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->serviceid)->get();
+    if(isset($request->customersiteedit)) {
+        $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->serviceid1)->get();
+    } else {
+        $servicedetails = Service::select('servicename','productid','price')->whereIn('id', $request->serviceid)->get();
+    }
       $sum = 0;
       foreach ($servicedetails as $key => $value) {
         $pid[] = $value['productid'];
@@ -1241,13 +1246,18 @@ class TicketController extends Controller
 
       
       $quote->customerid =  $request->customerid;
-
+      $quote->serviceid = null;
       //$quote->serviceid = $request->serviceid;
-      if(isset($request->serviceid)) {
-        $quote->serviceid = implode(',', $request->serviceid);
-      } else {
-        $quote->serviceid = null;
+      if(isset($request->customersiteedit)) {
+            $quote->serviceid = implode(',', $request->serviceid1);
+        } else {
+        if(isset($request->serviceid)) {
+            $quote->serviceid = implode(',', $request->serviceid);
+          } else {
+            $quote->serviceid = null;
+          }
       }
+      
 
       if(isset($request->productid)) {
         $quote->product_id = implode(',', $request->productid);
@@ -1303,6 +1313,45 @@ class TicketController extends Controller
         $quote->invoicenote = $request->invoicenote;
       }
       $quote->save();
+
+    if(isset($request->invoiceedit)) {
+        if(isset($request->customersiteedit)) {
+            if($request->serviceid1!=null) {
+                DB::table('hourlyprice')->where('ticketid',$request->quoteid)->delete();
+                $pricetotal = 0;
+                foreach($request->serviceid1 as $key =>$value) {
+                    $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value))->first();
+                    $data['ticketid'] = $request->quoteid;
+                    $data['serviceid'] = $value;
+                    $data['servicedescription'] = $request->servicedescription[$key];
+                    Hourlyprice::create($data);
+                }
+            }   
+        } else {
+            if($request->serviceid!=null) {
+                DB::table('hourlyprice')->where('ticketid',$request->quoteid)->delete();
+                $pricetotal = 0;
+                foreach($request->serviceid as $key =>$value) {
+                    $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value))->first();
+                    $data['ticketid'] = $request->quoteid;
+                    $data['serviceid'] = $value;
+                    $data['servicedescription'] = $request->servicedescription[$key];
+                    Hourlyprice::create($data);
+                }
+            }    
+        }
+        
+        if($request->productid!=null) {
+            DB::table('productdescription')->where('ticketid',$request->quoteid)->delete();
+            foreach($request->productid as $key =>$value) {
+                $data['ticketid'] = $request->quoteid;
+                $data['productid'] = $value;
+                $data['productdescription'] = $request->productdescription[$key];
+                ProductDescription::create($data);
+            }
+        }
+    }
+
       $request->session()->flash('success', 'Updated successfully');
       return redirect()->back();
     }
@@ -1683,25 +1732,81 @@ class TicketController extends Controller
   public function calculateproductprice(Request $request) {
     $json = array();
     $serviceidarray = explode(',', $request->serviceid);
-      $servicedetails = Service::select('servicename','price')->whereIn('id', $serviceidarray)->get();
+      $servicedetails = Service::select('servicename','price','id','description')->whereIn('id', $serviceidarray)->get();
       $sum = 0;
+      $hourpricehtml = "";
       foreach ($servicedetails as $key => $value) {
         $sname[] = $value['servicename'];
         $sum+= (float)$value['price'];
+
+        $horalyp = Hourlyprice::where('ticketid',$request->qid)->get();
+          if(count($horalyp)>0) {
+            $hpinfo = Hourlyprice::select('hour','minute','servicedescription','productdescription')->where('ticketid',$request->qid)->whereIn('serviceid',array($value['id']))->first();
+          }
+          $servicedescription = $value['description'];
+          if(@$hpinfo->servicedescription!="") {
+            $servicedescription = @$hpinfo->servicedescription;
+          }
+          
+          $hourpricehtml .='<div class="col-md-12">
+            <div class="row">
+
+              <div class="col-md-5 mb-2">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="'.$value['servicename'].'" required readonly>
+                    <input type="hidden" name="serviceids[]" id="serviceids" value="'.$value['id'].'">
+                </div>
+              </div>
+              <div class="col-md-7 mb-2">
+                <div class="form-group">
+                  <textarea class="form-control height-50" name="servicedescription[]" id="servicedescription" placeholder="Description">'.@$servicedescription.'</textarea>
+                </div>
+              </div>
+
+            </div>
+            </div>';
       } 
 
     $pidarray = explode(',', $request->productid);
-      $pdetails = Inventory::select('productname','id','price')->whereIn('id', $pidarray)->get();
+      $pdetails = Inventory::select('productname','id','price','description')->whereIn('id', $pidarray)->get();
       $sum1 = 0;
+      $hourproducthtml = "";
       foreach ($pdetails as $key => $value) {
         $pname[] = $value['productname'];
         $sum1+= (float)$value['price'];
+
+        $horalyp = ProductDescription::where('ticketid',$request->qid)->get();
+          if(count($horalyp)>0) {
+            $hpinfo = ProductDescription::select('productdescription')->where('ticketid',$request->qid)->whereIn('productid',array($value['id']))->first();
+          }
+          $productdescription = $value['description'];
+          if(@$hpinfo->productdescription!="") {
+            $productdescription = @$hpinfo->productdescription;
+          }
+          
+          $hourproducthtml .='<div class="col-md-12">
+            <div class="row">
+
+              <div class="col-md-5 mb-2">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="" name="productnames[]" id="productnames" value="'.$value['productname'].'" required readonly>
+                    <input type="hidden" name="productids[]" id="productids" value="'.$value['id'].'">
+                </div>
+              </div>
+              <div class="col-md-7 mb-2">
+                <div class="form-group">
+                  <textarea class="form-control height-50" name="productdescription[]" id="productdescription" placeholder="Description">'.@$productdescription.'</textarea>
+                </div>
+              </div>
+
+            </div>
+            </div>';
       }
       $totalprice = $sum+$sum1;
       $totalprice = number_format($totalprice,2);
       $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
 
-      return json_encode(['totalprice' =>$totalprice]);
+      return json_encode(['totalprice' =>$totalprice,'hourpricehtml' =>$hourpricehtml,'hourproducthtml' =>$hourproducthtml]);
       die;
   }
 

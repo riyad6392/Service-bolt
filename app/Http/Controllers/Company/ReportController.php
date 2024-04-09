@@ -158,7 +158,6 @@ class ReportController extends Controller
         $personnelids  =array();
         
 
-        
         foreach($productinfo as $key =>$value) {
            $pids[] = $value->product_id;
            $personnelids[] = $value->personnelid;
@@ -176,7 +175,10 @@ class ReportController extends Controller
            $productinfo = array(); 
            $numerickey = array();
         }
-
+        $personnelids = array_filter($personnelids, function($value) {
+            return !is_null($value);
+        });
+         
         $countsf1 = array_count_values($personnelids);
         arsort($countsf1);
         $personnelids = array_flip($countsf1);

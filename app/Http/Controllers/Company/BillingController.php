@@ -19,7 +19,8 @@ use App\Models\Inventory;
 use App\Models\User;
 use App\Models\Tenture;
 use App\Models\Address;
-
+use App\Models\Hourlyprice;
+use App\Models\ProductDescription;
 use Mail;
 
 class BillingController extends Controller
@@ -1687,7 +1688,7 @@ class BillingController extends Controller
                 $html .='<option value="'.$value->id.'" '.@$selectecp.'>'.$value->customername.'</option>';
               }
         $html .='</select>
-          </div>
+          </div><input type="hidden" name="invoiceedit" id="invoiceedit" value="invoiceedit">
           <div class="col-md-12 mb-2">
            <div class="input_fields_wrap">
               <div class="mb-3">
@@ -1719,9 +1720,45 @@ class BillingController extends Controller
                 $html .='<option value="'.$value->id.'" '.@$selectedp.' data-hour="'.$value->time.'" data-min="'.$value->minute.'" data-price="'.$value->price.'">'.$value->servicename.'</option>';
               }
         $html .='</select>
-          </div>
-
-          <div class="col-md-12 mb-2">
+          </div>';
+        $html .='<div class="row mt-4" id="testprice">';
+        if($quotedetails[0]->serviceid!="") {
+          $serviceids =explode(",", $quotedetails[0]->serviceid);
+          
+          foreach($serviceids as $key1=>$value1) {
+             $serviceinfo = Service::select('id','servicename','description')->where('id',$value1)->first();
+             $horalyp = Hourlyprice::where('ticketid',$request->id)->get();
+             if(count($horalyp)>0) {
+              $hpinfo = Hourlyprice::select('hour','minute','servicedescription','productdescription')->where('ticketid',$request->id)->whereIn('serviceid',array($value1))->first();
+             }
+            
+            $servicedescription = $serviceinfo->description;
+            if(@$hpinfo->servicedescription!="") {
+              $servicedescription = @$hpinfo->servicedescription;
+            }
+            
+            $html .='<input type="hidden" name="quoteid" id="quoteid" value="'.$request->id.'">
+                <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-5 mb-2">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="'.$serviceinfo->servicename.'"required readonly>
+                      <input type="hidden" name="serviceids[]" id="serviceids" value="'.$serviceinfo->id.'">
+                    </div>
+                  </div>
+                   <div class="col-md-7 mb-2">
+                    <div class="form-group">
+                    <textarea class="form-control height-50" name="servicedescription[]" id="servicedescription" placeholder="Description">'.@$servicedescription.'</textarea>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                ';
+            }
+          }
+          $html .='</div>';
+          
+          $html .='<div class="col-md-12 mb-2">
             <label>Select Products</label>
             <select class="form-control selectpickerp1" multiple aria-label="Default select example" data-live-search="true" name="productid[]" id="productid" style="height:auto;" data-placeholder="Select Products">';
               foreach($allproducts as $key => $value) {
@@ -1736,10 +1773,42 @@ class BillingController extends Controller
               }
         $html .='</select>
           </div>';
-
+          $html .='<div class="row mt-4" id="testprice1">';
+          if($quotedetails[0]->product_id!="") {
+          $productids =explode(",", $quotedetails[0]->product_id);
+          foreach($productids as $key2=>$value2) {
+             $productinfo = Inventory::select('id','productname','description')->where('id',$value2)->first();
+             $horalyp = ProductDescription::where('ticketid',$request->id)->get();
+             if(count($horalyp)>0) {
+              $hpinfo = ProductDescription::select('productdescription')->where('ticketid',$request->id)->whereIn('productid',array($value2))->first();
+             }
+            
+            $productdescription = $productinfo->description;
+            if(@$hpinfo->productdescription!="") {
+                $productdescription = @$hpinfo->productdescription;
+             }
+            $html .='
+              <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-5 mb-2">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="" name="productnames[]" id="productnames" value="'.$productinfo->productname.'"required readonly>
+                    <input type="hidden" name="productids[]" id="productids" value="'.$productinfo->id.'">
+                  </div>
+                </div>
+                 <div class="col-md-7 mb-2">
+                  <div class="form-group">
+                  <textarea class="form-control height-50" name="productdescription[]" id="productdescription" placeholder="Description">'.@$productdescription.'</textarea>
+                  </div>
+                </div>
+              </div>
+              </div>
+              ';
+          }
+        }
+        $html .='</div>';
           
-
-          $html.='<div class="col-md-12 mb-2">
+        $html.='<div class="col-md-12 mb-2">
             <div class="align-items-center justify-content-lg-between d-flex services-list">
                <p>
                 <input type="radio" id="test4" name="radiogroup" value="perhour" '.@$checked.' class="radiogroupedit">
@@ -1810,4 +1879,85 @@ class BillingController extends Controller
         die;
        
     }
+
+    public function calculatebillingprice(Request $request) {
+      $json = array();
+      $serviceidarray = explode(',', $request->serviceid);
+        $servicedetails = Service::select('servicename','price','id','description')->whereIn('id', $serviceidarray)->get();
+        $sum = 0;
+        $hourpricehtml = "";
+        foreach ($servicedetails as $key => $value) {
+          $sname[] = $value['servicename'];
+          $sum+= (float)$value['price'];
+
+          $horalyp = Hourlyprice::where('ticketid',$request->qid)->get();
+          if(count($horalyp)>0) {
+            $hpinfo = Hourlyprice::select('hour','minute','servicedescription','productdescription')->where('ticketid',$request->qid)->whereIn('serviceid',array($value['id']))->first();
+          }
+          $servicedescription = $value['description'];
+          if(@$hpinfo->servicedescription!="") {
+            $servicedescription = @$hpinfo->servicedescription;
+          }
+          
+          $hourpricehtml .='<div class="col-md-12">
+            <div class="row">
+
+              <div class="col-md-5 mb-2">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="'.$value['servicename'].'" required readonly>
+                    <input type="hidden" name="serviceids[]" id="serviceids" value="'.$value['id'].'">
+                </div>
+              </div>
+              <div class="col-md-7 mb-2">
+                <div class="form-group">
+                  <textarea class="form-control height-50" name="servicedescription[]" id="servicedescription" placeholder="Description">'.@$servicedescription.'</textarea>
+                </div>
+              </div>
+
+            </div>
+            </div>';
+        } 
+
+      $pidarray = explode(',', $request->productid);
+        $pdetails = Inventory::select('productname','id','price','description')->whereIn('id', $pidarray)->get();
+        $sum1 = 0;
+        $hourproducthtml = "";
+        foreach ($pdetails as $key => $value) {
+          $pname[] = $value['productname'];
+          $sum1+= (float)$value['price'];
+
+          $horalyp = ProductDescription::where('ticketid',$request->qid)->get();
+          if(count($horalyp)>0) {
+            $hpinfo = ProductDescription::select('productdescription')->where('ticketid',$request->qid)->whereIn('productid',array($value['id']))->first();
+          }
+          $productdescription = $value['description'];
+          if(@$hpinfo->productdescription!="") {
+            $productdescription = @$hpinfo->productdescription;
+          }
+          
+          $hourproducthtml .='<div class="col-md-12">
+            <div class="row">
+
+              <div class="col-md-5 mb-2">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="" name="productnames[]" id="productnames" value="'.$value['productname'].'" required readonly>
+                    <input type="hidden" name="productids[]" id="productids" value="'.$value['id'].'">
+                </div>
+              </div>
+              <div class="col-md-7 mb-2">
+                <div class="form-group">
+                  <textarea class="form-control height-50" name="productdescription[]" id="productdescription" placeholder="Description">'.@$productdescription.'</textarea>
+                </div>
+              </div>
+
+            </div>
+            </div>';
+        }
+        $totalprice = $sum+$sum1;
+        $totalprice = number_format($totalprice,2);
+        $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
+
+        return json_encode(['totalprice' =>$totalprice,'hourpricehtml' =>$hourpricehtml,'hourproducthtml' =>$hourproducthtml]);
+        die;
+  }
 }
