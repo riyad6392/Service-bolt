@@ -317,7 +317,7 @@
 </div>
      <br>
     <div class="table-responsive">
-	    <table id="exampleService" class="table no-wrap table-new table-list align-items-center">
+	    <table id="exampleService" class="table no-wrap table-new table-list align-items-center exampleService1">
     	    <thead>
         	    <tr>
                   <th>Date</th>
@@ -449,7 +449,7 @@
     </div>
      </form>
     <div class="table-responsive">
-        <table id="examplerecurring" class="table no-wrap table-new table-list align-items-center">
+        <table id="" class="table no-wrap table-new table-list align-items-center examplerecurring">
             <thead>
                 <tr>
                   <th>Ticket Number</th>
@@ -498,7 +498,7 @@
     </div>
     </form>
     <div class="table-responsive">
-        <table id="examplerecurring" class="table no-wrap table-new table-list align-items-center">
+        <table id="" class="table no-wrap table-new table-list align-items-center customerreportconnect">
             <thead>
                 <tr>
                   <th>Connected Addresses<th>
@@ -588,7 +588,7 @@
     </form>
       
     <div class="">
-        <table id="" class="table no-wrap table-new table-list align-items-center">
+        <table id="" class="table no-wrap table-new table-list align-items-center payrollclass">
             <thead>
                 <tr>
                   <th>Personnel <br>Name<th>
@@ -945,7 +945,7 @@
      </div>
  </div>
     <div class="table-responsive">
-        <table id="exampleproduct" class="table no-wrap table-new table-list align-items-center">
+        <table id="" class="table no-wrap table-new table-list align-items-center exampleproduct">
             <thead>
                 <tr>
                   <th>Product</th>
@@ -1613,20 +1613,32 @@
       $('#example1').DataTable({
        "order": [[ 0, "desc" ]]
       });
-      $('#exampleproduct').DataTable({
-       "order": [[ 0, "desc" ]]
-      });
+      
       $('#examplesaletab').DataTable({
        "order": [[ 0, "desc" ]]
       });
-      $("#examplerecurring").DataTable({
-       "order": [[ 0, "desc" ]] 
-      });
-      $("#exampleService").DataTable({
-       "order": [[ 0, "desc" ]] 
-      });
     });
 
+    $(".exampleService1").DataTable({
+       "order": [[ 0, "desc" ]] 
+    });
+    
+    $('.exampleproduct').DataTable({
+       "order": [[ 0, "desc" ]]
+    });
+
+    $(".examplerecurring").DataTable({
+       "order": [[ 0, "desc" ]] 
+      });
+
+    $(".customerreportconnect").DataTable({
+       "order": [[ 0, "desc" ]] 
+    });
+
+    $(".payrollclass121").DataTable({
+       "order": [[ 0, "desc" ]] 
+    });
+    
     $.ajaxSetup({
       headers: {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

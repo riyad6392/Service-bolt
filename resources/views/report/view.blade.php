@@ -162,6 +162,19 @@
 </div>
 </div>
 
+<div class="modal fade" id="edit-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customer-modal-box">
+      <div class="modal-body">
+      <form method="post" action="{{ route('company.ticketupdate') }}" enctype="multipart/form-data">
+        @csrf
+        <div id="viewmodaldata1"></div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @section('script')
@@ -350,6 +363,103 @@
         todayHighlight: true
   });
 });
+
+  $(document).on('click','#editTickets',function(e) {
+   $('.selectpicker2').selectpicker();
+   var id = $(this).data('id');
+
+   var pvalue = $(this).data('pid');
+   
+   var type = $(this).data('type');
+   if(type==undefined) {
+    var type = "quote";
+   }
+   var dataString =  'id='+ id+ '&type='+ type;
+     $.ajax({
+      url:'{{route('company.billingvieweditticketmodal')}}',
+      data: dataString,
+      method: 'post',
+      dataType: 'json',
+      refresh: true,
+      success:function(data) {
+        $('#viewmodaldata1').html(data.html);
+        $('.selectpicker').selectpicker({
+          size: 3
+        });
+        $(".selectpickerp1").selectpicker();
+        var hiddenprice = $("#priceticketedit").val();
+        $("#edithiddenprice").val(hiddenprice);
+    }
+    })
+  });
+
+  $(document).on('change','#serviceid',function(e) {
+  gethours();
+  var qid = $('#quoteid').val();
+  if(qid==undefined) {
+      var qid = "";
+  }
+  var serviceid = $('#serviceid').val();
+  var productid = $('#productid').val(); 
+    
+    $(document).find('#testprice').empty('');
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+
+    $.ajax({
+          url:'{{route('company.calculatebillingprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            console.log(data);
+            $('#priceticketedit').val(data.totalprice);
+            $('#tickettotaledit').val(data.totalprice);
+            $('#edithiddenprice').val(data.totalprice);
+            $('#testprice').append(data.hourpricehtml);
+        }
+      })
+})
+$(document).on('change','#productid',function(e) {
+    var serviceid = $('#serviceid').val();
+    var productid = $('#productid').val(); 
+    var qid = $('#quoteid').val();
+    if(qid==undefined) {
+      var qid = "";
+    }
+    $(document).find('#testprice1').empty('');
+    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+    $.ajax({
+          url:'{{route('company.calculatebillingprice')}}',
+          data: dataString,
+          method: 'post',
+          dataType: 'json',
+          refresh: true,
+          success:function(data) {
+            $('#priceticketedit').val(data.totalprice);
+            $('#tickettotaledit').val(data.totalprice);
+            $('#edithiddenprice').val(data.totalprice);
+            $('#testprice1').append(data.hourproducthtml);
+
+          }
+      })
+});
+
+  function gethours() {
+    var h=0;
+    var m=0;
+    $('select.selectpicker1').find('option:selected').each(function() {
+      h += parseInt($(this).data('hour'));
+      m += parseInt($(this).data('min'));
+      
+    });
+    var realmin = m % 60;
+    var hours = Math.floor(m / 60);
+    h = h+hours;
+    
+    $("#time1").val(h);
+    $("#minute1").val(realmin);
+  }
 </script>
 @endsection
 

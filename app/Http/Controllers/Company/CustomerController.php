@@ -1522,7 +1522,7 @@ class CustomerController extends Controller
         <div class="col-lg-4 mb-3 mx-auto">
         </div>
           <div class="col-lg-4 mb-3 mx-auto">
-          <a class="btn btn-add btn-block sendtocustomer" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="'.$request->id.'" data-pid="'.$request->pid.'" style="padding-top:10px;">Edit Invoice</a>
+          <a class="btn btn-add btn-block" data-bs-toggle="modal" data-bs-target="#edit-tickets" id="editTickets" data-id="'.$request->id.'" data-pid="'.$request->pid.'" style="padding-top:10px;">Edit Invoice</a>
           </div>
           <div class="col-lg-4 mb-3 mx-auto">
         </div>
