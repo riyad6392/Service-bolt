@@ -34,6 +34,7 @@ use App\Events\MyEvent;
 use App\Models\Checklist;
 use PDF;
 use App\Models\Hourlyprice;
+use App\Models\ProductDescription;
 
 class UserController extends Controller
 {
@@ -1278,7 +1279,7 @@ class UserController extends Controller
         $sum2 = 0;
        if($request->productid!="") {
         $productid = $request->productid;
-         $pdetails = Inventory::select('productname','id','price')->whereIn('id', array($request->productid))->get();
+         $pdetails = Inventory::select('productname','id','price','description')->whereIn('id', array($request->productid))->get();
       
           foreach ($pdetails as $key => $value) {
             $pname[] = $value['productname'];
@@ -1326,7 +1327,7 @@ class UserController extends Controller
           DB::table('hourlyprice')->where('ticketid',$request->id)->delete();
           $pricetotal = 0;
           foreach($request->pricearray as $key =>$value) {
-            $servicedetails = Service::select('id','servicename','price')->whereIn('id',array($value['id']))->first();
+            $servicedetails = Service::select('id','servicename','price','description')->whereIn('id',array($value['id']))->first();
             $hrpicehour = 0;
             if($value['hrs']!='0' || $value['hrs']!='00') {
                 $hrpicehour = $servicedetails->price*$value['hrs'];
@@ -1342,6 +1343,7 @@ class UserController extends Controller
             $data['hour'] = $value['hrs'];
             $data['minute'] = $value['mins'];
             $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
+            $data['servicedescription'] = $value['desciption'];
             
             Hourlyprice::create($data);
             $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
@@ -1350,6 +1352,18 @@ class UserController extends Controller
             // DB::table('quote')->where('id','=',$request->id)->update([ 
             //     "price"=>$finalsumprice
             // ]);
+        }
+        if(count(@$request->productarray)>0) {
+          DB::table('productdescription')->where('ticketid',$request->id)->delete();
+          $pricetotal = 0;
+          foreach($request->productarray as $key =>$value) {
+            $productdetails = Inventory::select('id','productname','price','description')->whereIn('id',array($value['id']))->first();
+            $data['ticketid'] = $request->id;
+            $data['productid'] = $value['id'];
+            $data['productdescription'] = $value['desciption'];
+            
+            ProductDescription::create($data);
+          }
         }
         return response()->json(['status'=>1,'message'=>'Invoice has been save successfully'],$this->successStatus); 
    } else {
@@ -1397,14 +1411,22 @@ class UserController extends Controller
                     $data['hour'] = $value['hrs'];
                     $data['minute'] = $value['mins'];
                     $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
-                    
+                    $data['servicedescription'] = $value['desciption'];
                     Hourlyprice::create($data);
                     $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
                   }
                     $finalsumprice = $pricetotal+$sum2;
-                    // DB::table('quote')->where('id','=',$request->id)->update([ 
-                    //     "price"=>$finalsumprice
-                    // ]);
+                }
+                if(count(@$request->productarray)>0) {
+                  DB::table('productdescription')->where('ticketid',$request->id)->delete();
+                  foreach($request->productarray as $key =>$value) {
+                    $productdetails = Inventory::select('id','productname','price','description')->whereIn('id',array($value['id']))->first();
+                    $data['ticketid'] = $request->id;
+                    $data['productid'] = $value['id'];
+                    $data['productdescription'] = $value['desciption'];
+                    
+                    ProductDescription::create($data);
+                  }
                 }
           return response()->json(['status'=>1,'message'=>'Invoice has been send successfully'],$this->successStatus); 
         }

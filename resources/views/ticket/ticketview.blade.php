@@ -734,7 +734,7 @@ section.promo_section {
 
 <div class="modal fade" id="edit-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content customer-modal-box">
+    <div class="modal-content customer-modal-box" style="width: 100%!important;">
       <div class="modal-body">
       <form method="post" action="{{ route('company.ticketupdate') }}" enctype="multipart/form-data">
         @csrf
