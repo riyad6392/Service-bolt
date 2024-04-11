@@ -5218,10 +5218,12 @@ $(document).on('click','#saveaddress',function(e) {
             dataType: 'json',
             refresh: true,
             success:function(data) {
+                swal("Done!", "Address Created Successfully!", "success");
               $("#add-address").modal('hide');
               $("#address").append("<option value="+data.address+" selected>"+data.address+"</option>");
-                location.reload();
-        }
+              $('#add-tickets').addClass('show');
+              location.reload();
+            }
         })
     })
 

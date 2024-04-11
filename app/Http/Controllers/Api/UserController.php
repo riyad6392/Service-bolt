@@ -387,7 +387,8 @@ class UserController extends Controller
             $sum = 0;
             $serearray=array();
             foreach ($servicedetails as $key => $value) {
-                $horalyp = Hourlyprice::select('hour','minute')->where('ticketid',$ticketId)->where('serviceid',$value['id'])->first();
+                $serviceinfo = Service::select('id','servicename','description')->where('id',$value)->first();
+                $horalyp = Hourlyprice::select('hour','minute','servicedescription')->where('ticketid',$ticketId)->where('serviceid',$value['id'])->first();
                 $hours = "";
                 if(isset($horalyp->hour)) {
                    $hours = $horalyp->hour; 
@@ -396,26 +397,43 @@ class UserController extends Controller
                 if(isset($horalyp->minute)) {
                    $minutes = $horalyp->minute; 
                 }
+                $servicedescription = @$serviceinfo->description;
+                if(@$horalyp->servicedescription!="") {
+                    $servicedescription = @$horalyp->servicedescription;
+                 }
+
                 $serearray[] = array (
                      'id' =>$value['id'],
                      'servicename' => $value['servicename'],
                      'price' => $value['price'],
                      'hrs' => $hours,
                      'mins' => $minutes,
+                     'description' => $servicedescription,
                    );
               $sum+= (int)$value['price'];
             }
             $servicename = "";
 
             $pidarray = explode(',', $quoteData->product_id);
-            $pdetails = Inventory::select('productname','id','price')->whereIn('id', $pidarray)->get();
+            $pdetails = Inventory::select('productname','id','price','description')->whereIn('id', $pidarray)->get();
             $sum1 = 0;
             $proarray=array();
             foreach ($pdetails as $key => $value) {
+                $productinfo = Inventory::select('id','productname','description')->where('id',$value->id)->first();
+                 $horalyp = ProductDescription::where('ticketid',$request->ticketId)->get();
+                 if(count($horalyp)>0) {
+                  $hpinfo = ProductDescription::select('productdescription')->where('ticketid',$request->ticketId)->where('productid',$value->id)->first();
+                 }
+                
+                $productdescription = @$productinfo->description;
+                if(@$hpinfo->productdescription!="") {
+                    $productdescription = @$hpinfo->productdescription;
+                 }
                 $proarray[] = array (
                      'id' =>$value['id'],
                      'productname' => $value['productname'],
                      'price' => $value['price'],
+                     'description' => $productdescription,
                 );
               //$pname[] = $value['productname'];
               $sum1+= (int)$value['price'];
@@ -1344,7 +1362,7 @@ class UserController extends Controller
             $data['hour'] = $value['hrs'];
             $data['minute'] = $value['mins'];
             $data['price'] = number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
-            $data['servicedescription'] = $value['desciption'];
+            $data['servicedescription'] = $value['description'];
             
             Hourlyprice::create($data);
             $pricetotal += number_format((float)$hrpicehour+$hrpiceminute, 2, '.', '');
@@ -1361,7 +1379,7 @@ class UserController extends Controller
             $productdetails = Inventory::select('id','productname','price','description')->whereIn('id',array($value['id']))->first();
             $data['ticketid'] = $request->id;
             $data['productid'] = $value['id'];
-            $data['productdescription'] = $value['desciption'];
+            $data['productdescription'] = $value['description'];
             
             ProductDescription::create($data);
           }
