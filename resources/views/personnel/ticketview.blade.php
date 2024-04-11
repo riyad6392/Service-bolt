@@ -33,6 +33,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   display: none;
 }
 
+.show {
+    display: block !important;
+}
+
 
 
 .card-header.card-ticket-header {
@@ -1038,7 +1042,7 @@ Save
 <div class="modal fade" id="add-services" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box overflow-hidden">
-      <form class="form-material m-t-40 form-valide" method="post" action="{{route('worker.servicecreate')}}" enctype="multipart/form-data">
+      <form class="form-material m-t-40 form-valide" method="post"  id="serviceformedit" enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
         <div class="add-customer-modal">
@@ -1136,7 +1140,7 @@ Save
 <div class="modal fade" id="add-product" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content customer-modal-box overflow-hidden">
-     <form class="form-material m-t-40 form-valide" method="post" action="{{route('worker.inventorycreate')}}" enctype="multipart/form-data">
+     <form class="form-material m-t-40 form-valide" method="post"  id="productformedit" enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
        <div class="add-customer-modal">
@@ -1184,7 +1188,7 @@ Save
      
      <div class="row mt-3">
      <div class="col-lg-6 mb-3">
-      <button class="btn btn-cancel btn-block" type="button" onClick="refreshPage()">Cancel</button>
+      <button class="btn btn-cancel btn-block" type="button" onClick="refreshPage1()">Cancel</button>
      </div>
      <div class="col-lg-6 mb-3">
       <button class="btn btn-add btn-block" type="submit">Complete</button>
@@ -1218,7 +1222,7 @@ Save
 
 <form id="form" method="post" action="{{route('worker.sendinvoice')}}">
   @csrf
-    <div class="modal fade show" id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" data-bs-backdrop="static" aria-modal="true" role="dialog">
+    <div class="modal fade " id="add-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" data-bs-backdrop="static" aria-modal="true" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content customer-modal-box">
      <div class="modal-body">
@@ -1246,9 +1250,22 @@ Save
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.js"></script>
 
 <script type="text/javascript">
-  function refreshPage() {
-    window.location.reload();
-  } 
+    function refreshPage() {
+        $("#add-tickets").show();
+        $('#add-tickets').addClass('show');
+
+        $("#add-services").hide();
+        $('#add-services').removeClass('show');
+    } 
+
+    function refreshPage1() {
+        $("#add-tickets").show();
+         $('#add-tickets').addClass('show');
+
+        $("#add-product").hide();
+        $('#add-product').removeClass('show');
+    } 
+
   $('.dropify').dropify();
   $(document).ready(function() {
     $('#example2').DataTable( {
@@ -1289,15 +1306,23 @@ Save
   });
   $(document).on('click','#sclick',function(e) {
     $("#add-tickets").hide();
+     $('#add-tickets').removeClass('show');
+     $('#add-services').css('display', 'block');
+    $('#add-services').addClass('show');
   });
-   $(document).on('click','#sclick1',function(e) {
-    $("#add-tickets").hide();
-    var cid = $(this).data('cid');
-    $("#customerid").val(cid);
-
-  });
+    $(document).on('click','#sclick1',function(e) {
+        $("#add-tickets").hide();
+        $('#add-tickets').removeClass('show');
+        var cid = $(this).data('cid');
+        $("#customerid").val(cid);
+        $("#add-address").css('display', 'block');
+        $("#add-address").addClass('show');
+    });
   $(document).on('click','#pclick',function(e) {
     $("#add-tickets").hide();
+    $('#add-tickets').removeClass('show');
+    $('#add-product').css('display', 'block');
+    $('#add-product').addClass('show');
   });
   $(document).on('click','#editTickets',function(e) {
     $('.selectpicker').selectpicker();
@@ -5169,7 +5194,11 @@ function IsEmail(email) {
     }
 }
 $(document).on('click','.cancelpopup',function(e) {
-   location.reload();
+    $("#add-tickets").show();
+    $('#add-tickets').addClass('show');
+
+    $("#add-address").hide();
+    $('#add-address').removeClass('show');
 
 });
 
@@ -5195,5 +5224,57 @@ $(document).on('click','#saveaddress',function(e) {
         }
         })
     })
+
+    $('#serviceformedit').on('submit', function(event) {
+      event.preventDefault();
+      var editservice = $("#editservice").val();
+      var url = "{{url('personnel/services/createservice')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+                console.log(data);
+              swal("Done!", "Service Created Successfully!", "success");
+
+              $("#edit-services").modal('hide');
+              $("#serviceid").append("<option value="+data.id+">"+data.servicename+"</option>");
+              $("#serviceid").selectpicker('refresh');
+              $('#add-tickets').addClass('show');
+              $("#add-services").hide();
+              $('#add-services').removeClass('show');
+            }
+        })
+    });
+
+    $('#productformedit').on('submit', function(event) {
+      event.preventDefault();
+      var editservice = $("#editservice").val();
+      var url = "{{route('worker.inventorycreate')}}";
+       $.ajax({
+            url:url,
+            data: new FormData(this),
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(data) {
+                console.log(data);
+              swal("Done!", "Product Created Successfully!", "success");
+
+              $("#add-product").modal('hide');
+              $("#productid").append("<option value="+data.id+">"+data.productname+ " ($" + data.price + ")</option>");
+              $("#productid").selectpicker('refresh');
+              $('#add-tickets').addClass('show');
+              $("#add-product").hide();
+              $('#add-product').removeClass('show');
+            }
+        })
+  });
 </script>
 @endsection
