@@ -627,6 +627,11 @@ section.promo_section {
         <p>@if($quotedetails[0]->customernotes!="") Personnel Notes:{!!$quotedetails[0]->customernotes!!}@endif</p>
     </div>
 </div>
+<div class="col-md-6">
+    <div>
+        <p>@if($quotedetails[0]->invoicenote!="") Invoice Notes:{!!$quotedetails[0]->invoicenote!!}@endif</p>
+    </div>
+</div>
 
 
 @php
@@ -686,6 +691,16 @@ section.promo_section {
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content customer-modal-box">
       <div class="modal-body">
+        <form class="post-4" method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data">
+        @csrf
+            <input type="hidden" name="ticketid" id="ticketid" value="{{$quotedetails[0]->id}}">
+            <div class="col-md-12">
+                <div>
+                    <button class="btn add-btn-yellow w-50 viewinvoice" type="submit" name="invoicetype" value="viewinvoice" target="_blank">View Invoice</button>
+                </div>
+
+            </div>
+        </form><br>
         <form class="post-4" method="post" action="{{ route('company.downloadinvoiceview') }}" enctype="multipart/form-data">
         @csrf
             <input type="hidden" name="ticketid" id="ticketid" value="{{$quotedetails[0]->id}}">
