@@ -148,7 +148,7 @@
       @endphp
 
         <tr class="" target="{{$i}}" data-id="{{$value->id}}">
-          <td>#{{$ids}}</td>
+          <td>{{$ids}}</td>
           <td><a class="btn add-btn-yellow w-100 viewinvoice" data-id="{{$value->id}}" data-duedate="{{$value->duedate}}" data-invoicenote="{{$value->invoicenote}}" data-pid="{{$value->personnelid}}" data-bs-toggle="modal" data-bs-target="#view-invoice">#{{$value->invoiceid}}</a></td>
           <td>{{date('m-d-Y', strtotime($value->date))}}</td>
           @php

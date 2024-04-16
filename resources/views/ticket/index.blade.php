@@ -234,7 +234,7 @@ select#servicename {
 
 
 	  <tr>
-	  <td>#{{$quote->id}}</td>
+	  <td>{{$quote->id}}</td>
 	  <td style="white-space:break-spaces;">{{$quote->address}}</td>
 	  @if($cpagedta==0)
 	  <td>{{$quote->customername}}</td>
@@ -418,7 +418,7 @@ select#servicename {
 			   }
 			@endphp
 	  <tr>
-	  <td>#{{$ticket->id}}</td>
+	  <td>{{$ticket->id}}</td>
 	  <td>{{$created_at}}</td>
 	  <td style="white-space:break-spaces;">{{$ticket->address}}</td>
 	  @if($cpagedta1==0)
@@ -561,7 +561,7 @@ select#servicename {
 			  }
 			@endphp
 	  <tr>
-	  <td>#{{$ticket->id}}</td>
+	  <td>{{$ticket->id}}</td>
 	  <td>{{$ticket->customername}}</td>
 	  <td style="white-space:break-spaces;">{{$ticket->address}}</td>
 	  <td>{{$ticket->price}}</td>
