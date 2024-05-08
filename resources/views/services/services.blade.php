@@ -133,7 +133,7 @@ i.fa.fa-plus.true-condition {
                 <table id="example" class="table no-wrap table-new table-list align-items-center">
                   <thead>
                     <tr>
-                      <th style="display: none;">Id</th>
+                      <th>Id</th>
                        
                       <th></th>
                       @if($cpagedta==0)
@@ -169,7 +169,7 @@ i.fa.fa-plus.true-condition {
                     @endphp
                     @foreach($serviceData as $service)
                     <tr class="user-hover showSingle" target="{{$i}}" data-id="{{$service->id}}" data-bs-toggle="modal" data-bs-target="#edit-services" id="editService">
-                      <td style="display: none;">{{$service->id}}</td>
+                      <td style="display: block;">{{$service->id}}</td>
                       <td><div class="user-img me-3" style="background: {{$service->color}};border-radius:48px;width: 20px;height: 20px;"></div></td>
                     @if($cpagedta==0)  
                       <td>{{$service->servicename}}</td>

@@ -130,7 +130,7 @@ a.yelloIcon {
     position: relative;">
           <thead>
             <tr>
-              <th style="display: none;">Id</th>
+              <th>Id</th>
               @if($cpagedta==0)
               <th>CUSTOMER NAME</th>
               <th>PHONE NUMBER</th>
@@ -170,7 +170,7 @@ a.yelloIcon {
                 ->whereIn('services.id',$explode_id)->get();
             @endphp
             <tr>
-              <td style="display: none;">{{$customer->id}}</td>
+              <td>{{$customer->id}}</td>
             @if($cpagedta==0)
             <td>
                <a href="{{url('company/customer/view/')}}/{{$customer->id}}" class="user-hover">

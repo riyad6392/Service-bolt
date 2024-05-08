@@ -104,7 +104,7 @@ i.fa.fa-plus.second.yellow-icon1 {
   			<table id="example" class="table no-wrap table-new table-list align-items-center">
 			  <thead>
 			  <tr>
-				  <th style="display: none;">Id</th>
+				  <th style="display: block;">Id</th>
 				  @if($cpagedta==0)
 			  	  <th>Sku</th>
 				  <th>Product Name</th>
@@ -159,7 +159,7 @@ i.fa.fa-plus.second.yellow-icon1 {
 			          
 			       	@endphp
 				  <tr target="{{$i}}" data-id="{{$inventory->id}}" class="user-hover showSingle" data-bs-toggle="modal" data-bs-target="#edit-product" id="editProduct">
-				  	  <td style="display: none;">{{$inventory->id}}</td>
+				  	  <td style="display: block;">{{$inventory->id}}</td>
 				  	@if($cpagedta==0)
 					  <td>{{$inventory->sku}}</td>
 					  <td>{{$inventory->productname}}</td>
