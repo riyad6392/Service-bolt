@@ -129,7 +129,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <table id="example" class="table no-wrap table-new table-list" style="position: relative;">
           <thead>
             <tr>
-              <th style="display: none;">ID</th>
+              <th style="display: block;">ID</th>
               <th>NAME</th>
               <th>PHONE NUMBER</th>
               <th>EMAIL</th>
@@ -142,7 +142,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
            @if(count($PersonnelData)>0)
           	@foreach($PersonnelData as $personnel)
             <tr target="{{$i}}" data-id="{{$personnel->id}}" class="user-hover showSingle">
-              <td style="display: none;">{{$personnel->id}}</td>
+              <td style="display: block;">{{$personnel->id}}</td>
               <td>
 		
 		  	   <div class="user-descption align-items-center d-flex">
