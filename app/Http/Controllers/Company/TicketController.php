@@ -10,7 +10,7 @@ use App\Models\Service;
 use App\Models\Personnel;
 use App\Models\Inventory;
 use App\Models\Address;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use DB;
 use App\Models\Managefield;
