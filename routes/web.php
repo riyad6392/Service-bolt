@@ -28,7 +28,7 @@ use App\Http\Controllers\Worker\WorkerHomeController;
 use App\Http\Controllers\Worker\WorkerTicketController;
 
 //worker manage admin controller
-use App\Http\Controllers\Worker\WorkerAdminTicketController;   
+use App\Http\Controllers\Worker\WorkerAdminTicketController;
 //end
 use App\Http\Controllers\Worker\WorkerAdminPersonnelController;
 
@@ -183,7 +183,7 @@ Route::group([
 
     //commission report
     Route::any('/commisionreport', [ComissionController::class, 'index'])->name('commisionreport');
-   
+
 
     Route::any('/customer/viewservicepopup', [CustomerController::class, 'viewservicepopup'])->name('viewservicepopup');
     Route::any('/customer/view/{id}', [CustomerController::class, 'view'])->name('customerview');
@@ -198,7 +198,7 @@ Route::group([
 
     Route::any('/customer/vieweditnotemodal', [CustomerController::class, 'vieweditnotemodal'])->name('vieweditnotemodal');
     Route::any('/customer/duplicateaddress', [CustomerController::class, 'duplicateaddress'])->name('duplicateaddress');
-    
+
 
     Route::any('/customer/updateaddress', [CustomerController::class, 'updateaddress'])->name('updateaddress');
     Route::any('/customer/updatenotes', [CustomerController::class, 'updatenotes'])->name('updatenotes');
@@ -216,7 +216,7 @@ Route::group([
 
     Route::any('/customer/calculateprice', [CustomerController::class, 'calculateprice'])->name('calculateprice');
     Route::any('/customer/customeeditinvoicemodal', [CustomerController::class, 'customeeditinvoicemodal'])->name('customeeditinvoicemodal');
-    
+
     //service Create
     Route::get('/services', [ServicesController::class, 'index'])->name('services');
     Route::any('/services/create', [ServicesController::class, 'create'])->name('servicecreate');
@@ -262,7 +262,7 @@ Route::group([
     Route::any('/inventory/leftbarinventorydata', [InventoryController::class, 'leftbarinventorydata'])->name('leftbarinventorydata');
     Route::any('/inventory/editviewinventorymodal', [InventoryController::class, 'editviewinventorymodal'])->name('editviewinventorymodal');
     Route::any('/inventory/readmoredesc', [InventoryController::class, 'readmoredesc'])->name('readmoredesc');
-    
+
 
     Route::any('/inventory/editviewinventorymodal1', [InventoryController::class, 'editviewinventorymodal1'])->name('editviewinventorymodal1');
 
@@ -273,11 +273,11 @@ Route::group([
     Route::any('/inventory/deleteProduct', [InventoryController::class, 'deleteProduct'])->name('deleteProduct');
     Route::any('/inventory/savefieldproduct', [InventoryController::class, 'savefieldproduct'])->name('savefieldproduct');
     Route::any('/inventory/duplicateproduct', [InventoryController::class, 'duplicateproduct'])->name('duplicateproduct');
-    
+
     //change Password
     Route::get('/changepassword', [ChangepasswordController::class, 'index'])->name('changepassword');
     Route::any('/updatepassword', [ChangepasswordController::class, 'update'])->name('updatepassword');
-    
+
     //Quote/Ticket Listing
     Route::get('/quote', [TicketController::class, 'index'])->name('quote');
     Route::any('/quote/updateticket', [TicketController::class, 'updateticket'])->name('updateticket');
@@ -309,7 +309,7 @@ Route::group([
     Route::get('/schedulernew', [SchedulerController::class, 'indexnew'])->name('schedulernew');
     Route::any('/scheduler/sortdata', [SchedulerController::class, 'sortdata'])->name('sortdata');
     Route::any('/scheduler/sortdataweekview', [SchedulerController::class, 'sortdataweekview'])->name('sortdataweekview');
-    
+
     Route::any('/scheduler/updatesortdata', [SchedulerController::class, 'updatesortdata'])->name('updatesortdata');
 
     Route::any('/scheduler/leftbarschedulerdata', [SchedulerController::class, 'leftbarschedulerdata'])->name('leftbarschedulerdata');
@@ -348,7 +348,7 @@ Route::group([
     Route::any('/checklist/leftbarchecklistdata', [ChecklistController::class, 'leftbarchecklistdata'])->name('leftbarchecklistdata');
     Route::any('/checklist/deleteChecklist', [ChecklistController::class, 'deleteChecklist'])->name('deleteChecklist');
     Route::any('/checklist/editChecklist', [ChecklistController::class, 'editChecklist'])->name('editChecklist');
-    
+
     Route::any('/checklist/vieweditchecklistmodal', [ChecklistController::class, 'vieweditchecklistmodal'])->name('vieweditchecklistmodal');
     Route::any('/checklist/updatechecklist', [ChecklistController::class, 'updatechecklist'])->name('updatechecklist');
 
@@ -360,7 +360,7 @@ Route::group([
 
     Route::any('/scheduler/getworker', [SchedulerController::class, 'getworker'])->name('getworker');
     Route::any('/scheduler/getworkerweekview', [SchedulerController::class, 'getworkerweekview'])->name('getworkerweekview');
-    
+
     Route::any('/scheduler/geteventdata', [SchedulerController::class, 'geteventdata'])->name('geteventdata');
 
 
@@ -399,7 +399,7 @@ Route::group([
     Route::any('/billing/getreceivepayment', [BillingController::class, 'getreceivepayment'])->name('getreceivepayment');
 
     Route::any('/billing/receivepayments', [BillingController::class, 'receivepayments'])->name('receivepayments');
-   
+
     Route::any('/billing/directpaynow/', [BillingController::class, 'directpaynow'])->name('directpaynow');
 
     Route::any('/billing/update', [BillingController::class, 'update'])->name('mybillingupdate');
@@ -434,7 +434,7 @@ Route::group([
     Route::any('/categories/delete', [CategoriesController::class, 'deleteCategory'])->name('deleteCategory');
 
     Route::any('/categories/viewcategorymodal', [CategoriesController::class, 'viewcategorymodal'])->name('viewcategorymodal');
-    
+
     // Manage terms start
     Route::get('/terms', [TermsController::class, 'index'])->name('terms');
 
@@ -462,12 +462,12 @@ Route::group([
     Route::any('/home/workerclockhoursout', [WorkerHomeController::class, 'workerclockhoursout'])->name('workerclockhoursout');
 
     Route::get('home/autocomplete', [WorkerHomeController::class, 'search'])->name('autocomplete');
-    
+
 
     Route::get('/myticket', [WorkerTicketController::class, 'index'])->name('myticket');
-    
+
     Route::get('/myquote', [WorkerTicketController::class, 'myquote'])->name('myquote');
-    
+
     Route::get('/completedticket', [WorkerTicketController::class, 'completedticket'])->name('completedticket');
     Route::get('/createticket', [WorkerTicketController::class, 'createticket'])->name('createticket');
     Route::get('/createquote', [WorkerTicketController::class, 'createquote'])->name('createquote');
@@ -477,7 +477,7 @@ Route::group([
     Route::any('/myticket/view/{id}', [WorkerTicketController::class, 'view'])->name('myticketview');
      Route::any('/myticket/map/{id}', [WorkerTicketController::class, 'viewmap'])->name('myticketmapview');
      Route::any('/myticket/mapdata', [WorkerTicketController::class, 'mapdata'])->name('myticketmapdata');
-     
+
     Route::any('/myticket/paynow/{id}', [WorkerTicketController::class, 'paynow'])->name('myticketpaynow');
     Route::any('/myticket/vieweditinvoicemodal', [WorkerTicketController::class, 'vieweditinvoicemodal'])->name('vieweditinvoicemodal');
     Route::any('/myticket/calculateprice', [WorkerTicketController::class, 'calculateprice'])->name('calculateprice');
@@ -496,7 +496,7 @@ Route::group([
     Route::any('/myticket/ticketquotecreate', [WorkerTicketController::class, 'ticketquotecreate'])->name('ticketquotecreate');
 
     Route::any('/myticket/addaddress', [WorkerTicketController::class, 'addaddress'])->name('addaddress');
-    
+
 
     //setting
     Route::get('/setting', [WorkerSettingController::class, 'index'])->name('setting');
@@ -574,18 +574,18 @@ Route::group([
     Route::any('/scheduler/leftbarschedulerdata', [WorkerSchedulerController::class, 'leftbarschedulerdata'])->name('leftbarschedulerdata');
 
     Route::any('/scheduler/gettimedata', [WorkerSchedulerController::class, 'gettimedata'])->name('gettimedata');
-    
+
     Route::any('/scheduler/getleavenote', [WorkerSchedulerController::class, 'getleavenote'])->name('getleavenote');
 
     Route::any('/scheduler/updatehours', [WorkerSchedulerController::class, 'updatehours'])->name('updatehours');
 
     Route::any('/scheduler/updatesethours', [WorkerSchedulerController::class, 'updatesethours'])->name('updatesethours');
-    
+
      Route::any('/scheduler/gethourdata', [WorkerSchedulerController::class, 'gethourdata'])->name('gethourdata');
 
     Route::any('/scheduler/timeoff', [WorkerSchedulerController::class, 'timeoff'])->name('timeoff');
 
-    
+
 
     Route::get('/timesheet', [WorkerTimesheetController::class, 'index'])->name('timesheet');
     Route::post('/timesheet/noteupdate', [WorkerTimesheetController::class, 'noteupdate'])->name('noteupdate');
@@ -699,8 +699,8 @@ Route::any('/checklist/updatechecklist', [WorkerAdminChecklistController::class,
         //worker change Password
         Route::get('/changepassword', [WorkerChangepasswordController::class, 'index'])->name('changepassword');
         Route::any('/updatepassword', [WorkerChangepasswordController::class, 'update'])->name('updatepassword');
-    //end  
-    
+    //end
+
 });
 
 // superadmin start
@@ -738,7 +738,7 @@ Route::group([
     Route::any('/manageTenture/tenturestatus', [AdmintentureController::class, 'tenturestatus'])->name('tenturestatus');
     Route::any('/manageTenture/tenturedelete', [AdmintentureController::class, 'tenturedelete'])->name('tenturedelete');
 
-    
+
     Route::get('/manageChecklist', [AdminchecklistController::class, 'index'])->name('manageChecklist');
     Route::any('/manageChecklist/create', [AdminchecklistController::class, 'create'])->name('manageChecklistcreate');
 
@@ -753,7 +753,7 @@ Route::group([
 
     Route::any('/manageProductimg/viewtab1modal', [AdminfeatureimgController::class, 'viewtab1modal'])->name('viewtab1modal');
     Route::any('/manageProductimg/updatetabimage', [AdminfeatureimgController::class, 'updatetabimage'])->name('updatetabimage');
-    
+
 
 
     Route::get('/manageCmspages', [AdminCmspageController::class, 'index'])->name('manageCmspages');
@@ -780,9 +780,10 @@ Route::group([
     Route::get('/managehomepagecontent', [AdminfeatureController::class, 'managehomepagecontent'])->name('managehomepagecontent');
     Route::any('/managehomepagecontent/viewhomepagemodal', [AdminfeatureController::class, 'viewhomepagemodal'])->name('viewhomepagemodal');
     Route::any('/managehomepagecontent/homepagecontentupdate', [AdminfeatureController::class, 'homepagecontentupdate'])->name('homepagecontentupdate');
-    
-    
+
 
  });
+Route::get('check-push-notification', [\App\Http\Controllers\Api\UserController::class, 'checkPushNotification']);
+
 
 //superadmin end

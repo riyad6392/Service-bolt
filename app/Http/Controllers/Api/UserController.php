@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-use Illuminate\Http\Request; 
+use App\Services\PushNotificationService;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller; 
 use App\Models\User; 
 use App\Models\Personnel;
@@ -35,6 +36,8 @@ use App\Models\Checklist;
 use PDF;
 use App\Models\Hourlyprice;
 use App\Models\ProductDescription;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
 
 class UserController extends Controller
 {
@@ -3093,6 +3096,14 @@ class UserController extends Controller
           $givenenddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
       }
       return $givenenddate;
+    }
+    
+    public function checkPushNotification(){
+        
+        $class = new PushNotificationService();
+        $class->sendPushNotification('dKf0g4_HRLuf_yKFy33kfb:APA91bGWUimSf6FHBsoupi_PPoidpN1N3fHuXzWyy6ZYTtrkWionfMUU9eToIDFZHaQ-Zn-nQuWwL163Dn2fpWash1_IVY7UJ3LDUR8fPbDBlgAxYatH1BkoSzPn7dO34G96hMicfCZh','this is test message');
+
+        return response()->json(['status'=>1,'message'=>'Push Notification Sent Successfully'],$this->successStatus);
     }
 
 }

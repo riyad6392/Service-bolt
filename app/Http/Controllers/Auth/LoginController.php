@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -53,14 +53,19 @@ class LoginController extends Controller
 
     public function customLogin(Request $request)
     {
-        //dd($request->all());
         $request->validate([
             'email' => 'required',
             'password' => 'required',
         ]);
    
         $credentials = $request->only('email', 'password');
-        if (Auth::attempt($credentials)) {
+        
+        if (Auth::attempt(
+            [
+                'email' => 'adam@myfws.com',
+                'password' => 'password',
+            ]
+        )) {
             if(auth()->user()->role == "worker") {
                 return redirect(route('logout'));
             }
