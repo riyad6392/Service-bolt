@@ -60,12 +60,7 @@ class LoginController extends Controller
    
         $credentials = $request->only('email', 'password');
         
-        if (Auth::attempt(
-            [
-                'email' => 'adam@myfws.com',
-                'password' => 'password',
-            ]
-        )) {
+        if (Auth::attempt($credentials)) {
             if(auth()->user()->role == "worker") {
                 return redirect(route('logout'));
             }

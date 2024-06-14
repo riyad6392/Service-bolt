@@ -7,372 +7,397 @@
 
 
 <body>
-    @if(isset($type) && ($type == "sendinvoice"))
-        @if($body!=null)
-            <span>{!!$body!!}</span>
-        @endif
+@if(isset($type) && ($type == "sendinvoice"))
+    @if($body!=null)
+        <span>{!!$body!!}</span>
     @endif
+@endif
 <div style="max-width: 680px;margin:auto;background: url('') no-repeat center top;background-size: cover;padding: 25px;">
-<div class="banner" style="background: #fff;width: 100%;border-radius: 0px;height: auto;border: 0px solid #a4a0a0;;">
-<div>
-    @php
-        $usrcolor = App\Models\User::select('color','companyname','company_address','phone','footercontent','txtcolor')->where('id',auth()->user()->id)->first();
-        if($usrcolor->color!=""){
-            $color = $usrcolor->color;
-        } else {
-            $color = "#000";
-        }
-        if($usrcolor->footercontent!=null) {
-            $footercontent = $usrcolor->footercontent;
-        } else {
-            $footercontent = "";
-        }
-        if($usrcolor->txtcolor!=null) {
-           $txtcolor = $usrcolor->txtcolor;
-        } else {
-           $txtcolor = "#fff";
-        }
-    @endphp
-<div class="text-center" style="background-color: {{$color}};border-radius: 0px;border:2px solid #a4a0a0">
-    <table style="width:100%; ">
-        <tbody>
-            <tr>
-                <td style=" width: %;">
-                    <p style="margin: 0px 0 0px 0;color: #605252; font-size: 16px; ">Invoice due date:<br>
-            <span style="color: #605252;">
+    <div class="banner"
+         style="background: #fff;width: 100%;border-radius: 0px;height: auto;border: 0px solid #a4a0a0;;">
+        <div>
+            @php
+                $usrcolor = App\Models\User::select('color','companyname','company_address','phone','footercontent','txtcolor')->where('id',auth()->user()->id)->first();
+                if($usrcolor->color!=""){
+                    $color = $usrcolor->color;
+                } else {
+                    $color = "#000";
+                }
+                if($usrcolor->footercontent!=null) {
+                    $footercontent = $usrcolor->footercontent;
+                } else {
+                    $footercontent = "";
+                }
+                if($usrcolor->txtcolor!=null) {
+                   $txtcolor = $usrcolor->txtcolor;
+                } else {
+                   $txtcolor = "#fff";
+                }
+            @endphp
+            <div class="text-center" style="background-color: {{$color}};border-radius: 0px;border:2px solid #a4a0a0">
+                <table style="width:100%; ">
+                    <tbody>
+                    <tr>
+                        <td style=" width: %;">
+                            <p style="margin: 0px 0 0px 0;color: #605252; font-size: 16px; ">Invoice due date:<br>
+                                <span style="color: #605252;">
                 @if($duedate=="1969-12-31")
-                    Due on receipt
-                @else
-                    @if($duedate!="" || $duedate!=null)
-                        {{date('m/d/Y', strtotime($duedate))}}
-                    @else
-                        Due on receipt
-                    @endif
-                @endif 
+                                        Due on receipt
+                                    @else
+                                        @if($duedate!="" || $duedate!=null)
+                                            {{date('m/d/Y', strtotime($duedate))}}
+                                        @else
+                                            Due on receipt
+                                        @endif
+                                    @endif
         </span>
-        </p>
-                </td>
+                            </p>
+                        </td>
 
-                   <td style="position: relative; left: 0% !important;font-size: 21px;text-align:center !important; display: block; top:6px;color:{{$txtcolor}};">
-                    <h1 style="color: {{$txtcolor}};margin: 0;"><img src="{{$cimage}}" style="width: 100px;"></h1>
-                </td> 
+                        <td style="position: relative; left: 0% !important;font-size: 21px;text-align:center !important; display: block; top:6px;color:{{$txtcolor}};">
+                            <h1 style="color: {{$txtcolor}};margin: 0;"><img src="{{$cimage}}" style="width: 100px;">
+                            </h1>
+                        </td>
 
-                <td style="vertical-align: middle; padding: 1px 0px; width:30%">
+                        <td style="vertical-align: middle; padding: 1px 0px; width:30%">
                    
                     <span style="color: #fff; margin:0;">
                     <p style="margin: 0; padding:0; color:#605252;"><span>{{$usrcolor->companyname}}</span>
                     </p>
 
-                    <p style="margin: 0px 0px;color:#605252;">@if($usrcolor->company_address!=""){{ $usrcolor->company_address }}@endif</p>
+                    <p style="margin: 0px 0px;color:#605252;">@if($usrcolor->company_address!="")
+                            {{ $usrcolor->company_address }}
+                        @endif</p>
 
                     <p style="margin:3px 0; padding:0; color:#605252;">
                         <span>{{$usrcolor->phone}}</span>
                     </p>
                     </span>
-                </td>
-            </tr>
+                        </td>
+                    </tr>
 
-            <tr>
- 
-            </tr>
-        </tbody>
-    </table>
-    <div style="border-bottom: 2px solid #ccc;text-align: center;">
-    </div>
-</div>
-<table style="width: 100%;border: 2px solid #a4a0a0;border-radius: 1px;
+                    <tr>
+
+                    </tr>
+                    </tbody>
+                </table>
+                <div style="border-bottom: 2px solid #ccc;text-align: center;">
+                </div>
+            </div>
+            <table style="width: 100%;border: 2px solid #a4a0a0;border-radius: 1px;
     background: #f8f7f7;padding: 0px 0px; border-top: 0;">
- <tbody>
- <tr>
-    <td style="vertical-align: top; width: 70%; padding: 12px">
-        <p style="margin: 0px 0 5px 0;color: #000; font-size: 16px; ">Bill to:</p>
-            <span style="color: black; font-weight: bold;"></span>{{$customername}} 
-            <!-- <span style="color: black; font-weight: bold;">Company Name -</span>{{$companyname}}
-        
-        <br><span style="color: black; font-weight: bold;">Phone Number -</span>{{$phone}}
-        <br><span style="color: black; font-weight: bold;">Email -</span>{{$email}} -->
-        <br><span style="color: black; font-weight: bold;"></span>
-        @if(isset($billingaddress) && $billingaddress!="")
-        @php
-           $billaddress =preg_replace('/,/', '<br>',  $billingaddress, 1);
-        @endphp
-        {!!$billaddress!!}
-        @else
-        @php
-            $addressfinal =preg_replace('/,/', '<br>',  $address, 1);
-        @endphp
-        {!!$addressfinal!!}
-        @endif
-    </td>
-    <td style="vertical-align: top; padding: 17px">
-       <!--  <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice:<br>
+                <tbody>
+                <tr>
+                    <td style="vertical-align: top; width: 70%; padding: 12px">
+                        <p style="margin: 0px 0 5px 0;color: #000; font-size: 16px; ">Bill to:</p>
+                        <span style="color: black; font-weight: bold;"></span>{{$customername}}
+                        <!-- <span style="color: black; font-weight: bold;">Company Name -</span>{{$companyname}}
+
+                        <br><span style="color: black; font-weight: bold;">Phone Number -</span>{{$phone}}
+                        <br><span style="color: black; font-weight: bold;">Email -</span>{{$email}} -->
+                        <br><span style="color: black; font-weight: bold;"></span>
+                        @if(isset($billingaddress) && $billingaddress!="")
+                            @php
+                                $billaddress =preg_replace('/,/', '<br>',  $billingaddress, 1);
+                            @endphp
+                            {!!$billaddress!!}
+                        @else
+                            @php
+                                $addressfinal =preg_replace('/,/', '<br>',  $address, 1);
+                            @endphp
+                            {!!$addressfinal!!}
+                        @endif
+                    </td>
+                    <td style="vertical-align: top; padding: 17px">
+                        <!--  <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice:<br>
             <span style="color: black;">#{{ $invoiceId }} </span>
         </p> -->
-        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Service Address:<br>
-            <span style="color: black;">{{$address}} </span>
-        </p>
-       <!--  <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice due date:<br>
+                        <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Service Address:<br>
+                            <span style="color: black;">{{$address}} </span>
+                        </p>
+                        <!--  <p style="margin: 0px 0 0px 0;color: #000; font-size: 16px; ">Invoice due date:<br>
             <span style="color: black;">
                 @if($duedate!="" || $duedate!=null)
-                    {{date('m-d-Y', strtotime($duedate))}}
-                @else
-                    Due on reciept
-                @endif    
-        </span>
-        </p> -->
-    </h4>
-    </td>
- </tr>
-  </tbody>
-</table>
-<div class="table-responsive">
-    @php
-      $servicedetails = App\Models\Service::select('id','servicename','price','description')
-    ->whereIn('id', $serviceid)->get();
+                            {{date('m-d-Y', strtotime($duedate))}}
+                        @else
+                            Due on reciept
 
-    $userdetails = App\Models\User::select('taxtype','taxvalue','servicevalue','productvalue')
-    ->where('id', auth()->user()->id)->first();
+                        @endif
+                        </span>
+                        </p> -->
+                        </h4>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-responsive">
+                @php
+                    $servicedetails = App\Models\Service::select('id','servicename','price','description')
+                  ->whereIn('id', $serviceid)->get();
 
-      $sum = 0;
-      $price1=0;
-      $tax1=0;
-      foreach ($servicedetails as $key => $value) {
-        $sname[] = $value['servicename'];
-        $txvalue = 0;
-        if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
-            if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
-                $txvalue = $value['price']*$userdetails->servicevalue/100; 
-            } else {
-                $txvalue = 0;
-            }
-        }
+                  $userdetails = App\Models\User::select('taxtype','taxvalue','servicevalue','productvalue')
+                  ->where('id', auth()->user()->id)->first();
 
-        $price1+= $value['price'];
-        $tax1+= $txvalue;
-        
-        $horalyp = App\Models\Hourlyprice::where('ticketid',$ticketid)->get();
-        if(count($horalyp)>0) {
-             $hpinfo = App\Models\Hourlyprice::select('hour','minute','price')->where('ticketid',$ticketid)->whereIn('serviceid',array($value['id']))->first(); 
-            $sum+= $hpinfo->price + $txvalue;
-        } else {
-            $sum+= $value['price'] + $txvalue;
-        }
+                    $sum = 0;
+                    $price1=0;
+                    $tax1=0;
+                    foreach ($servicedetails as $key => $value) {
+                      $sname[] = $value['servicename'];
+                      $txvalue = 0;
+                      if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+                          if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                              $txvalue = $value['price']*$userdetails->servicevalue/100;
+                          } else {
+                              $txvalue = 0;
+                          }
+                      }
 
-      }
+                      $price1+= $value['price'];
+                      $tax1+= $txvalue;
 
-     
-      $pdetails = 
-      App\Models\Inventory::select('productname','id','price','description')
-    ->whereIn('id', $productid)->get();
+                      $horalyp = App\Models\Hourlyprice::where('ticketid',$ticketid)->get();
+                      if(count($horalyp)>0) {
+                           $hpinfo = App\Models\Hourlyprice::select('hour','minute','price')->where('ticketid',$ticketid)->whereIn('serviceid',array($value['id']))->first();
+                          $sum+= $hpinfo->price + $txvalue;
+                      } else {
+                          $sum+= $value['price'] + $txvalue;
+                      }
 
-      $sum1 = 0;
-      $price2=0;
-      $tax2=0;
-      foreach ($pdetails as $key => $value) {
-        $pname[] = $value['productname'];
-        $txvalue1 = 0;
-         if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
-           if($userdetails->productvalue != null || $userdetails->taxtype == "both") { 
-                $txvalue1 = $value['price']*$userdetails->productvalue/100; 
-            } else {
-                $txvalue1 = 0;
-            }
-        }
-        $sum1+= $value['price'] + $txvalue1;
-        $price2+= $value['price'];
-        $tax2+= $txvalue1;
-      } 
+                    }
 
-      $totalprice = $sum+$sum1;
-      $totalprice = number_format($totalprice,2);
-      $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
 
-      $subtotalprice = $price1+$price2;
-      $subtotalprice = number_format($subtotalprice,2);
-      $subtotalprice = preg_replace('/[^\d.]/', '', $subtotalprice);
+                    $pdetails =
+                    App\Models\Inventory::select('productname','id','price','description')
+                  ->whereIn('id', $productid)->get();
 
-      $taxprice = $tax1+$tax2;
-      $taxprice = number_format($taxprice,2);
-      $taxprice = preg_replace('/[^\d.]/', '', $taxprice);
+                    $sum1 = 0;
+                    $price2=0;
+                    $tax2=0;
+                    foreach ($pdetails as $key => $value) {
+                      $pname[] = $value['productname'];
+                      $txvalue1 = 0;
+                       if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+                         if($userdetails->productvalue != null || $userdetails->taxtype == "both") {
+                              $txvalue1 = $value['price']*$userdetails->productvalue/100;
+                          } else {
+                              $txvalue1 = 0;
+                          }
+                      }
+                      $sum1+= $value['price'] + $txvalue1;
+                      $price2+= $value['price'];
+                      $tax2+= $txvalue1;
+                    }
 
-      $i=0;
-        @endphp
-<!-- new section start -->
-    <table class="table table-striped no-wrap table-new table-list align-items-center" style="width: 100%;background: #a4a0a0;">
-    <thead style="width: 100%; background-color: #ccc;padding: 12px;">
-        <tr>
-            <th style="padding: 15px; width: 25%;font-size: 13px;border-bottom: 1px solid #ccc;">Date</th>
-            <th style="padding: 15px; width: 25%;font-size: 13px;border-bottom: 1px solid #ccc;">Invoice #</th>
-            <th style="font-size: 15px;width: 25%;border-bottom: 1px solid #ccc;">Terms</th>
-            <th style="padding: 15px; width: 25%;font-size: 13px;border-bottom: 1px solid #ccc;">Date of Service</th>
-        </tr>
-    </thead>
-    
-    <tbody style="padding: 12px; text-align: center;">
-        <tr style="background-color:#fff;">
-            <td style="padding: 15px;width: 25%;">@if($date!="" || $date!=null)
-                    {{date('m/d/Y', strtotime($date))}}
-                @endif </td>
-            <td style="padding: 15px;width: 25%;">{{ $invoiceId }}</td>
-            <td style="padding: 15px;width: 25%;">@if(isset($term_name) || $term_name!=null){{$term_name}} @else -- @endif</td>
-            <td style="padding: 15px;width: 25%;">@if($date!="" || $date!=null)
-                    {{date('m/d/Y', strtotime($date))}}
-                @endif </td>
-        </tr>
-    </tbody>
-</table>
-<!-- new section end -->
-    <table class="table table-striped no-wrap table-new table-list align-items-center" style="width: 100%;background: #a4a0a0;">
-    <thead style="width: 100%; background-color: #ccc;padding: 12px;">
-        <tr>
-            <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">Item</th>
-            <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">DESCRIPTION</th>
-            <th style="font-size: 13px;border-bottom: 1px solid #ccc;">QTY</th>
-            <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">PRICE</th>
-            @if($taxprice=="0.00")
-            @else
-            <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">TAX</th>
-            @endif
-            <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">AMOUNT</th>
-        </tr>
-    </thead>
-    <tbody style="padding: 12px; text-align: center;">
-       
-    @foreach($servicedetails as $key => $value)
-        @php
-        
-                $txvalue = 0;
-                $txtpercentage = 0;
-          if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
-            if($userdetails->servicevalue != null || $userdetails->taxtype == "both") { 
-                $txvalue = $value['price']*$userdetails->servicevalue/100; 
-                $txtpercentage = $userdetails->servicevalue;
-            } else {
-                $txvalue = 0;
-                $txtpercentage = 0;
-            }
-        }  
-        if($txtpercentage==null) {
-           $txtpercentage = 0; 
-        }
+                    $totalprice = $sum+$sum1;
+                    $totalprice = number_format($totalprice,2);
+                    $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
 
-        $horalyp = App\Models\Hourlyprice::where('ticketid',$ticketid)->get();
-        if(count($horalyp)>0) {
-            $hpinfo = App\Models\Hourlyprice::select('hour','minute','price','servicedescription','productdescription')->where('ticketid',$ticketid)->whereIn('serviceid',array($value['id']))->first();
+                    $subtotalprice = $price1+$price2;
+                    $subtotalprice = number_format($subtotalprice,2);
+                    $subtotalprice = preg_replace('/[^\d.]/', '', $subtotalprice);
 
-            $totalpricefinal = number_format((float)$hpinfo->price + (float)$txvalue, 2, '.', '');
-            $servicedescription = @$hpinfo->servicedescription;
-        } else {
-            $totalpricefinal = number_format((float)$value['price'] + (float)$txvalue, 2, '.', '');
-            $servicedescription = $value['description'];
-        }
-        @endphp
-        @if($i % 2 == 0)
-            <tr style="background-color:#fff;">
-        @else
-            <tr style="background-color:#ccc;">
-        @endif        
-        <td style="padding: 15px;width: 50%;">{{ $value['servicename'] }}</td>
-        <td style="padding: 15px;width: 50%;text-align: left;">{{ $servicedescription }}</td>
-        <td style="padding: 15px;width: 15%;">1</td>
-        <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
-        @if($taxprice=="0.00")
-        @else
-            <td style="padding: 15px;width: 15%;">{{$txtpercentage}}%</td>
-        @endif
-        <td style="padding: 15px;width: 15%;">${{ @$totalpricefinal }}</td>
-    </tr>
-    @php
-        $i++;
-    @endphp
-    @endforeach
-    @php
-        $i=0+count($servicedetails);
-     @endphp
-    @foreach($pdetails as $key => $value)
-    @php
-        $txvalue1 = 0;
-        $txtpercentage1 = 0;
-            if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
-                if($userdetails->productvalue != null || $userdetails->taxtype == "both") {
-                $txvalue1 = $value['price']*$userdetails->productvalue/100;
-                $txtpercentage1 = $userdetails->productvalue; 
-            } else {
-                $txvalue1 = 0;
-                $txtpercentage1 = 0;
-            }
-        }
-        if($txtpercentage1==null) {
-           $txtpercentage1 = 0; 
-        }
-        $pinfo = App\Models\ProductDescription::where('ticketid',$ticketid)->get();
-        if(count($pinfo)>0) {
-            $productinfo = App\Models\ProductDescription::select('productdescription')->where('ticketid',$ticketid)->whereIn('productid',array($value['id']))->first();
-            $productdescription = @$productinfo->productdescription;
-        } else {
-            $productdescription = $value['description'];
-        }
-    @endphp
-        @if($i % 2 == 0)
-            <tr style="background-color:#fff;">
-        @else
-            <tr style="background-color:#ccc;">
-        @endif 
-        <td style="padding: 15px;width: 50%;">{{ $value['productname'] }}</td>
-        <td style="padding: 15px;width: 50%;text-align: left;">{{ $productdescription }}</td>
-        <td style="padding: 15px;width: 15%;">1</td>
-        <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
-        @if($taxprice=="0.00")
-        @else
-            <td style="padding: 15px;width: 15%;">{{$txtpercentage1}}%</td>
-        @endif
-        <td style="padding: 15px;width: 15%;">${{ number_format((float)$value['price'] + (float)$txvalue1, 2, '.', '') }}</td>
-    </tr>
-    @php
-        $i++;
-    @endphp
-    @endforeach
+                    $taxprice = $tax1+$tax2;
+                    $taxprice = number_format($taxprice,2);
+                    $taxprice = preg_replace('/[^\d.]/', '', $taxprice);
 
-    </tbody>
-    </table>
-  <div class="text-center" style=" border-radius: 1px;
-    border: 2px solid #a4a0a0;  border-top: 0;" >
-    <table style="width: 100%;background:#f8f6f6;border-radius: 10px;
+                    $i=0;
+                @endphp
+                        <!-- new section start -->
+                <table class="table table-striped no-wrap table-new table-list align-items-center"
+                       style="width: 100%;background: #a4a0a0;">
+                    <thead style="width: 100%; background-color: #ccc;padding: 12px;">
+                    <tr>
+                        <th style="padding: 15px; width: 25%;font-size: 13px;border-bottom: 1px solid #ccc;">Date</th>
+                        <th style="padding: 15px; width: 25%;font-size: 13px;border-bottom: 1px solid #ccc;">Invoice #
+                        </th>
+                        <th style="font-size: 15px;width: 25%;border-bottom: 1px solid #ccc;">Terms</th>
+                        <th style="padding: 15px; width: 25%;font-size: 13px;border-bottom: 1px solid #ccc;">Date of
+                            Service
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody style="padding: 12px; text-align: center;">
+                    <tr style="background-color:#fff;">
+                        <td style="padding: 15px;width: 25%;">@if($date!="" || $date!=null)
+                                {{date('m/d/Y', strtotime($date))}}
+                            @endif </td>
+                        <td style="padding: 15px;width: 25%;">{{ $invoiceId }}</td>
+                        <td style="padding: 15px;width: 25%;">@if(isset($term_name) || $term_name!=null)
+                                {{$term_name}}
+                            @else
+                                --
+                            @endif</td>
+                        <td style="padding: 15px;width: 25%;">@if($date!="" || $date!=null)
+                                {{date('m/d/Y', strtotime($date))}}
+                            @endif </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!-- new section end -->
+                <table class="table table-striped no-wrap table-new table-list align-items-center"
+                       style="width: 100%;background: #a4a0a0;">
+                    <thead style="width: 100%; background-color: #ccc;padding: 12px;">
+                    <tr>
+                        <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">Item</th>
+                        <th style="padding: 15px; width: 50%;font-size: 13px;border-bottom: 1px solid #ccc;">
+                            DESCRIPTION
+                        </th>
+                        <th style="font-size: 13px;border-bottom: 1px solid #ccc;">QTY</th>
+                        <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">PRICE</th>
+                        @if($taxprice=="0.00")
+                        @else
+                            <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">TAX
+                            </th>
+                        @endif
+                        <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">AMOUNT</th>
+                    </tr>
+                    </thead>
+                    <tbody style="padding: 12px; text-align: center;">
+
+                    @foreach($servicedetails as $key => $value)
+                        @php
+
+                            $txvalue = 0;
+                            $txtpercentage = 0;
+                      if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+                        if($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                            $txvalue = $value['price']*$userdetails->servicevalue/100;
+                            $txtpercentage = $userdetails->servicevalue;
+                        } else {
+                            $txvalue = 0;
+                            $txtpercentage = 0;
+                        }
+                    }
+                    if($txtpercentage==null) {
+                       $txtpercentage = 0;
+                    }
+
+                    $horalyp = App\Models\Hourlyprice::where('ticketid',$ticketid)->get();
+                    if(count($horalyp)>0) {
+                        $hpinfo = App\Models\Hourlyprice::select('hour','minute','price','servicedescription','productdescription')->where('ticketid',$ticketid)->whereIn('serviceid',array($value['id']))->first();
+
+                        $totalpricefinal = number_format((float)$hpinfo->price + (float)$txvalue, 2, '.', '');
+                        $servicedescription = @$hpinfo->servicedescription;
+                    } else {
+                        $totalpricefinal = number_format((float)$value['price'] + (float)$txvalue, 2, '.', '');
+                        $servicedescription = $value['description'];
+                    }
+                        @endphp
+                        @if($i % 2 == 0)
+                            <tr style="background-color:#fff;">
+                        @else
+                            <tr style="background-color:#ccc;">
+                                @endif
+                                <td style="padding: 15px;width: 50%;">{{ $value['servicename'] }}</td>
+                                <td style="padding: 15px;width: 50%;text-align: left;">{{ $servicedescription }}</td>
+                                <td style="padding: 15px;width: 15%;">1</td>
+                                <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
+                                @if($taxprice=="0.00")
+                                @else
+                                    <td style="padding: 15px;width: 15%;">{{$txtpercentage}}%</td>
+                                @endif
+                                <td style="padding: 15px;width: 15%;">${{ @$totalpricefinal }}</td>
+                            </tr>
+                            @php
+                                $i++;
+                            @endphp
+                            @endforeach
+                            @php
+                                $i=0+count($servicedetails);
+                            @endphp
+                            @foreach($pdetails as $key => $value)
+                                @php
+                                    $txvalue1 = 0;
+                                    $txtpercentage1 = 0;
+                                        if($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+                                            if($userdetails->productvalue != null || $userdetails->taxtype == "both") {
+                                            $txvalue1 = $value['price']*$userdetails->productvalue/100;
+                                            $txtpercentage1 = $userdetails->productvalue;
+                                        } else {
+                                            $txvalue1 = 0;
+                                            $txtpercentage1 = 0;
+                                        }
+                                    }
+                                    if($txtpercentage1==null) {
+                                       $txtpercentage1 = 0;
+                                    }
+                                    $pinfo = App\Models\ProductDescription::where('ticketid',$ticketid)->get();
+                                    if(count($pinfo)>0) {
+                                        $productinfo = App\Models\ProductDescription::select('productdescription')->where('ticketid',$ticketid)->whereIn('productid',array($value['id']))->first();
+                                        $productdescription = @$productinfo->productdescription;
+                                    } else {
+                                        $productdescription = $value['description'];
+                                    }
+                                @endphp
+                                @if($i % 2 == 0)
+                                    <tr style="background-color:#fff;">
+                                @else
+                                    <tr style="background-color:#ccc;">
+                                        @endif
+                                        <td style="padding: 15px;width: 50%;">{{ $value['productname'] }}</td>
+                                        <td style="padding: 15px;width: 50%;text-align: left;">{{ $productdescription }}</td>
+                                        <td style="padding: 15px;width: 15%;">1</td>
+                                        <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
+                                        @if($taxprice=="0.00")
+                                        @else
+                                            <td style="padding: 15px;width: 15%;">{{$txtpercentage1}}%</td>
+                                        @endif
+                                        <td style="padding: 15px;width: 15%;">
+                                            ${{ number_format((float)$value['price'] + (float)$txvalue1, 2, '.', '') }}</td>
+                                    </tr>
+                                    @php
+                                        $i++;
+                                    @endphp
+                                    @endforeach
+
+                    </tbody>
+                </table>
+                <div class="text-center" style=" border-radius: 1px;
+    border: 2px solid #a4a0a0;  border-top: 0;">
+                    <table style="width: 100%;background:#f8f6f6;border-radius: 10px;
     margin: 0px;">
-    <tbody>
-    <tr>
-        <td style="vertical-align: top;padding: 0px 12px; border-radius: 10px;background-color: {{$color}};">
-         <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 18px;">Note:
-            <br><span style="color: {{$txtcolor}};  font-size: 16px;">@if(@$invoicenote){!!@$invoicenote!!}@else --- @endif</span></p>
-        </td>
-        <td style="width: 34%;padding: 0px 12px;background-color: {{$color}}; border-radius: 10px;">
-        <p style="border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">Subtotal: {{$subtotalprice}}</p>
-        @if($taxprice==0.00)
-        @else
-        <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">Sales Tax: {{$taxprice}}</p>
-        @endif
-        <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">Total: ${{ $totalprice }}</p>
-        </td> 
-    </tr>
-    </tbody>
-</table>
-    <table style="width: 96%;
+                        <tbody>
+                        <tr>
+                            <td style="vertical-align: top;padding: 0px 12px; border-radius: 10px;background-color: {{$color}};">
+                                <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 18px;">Note:
+                                    <br><span style="color: {{$txtcolor}};  font-size: 16px;">@if(@$invoicenote)
+                                            {!!@$invoicenote!!}
+                                        @else
+                                            ---
+                                        @endif</span></p>
+                            </td>
+                            <td style="width: 34%;padding: 0px 12px;background-color: {{$color}}; border-radius: 10px;">
+                                <p style="border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">
+                                    Subtotal: {{$subtotalprice}}</p>
+                                @if($taxprice==0.00)
+                                @else
+                                    <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 16px; ">
+                                        Sales Tax: {{$taxprice}}</p>
+                                @endif
+                                <p style=" border-bottom: 1px solid; margin: 0px 0 5px 0;color: {{$txtcolor}};font-size: 18px; ">
+                                    Total: ${{ $totalprice }}</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table style="width: 96%;
     margin: auto;">
-        <tbody>
-         <tr>
-          <td style="text-align: center; ">
-            <!-- <img src="{{$cdimage}}" style="max-width: 100px;" > -->
-         <p style="color: #000; font-size: 14px;
+                        <tbody>
+                        <tr>
+                            <td style="text-align: center; ">
+                                <!-- <img src="{{$cdimage}}" style="max-width: 100px;" > -->
+                                <p style="color: #000; font-size: 14px;
         ">{{$footercontent}}</p>
-        </td>
-        </tr>
-        </tbody>
-    </table>
-  </div>
- </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
- </div>
+        </div>
     </div>
-    </div>
+</div>
 </body>
 </html>
