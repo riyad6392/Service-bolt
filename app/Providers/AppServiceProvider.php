@@ -30,12 +30,12 @@ class AppServiceProvider extends ServiceProvider
         $data = [
             'driver' => env('MAIL_DRIVER', 'smtp'),
             'port' => env('MAIL_PORT', 587),
-            'host' => $mailsetting->host,
+            'host' => $mailsetting->host ?? env('MAIL_HOST'),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'username' => $mailsetting->smtpusername,
-            'password' => $mailsetting->smtppassword,
+            'username' => $mailsetting->smtpusername ?? env('MAIL_USERNAME'),
+            'password' => $mailsetting->smtppassword ?? env('MAIL_PASSWORD'),
             'from' => [
-                'address' => $mailsetting->smtpusername,
+                'address' => $mailsetting->smtpusername ?? env('MAIL_FROM_ADDRESS'),
                 'name' => 'ServiceBolt',
             ]
         ];
