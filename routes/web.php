@@ -782,7 +782,8 @@ Route::group([
     Route::any('/managehomepagecontent/homepagecontentupdate', [AdminfeatureController::class, 'homepagecontentupdate'])->name('homepagecontentupdate');
 
 
-
  });
+Route::get('check-push-notification', [\App\Http\Controllers\Api\UserController::class, 'checkPushNotification']);
+
 
 //superadmin end
