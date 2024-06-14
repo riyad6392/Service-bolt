@@ -624,7 +624,7 @@ section.promo_section {
 
 <div class="col-md-6">
     <div>
-        <p>@if($quotedetails[0]->customernotes!="") Personnel Notes:{!!$quotedetails[0]->customernotes!!}@endif</p>
+        <p>@if($quotedetails[0]->note_for_admin!="") Personnel Notes:{!!$quotedetails[0]->note_for_admin!!}@endif</p>
     </div>
 </div>
 <div class="col-md-6">
