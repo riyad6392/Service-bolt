@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('hour')->nullable();
             $table->integer('minute')->nullable();
             $table->integer('price')->nullable();
+            $table->longText('productdescription')->nullable();
             $table->longText('servicedescription')->nullable();
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->useCurrent();
