@@ -7,7 +7,7 @@ use Kreait\Firebase\Messaging\CloudMessage;
 
 class PushNotificationService
 {
-    public function sendPushNotification($deviceToken, $message)
+    public function sendPushNotification($deviceToken, $title, $message, $topic)
     {
         $firebase = (new Factory)
             ->withServiceAccount(base_path('config/firebase_credentials.json'));
@@ -16,10 +16,11 @@ class PushNotificationService
         
         $message = CloudMessage::fromArray([
             'notification' => [
-                'title' => 'Hello from Firebase!',
+                'title' => $title,
                 'body' => $message
             ],
             'token' => $deviceToken,
+            'topic' => $topic
         ]);
         return $messaging->send($message);
         
