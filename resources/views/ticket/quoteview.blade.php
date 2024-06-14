@@ -18,8 +18,8 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
      Back</a>
         <div class="side-h3">
-       <h3 class="align-items-center d-flex justify-content-between">Quote Details 
-       
+       <h3 class="align-items-center d-flex justify-content-between">Quote Details
+
      </h3>
      </div>
   </div>
@@ -45,11 +45,11 @@
   $datef = date('F d, Y', strtotime($quotedetails[0]->etc));
   $addressnote = App\Models\Address::select('notes')->where('customerid',$quotedetails[0]->customerid)->where('address',$quotedetails[0]->address)->first();
   $pname = App\Models\Personnel::select('personnelname')->where('id',$quotedetails[0]->personnelid)->first();
- 
+
 @endphp
 @if(isset($quotedetails[0]->givendate))
   {{$quotedetails[0]->givendate}} - {{$quotedetails[0]->giventime}}</span>
-@endif 
+@endif
 </h5>
 <div class="text-lead mb-3">
     <p>Customer name: {{$quotedetails[0]->customername}}</p>
@@ -75,13 +75,13 @@
         <p>Time: {{@$quotedetails[0]->time}} {{@$quotedetails[0]->minute}}</p>
       </div>
     </div>
-   
+
     <div class="col-md-6">
       <div>
         <p>Ticket Total Price: ${{@$quotedetails[0]->tickettotal}}</p>
       </div>
     </div>
-    
+
     <div class="col-md-6">
       <div>
 <p>Service: {{$servicename}}</p></div></div>
@@ -177,7 +177,7 @@
           refresh: true,
           success:function(data) {
             $('#viewinvoicemodaldata').html(data.html);
-            
+
           }
         });
        return false;

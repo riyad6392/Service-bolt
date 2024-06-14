@@ -54,6 +54,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response 
      */ 
     public function login() {
+
         $validator = Validator::make(request()->all(), [
             'email' => 'required|email|max:255|exists:users,email',
             'password' => 'required'

@@ -530,8 +530,8 @@ section.promo_section {
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" fill="currentColor" d="M10.78 19.03a.75.75 0 01-1.06 0l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 111.06 1.06L5.81 11.5h14.44a.75.75 0 010 1.5H5.81l4.97 4.97a.75.75 0 010 1.06z"></path></svg>
      Back</a>
         <div class="side-h3">
-       <h3 class="align-items-center d-flex justify-content-between">Ticket Details 
-       
+       <h3 class="align-items-center d-flex justify-content-between">Ticket Details
+
      </h3>
      </div>
   </div>
@@ -561,7 +561,7 @@ section.promo_section {
   } else {
     $payment_status = "Pending";
   }
-  
+
 @endphp
   {{$quotedetails[0]->givendate}} - {{$quotedetails[0]->giventime}}</span>
   <a class="btn add-btn-yellow1 w-40 viewinvoice" data-id="{{$quotedetails[0]->id}}" data-bs-toggle="modal" data-bs-target="#view-invoice" style="margin-left: 70px;">Invoice</a>
@@ -599,7 +599,7 @@ section.promo_section {
         <p>Ticket Total Price: ${{$quotedetails[0]->tickettotal}}</p>
       </div>
     </div>
-    
+
     <div class="col-md-6">
       <div>
 <p>Service: {{$servicename}}</p></div></div>
@@ -635,7 +635,7 @@ section.promo_section {
 
 
 @php
-    if($quotedetails[0]->imagelist!="") 
+    if($quotedetails[0]->imagelist!="")
     {
       $imagelist = explode(',',$quotedetails[0]->imagelist);
       @endphp
@@ -665,10 +665,10 @@ section.promo_section {
                 </div>
             </div>
           </div>
-            
+
           @endif
-         
-     
+
+
         @php
       }
       @endphp
@@ -781,7 +781,7 @@ section.promo_section {
           refresh: true,
           success:function(data) {
             $('#viewinvoicemodaldata').html(data.html);
-            
+
           }
         });
        return false;
@@ -792,7 +792,7 @@ section.promo_section {
    var id = $(this).data('id');
    var view = $(this).data('view');
    var pvalue = $(this).data('pid');
-   
+
    var type = $(this).data('type');
    if(type==undefined) {
     var type = "quote";
@@ -824,23 +824,23 @@ section.promo_section {
           type: "POST",
           data: {
           customerid: customerid,
-          _token: '{{csrf_token()}}' 
+          _token: '{{csrf_token()}}'
           },
           dataType : 'json',
           success: function(result) {
-          $('#address3').html('<option value="">Select Customer Address or Begin Typing a Name</option>'); 
+          $('#address3').html('<option value="">Select Customer Address or Begin Typing a Name</option>');
             $.each(result.address,function(key,value) {
               var addressid = value.id+'#id#'+value.address;
               $("#address3").append('<option value="'+addressid+'">'+value.address+'</option>');
             });
           }
       });
-  }); 
+  });
 
   $(document).on('change','#serviceid',function(e) {
   gethours();
   var serviceid = $('#serviceid').val();
-  var productid = $('#productid').val(); 
+  var productid = $('#productid').val();
     var qid = "";
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
     $(document).find('#testprice').empty('');
@@ -866,7 +866,7 @@ $(document).on('change','#productid',function(e) {
   //getpricep1();
     $(document).find('#testprice1').empty('');
     var serviceid = $('#serviceid').val();
-    var productid = $('#productid').val(); 
+    var productid = $('#productid').val();
     var qid = "";
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
     $.ajax({
@@ -890,12 +890,12 @@ function gethours() {
     $('select.selectpicker1').find('option:selected').each(function() {
       h += parseInt($(this).data('hour'));
       m += parseInt($(this).data('min'));
-      
+
     });
     var realmin = m % 60;
   var hours = Math.floor(m / 60);
   h = h+hours;
-    
+
   $("#time1").val(h);
     $("#minute1").val(realmin);
   }

@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Auth;
-use Hash;
+//use Auth;
+//use Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Mail;
+//use Mail;
 use Carbon\Carbon; 
-use DB;
+//use DB;
 use Illuminate\Support\Facades\Session;
 
 class ForgotController extends Controller
