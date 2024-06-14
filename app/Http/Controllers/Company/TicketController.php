@@ -10,9 +10,10 @@ use App\Models\Service;
 use App\Models\Personnel;
 use App\Models\Inventory;
 use App\Models\Address;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use DB;
+//use DB;
 use App\Models\Managefield;
 use App\Models\Tenture;
 use App\Models\User;
@@ -334,18 +335,18 @@ class TicketController extends Controller
 
         $quoteee->save();
 
-    if($customer->email!=null) { 
-      $app_name = 'ServiceBolt';
-      $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
-      $email = $customer->email;
-      $user_exist = Customer::where('email', $email)->first();
-        
-      Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$addressinfo[1], 'servicename'=>$servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
-          $message->to($user_exist->email)
-          ->subject('Service Quote from ' . auth()->user()->companyname);
-          //$message->from($app_email,$app_name);
-        });
-    }
+        if($customer->email!=null) {
+          $app_name = 'ServiceBolt';
+          $app_email = env('MAIL_FROM_ADDRESS','ServiceBolt');
+          $email = $customer->email;
+          $user_exist = Customer::where('email', $email)->first();
+
+          Mail::send('mail_templates.sharequote', ['name'=>'service quote','address'=>$addressinfo[1], 'servicename'=>$servicename,'productname'=>$productname,'type'=>$request->radiogroup,'frequency'=>$request->frequency,'time'=>$quotelastid->time,'minute'=>$quotelastid->minute,'price'=>$request->price,'etc'=>$request->etc,'description'=>$request->description], function($message) use ($user_exist,$app_name,$app_email) {
+              $message->to($user_exist->email)
+              ->subject('Service Quote from ' . auth()->user()->companyname);
+              //$message->from($app_email,$app_name);
+            });
+        }
         if($request->share =='share') {
       	  $request->session()->flash('success', 'Quote share successfully');
          } else {
@@ -1136,8 +1137,8 @@ class TicketController extends Controller
                </div>';
             }
            $html .='<div class="col-md-12 mb-3">
-             <label>Description</label>
-             <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required>'.$quotedetails[0]->description.'</textarea>
+             <label>Company Notes</label>
+             <textarea class="form-control height-180" placeholder="Description" name="Company Notes" id="description" required>'.$quotedetails[0]->description.'</textarea>
            </div>';
            if($request->type == "ticket") {
               $updatev="ticket";

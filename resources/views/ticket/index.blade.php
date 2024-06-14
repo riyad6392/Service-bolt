@@ -835,7 +835,7 @@ select#servicename {
 	   <input type="text" class="form-control etc" placeholder="mm/dd/yyyy" name="etc" id="etc" onkeydown="return false" style="position: relative;" required>
 	   </div>
 	   <div class="col-md-12 mb-3">
-		   <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required></textarea>
+		   <textarea class="form-control height-180" placeholder="Company Notes" name="description" id="description" required></textarea>
 	   </div>
 	   <div class="col-lg-6 mb-3">
 	   	<button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>
@@ -1058,7 +1058,7 @@ select#servicename {
 	   <input type="text" value="" class="form-control etc" placeholder="mm/dd/yyyy" name="etc" id="etc1" onkeydown="return false" style="position: relative;" required>
 	   </div>
 	   <div class="col-md-12 mb-3">
-		   <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required></textarea>
+		   <textarea class="form-control height-180" placeholder="Company Notes" name="description" id="description" required></textarea>
 	   </div>
 	   <div class="col-lg-6 mb-3">
 	   	<button class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</button>

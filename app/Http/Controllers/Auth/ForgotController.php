@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Auth;
 use Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Mail;
 use Carbon\Carbon; 
 use DB;
@@ -77,7 +80,6 @@ class ForgotController extends Controller
         
         $user = User::where('email', $request->email)->where('role', 'worker')->first();  
         if ($user) {
-
           $updatePassword = DB::table('password_resets')
                               ->where([
                                 'email' => $request->email, 

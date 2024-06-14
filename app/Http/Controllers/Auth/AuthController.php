@@ -8,9 +8,10 @@ use App\Models\User;
 use Auth;
 use Hash;
 use Illuminate\Support\Str;
-use Mail;
 use App\Models\Managefield;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
+//use Mail;
 use DB;
 use Session;
 use Stripe;
@@ -259,7 +260,6 @@ class AuthController extends Controller
 
     public function login()
     {
-
      if(auth()->user()!=null){
       if(auth()->user()->status == "InActive") {
         Auth::logout();

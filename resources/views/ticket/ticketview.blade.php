@@ -610,7 +610,7 @@ section.promo_section {
 @endif
 <div class="col-md-6">
   <div>
-<p>@if($quotedetails[0]->description!="")Ticket Description: {{$quotedetails[0]->description}}@endif</p></div></div>
+<p>@if($quotedetails[0]->description!="")Company Notes: {{$quotedetails[0]->description}}@endif</p></div></div>
 <div class="col-md-6">
     <div>
         <p>Payment Status: {{$payment_status}}</p>

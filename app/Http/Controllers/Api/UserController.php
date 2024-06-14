@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User; 
 use App\Models\Personnel;
 use App\Models\Service;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +17,6 @@ use Tzsk\Otp\Facades\Otp;
 use Mail;
 use App\Helpers\Files\Storage\StorageDisk;
 use Intervention\Image\Facades\Image;
-use Auth;
 use Carbon\Carbon;
 use App\Models\Customer;
 use App\Models\Address;
@@ -70,7 +70,7 @@ class UserController extends Controller
             }
             return response()->json(['status'=>0,'message'=>$msg_err],$this->successStatus);
         }
-        
+//        dd(request()->all());
         if(Auth::attempt(['email' => request('email'), 'password' => request('password'), 'role' => 'worker'])){ 
             $user = Auth::user(); 
 
