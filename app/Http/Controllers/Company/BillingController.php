@@ -1388,7 +1388,6 @@ class BillingController extends Controller
 
     public function viewallticket(Request $request)
     {
-        
         $auth_id = auth()->user()->id;
         if(auth()->user()->role == 'company') {
             $auth_id = auth()->user()->id;

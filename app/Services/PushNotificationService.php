@@ -20,7 +20,7 @@ class PushNotificationService
                 'body' => $message
             ],
             'token' => $deviceToken,
-            'topic' => $topic
+//            'topic' => $topic
         ]);
         return $messaging->send($message);
         

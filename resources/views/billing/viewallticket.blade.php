@@ -13,9 +13,9 @@
   .modal-ul-box li {
       list-style: none;
       margin: 14px;
-     
+
       padding:10 0px;
-     
+
   }
   .btn.btn-sve {
       background: #FEE200;
@@ -33,7 +33,7 @@
   <div class="col-md-12">
       <div class="side-h3">
          <h3>Invoiced Tickets</h3>
-         
+
       </div>
 
      </div>
@@ -42,7 +42,7 @@
       <input type="hidden" name="phiddenid" id="phiddenid" value="">
       <div class="col-lg-3 mb-3">
         <select class="form-select puser" name="pid" id="pid">
-          <option value="">Select Personnel</option> 
+          <option value="">Select Personnel</option>
           @foreach($personnelUser as $key => $value)
             <option value="{{$value->id}}" @if(@$pid ==  $value->id) selected @endif>{{$value->personnelname}}</option>
           @endforeach
@@ -128,17 +128,17 @@
           $invoiceids = $randomid.''.$value->id;
 
           $invoidedata = App\Models\Quote::where('id','=',$value->id)
-          ->update([ 
+          ->update([
               "invoiceid"=>"$invoiceids"
           ]);
-        } 
+        }
         elseif($value->invoiced=="1") {
           $pstatus = "Invoiced";
           $randomid = 100;
           $invoiceids = $randomid.''.$value->id;
 
           $invoidedata = App\Models\Quote::where('id','=',$value->id)
-          ->update([ 
+          ->update([
               "invoiceid"=>"$invoiceids"
           ]);
         }
@@ -171,18 +171,18 @@
       @endforeach
       </tbody>
       </table>
-    
+
    </div>
      </div>
-     
-     
+
+
      </div>
      </div>
 
      </div>
 
-    
-     
+
+
 
 
      </div>
@@ -269,7 +269,7 @@
             url:"{{url('company/billing/leftbarbillingdata')}}",
             data: {
               targetid: targetid,
-              serviceid: serviceid 
+              serviceid: serviceid
             },
             method: 'post',
             dataType: 'json',
@@ -284,7 +284,7 @@
     //         url:"{{url('company/billing/leftbarbillingdata')}}",
     //         data: {
     //           targetid: 0,
-    //           serviceid: 0 
+    //           serviceid: 0
     //         },
     //         method: 'post',
     //         dataType: 'json',
@@ -308,7 +308,7 @@
         event.preventDefault();
         // Get form
         var form = $('#my-form')[0];
-        // FormData object 
+        // FormData object
         var data = new FormData(form);
         // If you want to add an extra field for the FormData
         data.append("page", "companybilling");
@@ -350,7 +350,7 @@
       refresh: true,
       success:function(data) {
         $('#viewinvoicemodaldata').html(data.html);
-        
+
       }
     });
   })
@@ -392,11 +392,11 @@
       refresh: true,
       success:function(data) {
         $('#viewdueinvoicemodaldata').html(data.html);
-        $("#duedate").datepicker({ 
-          autoclose: true, 
+        $("#duedate").datepicker({
+          autoclose: true,
           todayHighlight: true
         });
-        
+
       }
     });
   })
@@ -419,8 +419,8 @@
           refresh: true,
           success:function(data) {
             $('#viewinvoicemodaldatainvoiced').html(data.html);
-            $("#duedate").datepicker({ 
-              autoclose: true, 
+            $("#duedate").datepicker({
+              autoclose: true,
               todayHighlight: true
             });
           }
@@ -429,16 +429,16 @@
     })
   $(document).on('click','.cancelpopup',function(e) {
    location.reload();
-  }); 
+  });
 
   $(function () {
-  $("#from").datepicker({ 
-        autoclose: true, 
+  $("#from").datepicker({
+        autoclose: true,
         todayHighlight: true
   });
 
-   $("#to").datepicker({ 
-        autoclose: true, 
+   $("#to").datepicker({
+        autoclose: true,
         todayHighlight: true
   });
 });
@@ -448,7 +448,7 @@
    var id = $(this).data('id');
 
    var pvalue = $(this).data('pid');
-   
+
    var type = $(this).data('type');
    if(type==undefined) {
     var type = "quote";
@@ -488,18 +488,18 @@
           type: "POST",
           data: {
           customerid: customerid,
-          _token: '{{csrf_token()}}' 
+          _token: '{{csrf_token()}}'
           },
           dataType : 'json',
           success: function(result) {
-          $('#address3').html('<option value="">Select Customer Address or Begin Typing a Name</option>'); 
+          $('#address3').html('<option value="">Select Customer Address or Begin Typing a Name</option>');
             $.each(result.address,function(key,value) {
               var addressid = value.id+'#id#'+value.address;
               $("#address3").append('<option value="'+addressid+'">'+value.address+'</option>');
             });
           }
       });
-  }); 
+  });
 
   $(document).on('change','#serviceid',function(e) {
   gethours();
@@ -508,8 +508,8 @@
       var qid = "";
   }
   var serviceid = $('#serviceid').val();
-  var productid = $('#productid').val(); 
-    
+  var productid = $('#productid').val();
+
     $(document).find('#testprice').empty('');
     var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
 
@@ -530,7 +530,7 @@
 })
 $(document).on('change','#productid',function(e) {
     var serviceid = $('#serviceid').val();
-    var productid = $('#productid').val(); 
+    var productid = $('#productid').val();
     var qid = $('#quoteid').val();
     if(qid==undefined) {
       var qid = "";
@@ -559,12 +559,12 @@ $(document).on('change','#productid',function(e) {
     $('select.selectpicker1').find('option:selected').each(function() {
       h += parseInt($(this).data('hour'));
       m += parseInt($(this).data('min'));
-      
+
     });
     var realmin = m % 60;
     var hours = Math.floor(m / 60);
     h = h+hours;
-    
+
     $("#time1").val(h);
     $("#minute1").val(realmin);
   }
