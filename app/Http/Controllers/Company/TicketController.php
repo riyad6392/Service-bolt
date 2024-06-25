@@ -316,31 +316,13 @@ class TicketController extends Controller
             $notification->save();
             
             $puser = Personnel::select('device_token')->where("id", $request->personnelid)->first();
-            
             if ($puser->device_token != null) {
-                (new PushNotificationService)->sendPushNotification($puser->device_token,
+                (new PushNotificationService)->sendPushNotification(
+                    $puser->device_token,
                     "Quote #" . $quotelastid->id . " has been assigned",
                     "Quote #" . $quotelastid->id . " has been assigned",
                     "quote assign");
             }
-
-//            (new PushNotificationService)->sendPushNotification($puser->device_token,
-//                "Quote #" .$quotelastid->id. " has been assigned",
-//                "Quote #" .$quotelastid->id. " has been assigned",
-//                "quote assign");
-
-//            $msgarray = array (
-//                'title' => "Quote #" .$quotelastid->id. " has been assigned",
-//                'msg' => "Quote #" .$quotelastid->id. " has been assigned",
-//                'type' => 'quoteassign',
-//            );
-//
-//            $fcmData = array(
-//                'message' => $msgarray['msg'],
-//                'body' => $msgarray['title'],
-//            );
-//
-//            $this->sendFirebaseNotification($puser, $msgarray, $fcmData);
         }
         
         $quoteee = Quote::where('id', $quotelastid->id)->first();
