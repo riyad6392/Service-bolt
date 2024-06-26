@@ -888,20 +888,16 @@ class TicketController extends Controller
             $notification->save();
             
             $puser = Personnel::select('device_token')->where("id", $request->personnelid)->first();
-            
-            $msgarray = array(
-                'title' => "Ticket #" . $quotelastid->id . " has been assigned",
-                'msg' => "Ticket #" . $quotelastid->id . " has been assigned",
-                'type' => 'ticketassign',
-            );
-            
-            $fcmData = array(
-                'message' => $msgarray['msg'],
-                'body' => $msgarray['title'],
-            );
-            
-            $this->sendFirebaseNotification($puser, $msgarray, $fcmData);
+
+            if ($puser->device_token != null) {
+                (new PushNotificationService)->sendPushNotification(
+                    $puser->device_token,
+                    "Ticket #" . $quotelastid->id . " has been assigned",
+                    "Ticket #" . $quotelastid->id . " has been assigned",
+                    "Ticket assign");
+            }
         }
+
         $quoteee = Quote::where('id', $quotelastid->id)->first();
         $randomid = 100;
         $quoteee->invoiceid = $randomid . '' . $quotelastid->id;
@@ -924,6 +920,9 @@ class TicketController extends Controller
         } else {
             $request->session()->flash('success', 'Ticket added successfully');
         }
+
+
+
         return redirect()->route('company.quote');
     }
     

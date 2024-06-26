@@ -9,11 +9,13 @@ class PushNotificationService
 {
     public function sendPushNotification($deviceToken, $title, $message, $topic)
     {
+
         $firebase = (new Factory)
             ->withServiceAccount(base_path('config/firebase_credentials.json'));
+
         
         $messaging = $firebase->createMessaging();
-        
+
         $message = CloudMessage::fromArray([
             'notification' => [
                 'title' => $title,
@@ -22,6 +24,7 @@ class PushNotificationService
             'token' => $deviceToken,
 //            'topic' => $topic
         ]);
+
         return $messaging->send($message);
         
     }
