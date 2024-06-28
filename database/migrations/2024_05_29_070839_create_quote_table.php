@@ -46,6 +46,8 @@ return new class extends Migration
             $table->decimal('tax', 18)->nullable();
             $table->string('etc', 50)->nullable();
             $table->string('description')->nullable();
+            $table->string('customer_notes')->nullable();
+            $table->string('internal_notes')->nullable();
             $table->integer('ticket_status')->default(0)->comment('1-not assign, 2-assign, 4-picked, 3-completed');
             $table->string('checklist', 100)->nullable();
             $table->longText('note_for_customer')->nullable();

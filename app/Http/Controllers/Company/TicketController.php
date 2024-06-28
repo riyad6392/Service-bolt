@@ -83,19 +83,14 @@ class TicketController extends Controller
             $notification->save();
             
             $puser = Personnel::select('device_token')->where("id", $quote->personnelid)->first();
-            
-            $msgarray = array(
-                'title' => $message,
-                'msg' => $message,
-                'type' => 'ticketreopen',
-            );
-            
-            $fcmData = array(
-                'message' => $msgarray['msg'],
-                'body' => $msgarray['title'],
-            );
-            
-            $this->sendFirebaseNotification($puser, $msgarray, $fcmData);
+
+            if ($puser->device_token != null) {
+                (new PushNotificationService)->sendPushNotification(
+                    $puser->device_token,
+                    "A ticket #" . $quoteid . " has been reopened",
+                    "A ticket #" . $quoteid . " has been reopened",
+                    "Ticket reopened");
+            }
         }
         if ($request->name != "") {
             $quote->ticket_status = "4";
@@ -151,6 +146,7 @@ class TicketController extends Controller
     
     public function quotecreate(Request $request)
     {
+
         $serviceid = implode(',', $request->servicename);
         $productid = "";
         if (isset($request->productname)) {
@@ -1114,7 +1110,7 @@ class TicketController extends Controller
             </div></div>
           <div class="col-md-12 mb-3 position-relative">
             <label>Price</label>
-<i class="fa fa-dollar" style="position: absolute;top: 41px;left: 27px;"></i>
+            <i class="fa fa-dollar" style="position: absolute;top: 41px;left: 27px;"></i>
             <input type="text" class="form-control" placeholder="Price" name="price" id="priceticketedit" value="' . $quotedetails[0]->price . '" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" style="padding: 0 35px;" required="">
             <input type="hidden" name="edithiddenprice" id="edithiddenprice">
            </div>
@@ -1129,9 +1125,20 @@ class TicketController extends Controller
                </div>';
         }
         $html .= '<div class="col-md-12 mb-3">
-             <label>Description</label>
-             <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required>' . $quotedetails[0]->description . '</textarea>
+             <label>Company Notes</label>
+             <textarea class="form-control height-180" placeholder="Company Notes" name="description" id="description" required>' . $quotedetails[0]->description . '</textarea>
            </div>';
+
+        $html .= '<div class="col-md-12 mb-3">
+             <label>Internal Notes</label>
+             <textarea class="form-control height-180" placeholder="Internal Notes" name="internal_notes" id="internal_notes" required>' . $quotedetails[0]->internal_notes . '</textarea>
+           </div>';
+
+        $html .= '<div class="col-md-12 mb-3">
+             <label>Customer Notes</label>
+             <textarea class="form-control height-180" placeholder="Customer Notes" name="customer_notes" id="customer_notes" required>' . $quotedetails[0]->customer_notes . '</textarea>
+           </div>';
+
         if ($request->type == "ticket") {
             $updatev = "ticket";
         } else {
@@ -1755,6 +1762,8 @@ class TicketController extends Controller
                   <textarea class="form-control height-50" name="servicedescription[]" id="servicedescription" placeholder="Description">' . @$servicedescription . '</textarea>
                 </div>
               </div>
+              
+              
 
             </div>
             </div>';

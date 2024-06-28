@@ -2099,8 +2099,9 @@ $('#serviceform').on('submit', function(event) {
   	 $('#example1').DataTable( {
         "order": [[ 0, "desc" ]]
     } );
-    
+
   });
+
   $(document).ready(function() {
   	 $('#example2').DataTable( {
         "order": [[ 0, "desc" ]]
