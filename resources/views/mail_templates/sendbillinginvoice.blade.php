@@ -361,8 +361,8 @@
                         <tr>
                             <td style="vertical-align: top;padding: 0px 12px; border-radius: 10px;background-color: {{$color}};">
                                 <p style="margin: 0px 0 5px 0;color: {{$txtcolor}}; font-size: 18px;">Note:
-                                    <br><span style="color: {{$txtcolor}};  font-size: 16px;">@if(@$invoicenote)
-                                            {!!@$invoicenote!!}
+                                    <br><span style="color: {{$txtcolor}};  font-size: 16px;">@if(@$customer_notes)
+                                            {!!@$customer_notes!!}
                                         @else
                                             ---
                                         @endif</span></p>

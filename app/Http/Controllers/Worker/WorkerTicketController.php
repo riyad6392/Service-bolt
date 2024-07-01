@@ -505,7 +505,7 @@ class WorkerTicketController extends Controller
             Quote::where('id', $request->ticketid)->orWhere('parentid', $request->ticketid)
                 ->update([
                     "checklist" => "$checklist",
-                    "note_for_admin" => "$request->note_for_admin",
+                    "internal_notes" => "$request->internal_notes",
                     "note_for_customer" => $request->note_for_customer,
                     "imagelist" => "$newimagestring"
                 ]);
@@ -825,16 +825,11 @@ class WorkerTicketController extends Controller
             <label>Price</label>
             <input type="text" class="form-control" placeholder="Price" name="price" id="price12" value="' . $request->price . '" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 0" onpaste="return false" required>
           </div>
-          </div><div class="col-md-12 mb-2">
-            <div class="form-group">
-            <label>Description</label>
-            <input type="text" class="form-control" placeholder="Notes" name="description" id="description" value="' . $quote->description . '">
-          </div>
           </div>
           <div class="col-md-12 mb-2">
             <div class="form-group">
             <label>Invoice Notes</label>
-            <input type="text" class="form-control" placeholder="Notes" name="invoicenote" id="invoicenote" value="' . strip_tags($quote->invoicenote) . '">
+            <input type="text" class="form-control" placeholder="Notes" name="customer_notes" id="customer_notes" value="' . strip_tags($quote->customer_notes) . '">
           </div>
           </div><input type="hidden" name="id" id="id" value="' . $quote->id . '"><input type="hidden" name="productprice" id="productprice" value="">';
         $html .= '<div class="row">
@@ -885,7 +880,7 @@ class WorkerTicketController extends Controller
         } else {
             $quote->checklist = null;
         }
-        $quote->note_for_admin = $request->cnotes;
+        $quote->internal_notes = $request->cnotes;
         
         $quote->save();
         

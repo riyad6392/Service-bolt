@@ -86,7 +86,7 @@ class TicketFrequency extends Command
                        $data['ticket_status'] = 2;
                        $data['primaryname'] = $value['personnelid'];
                        $data['checklist'] = $value['checklist'];
-                       $data['note_for_admin'] = $value['note_for_admin'];
+                       $data['internal_notes'] = $value['internal_notes'];
                        $data['count'] = $value['count']+1;
                        $quotedata = Quote::create($data);
                         DB::table('quote')->where('id','=',$value['id'])
@@ -134,7 +134,7 @@ class TicketFrequency extends Command
                            $data['ticket_status'] = 2;
                            $data['primaryname'] = $value['personnelid'];
                            $data['checklist'] = $value['checklist'];
-                           $data['note_for_admin'] = $value['note_for_admin'];
+                           $data['internal_notes'] = $value['internal_notes'];
                            $data['count'] = $value['count']+1;
                            $quotedata = Quote::create($data);
                             DB::table('quote')->where('id','=',$value['id'])
@@ -191,7 +191,7 @@ class TicketFrequency extends Command
                        $data['ticket_status'] = 2;
                        $data['primaryname'] = $value['personnelid'];
                        $data['checklist'] = $value['checklist'];
-                       $data['note_for_admin'] = $value['note_for_admin'];
+                       $data['internal_notes'] = $value['internal_notes'];
                        $data['count'] = $value['count']+1;
 
                        $quotedata = Quote::create($data);
@@ -241,7 +241,7 @@ class TicketFrequency extends Command
                        $data['ticket_status'] = 2;
                        $data['primaryname'] = $value['personnelid'];
                        $data['checklist'] = $value['checklist'];
-                       $data['note_for_admin'] = $value['note_for_admin'];
+                       $data['internal_notes'] = $value['internal_notes'];
                        $data['count'] = $value['count']+1;
                        $quotedata = Quote::create($data);
                         DB::table('quote')->where('id','=',$value['id'])
@@ -290,7 +290,7 @@ class TicketFrequency extends Command
                        $data['ticket_status'] = 2;
                        $data['primaryname'] = $value['personnelid'];
                        $data['checklist'] = $value['checklist'];
-                       $data['note_for_admin'] = $value['note_for_admin'];
+                       $data['internal_notes'] = $value['internal_notes'];
                        $data['count'] = $value['count']+1;
                        $quotedata = Quote::create($data);
                         DB::table('quote')->where('id','=',$value['id'])

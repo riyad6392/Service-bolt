@@ -1427,7 +1427,7 @@ class CustomerController extends Controller
       $cdefaultimage = url('').'/uploads/servicebolt-noimage.png';
       $givendate = $tdata->givendate;
       if($request->invoicetype == "viewinvoice") {
-        return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'invoicenote'=>$tdata->invoicenote,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode,'term_name'=>$cinfo->term_name]); 
+        return view('mail_templates.sendbillinginvoice', ['invoiceId'=>$tdata->invoiceid,'address'=>$tdata->address,'billingaddress'=>$cinfo->billingaddress,'ticketid'=>$tdata->id,'customername'=>$cinfo->customername,'servicename'=>$servicename,'productname'=>$productname,'price'=>$tdata->price,'time'=>$tdata->giventime,'date'=>$tdata->givenstartdate,'description'=>$tdata->description,'customer_notes'=>$tdata->customer_notes,'companyname'=>$cinfo->companyname,'phone'=>$cinfo->phonenumber,'email'=>$cinfo->email,'cimage'=>$companyimage,'cdimage'=>$cdefaultimage,'serviceid'=>$serviceid,'productid'=>$productids,'duedate'=>$tdata->duedate,'payment_mode'=>$tdata->payment_mode,'term_name'=>$cinfo->term_name]);
       }
 
       if($request->invoicetype == "downloadinvoice") {

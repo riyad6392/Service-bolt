@@ -610,28 +610,36 @@ section.promo_section {
 @endif
 <div class="col-md-6">
   <div>
-<p>@if($quotedetails[0]->description!="")Company Notes: {{$quotedetails[0]->description}}@endif</p></div></div>
+      <p>@if($quotedetails[0]->description!="")Company Notes: <br>{{$quotedetails[0]->description}}@endif</p>
+  </div>
+   <div>
+        <p>@if($quotedetails[0]->customer_notes!="")Customer Notes: <br>{{$quotedetails[0]->customer_notes}}@endif</p>
+   </div>
+</div>
 <div class="col-md-6">
     <div>
         <p>Payment Status: {{$payment_status}}</p>
     </div>
-</div>
-<div class="col-md-6">
     <div>
-        <p>@if(@$addressnote->notes!=null) Address Notes: {{@$addressnote->notes}} @endif</p>
+        <p>@if($quotedetails[0]->internal_notes!="") Internal Notes:<br>{{$quotedetails[0]->internal_notes}}@endif</p>
     </div>
 </div>
+{{--<div class="col-md-6">--}}
+{{--    <div>--}}
+{{--        <p>@if(@$addressnote->notes!=null) Address Notes: {{@$addressnote->notes}} @endif</p>--}}
+{{--    </div>--}}
+{{--</div>--}}
 
-<div class="col-md-6">
-    <div>
-        <p>@if($quotedetails[0]->note_for_admin!="") Personnel Notes:{!!$quotedetails[0]->note_for_admin!!}@endif</p>
-    </div>
-</div>
-<div class="col-md-6">
-    <div>
-        <p>@if($quotedetails[0]->invoicenote!="") Invoice Notes:{!!$quotedetails[0]->invoicenote!!}@endif</p>
-    </div>
-</div>
+{{--<div class="col-md-6">--}}
+{{--    <div>--}}
+{{--        <p>@if($quotedetails[0]->internal_notes!="") Personnel Notes:{!!$quotedetails[0]->internal_notes!!}@endif</p>--}}
+{{--    </div>--}}
+{{--</div>--}}
+{{--<div class="col-md-6">--}}
+{{--    <div>--}}
+{{--        <p>@if($quotedetails[0]->invoicenote!="") Invoice Notes:{!!$quotedetails[0]->invoicenote!!}@endif</p>--}}
+{{--    </div>--}}
+{{--</div>--}}
 
 
 @php

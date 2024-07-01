@@ -1158,6 +1158,7 @@ class TicketController extends Controller
     
     public function ticketupdate(Request $request)
     {
+//        dd($request->all());
         $customer = Customer::select('customername', 'email')->where('id', $request->customerid)->first();
         
         $userdetails = User::select('taxtype', 'taxvalue', 'servicevalue', 'productvalue')->where('id', auth()->user()->id)->first();
@@ -1284,6 +1285,8 @@ class TicketController extends Controller
         $quote->price = $request->price;
         $quote->etc = $request->etc;
         $quote->description = $request->description;
+        $quote->customer_notes=$request->customer_notes ?? $quote->customer_notes=$request->customer_notes ;
+        $quote->internal_notes=$request->internal_notes ?? $quote->internal_notes;
         $quote->customername = $customer->customername;
         
         $addressinfo = explode("#id#", $request->address);

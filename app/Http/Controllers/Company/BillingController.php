@@ -1854,13 +1854,15 @@ class BillingController extends Controller
             <label style="position: relative;left: 0px;margin-bottom: 11px;">ETC</label>
            <input type="date" class="form-control etc" placeholder="ETC" name="etc" id="etc" onkeydown="return false" style="position: relative;" value="'.$quotedetails[0]->etc.'" required>
            </div>
-           <div class="col-md-12 mb-3 position-relative">
-            <label>Invoice Note</label>
-            <input type="text" class="form-control" placeholder="Invoice Note" name="invoicenote" id="invoicenote" value="'.$quotedetails[0]->invoicenote.'">
-           </div>
+        
            <div class="col-md-12 mb-3">
-             <label>Description</label>
-             <textarea class="form-control height-180" placeholder="Description" name="description" id="description" required>'.$quotedetails[0]->description.'</textarea>
+             <label>Invoice Note</label>
+              <textarea class="form-control height-180" placeholder="Invoice Note" name="customer_notes" id="customer_notes" required>'.$quotedetails[0]->customer_notes.'</textarea>
+           </div>
+           
+           <div class="col-md-12 mb-3">
+             <label>Company Notes</label>
+             <textarea class="form-control height-180" placeholder="Company Notes" name="description" id="description" required>'.$quotedetails[0]->description.'</textarea>
            </div>';
            if($request->type == "ticket") {
               $updatev="ticket";

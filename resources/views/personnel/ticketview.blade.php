@@ -824,7 +824,7 @@
                                         @endphp
                                         <div class="col-md-6">
                                             <div>
-                                                <p>Address Note : {{@$addressnote}}</p>
+{{--                                                <p>Address Note : {{@$addressnote}}</p>--}}
                                                 @if(!empty($ckinfo) && count($ckinfo)>0)
                                                     <ul>
                                                         @foreach($ckinfo as $key=>$value)
@@ -901,10 +901,10 @@
                                 <h5 class="mb-4">Internal Notes</h5>
 
 
-{{--                                <!-- <textarea name="cnotes" class="form-control customer-height mb-4" placeholder="Customer Notes" style="height: 280px;color: gray;">{{$quoteData->note_for_admin}}</textarea> -->--}}
+{{--                                <!-- <textarea name="cnotes" class="form-control customer-height mb-4" placeholder="Customer Notes" style="height: 280px;color: gray;">{{$quoteData->internal_notes}}</textarea> -->--}}
                                 <div class="mb-3">
-                                    <textarea class="summernote form-control customer-height mb-4" name="note_for_admin"
-                                              placeholder="Admin Notes">{{$quoteData->note_for_admin}}</textarea>
+                                    <textarea class="summernote form-control customer-height mb-4" name="internal_notes"
+                                              placeholder="Admin Notes">{{$quoteData->internal_notes}}</textarea>
                                 </div>
 
                                 <h5 class="mb-4">Customer Notes</h5>
@@ -913,7 +913,7 @@
                                 <!-- <textarea name="cnotes" class="form-control customer-height mb-4" placeholder="Customer Notes" style="height: 280px;color: gray;">{{$quoteData->note_for_customer}}</textarea> -->
                                 <div class="mb-3">
                                     <textarea class="summernote form-control customer-height mb-4" name="note_for_customer"
-                                              placeholder="Customer Notes">{{$quoteData->note_for_customer}}</textarea>
+                                              placeholder="Customer Notes">{{$quoteData->customer_notes}}</textarea>
                                 </div>
 
 
@@ -1002,7 +1002,7 @@
                                     <div class="col-lg-6 mb-3">
                                         <button type="submit" class="add-btn-yellow w-100"
                                                 style="text-align: center;border:0;">
-                                            @if($quoteData->note_for_admin!=null)
+                                            @if($quoteData->internal_notes!=null)
                                                 Update
                                             @else
                                                 Save
