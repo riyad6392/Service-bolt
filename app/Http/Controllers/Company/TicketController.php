@@ -1467,7 +1467,7 @@ class TicketController extends Controller
             <label style="position: relative;left: 0px;margin-bottom: 11px;">ETC: &nbsp;</label>' . $quotedetails[0]->etc . '
            </div>
            <div class="col-md-12 mb-3">
-             <label>Description:&nbsp;</label>' . $quotedetails[0]->description . '</div>';
+             <label>Company Notes:&nbsp;</label>' . $quotedetails[0]->description . '</div>';
         
         $html .= '</div>';
         return json_encode(['html' => $html]);

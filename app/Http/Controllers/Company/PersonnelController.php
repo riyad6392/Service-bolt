@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
+use App\Services\PushNotificationService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Personnel;
@@ -1067,18 +1068,14 @@ class PersonnelController extends Controller
 
         $puser = Personnel::select('device_token')->where("id", $workerinfo->workerid)->first();
         
-        $msgarray = array (
-          'title' => "$username has accepted your leave request",
-          'msg' => "$username has accepted your leave request",
-          'type' => 'leaveaccepted',
-        );
 
-        $fcmData = array(
-          'message' => $msgarray['msg'],
-          'body' => $msgarray['title'],
-        );
-
-          $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+        if ($puser->device_token != null) {
+            (new PushNotificationService)->sendPushNotification(
+                $puser->device_token,
+                "$username has accepted your leave request",
+                "$username has accepted your leave request",
+                "Leave Accepted");
+        }
 
       echo "1";
     }

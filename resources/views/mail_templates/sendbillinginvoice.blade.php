@@ -289,8 +289,8 @@
                         @else
                             <tr style="background-color:#ccc;">
                                 @endif
-                                <td style="padding: 15px;width: 50%;">{{ $value['servicename'] }}</td>
-                                <td style="padding: 15px;width: 50%;text-align: left;">{{ $servicedescription }}</td>
+                                <td style="padding: 15px;width: 50%;">{{ $value['id'] }}</td>
+                                <td style="padding: 15px;width: 50%;text-align: left;">{{ $value['servicename'] }}</td>
                                 <td style="padding: 15px;width: 15%;">1</td>
                                 <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
                                 @if($taxprice=="0.00")

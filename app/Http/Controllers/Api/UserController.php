@@ -1183,7 +1183,7 @@ class UserController extends Controller
             $quote->checklist = null;
         }
         $quote->internal_notes = $request->internal_notes;
-        $quote->note_for_customer = $request->note_for_customer;
+        $quote->customer_notes = $request->customer_notes;
         
         //for image upload
         

@@ -745,18 +745,13 @@ class SchedulerController extends Controller
 
             $puser = Personnel::select('device_token')->where("id", $workerid)->first();
 
-            $msgarray = array (
-                'title' => "A new ticket #" .$quoteid. " has been assigned",
-                'msg' => "A new ticket #" .$quoteid. " has been assigned",
-                'type' => 'ticketassign',
-            );
-
-            $fcmData = array(
-                'message' => $msgarray['msg'],
-                'body' => $msgarray['title'],
-            );
-
-            $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
+            if ($puser->device_token != null) {
+                (new PushNotificationService)->sendPushNotification(
+                    $puser->device_token,
+                    "A new ticket #" .$quoteid. " has been assigned",
+                    "A new ticket #" .$quoteid. " has been assigned",
+                    "Ticket Assign");
+            }
        }
     }
 
@@ -1794,18 +1789,15 @@ class SchedulerController extends Controller
 
         $puser = Personnel::select('device_token')->where("id", $quote->personnelid)->first();
 
-        $msgarray = array (
-            'title' => "Details Changed Ticket #" .$quote->id,
-            'msg' => "Details Changed Ticket #" .$quote->id,
-            'type' => 'ticketdetailchanges',
-        );
+          if ($puser->device_token != null) {
+              (new PushNotificationService)->sendPushNotification(
+                  $puser->device_token,
+                  "Details Changed Ticket #" .$quote->id,
+                  "Details Changed Ticket #" .$quote->id,
+                  "Ticket Detail Changes");
+          }
 
-        $fcmData = array(
-            'message' => $msgarray['msg'],
-            'body' => $msgarray['title'],
-        );
 
-        $this->sendFirebaseNotification($puser, $msgarray, $fcmData); 
       }
 
       $request->session()->flash('success', 'Updated successfully');

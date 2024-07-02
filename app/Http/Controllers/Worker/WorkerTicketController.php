@@ -506,7 +506,7 @@ class WorkerTicketController extends Controller
                 ->update([
                     "checklist" => "$checklist",
                     "internal_notes" => "$request->internal_notes",
-                    "note_for_customer" => $request->note_for_customer,
+                    "customer_notes" => $request->customer_notes,
                     "imagelist" => "$newimagestring"
                 ]);
             
@@ -757,11 +757,7 @@ class WorkerTicketController extends Controller
                     <input type="text" class="form-control minutes" placeholder="mm" name="minutes[]" id="minutes" value="' . @$hminute . '" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
                   </div>
                 </div>
-                 <div class="col-md-4 mb-2">
-                  <div class="form-group">
-                  <textarea class="form-control height-50" name="servicedescription[]" id="servicedescription" placeholder="Description">' . @$servicedescription . '</textarea>
-                  </div>
-                </div>
+                
               </div>
               </div>
               ';

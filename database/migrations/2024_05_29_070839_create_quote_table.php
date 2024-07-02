@@ -50,7 +50,6 @@ return new class extends Migration
             $table->string('internal_notes')->nullable();
             $table->integer('ticket_status')->default(0)->comment('1-not assign, 2-assign, 4-picked, 3-completed');
             $table->string('checklist', 100)->nullable();
-            $table->longText('note_for_customer')->nullable();
             $table->longText('internal_notes')->nullable();
             $table->text('imagelist')->nullable();
             $table->string('payment_status', 50)->nullable();

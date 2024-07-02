@@ -904,16 +904,16 @@
 {{--                                <!-- <textarea name="cnotes" class="form-control customer-height mb-4" placeholder="Customer Notes" style="height: 280px;color: gray;">{{$quoteData->internal_notes}}</textarea> -->--}}
                                 <div class="mb-3">
                                     <textarea class="summernote form-control customer-height mb-4" name="internal_notes"
-                                              placeholder="Admin Notes">{{$quoteData->internal_notes}}</textarea>
+                                              placeholder="Admin Notes">{!! $quoteData->internal_notes !!}</textarea>
                                 </div>
 
                                 <h5 class="mb-4">Customer Notes</h5>
 
 
-                                <!-- <textarea name="cnotes" class="form-control customer-height mb-4" placeholder="Customer Notes" style="height: 280px;color: gray;">{{$quoteData->note_for_customer}}</textarea> -->
+                                <!-- <textarea name="cnotes" class="form-control customer-height mb-4" placeholder="Customer Notes" style="height: 280px;color: gray;">{{$quoteData->customer_notes}}</textarea> -->
                                 <div class="mb-3">
-                                    <textarea class="summernote form-control customer-height mb-4" name="note_for_customer"
-                                              placeholder="Customer Notes">{{$quoteData->customer_notes}}</textarea>
+                                    <textarea class="summernote form-control customer-height mb-4" name="customer_notes"
+                                              placeholder="Customer Notes">{!! $quoteData->customer_notes !!}</textarea>
                                 </div>
 
 
