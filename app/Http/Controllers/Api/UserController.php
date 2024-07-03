@@ -2666,10 +2666,11 @@ class UserController extends Controller
         $user = Auth::user();
         $auth_id = $user->id;
         $worker = DB::table('users')->select('workerid')->where('id', $auth_id)->first();
-        
+//        info($request->latitude .'-'. $request->longitude);
+
         $workerid = $worker->workerid;
         if ($request->latitude != null && $request->longitude != null) {
-            DB::table('personnel')->where('id', '=', $workerid)
+            Personnel::where('id', '=', $workerid)
                 ->update([
                     "livelat" => "$request->latitude",
                     "livelong" => "$request->longitude",

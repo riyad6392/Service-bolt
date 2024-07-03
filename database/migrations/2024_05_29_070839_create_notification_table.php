@@ -20,8 +20,8 @@ return new class extends Migration
             $table->integer('ticketid')->nullable();
             $table->string('message', 100);
             $table->integer('read_by')->default(0);
-            $table->dateTime('created_at')->useCurrent();
-            $table->dateTime('updated_at')->useCurrent();
+            $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
         });
     }
 
