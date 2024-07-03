@@ -519,7 +519,7 @@
                 refresh: true,
                 success: function (data) {
                     console.log(data, 'dragon')
-                    console.log(data.html[0][1],data.html[0][2], 'data.html.length')
+                    console.log(data.html[0][1], data.html[0][2], 'data.html.length')
                     if (data.html.length == "0") {
                         var lat = $("#lat").val();
                         var long = $("#long").val();
@@ -559,10 +559,12 @@
 
                         var map = new google.maps.Map(document.getElementById('map'), {
                             zoom: 10,
-                            center: {lat : data.html[0][1], lng:data.html[0][2]},
+                            center: {lat: +data.html[0][1], lng: +data.html[0][2]},
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+
                         });
 
-                          var infowindow = new google.maps.InfoWindow();
+                        let infowindow = new google.maps.InfoWindow();
 
                         var marker, i;
 
@@ -573,6 +575,7 @@
                             } else {
                                 var imgestatic = APP_URL + '/images/graymapimage.png';
                             }
+
                             marker = new google.maps.Marker({
                               position: new google.maps.LatLng(data.html[i][1], data.html[i][2]),
                               map: map,
@@ -586,61 +589,51 @@
                               }
                             });
 
-                            // Create bounds object, loop over markers, set best map view.
-                            var bounds = new google.maps.LatLngBounds();
-                            bounds.extend(data.html[i][1], data.html[i][2])
-                            for (var i = 0; i < markers.length; i++) {
-                                bounds.extend(markers[i].getPosition());
-                            }
+                            google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                                return function () {
+                                    if (data.html[i][4] != null) {
+                                        var imgeurl = APP_URL + '/uploads/personnel/thumbnail/' + data.html[i][4];
+                                    } else {
+                                        var imgeurl = APP_URL + '/uploads/servicebolt-noimage.png';
+                                    }
+                                    if (data.html[i][5] != null) {
+                                        if (data.html[i][8] == 3) {
+                                            var contentString =
+                                                '<div class="user-box">' +
+                                                '<div>' +
+                                                '<img class="mb-2" src="' + imgeurl + '" alt="" style="width:60px;border-radius:100%">' +
+                                                '<span style="font-weight:bold"> ' + data.html[i][0] + '</span>' +
+                                                "</div>" +
+                                                "</div>";
 
-                            // Set best map view for markers.
-                            map.fitBounds(bounds);
+                                            infowindow.setContent(contentString);
+                                        } else {
+                                            var contentString =
+                                                '<div class="user-box">' +
+                                                '<div>' +
+                                                '<img class="mb-2" src="' + imgeurl + '" alt="" style="width:60px;border-radius:100%">' +
+                                                '<span style="font-weight:bold"> ' + data.html[i][0] + '</span>' +
+                                                '<p style="margin:0px;font-size:12px;color:#;font-weight:bold;">Ticket #' + data.html[i][5] + '<span style="font-size:12px;color:black;"> ' + data.html[i][6] + ' </span></p>' +
+                                                "</div>" +
+                                                "</div>";
 
-                            // google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                            //     return function () {
-                            //         if (data.html[i][4] != null) {
-                            //             var imgeurl = APP_URL + '/uploads/personnel/thumbnail/' + data.html[i][4];
-                            //         } else {
-                            //             var imgeurl = APP_URL + '/uploads/servicebolt-noimage.png';
-                            //         }
-                            //         if (data.html[i][5] != null) {
-                            //             if (data.html[i][8] == 3) {
-                            //                 var contentString =
-                            //                     '<div class="user-box">' +
-                            //                     '<div>' +
-                            //                     '<img class="mb-2" src="' + imgeurl + '" alt="" style="width:60px;border-radius:100%">' +
-                            //                     '<span style="font-weight:bold"> ' + data.html[i][0] + '</span>' +
-                            //                     "</div>" +
-                            //                     "</div>";
-                            //
-                            //                 infowindow.setContent(contentString);
-                            //             } else {
-                            //                 var contentString =
-                            //                     '<div class="user-box">' +
-                            //                     '<div>' +
-                            //                     '<img class="mb-2" src="' + imgeurl + '" alt="" style="width:60px;border-radius:100%">' +
-                            //                     '<span style="font-weight:bold"> ' + data.html[i][0] + '</span>' +
-                            //                     '<p style="margin:0px;font-size:12px;color:#;font-weight:bold;">Ticket #' + data.html[i][5] + '<span style="font-size:12px;color:black;"> ' + data.html[i][6] + ' </span></p>' +
-                            //                     "</div>" +
-                            //                     "</div>";
-                            //
-                            //                 infowindow.setContent(contentString);
-                            //             }
-                            //         } else {
-                            //             var contentString =
-                            //                 '<div class="user-box">' +
-                            //                 '<div>' +
-                            //                 '<img class="mb-2" src="' + imgeurl + '" alt="" style="width:60px;border-radius:100%">' +
-                            //                 '<span style="font-weight:bold"> ' + data.html[i][0] + '</span>' +
-                            //                 "</div>" +
-                            //                 "</div>";
-                            //
-                            //             infowindow.setContent(contentString);
-                            //         }
-                            //         //infowindow.setContent(data.html[i][0]);
-                            //         infowindow.open(map, marker);
-                            //     }
-                            // })(marker, i));
+                                            infowindow.setContent(contentString);
+                                        }
+                                    } else {
+                                        var contentString =
+                                            '<div class="user-box">' +
+                                            '<div>' +
+                                            '<img class="mb-2" src="' + imgeurl + '" alt="" style="width:60px;border-radius:100%">' +
+                                            '<span style="font-weight:bold"> ' + data.html[i][0] + '</span>' +
+                                            "</div>" +
+                                            "</div>";
+
+                                        infowindow.setContent(contentString);
+                                    }
+                                    //infowindow.setContent(data.html[i][0]);
+                                    infowindow.open(map, marker);
+                                }
+                            })(marker, i));
                         }
                     }
 
@@ -736,7 +729,7 @@
                     } else {
                         var map = new google.maps.Map(document.getElementById('map'), {
                             zoom: 10,
-                            center: new google.maps.LatLng(data.html[0][1], data.html[0][2]),
+                            center: {lat: +data.html[0][1], lng: +data.html[0][2]},
                             mapTypeId: google.maps.MapTypeId.ROADMAP
 
                         });
