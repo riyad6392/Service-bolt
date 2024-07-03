@@ -29,6 +29,7 @@ use App\Http\Controllers\Worker\WorkerTicketController;
 
 //worker manage admin controller
 use App\Http\Controllers\Worker\WorkerAdminTicketController;
+
 //end
 use App\Http\Controllers\Worker\WorkerAdminPersonnelController;
 
@@ -61,6 +62,7 @@ use App\Http\Controllers\Superadmin\AdminfeatureController;
 use App\Http\Controllers\Superadmin\SuperadminChangepasswordController;
 use App\Http\Controllers\Superadmin\AdminchecklistController;
 use App\Http\Controllers\Superadmin\AdminfeatureimgController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -109,7 +111,7 @@ Route::post('signupcomplete1', [App\Http\Controllers\Auth\AuthController::class,
 Route::get('/login', [App\Http\Controllers\Auth\AuthController::class, 'login'])->name('login');
 
 //company forget password start
-    Route::get('/login/forget', [App\Http\Controllers\Auth\ForgotController::class, 'showCompanyForgetPasswordForm'])->name('login.forget.get');
+Route::get('/login/forget', [App\Http\Controllers\Auth\ForgotController::class, 'showCompanyForgetPasswordForm'])->name('login.forget.get');
 Route::post('/login/forget', [App\Http\Controllers\Auth\ForgotController::class, 'submitCompanyForgetPasswordForm'])->name('login.forget.post');
 
 Route::get('companyreset-password/{token}', [App\Http\Controllers\Auth\ForgotController::class, 'showCompanyResetPasswordForm'])->name('login.reset.get');
@@ -129,19 +131,19 @@ Route::post('reset-password', [App\Http\Controllers\Auth\ForgotController::class
 
 //Route::post('/login', [App\Http\Controllers\Auth\AuthController::class,'authenticate']);
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'customLogin'])->name('login');
-Route::get('logout', [App\Http\Controllers\Auth\AuthController::class,'logout'])->name('logout');
+Route::get('logout', [App\Http\Controllers\Auth\AuthController::class, 'logout'])->name('logout');
 
-Route::get('workerlogout', [App\Http\Controllers\Auth\AuthController::class,'workerlogout'])->name('workerlogout');
+Route::get('workerlogout', [App\Http\Controllers\Auth\AuthController::class, 'workerlogout'])->name('workerlogout');
 
-Route::get('superadminlogout', [App\Http\Controllers\Auth\AuthController::class,'superadminlogout'])->name('superadminlogout');
+Route::get('superadminlogout', [App\Http\Controllers\Auth\AuthController::class, 'superadminlogout'])->name('superadminlogout');
 
 
 Route::group([
     'prefix' => 'company',
     'as' => 'company.',
     'namespace' => 'Company',
-    'middleware' => ['auth','company']
-], function(){
+    'middleware' => ['auth', 'company']
+], function () {
     Route::get('/home', [CompanyHomeController::class, 'index'])->name('home');
     Route::get('/payment', [CompanyHomeController::class, 'payment'])->name('payment');
     Route::get('/aggrement', [CompanyHomeController::class, 'aggrement'])->name('aggrement');
@@ -152,13 +154,13 @@ Route::group([
 
     Route::get('/timeoff', [TimeoffController::class, 'index'])->name('timeoff');
     Route::get('/timeoff/ptoreport', [TimeoffController::class, 'report'])->name('timeoffptoreport');
-     Route::any('/searchtimeoff', [TimeoffController::class, 'searchtimeoff'])->name('searchtimeoff');
+    Route::any('/searchtimeoff', [TimeoffController::class, 'searchtimeoff'])->name('searchtimeoff');
 
-     Route::any('/timeoffpto', [TimeoffController::class, 'timeoffpto'])->name('timeoffpto');
-      Route::any('/updatetimeoff', [TimeoffController::class, 'updatetimeoff'])->name('updatetimeoff');
-     Route::any('/viewdatepopup', [TimeoffController::class, 'viewdatepopup'])->name('viewdatepopup');
-     Route::get('/notification', [NotificationController::class, 'index'])->name('notification');
-     Route::any('/notification/deletenotification', [NotificationController::class, 'deletenotification'])->name('deletenotification');
+    Route::any('/timeoffpto', [TimeoffController::class, 'timeoffpto'])->name('timeoffpto');
+    Route::any('/updatetimeoff', [TimeoffController::class, 'updatetimeoff'])->name('updatetimeoff');
+    Route::any('/viewdatepopup', [TimeoffController::class, 'viewdatepopup'])->name('viewdatepopup');
+    Route::get('/notification', [NotificationController::class, 'index'])->name('notification');
+    Route::any('/notification/deletenotification', [NotificationController::class, 'deletenotification'])->name('deletenotification');
 
 
     Route::get('/import-form', [ExcelController::class, 'importForm'])->name('importForm');
@@ -169,7 +171,7 @@ Route::group([
 
     Route::post('/importcustomer', [ExcelController::class, 'importcustomer'])->name('importcustomer');
 
-     Route::get('/import-form-services', [ExcelController::class, 'importFormServices'])->name('importFormServices');
+    Route::get('/import-form-services', [ExcelController::class, 'importFormServices'])->name('importFormServices');
 
     Route::post('/importservices', [ExcelController::class, 'importservices'])->name('importservices');
 
@@ -229,7 +231,7 @@ Route::group([
     Route::any('/services/createservice', [ServicesController::class, 'createservice'])->name('createservice');
     Route::any('/services/create-service-ticket', [ServicesController::class, 'createserviceticket'])->name('createserviceticket');
     Route::any('/services/create-service-address', [ServicesController::class, 'create_service_address'])->name('create_service_address');
-     Route::any('/services/readmoredescservice', [ServicesController::class, 'readmoredescservice'])->name('readmoredescservice');
+    Route::any('/services/readmoredescservice', [ServicesController::class, 'readmoredescservice'])->name('readmoredescservice');
     //personnel Create
     Route::get('/personnel', [PersonnelController::class, 'index'])->name('personnel');
 
@@ -288,21 +290,21 @@ Route::group([
 
     Route::any('/quote/ticketcreate', [TicketController::class, 'ticketcreate'])->name('ticketcreate');
     Route::any('/quote/vieweditticketmodal', [TicketController::class, 'vieweditticketmodal'])->name('vieweditticketmodal');
-     Route::any('/quote/ticketupdate', [TicketController::class, 'ticketupdate'])->name('ticketupdate');
-     Route::any('/quote/deleteQuote', [TicketController::class, 'deleteQuote'])->name('deleteQuote');
+    Route::any('/quote/ticketupdate', [TicketController::class, 'ticketupdate'])->name('ticketupdate');
+    Route::any('/quote/deleteQuote', [TicketController::class, 'deleteQuote'])->name('deleteQuote');
 
-     Route::any('/quote/viewcompleteticketmodal', [TicketController::class, 'viewcompleteticketmodal'])->name('viewcompleteticketmodal');
+    Route::any('/quote/viewcompleteticketmodal', [TicketController::class, 'viewcompleteticketmodal'])->name('viewcompleteticketmodal');
 
-     Route::any('/quote/savefieldquote', [TicketController::class, 'savefieldquote'])->name('savefieldquote');
-     Route::any('/quote/savefieldticket', [TicketController::class, 'savefieldticket'])->name('savefieldticket');
+    Route::any('/quote/savefieldquote', [TicketController::class, 'savefieldquote'])->name('savefieldquote');
+    Route::any('/quote/savefieldticket', [TicketController::class, 'savefieldticket'])->name('savefieldticket');
 
-     Route::any('/quote/leftbarinvoice', [TicketController::class, 'leftbarinvoice'])->name('leftbarinvoice');
-     Route::any('/quote/sharequote', [TicketController::class, 'sharequote'])->name('sharequote');
-     Route::any('/quote/customercreate', [TicketController::class, 'customercreate'])->name('customer.create');
-     Route::any('/quote/checklatitude', [TicketController::class, 'checklati_long'])->name('checklati_long');
-     Route::any('/quote/ticketdetail/{id}', [TicketController::class, 'ticketdetail'])->name('ticketdetail');
-     Route::any('/quote/sendticketinvoice', [TicketController::class, 'sendticketinvoice'])->name('sendticketinvoice');
-     Route::any('/quote/calculateproductprice', [TicketController::class, 'calculateproductprice'])->name('calculateproductprice');
+    Route::any('/quote/leftbarinvoice', [TicketController::class, 'leftbarinvoice'])->name('leftbarinvoice');
+    Route::any('/quote/sharequote', [TicketController::class, 'sharequote'])->name('sharequote');
+    Route::any('/quote/customercreate', [TicketController::class, 'customercreate'])->name('customer.create');
+    Route::any('/quote/checklatitude', [TicketController::class, 'checklati_long'])->name('checklati_long');
+    Route::any('/quote/ticketdetail/{id}', [TicketController::class, 'ticketdetail'])->name('ticketdetail');
+    Route::any('/quote/sendticketinvoice', [TicketController::class, 'sendticketinvoice'])->name('sendticketinvoice');
+    Route::any('/quote/calculateproductprice', [TicketController::class, 'calculateproductprice'])->name('calculateproductprice');
 
     //Scheduler Listing
     Route::get('/scheduler', [SchedulerController::class, 'index'])->name('scheduler');
@@ -410,20 +412,20 @@ Route::group([
 
     Route::any('/billing/directicketsave', [BillingController::class, 'directicketsave'])->name('mybillingdirecticketsave');
 
-     Route::any('/billing/savefieldbilling', [BillingController::class, 'savefieldbilling'])->name('savefieldbilling');
+    Route::any('/billing/savefieldbilling', [BillingController::class, 'savefieldbilling'])->name('savefieldbilling');
 
-     Route::any('/billing/leftbarinvoice', [BillingController::class, 'leftbarinvoice'])->name('leftbarinvoice');
+    Route::any('/billing/leftbarinvoice', [BillingController::class, 'leftbarinvoice'])->name('leftbarinvoice');
 
-     Route::any('/billing/leftbarinvoiceemail', [BillingController::class, 'leftbarinvoiceemail'])->name('leftbarinvoiceemail');
+    Route::any('/billing/leftbarinvoiceemail', [BillingController::class, 'leftbarinvoiceemail'])->name('leftbarinvoiceemail');
 
-     Route::any('/billing/leftbarviewinvoice', [BillingController::class, 'leftbarviewinvoice'])->name('leftbarviewinvoice');
+    Route::any('/billing/leftbarviewinvoice', [BillingController::class, 'leftbarviewinvoice'])->name('leftbarviewinvoice');
 
-     Route::any('/billing/sendbillinginvoice', [BillingController::class, 'sendbillinginvoice'])->name('sendbillinginvoice');
-     Route::get('/billing/downloadinvoice/{id}', [BillingController::class, 'downloadinvoice'])->name('downloadinvoice');
+    Route::any('/billing/sendbillinginvoice', [BillingController::class, 'sendbillinginvoice'])->name('sendbillinginvoice');
+    Route::get('/billing/downloadinvoice/{id}', [BillingController::class, 'downloadinvoice'])->name('downloadinvoice');
 
-     Route::post('/billing/downloadinvoiceview', [BillingController::class, 'downloadinvoiceview'])->name('downloadinvoiceview');
+    Route::post('/billing/downloadinvoiceview', [BillingController::class, 'downloadinvoiceview'])->name('downloadinvoiceview');
 
-     Route::any('/billing/deleteamount', [BillingController::class, 'deleteamount'])->name('deleteamount');
+    Route::any('/billing/deleteamount', [BillingController::class, 'deleteamount'])->name('deleteamount');
 
     Route::get('/categories', [CategoriesController::class, 'index'])->name('categories');
 
@@ -451,8 +453,8 @@ Route::group([
     'prefix' => 'personnel',
     'as' => 'worker.',
     'namespace' => 'Worker',
-    'middleware' => ['auth','worker']
-], function(){
+    'middleware' => ['auth', 'worker']
+], function () {
     Route::get('/home', [WorkerHomeController::class, 'index'])->name('home');
 
     Route::any('/home/leftbarwdashboardschedulerdata', [WorkerHomeController::class, 'leftbarwdashboardschedulerdata'])->name('leftbarwdashboardschedulerdata');
@@ -475,8 +477,8 @@ Route::group([
     Route::any('/myticket/update', [WorkerTicketController::class, 'update'])->name('myticketupdate');
     Route::any('/myticket/update1', [WorkerTicketController::class, 'update1'])->name('myticketupdate1');
     Route::any('/myticket/view/{id}', [WorkerTicketController::class, 'view'])->name('myticketview');
-     Route::any('/myticket/map/{id}', [WorkerTicketController::class, 'viewmap'])->name('myticketmapview');
-     Route::any('/myticket/mapdata', [WorkerTicketController::class, 'mapdata'])->name('myticketmapdata');
+    Route::any('/myticket/map/{id}', [WorkerTicketController::class, 'viewmap'])->name('myticketmapview');
+    Route::any('/myticket/mapdata', [WorkerTicketController::class, 'mapdata'])->name('myticketmapdata');
 
     Route::any('/myticket/paynow/{id}', [WorkerTicketController::class, 'paynow'])->name('myticketpaynow');
     Route::any('/myticket/vieweditinvoicemodal', [WorkerTicketController::class, 'vieweditinvoicemodal'])->name('vieweditinvoicemodal');
@@ -581,10 +583,9 @@ Route::group([
 
     Route::any('/scheduler/updatesethours', [WorkerSchedulerController::class, 'updatesethours'])->name('updatesethours');
 
-     Route::any('/scheduler/gethourdata', [WorkerSchedulerController::class, 'gethourdata'])->name('gethourdata');
+    Route::any('/scheduler/gethourdata', [WorkerSchedulerController::class, 'gethourdata'])->name('gethourdata');
 
     Route::any('/scheduler/timeoff', [WorkerSchedulerController::class, 'timeoff'])->name('timeoff');
-
 
 
     Route::get('/timesheet', [WorkerTimesheetController::class, 'index'])->name('timesheet');
@@ -604,101 +605,101 @@ Route::group([
     //end
 
     //worker manage admin tiket controller
-        Route::get('/managequote', [WorkerAdminTicketController::class, 'index'])->name('managequote');
+    Route::get('/managequote', [WorkerAdminTicketController::class, 'index'])->name('managequote');
 
-        Route::any('/managequote/updateticket', [WorkerAdminTicketController::class, 'updateticket'])->name('updateticket');
+    Route::any('/managequote/updateticket', [WorkerAdminTicketController::class, 'updateticket'])->name('updateticket');
 
-        Route::any('/managequote/quotecreate', [WorkerAdminTicketController::class, 'quotecreate'])->name('quotecreate');
+    Route::any('/managequote/quotecreate', [WorkerAdminTicketController::class, 'quotecreate'])->name('quotecreate');
 
-        Route::any('/managequote/getaddressbyid', [WorkerAdminTicketController::class, 'getaddressbyid'])->name('getaddressbyid');
+    Route::any('/managequote/getaddressbyid', [WorkerAdminTicketController::class, 'getaddressbyid'])->name('getaddressbyid');
 
-        Route::any('/managequote/ticketcreate', [WorkerAdminTicketController::class, 'ticketcreate'])->name('ticketcreate');
+    Route::any('/managequote/ticketcreate', [WorkerAdminTicketController::class, 'ticketcreate'])->name('ticketcreate');
 
-        Route::any('/managequote/vieweditticketmodal', [WorkerAdminTicketController::class, 'vieweditticketmodal'])->name('vieweditticketmodal');
+    Route::any('/managequote/vieweditticketmodal', [WorkerAdminTicketController::class, 'vieweditticketmodal'])->name('vieweditticketmodal');
 
-        Route::any('/managequote/ticketupdate', [WorkerAdminTicketController::class, 'ticketupdate'])->name('ticketupdate');
+    Route::any('/managequote/ticketupdate', [WorkerAdminTicketController::class, 'ticketupdate'])->name('ticketupdate');
 
-        Route::any('/managequote/deleteQuote', [WorkerAdminTicketController::class, 'deleteQuote'])->name('deleteQuote');
+    Route::any('/managequote/deleteQuote', [WorkerAdminTicketController::class, 'deleteQuote'])->name('deleteQuote');
 
-        Route::any('/managequote/viewcompleteticketmodal', [WorkerAdminTicketController::class, 'viewcompleteticketmodal'])->name('viewcompleteticketmodal');
+    Route::any('/managequote/viewcompleteticketmodal', [WorkerAdminTicketController::class, 'viewcompleteticketmodal'])->name('viewcompleteticketmodal');
 
-        Route::any('/managequote/savefieldquote', [WorkerAdminTicketController::class, 'savefieldquote'])->name('savefieldquote');
+    Route::any('/managequote/savefieldquote', [WorkerAdminTicketController::class, 'savefieldquote'])->name('savefieldquote');
 
-        Route::any('/managequote/savefieldticket', [WorkerAdminTicketController::class, 'savefieldticket'])->name('savefieldticket');
+    Route::any('/managequote/savefieldticket', [WorkerAdminTicketController::class, 'savefieldticket'])->name('savefieldticket');
 
-        //Admin manage personnel module
-        Route::get('/managepersonnel', [WorkerAdminPersonnelController::class, 'index'])->name('managepersonnel');
+    //Admin manage personnel module
+    Route::get('/managepersonnel', [WorkerAdminPersonnelController::class, 'index'])->name('managepersonnel');
 
-        Route::any('/managepersonnel/create', [WorkerAdminPersonnelController::class, 'create'])->name('personnelcreate');
+    Route::any('/managepersonnel/create', [WorkerAdminPersonnelController::class, 'create'])->name('personnelcreate');
 
-        Route::any('/managepersonnel/leftbarservicedata', [WorkerAdminPersonnelController::class, 'leftbarservicedata'])->name('leftbarservicedata');
+    Route::any('/managepersonnel/leftbarservicedata', [WorkerAdminPersonnelController::class, 'leftbarservicedata'])->name('leftbarservicedata');
 
-        Route::any('/managepersonnel/viewpersonnelmodal', [WorkerAdminPersonnelController::class, 'viewpersonnelmodal'])->name('viewpersonnelmodal');
+    Route::any('/managepersonnel/viewpersonnelmodal', [WorkerAdminPersonnelController::class, 'viewpersonnelmodal'])->name('viewpersonnelmodal');
 
-        Route::any('/managepersonnel/update', [WorkerAdminPersonnelController::class, 'update'])->name('personnelupdate');
+    Route::any('/managepersonnel/update', [WorkerAdminPersonnelController::class, 'update'])->name('personnelupdate');
 
-        Route::any('/managepersonnel/leftbarpersonnelschedulerdata', [WorkerAdminPersonnelController::class, 'leftbarpersonnelschedulerdata'])->name('leftbarpersonnelschedulerdata');
+    Route::any('/managepersonnel/leftbarpersonnelschedulerdata', [WorkerAdminPersonnelController::class, 'leftbarpersonnelschedulerdata'])->name('leftbarpersonnelschedulerdata');
 
-        Route::any('/managepersonnel/leftbarpersonneltimesheetdata', [WorkerAdminPersonnelController::class, 'leftbarpersonneltimesheetdata'])->name('leftbarpersonneltimesheetdata');
+    Route::any('/managepersonnel/leftbarpersonneltimesheetdata', [WorkerAdminPersonnelController::class, 'leftbarpersonneltimesheetdata'])->name('leftbarpersonneltimesheetdata');
 
-        Route::any('/managepersonnel/leftbarpersonneltimeoffdata', [WorkerAdminPersonnelController::class, 'leftbarpersonneltimeoffdata'])->name('leftbarpersonneltimeoffdata');
+    Route::any('/managepersonnel/leftbarpersonneltimeoffdata', [WorkerAdminPersonnelController::class, 'leftbarpersonneltimeoffdata'])->name('leftbarpersonneltimeoffdata');
 
-        Route::any('/managepersonnel/accepttime', [WorkerAdminPersonnelController::class, 'accepttime'])->name('accepttime');
+    Route::any('/managepersonnel/accepttime', [WorkerAdminPersonnelController::class, 'accepttime'])->name('accepttime');
 
-        Route::any('/managepersonnel/rejecttime', [WorkerAdminPersonnelController::class, 'rejecttime'])->name('rejecttime');
+    Route::any('/managepersonnel/rejecttime', [WorkerAdminPersonnelController::class, 'rejecttime'])->name('rejecttime');
 
-        Route::any('/managepersonnel/timeupdate', [WorkerAdminPersonnelController::class, 'timeupdate'])->name('timeupdate');
+    Route::any('/managepersonnel/timeupdate', [WorkerAdminPersonnelController::class, 'timeupdate'])->name('timeupdate');
 
-        Route::get('/managescheduler', [WorkerAdminSchedulerController::class, 'index'])->name('managescheduler');
+    Route::get('/managescheduler', [WorkerAdminSchedulerController::class, 'index'])->name('managescheduler');
 
-        Route::any('/managescheduler/leftbarschedulerdata', [WorkerAdminSchedulerController::class, 'leftbarschedulerdata'])->name('leftbarschedulerdata');
+    Route::any('/managescheduler/leftbarschedulerdata', [WorkerAdminSchedulerController::class, 'leftbarschedulerdata'])->name('leftbarschedulerdata');
 
-        Route::any('/managescheduler/leftbarschedulerdataprev', [WorkerAdminSchedulerController::class, 'leftbarschedulerdataprev'])->name('leftbarschedulerdataprev');
+    Route::any('/managescheduler/leftbarschedulerdataprev', [WorkerAdminSchedulerController::class, 'leftbarschedulerdataprev'])->name('leftbarschedulerdataprev');
 
-        Route::any('/managescheduler/vieweditschedulermodal', [WorkerAdminSchedulerController::class, 'vieweditschedulermodal'])->name('vieweditschedulermodal');
+    Route::any('/managescheduler/vieweditschedulermodal', [WorkerAdminSchedulerController::class, 'vieweditschedulermodal'])->name('vieweditschedulermodal');
 
-        Route::any('/managescheduler/sticketupdate', [WorkerAdminSchedulerController::class, 'sticketupdate'])->name('sticketupdate');
+    Route::any('/managescheduler/sticketupdate', [WorkerAdminSchedulerController::class, 'sticketupdate'])->name('sticketupdate');
 
-        Route::any('/managescheduler/viewaddedticketmodal', [WorkerAdminSchedulerController::class, 'viewaddedticketmodal'])->name('viewaddedticketmodal');
+    Route::any('/managescheduler/viewaddedticketmodal', [WorkerAdminSchedulerController::class, 'viewaddedticketmodal'])->name('viewaddedticketmodal');
 
-        Route::any('/managescheduler/ticketadded', [WorkerAdminSchedulerController::class, 'ticketadded'])->name('ticketadded');
+    Route::any('/managescheduler/ticketadded', [WorkerAdminSchedulerController::class, 'ticketadded'])->name('ticketadded');
 
-        Route::any('/managequote/directquotecreate', [WorkerAdminSchedulerController::class, 'directquotecreate'])->name('directquotecreate');
+    Route::any('/managequote/directquotecreate', [WorkerAdminSchedulerController::class, 'directquotecreate'])->name('directquotecreate');
 
-        //Worker Admin Checklist module
-Route::get('/checklist', [WorkerAdminChecklistController::class, 'index'])->name('checklist');
+    //Worker Admin Checklist module
+    Route::get('/checklist', [WorkerAdminChecklistController::class, 'index'])->name('checklist');
 
-Route::any('/checklist/create', [WorkerAdminChecklistController::class, 'create'])->name('checklistcreate');
+    Route::any('/checklist/create', [WorkerAdminChecklistController::class, 'create'])->name('checklistcreate');
 
-Route::any('/checklist/leftbarchecklistdata', [WorkerAdminChecklistController::class, 'leftbarchecklistdata'])->name('leftbarchecklistdata');
+    Route::any('/checklist/leftbarchecklistdata', [WorkerAdminChecklistController::class, 'leftbarchecklistdata'])->name('leftbarchecklistdata');
 
-Route::any('/checklist/deleteChecklist', [WorkerAdminChecklistController::class, 'deleteChecklist'])->name('deleteChecklist');
+    Route::any('/checklist/deleteChecklist', [WorkerAdminChecklistController::class, 'deleteChecklist'])->name('deleteChecklist');
 
-Route::any('/checklist/editChecklist', [WorkerAdminChecklistController::class, 'editChecklist'])->name('editChecklist');
+    Route::any('/checklist/editChecklist', [WorkerAdminChecklistController::class, 'editChecklist'])->name('editChecklist');
 
-Route::any('/checklist/vieweditchecklistmodal', [WorkerAdminChecklistController::class, 'vieweditchecklistmodal'])->name('vieweditchecklistmodal');
+    Route::any('/checklist/vieweditchecklistmodal', [WorkerAdminChecklistController::class, 'vieweditchecklistmodal'])->name('vieweditchecklistmodal');
 
-Route::any('/checklist/updatechecklist', [WorkerAdminChecklistController::class, 'updatechecklist'])->name('updatechecklist');
+    Route::any('/checklist/updatechecklist', [WorkerAdminChecklistController::class, 'updatechecklist'])->name('updatechecklist');
 //end here
 
     //worder admin billing module
-        Route::get('/billing', [WorkerAdminBillingController::class, 'index'])->name('billing');
+    Route::get('/billing', [WorkerAdminBillingController::class, 'index'])->name('billing');
 
-        Route::any('/billing/billingview/{date}', [WorkerAdminBillingController::class, 'billingview'])->name('billingview');
+    Route::any('/billing/billingview/{date}', [WorkerAdminBillingController::class, 'billingview'])->name('billingview');
 
-        Route::any('/billing/leftbarbillingdata', [WorkerAdminBillingController::class, 'leftbarbillingdata'])->name('leftbarbillingdata');
+    Route::any('/billing/leftbarbillingdata', [WorkerAdminBillingController::class, 'leftbarbillingdata'])->name('leftbarbillingdata');
 
-        Route::any('/billing/update', [WorkerAdminBillingController::class, 'update'])->name('mybillingupdate');
+    Route::any('/billing/update', [WorkerAdminBillingController::class, 'update'])->name('mybillingupdate');
 
-        Route::any('/billing/savefieldbilling', [WorkerAdminBillingController::class, 'savefieldbilling'])->name('savefieldbilling');
+    Route::any('/billing/savefieldbilling', [WorkerAdminBillingController::class, 'savefieldbilling'])->name('savefieldbilling');
 
-        Route::any('/billing/leftbarinvoice', [WorkerAdminBillingController::class, 'leftbarinvoice'])->name('leftbarinvoice');
+    Route::any('/billing/leftbarinvoice', [WorkerAdminBillingController::class, 'leftbarinvoice'])->name('leftbarinvoice');
 
-        Route::any('/billing/sendbillinginvoice', [WorkerAdminBillingController::class, 'sendbillinginvoice'])->name('sendbillinginvoice');
+    Route::any('/billing/sendbillinginvoice', [WorkerAdminBillingController::class, 'sendbillinginvoice'])->name('sendbillinginvoice');
 
-        //worker change Password
-        Route::get('/changepassword', [WorkerChangepasswordController::class, 'index'])->name('changepassword');
-        Route::any('/updatepassword', [WorkerChangepasswordController::class, 'update'])->name('updatepassword');
+    //worker change Password
+    Route::get('/changepassword', [WorkerChangepasswordController::class, 'index'])->name('changepassword');
+    Route::any('/updatepassword', [WorkerChangepasswordController::class, 'update'])->name('updatepassword');
     //end
 
 });
@@ -706,7 +707,7 @@ Route::any('/checklist/updatechecklist', [WorkerAdminChecklistController::class,
 // superadmin start
 Route::get('/superadmin/login', [App\Http\Controllers\Auth\AuthController::class, 'superadminlogin'])->name('superadmin');
 Route::post('/superadmin/login', [App\Http\Controllers\Auth\LoginController::class, 'superadminLogin'])->name('superadmin');
-Route::get('superadminlogout', [App\Http\Controllers\Auth\AuthController::class,'superadminlogout'])->name('superadminlogout');
+Route::get('superadminlogout', [App\Http\Controllers\Auth\AuthController::class, 'superadminlogout'])->name('superadminlogout');
 
 Route::get('/superadmin', function () {
     return redirect('/superadmin/login');
@@ -716,8 +717,8 @@ Route::group([
     'prefix' => 'superadmin',
     'as' => 'superadmin.',
     'namespace' => 'Superadmin',
-    'middleware' => ['auth','superadmin']
-], function() {
+    'middleware' => ['auth', 'superadmin']
+], function () {
     Route::get('/home', [SuperadminHomeController::class, 'index'])->name('home');
     Route::get('/manageUser', [SuperadminUserController::class, 'index'])->name('manageUser');
 
@@ -755,7 +756,6 @@ Route::group([
     Route::any('/manageProductimg/updatetabimage', [AdminfeatureimgController::class, 'updatetabimage'])->name('updatetabimage');
 
 
-
     Route::get('/manageCmspages', [AdminCmspageController::class, 'index'])->name('manageCmspages');
     Route::any('/cmspagestatus', [AdminCmspageController::class, 'cmspagestatus'])->name('cmspagestatus');
     Route::any('/viewcmspagemodal', [AdminCmspageController::class, 'viewcmspagemodal'])->name('viewcmspagemodal');
@@ -782,7 +782,7 @@ Route::group([
     Route::any('/managehomepagecontent/homepagecontentupdate', [AdminfeatureController::class, 'homepagecontentupdate'])->name('homepagecontentupdate');
 
 
- });
+});
 Route::get('check-push-notification', [\App\Http\Controllers\Api\UserController::class, 'checkPushNotification']);
 
 

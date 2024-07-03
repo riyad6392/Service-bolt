@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
+use App\Models\Personnel;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DB;
@@ -262,7 +263,19 @@ class HomeController extends Controller
 
    // $scheduleData = DB::table('personnel')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->leftJoin('quote', 'quote.personnelid', '=', 'personnel.id')->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->groupBy('quote.id')->orderBy('quote.updated_at','desc')->get();
 
-    $scheduleData = DB::table('personnel')->select('quote.*', 'personnel.image','personnel.personnelname','personnel.livelat as lat','personnel.livelong as long','personnel.checkstatus')->leftJoin('quote', 'quote.personnelid', '=', 'personnel.id')->whereIn('quote.ticket_status',array(2,4))->whereIn('personnel.id',$workerids)->where('personnel.livelat','!=',null)->where('personnel.livelong','!=',null)->orderBy('quote.updated_at','asc')->get();
+    $scheduleData = Personnel::select('quote.*',
+        'personnel.image',
+        'personnel.personnelname',
+        'personnel.livelat as lat',
+        'personnel.livelong as long',
+        'personnel.checkstatus')
+        ->leftJoin('quote', 'quote.personnelid', '=', 'personnel.id')
+        ->whereIn('quote.ticket_status',array(2,4))
+        ->whereIn('personnel.id',$workerids)
+        ->where('personnel.livelat','!=',null)
+        ->where('personnel.livelong','!=',null)
+        ->orderBy('quote.updated_at','asc')
+        ->get();
 
 
 
@@ -271,7 +284,17 @@ class HomeController extends Controller
       $json = array();
       $data = [];
         foreach($scheduleData as $key => $value) {
-            array_push($data, [$value->personnelname,$value->lat,$value->long,$value->longitude,$value->image,$value->id,$value->giventime,$value->checkstatus,$value->ticket_status]);
+            $data[] = [
+                $value->personnelname,
+                $value->lat,
+                $value->long,
+                $value->longitude,
+                $value->image,
+                $value->id,
+                $value->giventime,
+                $value->checkstatus,
+                $value->ticket_status
+            ];
         }
         //dd($data);
       return json_encode(['html' =>$data]);

@@ -680,7 +680,7 @@ $googleplacekey = $userinfo->googleplace;
 <script src="{{ asset('js/jquery.typeahead.js')}}"></script>
    
 @yield('script')
- <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $googleplacekey; ?>&callback=initAutocomplete&libraries=places" async></script>
+ <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $googleplacekey; ?>&loading=async&callback=initAutocomplete&libraries=places" async></script>
  <!-- for datepicker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
  
