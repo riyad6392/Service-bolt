@@ -14,6 +14,9 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\TicketFrequency::class,
+        Commands\CheckTicketPickup::class,
+        Commands\AnotherCommand::class,
+
     ];
 
     /**
@@ -25,6 +28,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('command:ticketfrequency');
+        $schedule->command('command:check-ticket-pickup')->everyMinute();
+        $schedule->command('command:another-command');
 
     }
 
@@ -36,7 +41,6 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }
