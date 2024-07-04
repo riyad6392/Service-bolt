@@ -1,574 +1,605 @@
 @extends('layouts.header')
 @section('content')
-<style type="text/css">
-  .table-new tbody tr.selectedrow:after {
-    background: #FAED61 !important;
-  }
-  .modal-ul-box {
-    padding: 0;
-    margin: 10px;
-    height: 340px;
-    overflow-y: scroll;
-  }
-  .modal-ul-box li {
-      list-style: none;
-      margin: 14px;
-
-      padding:10 0px;
-
-  }
-  .btn.btn-sve {
-      background: #FEE200;
-      padding: 8px 34px;
-      box-shadow: 0px 0px 10px #ccc;
-  }
-  .side-h3 {
-    padding: 30px 0;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-</style>
-<div class="content">
-  <div class="col-md-12">
-      <div class="side-h3">
-         <h3>Invoiced Tickets</h3>
-
-      </div>
-
-     </div>
-  <form method="post" action="{{route('company.viewallticket') }}" class="row pe-0">
-      @csrf
-      <input type="hidden" name="phiddenid" id="phiddenid" value="">
-      <div class="col-lg-3 mb-3">
-        <select class="form-select puser" name="pid" id="pid">
-          <option value="">Select Personnel</option>
-          @foreach($personnelUser as $key => $value)
-            <option value="{{$value->id}}" @if(@$pid ==  $value->id) selected @endif>{{$value->personnelname}}</option>
-          @endforeach
-        </select>
-      </div>
-      @if(isset($from))
-        <div class="col-lg-2 mb-2">
-          <input type="text" id="from" placeholder="mm/dd/yyyy" value="{{$from}}" name="from" class="form-control" readonly>
-        </div>
-        <div class="col-lg-2 mb-2">
-          <input type="text" id="to" placeholder="mm/dd/yyyy" value="{{$to}}" name="to" class="form-control" readonly>
-        </div>
-      @else
-        <div class="col-lg-2 mb-2">
-          <input type="text" id="from" value="{{@$_REQUEST['from']}}" name="from" class="form-control" placeholder="mm/dd/yyyy" readonly>
-        </div>
-        @if(!isset($_REQUEST['to']))
-        <div class="col-lg-2 mb-2">
-          <input type="text" id="to" value="{{@$_REQUEST['from']}}" name="to" class="form-control" placeholder="mm/dd/yyyy" readonly>
-        </div>
-        @else
-          <div class="col-lg-2 mb-2">
-          <input type="text" id="to" value="{{@$_REQUEST['to']}}" name="to" class="form-control" placeholder="mm/dd/yyyy" readonly>
-        </div>
-        @endif
-      @endif
-      <div class="col-lg-2 mb-2 pe-0" >
-       <button class="btn btn-block button" type="submit" id="search1" name="search" value="search">Search</button>
-      </div>
-
-      <div class="col-md-2">
-         <button class="btn btn-block button" type="submit" name="search" value="excel">{{ __('Export') }}</button>
-        </div>
-      </div>
-
-     </div>
-     </form>
-   <form method="post" action="{{ url('company/billing/update') }}" enctype="multipart/form-data">
-      @csrf
-     <div class="row">
-    @if(Session::has('success'))
-
-          <div class="alert alert-success" id="selector">
-
-              {{Session::get('success')}}
-
-          </div>
-
-      @endif
-<div class="col-md-12 mb-4">
-<div class="card">
-     <div class="card-body">
-     <div class="col-lg-12 mt-2">
-     <div class="table-responsive">
-      <table id="example" class="table no-wrap table-new table-list align-items-center">
-      <thead>
-      <tr>
-        <th>#</th>
-        <th>Invoice Id</th>
-        <th>Date</th>
-        <th>Due Date</th>
-        <th>Customer Name</th>
-        <th>Service Address</th>
-        <th>Personnel Name</th>
-        <th>Amount</th>
-        <th>Payment status</th>
-      </tr>
-      </thead>
-      <tbody>
-      @php
-        $i = 1;
-      @endphp
-      @foreach($totalbillingData as $key=>$value)
-      @php
-        if($value->parentid!=0) {
-          $ids= $value->parentid;
-        } else {
-          $ids = $value->id;
+    <style type="text/css">
+        .table-new tbody tr.selectedrow:after {
+            background: #FAED61 !important;
         }
-        if($value->payment_status!="" || $value->payment_mode!="") {
-          $pstatus = "Paid";
-          $randomid = 100;
-          $invoiceids = $randomid.''.$value->id;
 
-          $invoidedata = App\Models\Quote::where('id','=',$value->id)
-          ->update([
-              "invoiceid"=>"$invoiceids"
-          ]);
+        .modal-ul-box {
+            padding: 0;
+            margin: 10px;
+            height: 340px;
+            overflow-y: scroll;
         }
-        elseif($value->invoiced=="1") {
-          $pstatus = "Invoiced";
-          $randomid = 100;
-          $invoiceids = $randomid.''.$value->id;
 
-          $invoidedata = App\Models\Quote::where('id','=',$value->id)
-          ->update([
-              "invoiceid"=>"$invoiceids"
-          ]);
+        .modal-ul-box li {
+            list-style: none;
+            margin: 14px;
+
+            padding: 10 0px;
+
         }
-        elseif($value->invoiced=="0" && ($value->payment_mode=="" || $value->payment_status=="")) {
-          $pstatus = "Pending";
+
+        .btn.btn-sve {
+            background: #FEE200;
+            padding: 8px 34px;
+            box-shadow: 0px 0px 10px #ccc;
         }
-      @endphp
 
-        <tr class="" target="{{$i}}" data-id="{{$value->id}}">
-          <td>{{$ids}}</td>
-          <td><a class="btn add-btn-yellow w-100 viewinvoice" data-id="{{$value->id}}" data-duedate="{{$value->duedate}}" data-invoicenote="{{$value->invoicenote}}" data-pid="{{$value->personnelid}}" data-bs-toggle="modal" data-bs-target="#view-invoice">#{{$value->invoiceid}}</a></td>
-          <td>{{date('m-d-Y', strtotime($value->date))}}</td>
-          @php
-            if($value->duedate!=null || $value->duedate!='') {
-              $duedate = date('m-d-Y', strtotime($value->duedate));
-            } else {
-              $duedate = "--";
-            }
-          @endphp
-          <td>{{$duedate}}</td>
-          <td>{{$value->customername}}</td>
-          <td>{{$value->address}}</td>
-          <td>{{$value->personnelname}}</td>
-          <td>{{$value->price}}</td>
-          <td>{{$pstatus}}</td>
-        </tr>
-      @php
-        $i++;
-      @endphp
-      @endforeach
-      </tbody>
-      </table>
+        .side-h3 {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+    </style>
+    <div class="content">
+        <div class="col-md-12">
+            <div class="side-h3">
+                <h3>Invoiced Tickets</h3>
 
-   </div>
-     </div>
+            </div>
 
+        </div>
+        <form method="post" action="{{route('company.viewallticket') }}" class="row pe-0">
+            @csrf
+            <input type="hidden" name="phiddenid" id="phiddenid" value="">
+            <div class="col-lg-3 mb-3">
+                <select class="form-select puser" name="pid" id="pid">
+                    <option value="">Select Personnel</option>
+                    @foreach($personnelUser as $key => $value)
+                        <option value="{{$value->id}}"
+                                @if(@$pid ==  $value->id) selected @endif>{{$value->personnelname}}</option>
+                    @endforeach
+                </select>
+            </div>
+            @if(isset($from))
+                <div class="col-lg-2 mb-2">
+                    <input type="text" id="from" placeholder="mm/dd/yyyy" value="{{$from}}" name="from"
+                           class="form-control" readonly>
+                </div>
+                <div class="col-lg-2 mb-2">
+                    <input type="text" id="to" placeholder="mm/dd/yyyy" value="{{$to}}" name="to" class="form-control"
+                           readonly>
+                </div>
+            @else
+                <div class="col-lg-2 mb-2">
+                    <input type="text" id="from" value="{{@$_REQUEST['from']}}" name="from" class="form-control"
+                           placeholder="mm/dd/yyyy" readonly>
+                </div>
+                @if(!isset($_REQUEST['to']))
+                    <div class="col-lg-2 mb-2">
+                        <input type="text" id="to" value="{{@$_REQUEST['from']}}" name="to" class="form-control"
+                               placeholder="mm/dd/yyyy" readonly>
+                    </div>
+                @else
+                    <div class="col-lg-2 mb-2">
+                        <input type="text" id="to" value="{{@$_REQUEST['to']}}" name="to" class="form-control"
+                               placeholder="mm/dd/yyyy" readonly>
+                    </div>
+                @endif
+            @endif
+            <div class="col-lg-2 mb-2 pe-0">
+                <button class="btn btn-block button" type="submit" id="search1" name="search" value="search">Search
+                </button>
+            </div>
 
-     </div>
-     </div>
-
-     </div>
-
-
-
-
-
-     </div>
-   </form>
-   </div>
-</div>
-
-<div class="modal fade" id="edit-address" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content customer-modal-box">
-      <div class="modal-body">
-        <form method="post" action="{{ route('company.sendbillinginvoice') }}" enctype="multipart/form-data">
-          @csrf
-          <div id="viewinvoicemodaldata"></div>
-        </form>
-      </div>
-  </div>
-</div>
-</div>
-
-<div class="modal fade" id="send-emailinvoice" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content customer-modal-box">
-      <div class="modal-body">
-        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data">
-          @csrf
-          <input type="hidden" name="invoicetype" id="invoicetype" value="sendinvoice">
-          <div id="viewinvoicemodaldatainvoiced"></div>
-        </form>
-      </div>
-  </div>
-</div>
-</div>
-
-<!-- Due invoice modal -->
-<div class="modal fade" id="view-invoice" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content customer-modal-box">
-      <div class="modal-body">
-        <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data" target="_blank">
-          @csrf
-          <div id="viewdueinvoicemodaldata"></div>
-        </form>
-      </div>
-  </div>
-</div>
-</div>
-
-<div class="modal fade" id="edit-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content customer-modal-box">
-      <div class="modal-body">
-      <form method="post" action="{{ route('company.ticketupdate') }}" enctype="multipart/form-data">
-        @csrf
-        <div id="viewmodaldata1"></div>
-      </form>
-      </div>
+            <div class="col-md-2">
+                <button class="btn btn-block button" type="submit" name="search"
+                        value="excel">{{ __('Export') }}</button>
+            </div>
     </div>
-  </div>
-</div>
+
+    </div>
+    </form>
+    <form method="post" action="{{ url('company/billing/update') }}" enctype="multipart/form-data">
+        @csrf
+        <div class="row">
+            @if(Session::has('success'))
+
+                <div class="alert alert-success" id="selector">
+
+                    {{Session::get('success')}}
+
+                </div>
+
+            @endif
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="col-lg-12 mt-2">
+                            <div class="table-responsive">
+                                <table id="example" class="table no-wrap table-new table-list align-items-center">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Invoice Id</th>
+                                        <th>Date</th>
+                                        <th>Due Date</th>
+                                        <th>Customer Name</th>
+                                        <th>Service Address</th>
+                                        <th>Personnel Name</th>
+                                        <th>Amount</th>
+                                        <th>Payment status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @php
+                                        $i = 1;
+                                    @endphp
+                                    @foreach($totalbillingData as $key=>$value)
+                                        @php
+                                            if($value->parentid!=0) {
+                                              $ids= $value->parentid;
+                                            } else {
+                                              $ids = $value->id;
+                                            }
+                                            if($value->payment_status!="" || $value->payment_mode!="") {
+                                              $pstatus = "Paid";
+                                              $randomid = 100;
+                                              $invoiceids = $randomid.''.$value->id;
+
+                                              $invoidedata = App\Models\Quote::where('id','=',$value->id)
+                                              ->update([
+                                                  "invoiceid"=>"$invoiceids"
+                                              ]);
+                                            }
+                                            elseif($value->invoiced=="1") {
+                                              $pstatus = "Invoiced";
+                                              $randomid = 100;
+                                              $invoiceids = $randomid.''.$value->id;
+
+                                              $invoidedata = App\Models\Quote::where('id','=',$value->id)
+                                              ->update([
+                                                  "invoiceid"=>"$invoiceids"
+                                              ]);
+                                            }
+                                            elseif($value->invoiced=="0" && ($value->payment_mode=="" || $value->payment_status=="")) {
+                                              $pstatus = "Pending";
+                                            }
+                                        @endphp
+
+                                        <tr class="" target="{{$i}}" data-id="{{$value->id}}">
+                                            <td>{{$ids}}</td>
+                                            <td><a class="btn add-btn-yellow w-100 viewinvoice" data-id="{{$value->id}}"
+                                                   data-duedate="{{$value->duedate}}"
+                                                   data-invoicenote="{{$value->invoicenote}}"
+                                                   data-pid="{{$value->personnelid}}" data-bs-toggle="modal"
+                                                   data-bs-target="#view-invoice">#{{$value->invoiceid}}</a></td>
+                                            <td>{{$value->date}}</td>
+                                            @php
+                                                if($value->duedate!=null || $value->duedate!='') {
+                                                  $duedate = $value->duedate;
+                                                } else {
+                                                  $duedate = '';
+                                                }
+                                            @endphp
+                                            <td>{{$duedate}}</td>
+                                            <td>{{$value->customername}}</td>
+                                            <td>{{$value->address}}</td>
+                                            <td>{{$value->personnelname}}</td>
+                                            <td>{{$value->price}}</td>
+                                            <td>{{$pstatus}}</td>
+                                        </tr>
+                                        @php
+                                            $i++;
+                                        @endphp
+                                    @endforeach
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </form>
+    </div>
+    </div>
+
+    <div class="modal fade" id="edit-address" tabindex="-1" aria-labelledby="add-personnelModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content customer-modal-box">
+                <div class="modal-body">
+                    <form method="post" action="{{ route('company.sendbillinginvoice') }}"
+                          enctype="multipart/form-data">
+                        @csrf
+                        <div id="viewinvoicemodaldata"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="send-emailinvoice" tabindex="-1" aria-labelledby="add-personnelModalLabel"
+         aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content customer-modal-box">
+                <div class="modal-body">
+                    <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="invoicetype" id="invoicetype" value="sendinvoice">
+                        <div id="viewinvoicemodaldatainvoiced"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Due invoice modal -->
+    <div class="modal fade" id="view-invoice" tabindex="-1" aria-labelledby="add-personnelModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content customer-modal-box">
+                <div class="modal-body">
+                    <form method="post" action="{{ route('company.viewinvoice') }}" enctype="multipart/form-data"
+                          target="_blank">
+                        @csrf
+                        <div id="viewdueinvoicemodaldata"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="edit-tickets" tabindex="-1" aria-labelledby="add-personnelModalLabel" aria-hidden="true"
+         data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content customer-modal-box">
+                <div class="modal-body">
+                    <form method="post" action="{{ route('company.ticketupdate') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div id="viewmodaldata1"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
 @section('script')
-<script type="text/javascript">
+    <script type="text/javascript">
 
-  $(document).ready(function() {
-    $('#example').DataTable({
-      "order": [[ 0, "desc" ]]
-    });
-   // $("#example tbody > tr:first-child").addClass('selectedrow');
-  });
+        $(document).ready(function () {
+            $('#example').DataTable({
+                "order": [[0, "desc"]],
+                "columnDefs": [{
+                    render: function (data, type, row) {
+                        console.log(data);
+                        if(data != null && data != '' && data != undefined){
+                            return moment(data).format('D MMM YYYY');
+                        }else {
+                            return data;
+                        }
+                    },
+                    type: 'date',
+                    "targets": [2, 3]
+                }]
+            });
+            // $("#example tbody > tr:first-child").addClass('selectedrow');
+        });
 
-  $.ajaxSetup({
-      headers: {
-         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-   });
-  jQuery(function() {
-    $(document).on('click','.showSingle',function(e) {
-        var targetid = $(this).attr('target');
-        var serviceid = $(this).attr('data-id');
-        $.ajax({
-            url:"{{url('company/billing/leftbarbillingdata')}}",
-            data: {
-              targetid: targetid,
-              serviceid: serviceid
-            },
-            method: 'post',
-            dataType: 'json',
-            refresh: true,
-            success:function(data) {
-              $('#viewleftbarbillingdata').html(data.html);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+        jQuery(function () {
+            $(document).on('click', '.showSingle', function (e) {
+                var targetid = $(this).attr('target');
+                var serviceid = $(this).attr('data-id');
+                $.ajax({
+                    url: "{{url('company/billing/leftbarbillingdata')}}",
+                    data: {
+                        targetid: targetid,
+                        serviceid: serviceid
+                    },
+                    method: 'post',
+                    dataType: 'json',
+                    refresh: true,
+                    success: function (data) {
+                        $('#viewleftbarbillingdata').html(data.html);
+                    }
+                })
+            });
+
+            // $.ajax({
+            //         url:"{{url('company/billing/leftbarbillingdata')}}",
+            //         data: {
+            //           targetid: 0,
+            //           serviceid: 0
+            //         },
+            //         method: 'post',
+            //         dataType: 'json',
+            //         refresh: true,
+            //         success:function(data) {
+            //           $('#viewleftbarbillingdata').html(data.html);
+            //         }
+            //     })
+        });
+
+        // $('table tr').each(function(a,b) {
+        //   $(b).click(function() {
+        //        $(this).addClass('selectedrow').siblings().removeClass('selectedrow');
+        //   });
+        // });
+        $('#selector').delay(2000).fadeOut('slow');
+
+        $(document).ready(function () {
+            $("#btnSubmit").click(function (event) {
+                //stop submit the form, we will post it manually.
+                event.preventDefault();
+                // Get form
+                var form = $('#my-form')[0];
+                // FormData object
+                var data = new FormData(form);
+                // If you want to add an extra field for the FormData
+                data.append("page", "companybilling");
+                // disabled the submit button
+                $("#btnSubmit").prop("disabled", true);
+                $.ajax({
+                    url: '{{route('company.savefieldbilling')}}',
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    timeout: 800000,
+                    method: 'post',
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#output").text(data);
+                        $("#btnSubmit").prop("disabled", false);
+                        location.reload();
+                    },
+                    error: function (e) {
+                        $("#output").text(e.responseText);
+                        $("#btnSubmit").prop("disabled", false);
+                    }
+                });
+            });
+        });
+
+        $(document).on('click', '.emailinvoice', function (e) {
+            var id = $(this).data('id');
+            var email = $(this).data('email');
+            $.ajax({
+                url: "{{url('company/billing/leftbarinvoice')}}",
+                data: {
+                    id: id,
+                    email: email
+                },
+                method: 'post',
+                dataType: 'json',
+                refresh: true,
+                success: function (data) {
+                    $('#viewinvoicemodaldata').html(data.html);
+
+                }
+            });
         })
-    });
 
-    // $.ajax({
-    //         url:"{{url('company/billing/leftbarbillingdata')}}",
-    //         data: {
-    //           targetid: 0,
-    //           serviceid: 0
-    //         },
-    //         method: 'post',
-    //         dataType: 'json',
-    //         refresh: true,
-    //         success:function(data) {
-    //           $('#viewleftbarbillingdata').html(data.html);
-    //         }
-    //     })
-  });
-
-  // $('table tr').each(function(a,b) {
-  //   $(b).click(function() {
-  //        $(this).addClass('selectedrow').siblings().removeClass('selectedrow');
-  //   });
-  // });
-  $('#selector').delay(2000).fadeOut('slow');
-
-    $(document).ready(function () {
-      $("#btnSubmit").click(function (event) {
-        //stop submit the form, we will post it manually.
-        event.preventDefault();
-        // Get form
-        var form = $('#my-form')[0];
-        // FormData object
-        var data = new FormData(form);
-        // If you want to add an extra field for the FormData
-        data.append("page", "companybilling");
-        // disabled the submit button
-        $("#btnSubmit").prop("disabled", true);
-        $.ajax({
-          url:'{{route('company.savefieldbilling')}}',
-          data: data,
-          processData: false,
-          contentType: false,
-          cache: false,
-          timeout: 800000,
-          method: 'post',
-          dataType: 'json',
-          success: function (data) {
-              $("#output").text(data);
-              $("#btnSubmit").prop("disabled", false);
-              location.reload();
-          },
-          error: function (e) {
-              $("#output").text(e.responseText);
-              $("#btnSubmit").prop("disabled", false);
-          }
-        });
-      });
-    });
-
-  $(document).on('click','.emailinvoice',function(e) {
-   var id = $(this).data('id');
-   var email = $(this).data('email');
-   $.ajax({
-      url:"{{url('company/billing/leftbarinvoice')}}",
-      data: {
-        id: id,
-        email :email
-      },
-      method: 'post',
-      dataType: 'json',
-      refresh: true,
-      success:function(data) {
-        $('#viewinvoicemodaldata').html(data.html);
-
-      }
-    });
-  })
-
-  $(document).on('click','.service_list_dot',function(e) {
-   var id = $(this).data('id');
-   var name = "Service Name";
-   $.ajax({
-      url:'{{route('company.viewservicepopup')}}',
-      data: {
-        'id':id,
-        'name':name
-      },
-      method: 'post',
-      dataType: 'json',
-      refresh: true,
-      success:function(data) {
-        $('#viewservicelistdata').html(data.html);
-      }
-  })
- });
-
- $(document).on('click','.viewinvoice',function(e) {
-   var id = $(this).data('id');
-   var duedate = $(this).data('duedate');
-   var invoicenote = $(this).data('invoicenote');
-   var pid = $(this).data('pid');
-
-    $.ajax({
-      url:"{{url('company/customer/leftbarviewinvoice')}}",
-      data: {
-        id: id,
-        duedate: duedate,
-        invoicenote: invoicenote,
-        pid: pid,
-      },
-      method: 'post',
-      dataType: 'json',
-      refresh: true,
-      success:function(data) {
-        $('#viewdueinvoicemodaldata').html(data.html);
-        $("#duedate").datepicker({
-          autoclose: true,
-          todayHighlight: true
+        $(document).on('click', '.service_list_dot', function (e) {
+            var id = $(this).data('id');
+            var name = "Service Name";
+            $.ajax({
+                url: '{{route('company.viewservicepopup')}}',
+                data: {
+                    'id': id,
+                    'name': name
+                },
+                method: 'post',
+                dataType: 'json',
+                refresh: true,
+                success: function (data) {
+                    $('#viewservicelistdata').html(data.html);
+                }
+            })
         });
 
-      }
-    });
-  })
+        $(document).on('click', '.viewinvoice', function (e) {
+            var id = $(this).data('id');
+            var duedate = $(this).data('duedate');
+            var invoicenote = $(this).data('invoicenote');
+            var pid = $(this).data('pid');
 
-  $(document).on('click','.sendtocustomer',function(e) {
-        $("#view-invoice").hide();
-        $("#send-emailinvoice").show();
+            $.ajax({
+                url: "{{url('company/customer/leftbarviewinvoice')}}",
+                data: {
+                    id: id,
+                    duedate: duedate,
+                    invoicenote: invoicenote,
+                    pid: pid,
+                },
+                method: 'post',
+                dataType: 'json',
+                refresh: true,
+                success: function (data) {
+                    $('#viewdueinvoicemodaldata').html(data.html);
+                    $("#duedate").datepicker({
+                        autoclose: true,
+                        todayHighlight: true
+                    });
 
-        var id = $(this).data('id');
-        var email = $(this).data('email');
-
-         $.ajax({
-          url:"{{url('company/customer/leftbarviewinvoiceemail')}}",
-          data: {
-            id: id,
-            email :email
-          },
-          method: 'post',
-          dataType: 'json',
-          refresh: true,
-          success:function(data) {
-            $('#viewinvoicemodaldatainvoiced').html(data.html);
-            $("#duedate").datepicker({
-              autoclose: true,
-              todayHighlight: true
+                }
             });
-          }
-        });
-       return false;
-    })
-  $(document).on('click','.cancelpopup',function(e) {
-   location.reload();
-  });
+        })
 
-  $(function () {
-  $("#from").datepicker({
-        autoclose: true,
-        todayHighlight: true
-  });
+        $(document).on('click', '.sendtocustomer', function (e) {
+            $("#view-invoice").hide();
+            $("#send-emailinvoice").show();
 
-   $("#to").datepicker({
-        autoclose: true,
-        todayHighlight: true
-  });
-});
+            var id = $(this).data('id');
+            var email = $(this).data('email');
 
-  $(document).on('click','#editTickets',function(e) {
-   $('.selectpicker2').selectpicker();
-   var id = $(this).data('id');
-
-   var pvalue = $(this).data('pid');
-
-   var type = $(this).data('type');
-   if(type==undefined) {
-    var type = "quote";
-   }
-   var dataString =  'id='+ id+ '&type='+ type;
-     $.ajax({
-      url:'{{route('company.billingvieweditticketmodal')}}',
-      data: dataString,
-      method: 'post',
-      dataType: 'json',
-      refresh: true,
-      success:function(data) {
-        $('#viewmodaldata1').html(data.html);
-        $('.selectpicker').selectpicker({
-          size: 3
-        });
-        $(".selectpickerp1").selectpicker();
-        var hiddenprice = $("#priceticketedit").val();
-        $("#edithiddenprice").val(hiddenprice);
-    }
-    })
-  });
-   $(document).on('click','.btn-close',function(e) {
-    $("#view-invoice").css('display','block');
-    $("#send-emailinvoice").css('display','none');
-  });
-   $(document).on('click','.btn-cancel',function(e) {
-    $("#view-invoice").css('display','block');
-    $("#send-emailinvoice").css('display','none');
-  });
-
-   $(document).on('click','#customerid2',function(e) {
-    var customerid = this.value;
-      $("#address2").html('');
-        $.ajax({
-          url:"{{url('company/quote/getaddressbyid')}}",
-          type: "POST",
-          data: {
-          customerid: customerid,
-          _token: '{{csrf_token()}}'
-          },
-          dataType : 'json',
-          success: function(result) {
-          $('#address3').html('<option value="">Select Customer Address or Begin Typing a Name</option>');
-            $.each(result.address,function(key,value) {
-              var addressid = value.id+'#id#'+value.address;
-              $("#address3").append('<option value="'+addressid+'">'+value.address+'</option>');
+            $.ajax({
+                url: "{{url('company/customer/leftbarviewinvoiceemail')}}",
+                data: {
+                    id: id,
+                    email: email
+                },
+                method: 'post',
+                dataType: 'json',
+                refresh: true,
+                success: function (data) {
+                    $('#viewinvoicemodaldatainvoiced').html(data.html);
+                    $("#duedate").datepicker({
+                        autoclose: true,
+                        todayHighlight: true
+                    });
+                }
             });
-          }
-      });
-  });
+            return false;
+        })
+        $(document).on('click', '.cancelpopup', function (e) {
+            location.reload();
+        });
 
-  $(document).on('change','#serviceid',function(e) {
-  gethours();
-  var qid = $('#quoteid').val();
-  if(qid==undefined) {
-      var qid = "";
-  }
-  var serviceid = $('#serviceid').val();
-  var productid = $('#productid').val();
+        $(function () {
+            $("#from").datepicker({
+                autoclose: true,
+                todayHighlight: true
+            });
 
-    $(document).find('#testprice').empty('');
-    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
+            $("#to").datepicker({
+                autoclose: true,
+                todayHighlight: true
+            });
+        });
 
-    $.ajax({
-          url:'{{route('company.calculatebillingprice')}}',
-          data: dataString,
-          method: 'post',
-          dataType: 'json',
-          refresh: true,
-          success:function(data) {
-            console.log(data);
-            $('#priceticketedit').val(data.totalprice);
-            $('#tickettotaledit').val(data.totalprice);
-            $('#edithiddenprice').val(data.totalprice);
-            $('#testprice').append(data.hourpricehtml);
+        $(document).on('click', '#editTickets', function (e) {
+            $('.selectpicker2').selectpicker();
+            var id = $(this).data('id');
+
+            var pvalue = $(this).data('pid');
+
+            var type = $(this).data('type');
+            if (type == undefined) {
+                var type = "quote";
+            }
+            var dataString = 'id=' + id + '&type=' + type;
+            $.ajax({
+                url: '{{route('company.billingvieweditticketmodal')}}',
+                data: dataString,
+                method: 'post',
+                dataType: 'json',
+                refresh: true,
+                success: function (data) {
+                    $('#viewmodaldata1').html(data.html);
+                    $('.selectpicker').selectpicker({
+                        size: 3
+                    });
+                    $(".selectpickerp1").selectpicker();
+                    var hiddenprice = $("#priceticketedit").val();
+                    $("#edithiddenprice").val(hiddenprice);
+                }
+            })
+        });
+        $(document).on('click', '.btn-close', function (e) {
+            $("#view-invoice").css('display', 'block');
+            $("#send-emailinvoice").css('display', 'none');
+        });
+        $(document).on('click', '.btn-cancel', function (e) {
+            $("#view-invoice").css('display', 'block');
+            $("#send-emailinvoice").css('display', 'none');
+        });
+
+        $(document).on('click', '#customerid2', function (e) {
+            var customerid = this.value;
+            $("#address2").html('');
+            $.ajax({
+                url: "{{url('company/quote/getaddressbyid')}}",
+                type: "POST",
+                data: {
+                    customerid: customerid,
+                    _token: '{{csrf_token()}}'
+                },
+                dataType: 'json',
+                success: function (result) {
+                    $('#address3').html('<option value="">Select Customer Address or Begin Typing a Name</option>');
+                    $.each(result.address, function (key, value) {
+                        var addressid = value.id + '#id#' + value.address;
+                        $("#address3").append('<option value="' + addressid + '">' + value.address + '</option>');
+                    });
+                }
+            });
+        });
+
+        $(document).on('change', '#serviceid', function (e) {
+            gethours();
+            var qid = $('#quoteid').val();
+            if (qid == undefined) {
+                var qid = "";
+            }
+            var serviceid = $('#serviceid').val();
+            var productid = $('#productid').val();
+
+            $(document).find('#testprice').empty('');
+            var dataString = 'serviceid=' + serviceid + '&productid=' + productid + '&qid=' + qid;
+
+            $.ajax({
+                url: '{{route('company.calculatebillingprice')}}',
+                data: dataString,
+                method: 'post',
+                dataType: 'json',
+                refresh: true,
+                success: function (data) {
+                    console.log(data);
+                    $('#priceticketedit').val(data.totalprice);
+                    $('#tickettotaledit').val(data.totalprice);
+                    $('#edithiddenprice').val(data.totalprice);
+                    $('#testprice').append(data.hourpricehtml);
+                }
+            })
+        })
+        $(document).on('change', '#productid', function (e) {
+            var serviceid = $('#serviceid').val();
+            var productid = $('#productid').val();
+            var qid = $('#quoteid').val();
+            if (qid == undefined) {
+                var qid = "";
+            }
+            $(document).find('#testprice1').empty('');
+            var dataString = 'serviceid=' + serviceid + '&productid=' + productid + '&qid=' + qid;
+            $.ajax({
+                url: '{{route('company.calculatebillingprice')}}',
+                data: dataString,
+                method: 'post',
+                dataType: 'json',
+                refresh: true,
+                success: function (data) {
+                    $('#priceticketedit').val(data.totalprice);
+                    $('#tickettotaledit').val(data.totalprice);
+                    $('#edithiddenprice').val(data.totalprice);
+                    $('#testprice1').append(data.hourproducthtml);
+
+                }
+            })
+        });
+
+        function gethours() {
+            var h = 0;
+            var m = 0;
+            $('select.selectpicker1').find('option:selected').each(function () {
+                h += parseInt($(this).data('hour'));
+                m += parseInt($(this).data('min'));
+
+            });
+            var realmin = m % 60;
+            var hours = Math.floor(m / 60);
+            h = h + hours;
+
+            $("#time1").val(h);
+            $("#minute1").val(realmin);
         }
-      })
-})
-$(document).on('change','#productid',function(e) {
-    var serviceid = $('#serviceid').val();
-    var productid = $('#productid').val();
-    var qid = $('#quoteid').val();
-    if(qid==undefined) {
-      var qid = "";
-    }
-    $(document).find('#testprice1').empty('');
-    var dataString =  'serviceid='+ serviceid+ '&productid='+ productid+ '&qid='+ qid;
-    $.ajax({
-          url:'{{route('company.calculatebillingprice')}}',
-          data: dataString,
-          method: 'post',
-          dataType: 'json',
-          refresh: true,
-          success:function(data) {
-            $('#priceticketedit').val(data.totalprice);
-            $('#tickettotaledit').val(data.totalprice);
-            $('#edithiddenprice').val(data.totalprice);
-            $('#testprice1').append(data.hourproducthtml);
-
-          }
-      })
-});
-
-  function gethours() {
-    var h=0;
-    var m=0;
-    $('select.selectpicker1').find('option:selected').each(function() {
-      h += parseInt($(this).data('hour'));
-      m += parseInt($(this).data('min'));
-
-    });
-    var realmin = m % 60;
-    var hours = Math.floor(m / 60);
-    h = h+hours;
-
-    $("#time1").val(h);
-    $("#minute1").val(realmin);
-  }
-</script>
+    </script>
 @endsection
 
 
