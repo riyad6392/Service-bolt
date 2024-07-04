@@ -50,9 +50,20 @@ class TicketController extends Controller
             return redirect()->back();
         }
         
-        $quoteData = Quote::select('quote.*', 'customer.email')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid', $auth_id)->where('quote.ticket_status', '0')->orderBy('quote.id', 'DESC')->get();
+        $quoteData = Quote::select('quote.*', 'customer.email')
+            ->join('customer', 'customer.id', '=', 'quote.customerid')
+            ->where('quote.userid', $auth_id)
+            ->where('quote.ticket_status', '0')
+            ->orderBy('quote.id', 'DESC')
+            ->get();
         
-        $ticketData = Quote::select('quote.*', 'customer.email')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.userid', $auth_id)->whereIn('quote.ticket_status', ['1', '2', '4'])->where('quote.parentid', '=', "")->orderByRaw('CAST(quote.id AS UNSIGNED) DESC')->get();
+        $ticketData = Quote::select('quote.*', 'customer.email')
+            ->join('customer', 'customer.id', '=', 'quote.customerid')
+            ->where('quote.userid', $auth_id)
+            ->whereIn('quote.ticket_status', ['1', '2', '4'])
+            ->where('quote.parentid', '=', "")
+            ->orderByRaw('CAST(quote.id AS UNSIGNED) DESC')
+            ->get();
         $customer = Customer::where('userid', $auth_id)->orderBy('id', 'DESC')->get();
         $services = Service::where('userid', $auth_id)->get();
         $services1 = Service::where('userid', $auth_id)->get();
