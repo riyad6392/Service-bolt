@@ -394,7 +394,7 @@ class UserController extends Controller
         
         $checklistData = DB::table('checklist')->select('id', 'checklist')->whereIn('serviceid', $serviceidarrays)->get();
         
-        $quoteData = DB::table('quote')->select('quote.id', 'quote.primaryname', 'quote.tax', 'quote.customerid', 'quote.customername', 'quote.address', 'quote.latitude', 'quote.longitude', 'quote.etc', 'quote.givendate', 'quote.giventime', 'quote.givenendtime', 'quote.givenstartdate', 'quote.givenenddate', 'quote.time', 'quote.minute', 'quote.description', 'quote.product_id', 'quote.serviceid', 'quote.imagelist', 'customer.phonenumber', 'customer.email', 'quote.ticket_status', 'quote.internal_notes', 'quote.checklist', 'quote.price', 'quote.payment_mode', 'quote.invoicenote')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id', $ticketId)->first();
+        $quoteData = DB::table('quote')->select('quote.id', 'quote.primaryname', 'quote.tax', 'quote.customerid', 'quote.customername', 'quote.address', 'quote.latitude', 'quote.longitude', 'quote.etc', 'quote.givendate', 'quote.giventime', 'quote.givenendtime', 'quote.givenstartdate', 'quote.givenenddate', 'quote.time', 'quote.minute', 'quote.description','quote.customer_notes','quote.internal_notes', 'quote.product_id', 'quote.serviceid', 'quote.imagelist', 'customer.phonenumber', 'customer.email', 'quote.ticket_status', 'quote.internal_notes', 'quote.checklist', 'quote.price', 'quote.payment_mode', 'quote.invoicenote')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id', $ticketId)->first();
         
         if ($quoteData) {
             $serviceidarray = explode(',', $quoteData->serviceid);
@@ -520,6 +520,7 @@ class UserController extends Controller
                 'servicedata' => $serearray,
                 'productdata' => $proarray,
                 'internal_notes' => $quoteData->internal_notes,
+                'customer_notes' => $quoteData->customer_notes,
                 'payment_mode' => $quoteData->payment_mode,
                 'invoicenote' => $quoteData->invoicenote,
             ]);

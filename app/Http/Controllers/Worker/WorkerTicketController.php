@@ -886,6 +886,7 @@ class WorkerTicketController extends Controller
     
     public function sendinvoice(Request $request)
     {
+
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
         
@@ -1008,6 +1009,8 @@ class WorkerTicketController extends Controller
         // $quote->tickettotal = $request->ticketprice;
         // $quote->tax = $totaltax;
         // $quote->save();
+
+
         if ($request->type == "paynow") {
             if (count($request->serviceids) > 0) {
                 DB::table('hourlyprice')->where('ticketid', $request->qid)->delete();
