@@ -147,6 +147,7 @@ class TicketController extends Controller
     public function quotecreate(Request $request)
     {
 
+
         $serviceid = implode(',', $request->servicename);
         $productid = "";
         if (isset($request->productname)) {
@@ -664,6 +665,7 @@ class TicketController extends Controller
     
     public function createquote(Request $request)
     {
+
         $auth_id = auth()->user()->id;
         
         $data['userid'] = $auth_id;

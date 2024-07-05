@@ -7,6 +7,7 @@ use App\Models\Quote;
 use App\Models\Personnel;
 use App\Services\PushNotificationService;
 use App\Jobs\SendTicketPickupNotification;
+use Illuminate\Support\Facades\DB;
 
 class CheckTicketPickup extends Command
 {
@@ -23,13 +24,20 @@ class CheckTicketPickup extends Command
         info('CheckTicketPickup command started.');
 
 
-        $tickets = Quote::whereIn('ticket_status', [0,1,2,3])->get();
+        $tickets = Quote::where('ticket_status', 2)
+            ->select('personnelid', DB::raw('COUNT(*) as ticket_count'))
+            ->groupBy('personnelid')
+            ->get();
+
         foreach ($tickets as $ticket) {
-            SendTicketPickupNotification::dispatch($ticket->personnelid, $ticket->id);
-            info('Job dispatched for personnel ID: ' . $ticket->personnelid . ' for ticket ID: ' . $ticket->id);
+            $personnel = Personnel::find($ticket->personnelid);
+            if ($personnel && $personnel->device_token) {
+                SendTicketPickupNotification::dispatch($personnel->device_token, $ticket->ticket_count, $personnel->personnelname);
+               info('Notification dispatched to personnel ID: ' . $ticket->personnelid . ' with ' . $ticket->ticket_count . ' unpicked tickets.');
+            }
         }
 
-       info('CheckTicketPickup command finished.');
+        info('CheckTicketPickup command finished.');
         return 0;
     }
 }

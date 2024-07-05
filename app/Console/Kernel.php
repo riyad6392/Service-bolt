@@ -27,8 +27,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('command:ticketfrequency');
         $schedule->command('command:check-ticket-pickup')->everyMinute();
+        $schedule->command('command:ticketfrequency');
         $schedule->command('command:another-command');
 
     }
