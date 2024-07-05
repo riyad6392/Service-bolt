@@ -12,9 +12,9 @@ use App\Models\Personnel;
 use App\Models\Inventory;
 use App\Models\Address;
 use App\Models\User;
-use DB;
 use App\Models\Schedulerhours;
 use DateTime;
+use Illuminate\Support\Facades\DB;
 use Mail;
 use App\Models\Tenture;
 use App\Models\Notification;
@@ -886,285 +886,292 @@ class WorkerTicketController extends Controller
     
     public function sendinvoice(Request $request)
     {
+        try {
+            DB::beginTransaction();
 
-        $auth_id = auth()->user()->id;
-        $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
-        
-        $customerid = $request->customerid;
-        
-        $customer = Customer::where('id', $customerid)->get()->first();
-        $customer->email = $request->email;
-        $customer->save();
-        $serviceid = implode(',', $request->serviceid);
-        
-        $userdetails = User::select('taxtype', 'taxvalue', 'servicevalue', 'productvalue', 'bodytext', 'subject')->where('id', $worker->userid)->first();
-        
-        $servicedetails = Service::select('servicename', 'productid', 'price')->whereIn('id', $request->serviceid)->get();
-        $servicenames = $servicedetails[0]->servicename;
-        $sum = 0;
-        foreach ($servicedetails as $key => $value) {
-            $pid[] = $value['productid'];
-            $sname[] = $value['servicename'];
-            $txvalue = 0;
-            if ($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
-                if ($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
-                    $txvalue = $value['price'] * $userdetails->servicevalue / 100;
-                } else {
-                    $txvalue = 0;
+            $auth_id = auth()->user()->id;
+            $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
+
+            $customerid = $request->customerid;
+
+            $customer = Customer::where('id', $customerid)->get()->first();
+            $customer->email = $request->email;
+            $customer->save();
+            $serviceid = implode(',', $request->serviceid);
+
+            $userdetails = User::select('taxtype', 'taxvalue', 'servicevalue', 'productvalue', 'bodytext', 'subject')->where('id', $worker->userid)->first();
+
+            $servicedetails = Service::select('servicename', 'productid', 'price')->whereIn('id', $request->serviceid)->get();
+            $servicenames = $servicedetails[0]->servicename;
+            $sum = 0;
+            foreach ($servicedetails as $key => $value) {
+                $pid[] = $value['productid'];
+                $sname[] = $value['servicename'];
+                $txvalue = 0;
+                if ($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+                    if ($userdetails->servicevalue != null || $userdetails->taxtype == "both") {
+                        $txvalue = $value['price'] * $userdetails->servicevalue / 100;
+                    } else {
+                        $txvalue = 0;
+                    }
                 }
+                $sum += $txvalue;
             }
-            $sum += $txvalue;
-        }
-        $servicename = implode(',', $sname);
-        
-        $quote = Quote::where('id', $request->id)->get()->first();
-        
-        if ($request->productid == "") {
-            $request->productid = array();
-        }
-        if ($quote->product_id == "") {
-            $productids = array();
-        }
-        
-        $productids = explode(',', $quote->product_id);
-        
-        $removedataid = array_diff($productids, $request->productid);
-        if ($removedataid != "") {
-            foreach ($removedataid as $key => $value) {
-                $productd = Inventory::where('id', $value)->first();
-                if (!empty($productd)) {
-                    $productd->quantity = (@$productd->quantity) + 1;
-                    $productd->save();
-                }
+            $servicename = implode(',', $sname);
+
+            $quote = Quote::where('id', $request->id)->get()->first();
+
+            if ($request->productid == "") {
+                $request->productid = array();
             }
-        }
-        if ($request->productid != null) {
-            $reqpids = $request->productid;
-            $plusdataids = array_diff($reqpids, $productids);
-            if ($plusdataids != "") {
-                foreach ($plusdataids as $key => $value) {
+            if ($quote->product_id == "") {
+                $productids = array();
+            }
+
+            $productids = explode(',', $quote->product_id);
+
+            $removedataid = array_diff($productids, $request->productid);
+            if ($removedataid != "") {
+                foreach ($removedataid as $key => $value) {
                     $productd = Inventory::where('id', $value)->first();
                     if (!empty($productd)) {
-                        $productd->quantity = (@$productd->quantity) - 1;
+                        $productd->quantity = (@$productd->quantity) + 1;
                         $productd->save();
                     }
                 }
             }
-        }
-        
-        $productid = "";
-        $productname = "";
-        $sum1 = 0;
-        $txvalue1 = 0;
-        if (count($request->productid) > 0) {
-            $productid = implode(',', $request->productid);
-            
-            $pdetails = Inventory::select('productname', 'id', 'price')->whereIn('id', $request->productid)->get();
-            foreach ($pdetails as $key => $value) {
-                $pname[] = $value['productname'];
-                if ($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
-                    if ($userdetails->productvalue != null || $userdetails->taxtype == "both") {
-                        $txvalue1 = $value['price'] * $userdetails->productvalue / 100;
-                    } else {
-                        $txvalue1 = 0;
-                    }
-                }
-                $sum1 += $txvalue1;
-            }
-            $productname = implode(',', $pname);
-        } else {
-            $productid = null;
-        }
-        
-        $totaltax = $sum + $sum1;
-        $totaltax = number_format($totaltax, 2);
-        $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
-        
-        $quote = Quote::where('id', $request->id)->get()->first();
-        
-        //$pids = rtrim($productid, ',');
-        $pids = $productid;
-        
-        $company = User::where('id', $quote->userid)->get()->first();
-        if ($company->image != null) {
-            $companyimage = url('') . '/userimage/' . $company->image;
-        } else {
-            $companyimage = url('') . '/uploads/servicebolt-noimage.png';
-        }
-        $cdefaultimage = url('') . '/uploads/servicebolt-noimage.png';
-        if ($request->description) {
-            $description = $request->description;
-        } else {
-            $description = null;
-        }
-        DB::table('quote')->where('id', '=', $request->id)->orWhere('parentid', '=', $request->id)
-            ->update([
-                "description" => "$description", "serviceid" => "$serviceid", "servicename" => "$servicenames", "product_id" => "$pids", "price" => "$request->price", "tickettotal" => "$request->ticketprice", "tax" => "$totaltax", "address" => "$request->address", "invoicenote" => "$request->invoicenote"
-            ]);
-        
-        // $quote->serviceid = $serviceid;
-        // $quote->servicename = $servicedetails[0]->servicename;
-        // $quote->product_id = rtrim($productid, ',');
-        // $quote->price = $request->price;
-        // $quote->tickettotal = $request->ticketprice;
-        // $quote->tax = $totaltax;
-        // $quote->save();
-
-
-        if ($request->type == "paynow") {
-            if (count($request->serviceids) > 0) {
-                DB::table('hourlyprice')->where('ticketid', $request->qid)->delete();
-                $pricetotal = 0;
-                foreach ($request->serviceids as $key => $value) {
-                    $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
-                    $hrpicehour = 0;
-                    if ($request->hours[$key] != '0' || $request->hours[$key] != '00') {
-                        $hrpicehour = $servicedetails->price * $request->hours[$key];
-                    }
-                    $hrpiceminute = 0;
-                    if ($request->minutes[$key] != '0' || $request->minutes[$key] != '00') {
-                        $perminuteprice = $servicedetails->price / 60;
-                        $hrpiceminute = $perminuteprice * $request->minutes[$key];
-                    }
-                    
-                    $data['ticketid'] = $request->qid;
-                    $data['serviceid'] = $value;
-                    $data['hour'] = $request->hours[$key];
-                    $data['minute'] = $request->minutes[$key];
-                    $data['price'] = number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
-                    $data['servicedescription'] = $request->servicedescription[$key];
-                    Hourlyprice::create($data);
-                    $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
-                }
-                $productprice = 0;
-                if ($request->productprice != null || $request->productprice != '0') {
-                    $productprice = $request->productprice;
-                }
-                $finalsumprice = $pricetotal + $productprice;
-            }
-            
             if ($request->productid != null) {
-                DB::table('productdescription')->where('ticketid', $request->qid)->delete();
-                foreach ($request->productid as $key => $value) {
-                    $data['ticketid'] = $request->qid;
-                    $data['productid'] = $value;
-                    $data['productdescription'] = $request->productdescription[$key];
-                    ProductDescription::create($data);
-                }
-            }
-            $paynowurl = url('personnel/myticket/paynow/') . '/' . $request->id;
-            return redirect($paynowurl);
-        }
-        if ($request->type == "save") {
-            if (count($request->serviceids) > 0) {
-                DB::table('hourlyprice')->where('ticketid', $request->qid)->delete();
-                $pricetotal = 0;
-                foreach ($request->serviceids as $key => $value) {
-                    $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
-                    $hrpicehour = 0;
-                    if ($request->hours[$key] != '0' || $request->hours[$key] != '00') {
-                        $hrpicehour = $servicedetails->price * $request->hours[$key];
-                    }
-                    $hrpiceminute = 0;
-                    if ($request->minutes[$key] != '0' || $request->minutes[$key] != '00') {
-                        $perminuteprice = $servicedetails->price / 60;
-                        $hrpiceminute = $perminuteprice * $request->minutes[$key];
-                    }
-                    
-                    $data['ticketid'] = $request->qid;
-                    $data['serviceid'] = $value;
-                    $data['hour'] = $request->hours[$key];
-                    $data['minute'] = $request->minutes[$key];
-                    $data['servicedescription'] = $request->servicedescription[$key];
-                    $data['price'] = number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
-                    
-                    Hourlyprice::create($data);
-                    $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
-                }
-                $productprice = 0;
-                if ($request->productprice != null || $request->productprice != '0') {
-                    $productprice = $request->productprice;
-                }
-                $finalsumprice = $pricetotal + $productprice;
-                
-                if ($request->productid != null) {
-                    DB::table('productdescription')->where('ticketid', $request->qid)->delete();
-                    foreach ($request->productid as $key => $value) {
-                        $data['ticketid'] = $request->qid;
-                        $data['productid'] = $value;
-                        $data['productdescription'] = $request->productdescription[$key];
-                        ProductDescription::create($data);
+                $reqpids = $request->productid;
+                $plusdataids = array_diff($reqpids, $productids);
+                if ($plusdataids != "") {
+                    foreach ($plusdataids as $key => $value) {
+                        $productd = Inventory::where('id', $value)->first();
+                        if (!empty($productd)) {
+                            $productd->quantity = (@$productd->quantity) - 1;
+                            $productd->save();
+                        }
                     }
                 }
             }
-            $request->session()->flash('success', 'Invoice has been Save successfully');
-            return redirect()->back();
-        }
-        if ($request->type == "sendinvoice") {
-            if (count($request->serviceids) > 0) {
-                DB::table('hourlyprice')->where('ticketid', $request->qid)->delete();
-                $pricetotal = 0;
-                foreach ($request->serviceids as $key => $value) {
-                    $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
-                    $hrpicehour = 0;
-                    if ($request->hours[$key] != '0' || $request->hours[$key] != '00') {
-                        $hrpicehour = $servicedetails->price * $request->hours[$key];
+
+            $productid = "";
+            $productname = "";
+            $sum1 = 0;
+            $txvalue1 = 0;
+            if (count($request->productid) > 0) {
+                $productid = implode(',', $request->productid);
+
+                $pdetails = Inventory::select('productname', 'id', 'price')->whereIn('id', $request->productid)->get();
+                foreach ($pdetails as $key => $value) {
+                    $pname[] = $value['productname'];
+                    if ($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
+                        if ($userdetails->productvalue != null || $userdetails->taxtype == "both") {
+                            $txvalue1 = $value['price'] * $userdetails->productvalue / 100;
+                        } else {
+                            $txvalue1 = 0;
+                        }
                     }
-                    $hrpiceminute = 0;
-                    if ($request->minutes[$key] != '0' || $request->minutes[$key] != '00') {
-                        $perminuteprice = $servicedetails->price / 60;
-                        $hrpiceminute = $perminuteprice * $request->minutes[$key];
-                    }
-                    
-                    $data['ticketid'] = $request->qid;
-                    $data['serviceid'] = $value;
-                    $data['hour'] = $request->hours[$key];
-                    $data['minute'] = $request->minutes[$key];
-                    $data['price'] = number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
-                    $data['servicedescription'] = $request->servicedescription[$key];
-                    Hourlyprice::create($data);
-                    $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
+                    $sum1 += $txvalue1;
                 }
-                $productprice = 0;
-                if ($request->productprice != null || $request->productprice != '0') {
-                    $productprice = $request->productprice;
-                }
-                $finalsumprice = $pricetotal + $productprice;
-                if ($request->productid != null) {
-                    DB::table('productdescription')->where('ticketid', $request->qid)->delete();
-                    foreach ($request->productid as $key => $value) {
-                        $data['ticketid'] = $request->qid;
-                        $data['productid'] = $value;
-                        $data['productdescription'] = $request->productdescription[$key];
-                        ProductDescription::create($data);
-                    }
-                }
+                $productname = implode(',', $pname);
+            } else {
+                $productid = null;
+            }
+
+            $totaltax = $sum + $sum1;
+            $totaltax = number_format($totaltax, 2);
+            $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
+
+            $quote = Quote::where('id', $request->id)->get()->first();
+
+            //$pids = rtrim($productid, ',');
+            $pids = $productid;
+
+            $company = User::where('id', $quote->userid)->get()->first();
+            if ($company->image != null) {
+                $companyimage = url('') . '/userimage/' . $company->image;
+            } else {
+                $companyimage = url('') . '/uploads/servicebolt-noimage.png';
+            }
+            $cdefaultimage = url('') . '/uploads/servicebolt-noimage.png';
+            if ($request->description) {
+                $description = $request->description;
+            } else {
+                $description = null;
             }
             DB::table('quote')->where('id', '=', $request->id)->orWhere('parentid', '=', $request->id)
                 ->update([
-                    "invoiced" => 1
+                    "description" => "$description", "serviceid" => "$serviceid", "servicename" => "$servicenames", "product_id" => "$pids", "price" => "$request->price", "tickettotal" => "$request->ticketprice", "tax" => "$totaltax", "address" => "$request->address", "invoicenote" => "$request->invoicenote"
                 ]);
-            
-            if ($userdetails->subject != null) {
-                $subject = $userdetails->subject;
-            } else {
-                $subject = 'Invoice details!';
+
+            // $quote->serviceid = $serviceid;
+            // $quote->servicename = $servicedetails[0]->servicename;
+            // $quote->product_id = rtrim($productid, ',');
+            // $quote->price = $request->price;
+            // $quote->tickettotal = $request->ticketprice;
+            // $quote->tax = $totaltax;
+            // $quote->save();
+
+
+            if ($request->type == "paynow") {
+                if (count($request->serviceids) > 0) {
+                    DB::table('hourlyprice')->where('ticketid', $request->qid)->delete();
+                    $pricetotal = 0;
+                    foreach ($request->serviceids as $key => $value) {
+                        $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
+                        $hrpicehour = 0;
+                        if ($request->hours[$key] != '0' || $request->hours[$key] != '00') {
+                            $hrpicehour = $servicedetails->price * $request->hours[$key];
+                        }
+                        $hrpiceminute = 0;
+                        if ($request->minutes[$key] != '0' || $request->minutes[$key] != '00') {
+                            $perminuteprice = $servicedetails->price / 60;
+                            $hrpiceminute = $perminuteprice * $request->minutes[$key];
+                        }
+
+                        $data['ticketid'] = $request->qid;
+                        $data['serviceid'] = $value;
+                        $data['hour'] = $request->hours[$key];
+                        $data['minute'] = $request->minutes[$key];
+                        $data['price'] = number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
+                        $data['servicedescription'] = $request->servicedescription[$key] ?? '';
+                        Hourlyprice::create($data);
+                        $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
+                    }
+                    $productprice = 0;
+                    if ($request->productprice != null || $request->productprice != '0') {
+                        $productprice = $request->productprice;
+                    }
+                    $finalsumprice = $pricetotal + $productprice;
+                }
+
+                if ($request->productid != null) {
+                    DB::table('productdescription')->where('ticketid', $request->qid)->delete();
+                    foreach ($request->productid as $key => $value) {
+                        $data['ticketid'] = $request->qid;
+                        $data['productid'] = $value;
+                        $data['productdescription'] = $request->productdescription[$key];
+                        ProductDescription::create($data);
+                    }
+                }
+                $paynowurl = url('personnel/myticket/paynow/') . '/' . $request->id;
+                return redirect($paynowurl);
             }
-            
-            $app_name = 'ServiceBolt';
-            $app_email = env('MAIL_FROM_ADDRESS', 'ServiceBolt');
-            $cemail = $request->email;
-            //$user_exist = Customer::where('email', $email)->first();
-            
-            $pdf = PDF::loadView('mail_templates.sendinvoice', ['invoiceId' => $quote->invoiceid, 'address' => $quote->address, 'billingaddress' => $customer->billingaddress, 'ticketid' => $quote->id, 'customername' => $customer->customername, 'servicename' => $servicename, 'productname' => $productname, 'price' => $request->price, 'time' => $quote->giventime, 'date' => $quote->givenstartdate, 'description' => $quote->invoicenote, 'companyname' => $customer->companyname, 'phone' => $customer->phonenumber, 'email' => $customer->email, 'cimage' => $companyimage, 'cdimage' => $cdefaultimage, 'serviceid' => $serviceid, 'productid' => $productid, 'duedate' => $quote->duedate, 'quoteuserid' => $quote->userid]);
-            
-            Mail::send('mail_templates.sendinvoice1', ['body' => $userdetails->bodytext, 'type' => "sendinvoice"], function ($message) use ($cemail, $app_name, $app_email, $pdf, $subject) {
-                $message->to($cemail);
-                $message->subject($subject);
-                $message->attachData($pdf->output(), "invoice.pdf");
-            });
-            $request->session()->flash('success', 'Invoice has been sent successfully');
-            return redirect()->back();
+            if ($request->type == "save") {
+                if (count($request->serviceids) > 0) {
+                    DB::table('hourlyprice')->where('ticketid', $request->qid)->delete();
+                    $pricetotal = 0;
+                    foreach ($request->serviceids as $key => $value) {
+                        $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
+                        $hrpicehour = 0;
+                        if ($request->hours[$key] != '0' || $request->hours[$key] != '00') {
+                            $hrpicehour = $servicedetails->price * $request->hours[$key];
+                        }
+                        $hrpiceminute = 0;
+                        if ($request->minutes[$key] != '0' || $request->minutes[$key] != '00') {
+                            $perminuteprice = $servicedetails->price / 60;
+                            $hrpiceminute = $perminuteprice * $request->minutes[$key];
+                        }
+
+                        $data['ticketid'] = $request->qid;
+                        $data['serviceid'] = $value;
+                        $data['hour'] = $request->hours[$key];
+                        $data['minute'] = $request->minutes[$key];
+                        $data['servicedescription'] = $request->servicedescription[$key] ?? '';
+                        $data['price'] = number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
+
+                        Hourlyprice::create($data);
+                        $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
+                    }
+                    $productprice = 0;
+                    if ($request->productprice != null || $request->productprice != '0') {
+                        $productprice = $request->productprice;
+                    }
+                    $finalsumprice = $pricetotal + $productprice;
+
+                    if ($request->productid != null) {
+                        DB::table('productdescription')->where('ticketid', $request->qid)->delete();
+                        foreach ($request->productid as $key => $value) {
+                            $data['ticketid'] = $request->qid;
+                            $data['productid'] = $value;
+                            $data['productdescription'] = $request->productdescription[$key];
+                            ProductDescription::create($data);
+                        }
+                    }
+                }
+                $request->session()->flash('success', 'Invoice has been Save successfully');
+                return redirect()->back();
+            }
+            if ($request->type == "sendinvoice") {
+                if (count($request->serviceids) > 0) {
+                    DB::table('hourlyprice')->where('ticketid', $request->qid)->delete();
+                    $pricetotal = 0;
+                    foreach ($request->serviceids as $key => $value) {
+                        $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
+                        $hrpicehour = 0;
+                        if ($request->hours[$key] != '0' || $request->hours[$key] != '00') {
+                            $hrpicehour = $servicedetails->price * $request->hours[$key];
+                        }
+                        $hrpiceminute = 0;
+                        if ($request->minutes[$key] != '0' || $request->minutes[$key] != '00') {
+                            $perminuteprice = $servicedetails->price / 60;
+                            $hrpiceminute = $perminuteprice * $request->minutes[$key];
+                        }
+
+                        $data['ticketid'] = $request->qid;
+                        $data['serviceid'] = $value;
+                        $data['hour'] = $request->hours[$key];
+                        $data['minute'] = $request->minutes[$key];
+                        $data['price'] = number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
+                        $data['servicedescription'] = $request->servicedescription[$key];
+                        Hourlyprice::create($data);
+                        $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
+                    }
+                    $productprice = 0;
+                    if ($request->productprice != null || $request->productprice != '0') {
+                        $productprice = $request->productprice;
+                    }
+                    $finalsumprice = $pricetotal + $productprice;
+                    if ($request->productid != null) {
+                        DB::table('productdescription')->where('ticketid', $request->qid)->delete();
+                        foreach ($request->productid as $key => $value) {
+                            $data['ticketid'] = $request->qid;
+                            $data['productid'] = $value;
+                            $data['productdescription'] = $request->productdescription[$key];
+                            ProductDescription::create($data);
+                        }
+                    }
+                }
+                DB::table('quote')->where('id', '=', $request->id)->orWhere('parentid', '=', $request->id)
+                    ->update([
+                        "invoiced" => 1
+                    ]);
+
+                if ($userdetails->subject != null) {
+                    $subject = $userdetails->subject;
+                } else {
+                    $subject = 'Invoice details!';
+                }
+
+                $app_name = 'ServiceBolt';
+                $app_email = env('MAIL_FROM_ADDRESS', 'ServiceBolt');
+                $cemail = $request->email;
+                //$user_exist = Customer::where('email', $email)->first();
+
+                $pdf = PDF::loadView('mail_templates.sendinvoice', ['invoiceId' => $quote->invoiceid, 'address' => $quote->address, 'billingaddress' => $customer->billingaddress, 'ticketid' => $quote->id, 'customername' => $customer->customername, 'servicename' => $servicename, 'productname' => $productname, 'price' => $request->price, 'time' => $quote->giventime, 'date' => $quote->givenstartdate, 'description' => $quote->invoicenote, 'companyname' => $customer->companyname, 'phone' => $customer->phonenumber, 'email' => $customer->email, 'cimage' => $companyimage, 'cdimage' => $cdefaultimage, 'serviceid' => $serviceid, 'productid' => $productid, 'duedate' => $quote->duedate, 'quoteuserid' => $quote->userid]);
+
+                Mail::send('mail_templates.sendinvoice1', ['body' => $userdetails->bodytext, 'type' => "sendinvoice"], function ($message) use ($cemail, $app_name, $app_email, $pdf, $subject) {
+                    $message->to($cemail);
+                    $message->subject($subject);
+                    $message->attachData($pdf->output(), "invoice.pdf");
+                });
+                $request->session()->flash('success', 'Invoice has been sent successfully');
+                DB::commit();
+                return redirect()->back();
+            }
+        }catch(\Exception $e) {
+            DB::rollback();
+            echo 'Message: ' .$e->getMessage();
         }
     }
     
