@@ -867,6 +867,7 @@ class WorkerTicketController extends Controller
     
     public function ticketupdate(Request $request)
     {
+
         $quoteid = $request->quoteid;
         
         $quote = Quote::where('id', $quoteid)->get()->first();
@@ -882,6 +883,7 @@ class WorkerTicketController extends Controller
         
         $request->session()->flash('success', 'Updated successfully');
         return redirect()->back();
+
     }
     
     public function sendinvoice(Request $request)
