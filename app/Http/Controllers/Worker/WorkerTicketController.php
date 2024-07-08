@@ -637,6 +637,7 @@ class WorkerTicketController extends Controller
     
     public function vieweditinvoicemodal(Request $request)
     {
+
         $json = array();
         $auth_id = auth()->user()->id;
         $personnelid = auth()->user()->workerid;
@@ -1063,6 +1064,7 @@ class WorkerTicketController extends Controller
                 if (count($request->serviceids) > 0) {
                     DB::table('hourlyprice')->where('ticketid', $request->qid)->delete();
                     $pricetotal = 0;
+
                     foreach ($request->serviceids as $key => $value) {
                         $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
                         $hrpicehour = 0;
@@ -1082,7 +1084,20 @@ class WorkerTicketController extends Controller
                         $data['servicedescription'] = $request->servicedescription[$key] ?? '';
                         $data['price'] = number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
 
-                        Hourlyprice::create($data);
+//                        dd($data);
+
+//                        Hourlyprice::create($data);
+
+                        $hourlyprice = Hourlyprice::where('ticketid', $request->qid)
+                            ->where('serviceid', $value)
+                            ->first();
+
+                        if ($hourlyprice) {
+                            $hourlyprice->update($data);
+                        } else {
+                            Hourlyprice::create($data);
+                        }
+
                         $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
                     }
                     $productprice = 0;

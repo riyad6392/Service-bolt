@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Hourlyprice extends Model
 {
     protected $table = 'hourlyprice';
-    protected $fillable = ['id','ticketid','serviceid','hour','minute','price','servicedescription','productdescription'];
+    protected $fillable = ['ticketid','serviceid','hour','minute','price','servicedescription','productdescription'];
 }
