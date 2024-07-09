@@ -35,7 +35,7 @@ class WorkerTicketController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Show the application dashboard.
      *
@@ -44,61 +44,61 @@ class WorkerTicketController extends Controller
     public function index(Request $request)
     {
         $auth_id = auth()->user()->id;
-        
+
         if (auth()->user()->role == 'worker') {
             $auth_id = auth()->user()->id;
         } else {
             return redirect()->back();
         }
-        
+
         $worker = DB::table('users')->select('workerid')->where('id', $auth_id)->first();
-        
+
         $ticketdata = DB::table('quote')->where('personnelid', $worker->workerid)->whereIn('ticket_status', array('2', '4'))->orderBy('id', 'desc')->get();
-        
+
         $workerh = DB::table('workerhour')->where('workerid', $worker->workerid)->whereDate('created_at', DB::raw('CURDATE()'))->orderBy('id', 'desc')->first();
-        
+
         return view('personnel.myticket', compact('auth_id', 'ticketdata', 'workerh'));
     }
-    
+
     public function myquote(Request $request)
     {
         $auth_id = auth()->user()->id;
-        
+
         if (auth()->user()->role == 'worker') {
             $auth_id = auth()->user()->id;
         } else {
             return redirect()->back();
         }
-        
+
         $worker = DB::table('users')->select('workerid')->where('id', $auth_id)->first();
-        
+
         $ticketdata = DB::table('quote')->where('personnelid', $worker->workerid)->whereIn('ticket_status', array('0'))->orderBy('id', 'desc')->get();
-        
+
         return view('personnel.myquote', compact('auth_id', 'ticketdata'));
     }
-    
+
     public function completedticket(Request $request)
     {
         $auth_id = auth()->user()->id;
-        
+
         if (auth()->user()->role == 'worker') {
             $auth_id = auth()->user()->id;
         } else {
             return redirect()->back();
         }
-        
+
         $worker = DB::table('users')->select('workerid')->where('id', $auth_id)->first();
-        
+
         $ticketdata = DB::table('quote')->where('personnelid', $worker->workerid)->whereIn('ticket_status', array('3'))->orderBy('id', 'desc')->get();
-        
+
         return view('personnel.completeticket', compact('auth_id', 'ticketdata'));
     }
-    
+
     public function viewticketmodal(Request $request)
     {
         $json = array();
         $auth_id = auth()->user()->id;
-        
+
         @$workersdata = Personnel::where('id', auth()->user()->workerid)->first();
         @$permissonarray = explode(',', $workersdata->ticketid);
         if (in_array("Unclose Ticket", $permissonarray)) {
@@ -116,24 +116,24 @@ class WorkerTicketController extends Controller
             $html .= '<button type="submit" class="btn add-btn-yellow w-100 mb-4" name="Pickup" value="Pickup">Pickup</button>';
             $html .= '<button type="submit" class="btn add-btn-yellow w-100 mb-4" name="closeout" value="closeout" style="pointer-events:none;">Close Out</button></button>';
         }
-        
+
         if ($ticketData->ticket_status == "4") {
             $html .= '<button type="submit" class="btn add-btn-yellow w-100 mb-4" name="picked" value="picked" style="pointer-events:none;">Picked</button>';
             $html .= '<button type="submit" class="btn add-btn-yellow w-100 mb-4" name="closeout" value="closeout" style="">Close Out</button></button>';
         }
-        
+
         if ($ticketData->ticket_status == "3") {
             $html .= '<button type="submit" class="btn add-btn-yellow w-100 mb-4" name="completed" value="completed" style="pointer-events:none;">Completed</button>';
-            
+
             $html .= '<button type="button" class="btn add-btn-yellow w-100 mb-4" name="unclose" value="unclose" id="unclose" style="' . $sclass . '">UnClose</button>';
         }
-        
-        
+
+
         $html .= '<a href="#" class="btn btn-personnal w-100" data-bs-dismiss="modal">Cancel</a>';
         return json_encode(['html' => $html]);
         die;
     }
-    
+
     public function viewticketmodal1(Request $request)
     {
         $json = array();
@@ -147,11 +147,11 @@ class WorkerTicketController extends Controller
         return json_encode(['html' => $html]);
         die;
     }
-    
+
     public function update(Request $request)
     {
         $personeldata = Quote::select('quote.personnelid', 'personnel.personnelname')->leftjoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id', $request->ticketid)->get()->first();
-        
+
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
         $currentDate = date('l - F d, Y');
@@ -159,7 +159,7 @@ class WorkerTicketController extends Controller
             $ticket = Quote::where('id', $request->ticketid)->first();
             $ticket->ticket_status = 4;
             $ticket->save();
-            
+
             $ticket1 = Quote::where('parentid', $request->ticketid)->get();
             if (count($ticket1) > 0) {
                 foreach ($ticket1 as $key => $value) {
@@ -173,34 +173,34 @@ class WorkerTicketController extends Controller
             $currentDateTime = date('m/d/Y H:i:s');
             $date1 = date('Y-m-d');
             $starttime = date('h:i A', strtotime($currentDateTime));
-            
+
             $data['workerid'] = $worker->workerid;
             $data['ticketid'] = $request->ticketid;
             $data['starttime'] = $starttime;
             $data['date'] = $currentDate;
             $data['date1'] = $date1;
-            
+
             Schedulerhours::create($data);
-            
+
             $app_name = 'ServiceBolt';
             $app_email = env('MAIL_FROM_ADDRESS', 'ServiceBolt');
-            
+
             $user_exist = DB::table('users')->select('email', 'firstname')->where('id', $ticket->userid)->first();
             $ticketid = '#' . $request->ticketid;
             $ticketsub = "Ticket $ticketid picked up by $personeldata->personnelname";
             $ticketheading = "The ticket below has been picked successfully.";
-            
+
             Mail::send('mail_templates.sendpickup', ['ticketId' => $ticket->id, 'address' => $ticket->address, 'customername' => $ticket->customername, 'price' => $ticket->price, 'hours' => $ticket->time, 'minutes' => $ticket->minute, 'starttime' => $ticket->giventime, 'date' => $ticket->givendate, 'name' => $user_exist->firstname, 'heading' => $ticketheading], function ($message) use ($user_exist, $app_name, $app_email, $ticketsub) {
                 $message->to($user_exist->email)
                     ->subject($ticketsub);
                 //$message->from($app_email,$app_name);
             });
-            
+
             $data1['uid'] = $worker->userid;
             $data1['pid'] = $worker->workerid;
             $data1['ticketid'] = $request->ticketid;
             $data1['message'] = $ticketsub;
-            
+
             Notification::create($data1);
             event(new MyEvent($data1));
             $request->session()->flash('success', 'Ticket Pickup successfully');
@@ -210,7 +210,7 @@ class WorkerTicketController extends Controller
             $ticket = Quote::where('id', $request->ticketid)->first();
             $ticket->ticket_status = 3;
             $ticket->save();
-            
+
             $ticket1 = Quote::where('parentid', $request->ticketid)->get();
             if (count($ticket1) > 0) {
                 foreach ($ticket1 as $key => $value) {
@@ -220,12 +220,12 @@ class WorkerTicketController extends Controller
                         ]);
                 }
             }
-            
+
             date_default_timezone_set('Asia/Kolkata');
             $currentDateTime = date('m/d/Y H:i:s');
             $date1 = date('Y-m-d');
             $endtime = date('h:i A', strtotime($currentDateTime));
-            
+
             $sdata = Schedulerhours::where('ticketid', $request->ticketid)->first();
             if ($sdata) {
                 $satrttime = $sdata->starttime;
@@ -233,32 +233,32 @@ class WorkerTicketController extends Controller
                 $datetime2 = new DateTime($endtime);
                 $interval = $datetime1->diff($datetime2);
                 $totalhours = $interval->format('%hh %im');
-                
+
                 $sdata->endtime = $endtime;
                 $sdata->totalhours = $totalhours;
                 $sdata->date1 = $date1;
                 $sdata->save();
             }
-            
+
             $app_name = 'ServiceBolt';
             $app_email = env('MAIL_FROM_ADDRESS', 'ServiceBolt');
-            
+
             $user_exist = DB::table('users')->select('email', 'firstname')->where('id', $ticket->userid)->first();
             $ticketid = '#' . $request->ticketid;
             $ticketsub = "Ticket $ticketid has been closed";
             $ticketheading = "The ticket below has been completed successfully.";
-            
+
             Mail::send('mail_templates.sendpickup', ['ticketId' => $ticket->id, 'address' => $ticket->address, 'customername' => $ticket->customername, 'price' => $ticket->price, 'hours' => $ticket->time, 'minutes' => $ticket->minute, 'starttime' => $ticket->giventime, 'date' => $ticket->givendate, 'name' => $user_exist->firstname, 'heading' => $ticketheading], function ($message) use ($user_exist, $app_name, $app_email, $ticketsub) {
                 $message->to($user_exist->email)
                     ->subject($ticketsub);
                 //$message->from($app_email,$app_name);
             });
-            
+
             $data1['uid'] = $worker->userid;
             $data1['pid'] = $worker->workerid;
             $data1['ticketid'] = $request->ticketid;
             $data1['message'] = $ticketsub;
-            
+
             Notification::create($data1);
             event(new MyEvent($data1));
             $request->session()->flash('success', 'Ticket completed successfully');
@@ -269,7 +269,7 @@ class WorkerTicketController extends Controller
             $ticket = Quote::where('id', $request->ticketid)->get()->first();
             $ticket->ticket_status = 4;
             $ticket->save();
-            
+
             $ticket1 = Quote::where('parentid', $request->ticketid)->get();
             if (count($ticket1) > 0) {
                 foreach ($ticket1 as $key => $value) {
@@ -279,28 +279,28 @@ class WorkerTicketController extends Controller
                         ]);
                 }
             }
-            
+
             $request->session()->flash('success', 'Ticket Unclose successfully');
             return redirect()->back();
         }
-        
+
         return redirect()->route('worker.myticket');
     }
-    
+
     public function update1(Request $request)
     {
         $personeldata = Quote::select('quote.personnelid', 'personnel.personnelname')->leftjoin('personnel', 'personnel.id', '=', 'quote.personnelid')->where('quote.id', $request->ticketid)->get()->first();
-        
+
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
         $currentDate = date('l - F d, Y');
         if ($request->Pickup == "Pickup") {
             $ticket = Quote::where('id', $request->ticketid)->get()->first();
             //new logic
-            
+
             $ticket->ticket_status = 4;
             $ticket->save();
-            
+
             $ticket1 = Quote::where('parentid', $request->ticketid)->get();
             //new logic
             if (count($ticket1) > 0) {
@@ -315,36 +315,36 @@ class WorkerTicketController extends Controller
             $currentDateTime = date('m/d/Y H:i:s');
             $date1 = date('Y-m-d');
             $starttime = date('h:i A', strtotime($currentDateTime));
-            
+
             $data['workerid'] = $worker->workerid;
             $data['ticketid'] = $request->ticketid;
             $data['starttime'] = $starttime;
             $data['date'] = $currentDate;
             $data['date1'] = $date1;
-            
+
             Schedulerhours::create($data);
-            
+
             $app_name = 'ServiceBolt';
             $app_email = env('MAIL_FROM_ADDRESS', 'ServiceBolt');
-            
+
             $user_exist = DB::table('users')->select('email', 'firstname')->where('id', $ticket->userid)->first();
-            
-            
+
+
             $ticketid = '#' . $request->ticketid;
             $ticketsub = "Ticket $ticketid picked up by $personeldata->personnelname";
             $ticketheading = "The ticket below has been picked successfully.";
-            
+
             Mail::send('mail_templates.sendpickup', ['ticketId' => $ticket->id, 'address' => $ticket->address, 'customername' => $ticket->customername, 'price' => $ticket->price, 'hours' => $ticket->time, 'minutes' => $ticket->minute, 'starttime' => $ticket->giventime, 'date' => $ticket->givendate, 'name' => $user_exist->firstname, 'heading' => $ticketheading], function ($message) use ($user_exist, $app_name, $app_email, $ticketsub) {
                 $message->to($user_exist->email)
                     ->subject($ticketsub);
                 //$message->from($app_email,$app_name);
             });
-            
+
             $data1['uid'] = $worker->userid;
             $data1['pid'] = $worker->workerid;
             $data1['ticketid'] = $request->ticketid;
             $data1['message'] = $ticketsub;
-            
+
             Notification::create($data1);
             event(new MyEvent($data1));
             $request->session()->flash('success', 'Ticket Pickup successfully');
@@ -352,12 +352,12 @@ class WorkerTicketController extends Controller
         }
         if ($request->closeout == "closeout") {
             $ticket = Quote::where('id', $request->ticketid)->get()->first();
-            
+
             $ticket->ticket_status = 3;
             $ticket->ticketdate = date('Y-m-d');
             $ticket->save();
-            
-            
+
+
             $ticket1 = Quote::where('parentid', $request->ticketid)->get();
             if ($request->pointckbox) {
                 $cheklist = implode(",", $request->pointckbox);
@@ -374,13 +374,13 @@ class WorkerTicketController extends Controller
                         ]);
                 }
             }
-            
-            
+
+
             date_default_timezone_set('Asia/Kolkata');
             $currentDateTime = date('m/d/Y H:i:s');
             $date1 = date('Y-m-d');
             $endtime = date('h:i A', strtotime($currentDateTime));
-            
+
             $sdata = Schedulerhours::where('ticketid', $request->ticketid)->get()->first();
             if ($sdata) {
                 $satrttime = $sdata->starttime;
@@ -388,35 +388,35 @@ class WorkerTicketController extends Controller
                 $datetime2 = new DateTime($endtime);
                 $interval = $datetime1->diff($datetime2);
                 $totalhours = $interval->format('%hh %im');
-                
+
                 $sdata->endtime = $endtime;
                 $sdata->totalhours = $totalhours;
                 $sdata->date1 = $date1;
                 $sdata->save();
             }
-            
+
             $app_name = 'ServiceBolt';
             $app_email = env('MAIL_FROM_ADDRESS', 'ServiceBolt');
-            
+
             $user_exist = DB::table('users')->select('email', 'firstname')->where('id', $ticket->userid)->first();
             $ticketid = '#' . $request->ticketid;
             $ticketsub = "Ticket $ticketid has been closed";
             $ticketheading = "The ticket below has been completed successfully.";
-            
+
             Mail::send('mail_templates.sendpickup', ['ticketId' => $ticket->id, 'address' => $ticket->address, 'customername' => $ticket->customername, 'price' => $ticket->price, 'hours' => $ticket->time, 'minutes' => $ticket->minute, 'starttime' => $ticket->giventime, 'date' => $ticket->givendate, 'name' => $user_exist->firstname, 'heading' => $ticketheading], function ($message) use ($user_exist, $app_name, $app_email, $ticketsub) {
                 $message->to($user_exist->email)
                     ->subject($ticketsub);
                 //$message->from($app_email,$app_name);
             });
-            
+
             $data1['uid'] = $worker->userid;
             $data1['pid'] = $worker->workerid;
             $data1['ticketid'] = $request->ticketid;
             $data1['message'] = $ticketsub;
-            
+
             Notification::create($data1);
             event(new MyEvent($data1));
-            
+
             $request->session()->flash('success', 'Ticket completed successfully');
             return redirect()->back();
         }
@@ -425,16 +425,16 @@ class WorkerTicketController extends Controller
             $ticket = Quote::where('id', $request->ticketid)->get()->first();
             $ticket->ticket_status = 4;
             $ticket->save();
-            
+
             $ticketsub = "Ticket Re-opened by ($personeldata->personnelname)";
             $data1['uid'] = $worker->userid;
             $data1['pid'] = $worker->workerid;
             $data1['ticketid'] = $request->ticketid;
             $data1['message'] = $ticketsub;
-            
+
             Notification::create($data1);
             event(new MyEvent($data1));
-            
+
             $ticket1 = Quote::where('parentid', $request->ticketid)->get();
             if (count($ticket1) > 0) {
                 foreach ($ticket1 as $key => $value) {
@@ -448,7 +448,7 @@ class WorkerTicketController extends Controller
             return redirect()->back();
         }
         if ($request->closeout == null) {
-            
+
             $ticket = Quote::where('id', $request->ticketid)->first();
             if ($request->pointckbox) {
                 $cheklist = implode(",", $request->pointckbox);
@@ -456,7 +456,7 @@ class WorkerTicketController extends Controller
             } else {
                 $checklist = null;
             }
-            
+
             if ($request->cnotes) {
                 $customernotes = $request->cnotes;
             }
@@ -480,28 +480,28 @@ class WorkerTicketController extends Controller
                 if (!empty($request->oldimage)) {
                     $oldnewarray = $request->oldimage;
                 }
-                
+
                 // dd($oldnewarray);
                 $result = array_diff($olddataarray, $oldnewarray);
-                
+
                 if (count($result) > 0) {
                     foreach ($result as $image) {
                         $path = 'uploads/ticketnote/';
-                        
+
                         $stories_path = $path . $image;;
                         @unlink($stories_path);
                     }
                 }
-                
+
                 foreach ($oldnewarray as $name) {
                     array_push($files, $name);
                 }
             }
-            
+
             $newimagestring = implode(',', $files);
             // $ticket->imagelist = $newimagestring;
             // $ticket->save();
-            
+
             Quote::where('id', $request->ticketid)->orWhere('parentid', $request->ticketid)
                 ->update([
                     "checklist" => "$checklist",
@@ -509,13 +509,13 @@ class WorkerTicketController extends Controller
                     "customer_notes" => $request->customer_notes,
                     "imagelist" => "$newimagestring"
                 ]);
-            
+
             $request->session()->flash('success', 'Updated successfully');
             return redirect()->back();
         }
         return redirect()->back();
     }
-    
+
     public function view(Request $request, $id)
     {
         $auth_id = auth()->user()->id;
@@ -525,13 +525,13 @@ class WorkerTicketController extends Controller
         } else {
             return redirect()->back();
         }
-        
+
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
-        
+
         $productData = Inventory::where('user_id', $worker->userid)->where('workerid', $worker->workerid)->orderBy('id', 'ASC')->get();
-        
+
         $tenture = Tenture::where('status', 'Active')->get();
-        
+
         $sdata = Quote::select('serviceid')->where('id', $id)->first();
         $quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id', $id)->first();
         if ($sdata->serviceid != "") {
@@ -539,13 +539,13 @@ class WorkerTicketController extends Controller
         } else {
             $serviceidarrays = array();
         }
-        
-        
+
+
         $checklistData = DB::table('checklist')->select('*')->whereIn('serviceid', $serviceidarrays)->get();
-        
-        
+
+
         $sdata = Schedulerhours::where('ticketid', $quoteData->id)->get()->first();
-        
+
         @$workersdata = Personnel::where('id', $worker->workerid)->first();
         @$permissonarray = explode(',', $workersdata->ticketid);
         if (in_array("See Previous Tickets", $permissonarray)) {
@@ -554,23 +554,23 @@ class WorkerTicketController extends Controller
             $prequoteData = array();
             //DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.customerid',$quoteData->customerid)->where('quote.parentid','=','')->where('quote.personnelid','!=',null)->whereIn('quote.ticket_status',array('2','4'))->get();
         }
-        
+
         $sum = 0;
         if ($quoteData->serviceid != "") {
             $serviceidarray = explode(',', $quoteData->serviceid);
-            
+
             $servicedetails = Service::select('servicename', 'price')->whereIn('id', $serviceidarray)->get();
-            
+
             foreach ($servicedetails as $key => $value) {
                 $sname[] = $value['servicename'];
                 $sum += (int)$value['price'];
             }
-            
+
             $servicename = implode(',', $sname);
         } else {
             $servicename = "";
         }
-        
+
         $sum1 = 0;
         if (!empty($quoteData->product_id)) {
             $pidarray = explode(',', $quoteData->product_id);
@@ -579,16 +579,16 @@ class WorkerTicketController extends Controller
                 @$pname[] = $value['productname'];
                 $sum1 += (int)$value['price'];
             }
-            
+
             $totalprice = @$sum + @$sum1;
             @$productname = implode(',', @$pname);
         } else {
             @$productname = "";
             $totalprice = $quoteData->price;
         }
-        
+
         $cid = $quoteData->customerid;
-        
+
         $addressinfo = Address::select('checklistid')->where('customerid', $cid)->where('address', $quoteData->address)->first();
         $ckinfo = array();
         if (@$addressinfo->checklistid != "") {
@@ -598,32 +598,32 @@ class WorkerTicketController extends Controller
                 $ckinfo = $ckinfo;
             }
         }
-        
+
         return view('personnel.ticketview', compact('quoteData', 'checklistData', 'sdata', 'prequoteData', 'servicename', 'productname', 'totalprice', 'productData', 'tenture', 'cid', 'ckinfo', 'permissonarray', 'pworkerid'));
     }
-    
+
     public function viewmap(Request $request, $id)
     {
         //$quoteData = DB::table('quote')->select('quote.*', 'customer.phonenumber')->leftjoin('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id',$id)->first();
-        
+
         return view('personnel.ticketviewmap', compact('id'));
     }
-    
+
     public function mapdata(Request $request)
     {
         $id = $request->id;
         $auth_id = auth()->user()->id;
-        
+
         $scheduleData = DB::table('quote')->select('quote.*', 'customer.image', 'customer.customername')->join('customer', 'customer.id', '=', 'quote.customerid')->where('quote.id', $id)->get();
         $json = array();
         $data = [];
         foreach ($scheduleData as $key => $value) {
             array_push($data, [$value->customername, $value->latitude, $value->longitude, $value->address, $value->image, $value->id, $value->giventime]);
-            
+
         }
         return json_encode(['html' => $data]);
     }
-    
+
     public function paynow(Request $request, $id)
     {
         $quoteData = DB::table('quote')->select('*')->where('id', $id)->first();
@@ -634,7 +634,7 @@ class WorkerTicketController extends Controller
         }
         return view('personnel.paynow', compact('quoteData', 'paymentpaid'));
     }
-    
+
     public function vieweditinvoicemodal(Request $request)
     {
 
@@ -647,21 +647,22 @@ class WorkerTicketController extends Controller
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
         $sid = explode(',', $customer[0]->serviceid);
         $serviceData = Service::where('userid', $worker->userid)->orWhere('workerid', $worker->workerid)->orderBy('id', 'desc')->get();
-        
+//        dd(count($serviceData));
+
         $getprimary = $quote->primaryname;
-        
+
+
         //$serviceData = Service::whereIn('id',$sid)->orderBy('id','ASC')->get();
-        
-        
+
+
         $userData = User::select('workerid', 'userid')->where('id', $auth_id)->first();
         $workers = Personnel::where('id', $userData->workerid)->first();
-        
+
         $productData = DB::table('products')->where('user_id', $userData->userid)->orWhere('workerid', $worker->workerid)->orderBy('id', 'desc')->get();
-        
+
         $permissonarray = explode(',', $workers->ticketid);
-        
+
         $paynowurl = url('personnel/myticket/paynow/') . '/' . $request->id;
-        
         $html = '<div class="add-customer-modal">
                   <h5>Create Invoice</h5>
                 </div>';
@@ -678,7 +679,7 @@ class WorkerTicketController extends Controller
   <label>Select Address</label>
   <div class="d-flex align-items-center">
     <select class="form-control selectpicker" aria-label="Default select example" data-live-search="true" name="address" id="address" required="" style="height:auto;">';
-        
+
         foreach ($addressinfo as $key => $value) {
             if ($quote->address == $value->address) {
                 $selecteda = "selected";
@@ -704,7 +705,8 @@ class WorkerTicketController extends Controller
           <label>Select Services</label>
       <div class="d-flex align-items-center">
         <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" required="" style="height:auto;">';
-        
+
+//        dd($quote->serviceid);
         foreach ($serviceData as $key => $value) {
             $serviceids = explode(",", $quote->serviceid);
             if (in_array($value->id, $serviceids)) {
@@ -714,63 +716,57 @@ class WorkerTicketController extends Controller
             }
             $html .= '<option value="' . $value->id . '" ' . @$selectedp . '>' . $value->servicename . ' ($' . $value->price . ')</option>';
         }
+
         $html .= '</select>
         <a href="#" data-bs-toggle="modal" data-bs-target="#add-services" id="sclick"><i class="fa fa-plus"></i></a>
           </div>';
         $serviceids = explode(",", $quote->serviceid);
         $html .= '<div class="row mt-4" id="testprice">';
-        foreach ($serviceids as $key1 => $value1) {
-            $serviceinfo = Service::select('id', 'servicename', 'description')->where('id', $value1)->first();
-            $horalyp = Hourlyprice::where('ticketid', $request->id)->get();
-            if (count($horalyp) > 0) {
-                $hpinfo = Hourlyprice::select('hour', 'minute', 'servicedescription', 'productdescription')->where('ticketid', $request->id)->whereIn('serviceid', array($value1))->first();
-            }
-            if (@$hpinfo->hour != "") {
-                $hhour = @$hpinfo->hour;
-            } else {
-                $hhour = "01";
-            }
-            if (@$hpinfo->minute != "") {
-                $hminute = @$hpinfo->minute;
-            } else {
-                $hminute = "00";
-            }
-            $servicedescription = $serviceinfo->description;
-            if (@$hpinfo->servicedescription != "") {
-                $servicedescription = @$hpinfo->servicedescription;
-            }
-            $html .= '
-              <div class="col-md-12">
-              <div class="row">
+        $horalyp = Hourlyprice::where('ticketid', $request->id)->get();
+//        dd(count($horalyp));
+        foreach ($horalyp as $key1 => $value1) {
+            $serviceinfo = Service::select('id', 'servicename', 'description')->where('id', $value1->serviceid)->first();
+
+            if ($serviceinfo) {
+                $hpinfo = Hourlyprice::select('hour', 'minute', 'servicedescription', 'productdescription')
+                    ->where('ticketid', $request->id)
+                    ->where('serviceid', $value1->serviceid)
+                    ->first();
+
+                $hhour = $hpinfo->hour ?? "01";
+                $hminute = $hpinfo->minute ?? "00";
+
+                $html .= '
+        <div class="col-md-12">
+            <div class="row">
                 <div class="col-md-4 mb-2">
-                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="' . $serviceinfo->servicename . '"required readonly>
-                    <input type="hidden" name="serviceids[]" id="serviceids" value="' . $serviceinfo->id . '">
-                  </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="' . htmlspecialchars($serviceinfo->servicename) . '" required readonly>
+                        <input type="hidden" name="serviceids[]" id="serviceids" value="' . htmlspecialchars($serviceinfo->id) . '">
+                    </div>
                 </div>
                 <div class="col-md-2 mb-2">
-                  <div class="form-group">
-                    <input type="text" class="form-control hours" placeholder="hh" name="hours[]" id="hours" value="' . @$hhour . '" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
-                  </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control hours" placeholder="hh" name="hours[]" id="hours" value="' . htmlspecialchars($hhour) . '" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                    </div>
                 </div>
                 <div class="col-md-2 mb-2">
-                  <div class="form-group">
-                    <input type="text" class="form-control minutes" placeholder="mm" name="minutes[]" id="minutes" value="' . @$hminute . '" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
-                  </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control minutes" placeholder="mm" name="minutes[]" id="minutes" value="' . htmlspecialchars($hminute) . '" maxlength="2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" required>
+                    </div>
                 </div>
-                
-              </div>
-              </div>
-              ';
+            </div>
+        </div>';
+            }
         }
         $html .= '</div>';
-        
-        
+
+
         $html .= '<div class="col-md-12 mb-3">
           <label>Select Products</label>
       <div class="d-flex align-items-center">
         <select class="form-control selectpicker" data-live-search="true" multiple="" data-placeholder="Select Products" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="productid[]" id="productid" style="height:auto;">';
-        
+
         foreach ($productData as $key => $value) {
             $productids = explode(",", $quote->product_id);
             if (in_array($value->id, $productids)) {
@@ -792,7 +788,7 @@ class WorkerTicketController extends Controller
                 if (count($horalyp) > 0) {
                     $hpinfo = ProductDescription::select('productdescription')->where('ticketid', $request->id)->whereIn('productid', array($value2))->first();
                 }
-                
+
                 $productdescription = $productinfo->description;
                 if (@$hpinfo->productdescription != "") {
                     $productdescription = @$hpinfo->productdescription;
@@ -839,7 +835,7 @@ class WorkerTicketController extends Controller
           </div>';
         if ($getprimary == $personnelid) {
             if (in_array("Create Invoice for payment", $permissonarray) || in_array("Administrator", $permissonarray)) {
-                
+
                 $html .= '<div class="row"><div class="col-lg-6 mb-2">
               <button type="submit" class="add-btn-yellow w-100" style="text-align: center;border:0;height:42px;" name="type" value="sendinvoice">Send Invoice</button>
             </div>
@@ -863,14 +859,14 @@ class WorkerTicketController extends Controller
         $html .= '</div>';
         return json_encode(['html' => $html]);
         die;
-        
+
     }
-    
+
     public function ticketupdate(Request $request)
     {
 
         $quoteid = $request->quoteid;
-        
+
         $quote = Quote::where('id', $quoteid)->get()->first();
         if ($request->pointckbox) {
             $cheklist = implode(",", $request->pointckbox);
@@ -879,14 +875,14 @@ class WorkerTicketController extends Controller
             $quote->checklist = null;
         }
         $quote->internal_notes = $request->cnotes;
-        
+
         $quote->save();
-        
+
         $request->session()->flash('success', 'Updated successfully');
         return redirect()->back();
 
     }
-    
+
     public function sendinvoice(Request $request)
     {
         try {
@@ -1058,13 +1054,17 @@ class WorkerTicketController extends Controller
                     }
                 }
                 $paynowurl = url('personnel/myticket/paynow/') . '/' . $request->id;
+                DB::commit();
+
                 return redirect($paynowurl);
             }
             if ($request->type == "save") {
+//                dd(count($request->serviceids));
                 if (count($request->serviceids) > 0) {
                     DB::table('hourlyprice')->where('ticketid', $request->qid)->delete();
                     $pricetotal = 0;
 
+                    $data = [];
                     foreach ($request->serviceids as $key => $value) {
                         $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
                         $hrpicehour = 0;
@@ -1077,29 +1077,31 @@ class WorkerTicketController extends Controller
                             $hrpiceminute = $perminuteprice * $request->minutes[$key];
                         }
 
-                        $data['ticketid'] = $request->qid;
-                        $data['serviceid'] = $value;
-                        $data['hour'] = $request->hours[$key];
-                        $data['minute'] = $request->minutes[$key];
-                        $data['servicedescription'] = $request->servicedescription[$key] ?? '';
-                        $data['price'] = number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
+                        $data[$key]['ticketid'] = $request->qid;
+                        $data[$key]['serviceid'] = $value;
+                        $data[$key]['hour'] = $request->hours[$key];
+                        $data[$key]['minute'] = $request->minutes[$key];
+                        $data[$key]['servicedescription'] = $request->servicedescription[$key] ?? '';
+                        $data[$key]['price'] = number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
 
-//                        dd($data);
 
 //                        Hourlyprice::create($data);
 
-                        $hourlyprice = Hourlyprice::where('ticketid', $request->qid)
-                            ->where('serviceid', $value)
-                            ->first();
-
-                        if ($hourlyprice) {
-                            $hourlyprice->update($data);
-                        } else {
-                            Hourlyprice::create($data);
-                        }
+//                        $hourlyprice = Hourlyprice::where('ticketid', $request->qid)
+//                            ->where('serviceid', $value)
+//                            ->first();
+//
+//                        if ($hourlyprice) {
+//                            $hourlyprice->update($data);
+//                        } else {
+//                            Hourlyprice::create($data);
+//                        }
 
                         $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
                     }
+                    Hourlyprice::insert($data);
+
+//                    dd($data);
                     $productprice = 0;
                     if ($request->productprice != null || $request->productprice != '0') {
                         $productprice = $request->productprice;
@@ -1117,6 +1119,7 @@ class WorkerTicketController extends Controller
                     }
                 }
                 $request->session()->flash('success', 'Invoice has been Save successfully');
+                DB::commit();
                 return redirect()->back();
             }
             if ($request->type == "sendinvoice") {
@@ -1140,7 +1143,7 @@ class WorkerTicketController extends Controller
                         $data['hour'] = $request->hours[$key];
                         $data['minute'] = $request->minutes[$key];
                         $data['price'] = number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
-                        $data['servicedescription'] = $request->servicedescription[$key];
+                        $data['servicedescription'] = $request->servicedescription[$key] ?? '';
                         Hourlyprice::create($data);
                         $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
                     }
@@ -1186,12 +1189,13 @@ class WorkerTicketController extends Controller
                 DB::commit();
                 return redirect()->back();
             }
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
-            echo 'Message: ' .$e->getMessage();
+//            dd($e->getMessage());
+            echo 'Message: ' . $e->getMessage();
         }
     }
-    
+
     public function createticket(Request $request)
     {
         $auth_id = auth()->user()->id;
@@ -1200,17 +1204,17 @@ class WorkerTicketController extends Controller
         } else {
             return redirect()->back();
         }
-        
+
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
         $customer = Customer::where('userid', $worker->userid)->orWhere('workerid', $worker->workerid)->orderBy('id', 'DESC')->get();
         $services = Service::where('userid', $worker->userid)->orWhere('workerid', $worker->workerid)->orderBy('id', 'DESC')->get();
         $products = Inventory::where('user_id', $worker->userid)->orWhere('workerid', $worker->workerid)->orderBy('id', 'DESC')->get();
-        
+
         //$workerlist = Personnel::where('userid', $worker->userid)->where('id','!=',$worker->workerid)->get();
         $workerlist = Personnel::where('userid', $worker->userid)->get();
-        
+
         $personnel = Personnel::where('id', $worker->workerid)->first();
-        
+
         $permissonarray = explode(',', $personnel->ticketid);
         $tenture = Tenture::where('status', 'Active')->get();
         $userData = User::select('openingtime', 'closingtime')->where('id', $worker->userid)->first();
@@ -1220,7 +1224,7 @@ class WorkerTicketController extends Controller
             return redirect()->back();
         }
     }
-    
+
     public function createquote(Request $request)
     {
         $auth_id = auth()->user()->id;
@@ -1229,56 +1233,56 @@ class WorkerTicketController extends Controller
         } else {
             return redirect()->back();
         }
-        
+
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
         $customer = Customer::where('userid', $worker->userid)->orWhere('workerid', $worker->workerid)->orderBy('id', 'DESC')->get();
         $services = Service::where('userid', $worker->userid)->orWhere('workerid', $worker->workerid)->orderBy('id', 'DESC')->get();
         $products = Inventory::where('user_id', $worker->userid)->orWhere('workerid', $worker->workerid)->orderBy('id', 'DESC')->get();
-        
+
         //$workerlist = Personnel::where('userid', $worker->userid)->where('id','!=',$worker->workerid)->get();
         $workerlist = Personnel::where('userid', $worker->userid)->get();
-        
+
         $personnel = Personnel::where('id', $worker->workerid)->first();
-        
+
         $permissonarray = explode(',', $personnel->ticketid);
         $tenture = Tenture::where('status', 'Active')->get();
-        
+
         $userData = User::select('openingtime', 'closingtime')->where('id', $worker->userid)->first();
-        
+
         if (in_array("Create Quote", $permissonarray) || in_array("Administrator", $permissonarray)) {
             return view('personnel.createquote', compact('auth_id', 'customer', 'services', 'workerlist', 'tenture', 'products', 'permissonarray', 'userData'));
         } else {
             return redirect()->back();
         }
     }
-    
+
     public function getaddressbyid(Request $request)
     {
         $data['address'] = Address::where("customerid", $request->customerid)
             ->get(["address", "id"]);
-        
+
         $customer = Customer::where('id', $request->customerid)->get();
-        
+
         $sid = explode(',', $customer[0]->serviceid);
-        
+
         $data['serviceData'] = Service::whereIn('id', $sid)->get(["servicename", "id", "time", "minute", "frequency", "price"]);
-        
+
         $data['address'] = Address::where("customerid", $request->customerid)
             ->get(["address", "id"]);
         return response()->json($data);
     }
-    
+
     public function ticketcreate(Request $request)
     {
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
-        
+
         $userdetails = User::select('taxtype', 'taxvalue', 'servicevalue', 'productvalue')->where('id', $worker->userid)->first();
-        
+
         $customer = Customer::select('customername', 'email')->where('id', $request->customerid)->first();
-        
+
         $serviceid = implode(',', $request->servicename);
-        
+
         $servicedetails = Service::select('servicename', 'productid', 'price')->whereIn('id', $request->servicename)->get();
         $sum = 0;
         foreach ($servicedetails as $key => $value) {
@@ -1295,11 +1299,11 @@ class WorkerTicketController extends Controller
             $sum += $txvalue;
         }
         $servicename = implode(',', $sname);
-        
+
         $productid = "";
         $productname = "";
         $productnames = "";
-        
+
         if (isset($request->productname)) {
             $productid = implode(',', $request->productname);
         }
@@ -1307,8 +1311,8 @@ class WorkerTicketController extends Controller
         $txvalue1 = 0;
         if ($request->productname != "") {
             $productdetails = Inventory::select('id', 'productname', 'price')->whereIn('id', $request->productname)->get();
-            
-            
+
+
             foreach ($productdetails as $key => $value) {
                 $pname[] = $value['productname'];
                 if ($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
@@ -1319,7 +1323,7 @@ class WorkerTicketController extends Controller
                     }
                 }
                 $sum1 += $txvalue1;
-                
+
                 $productd = Inventory::where('id', $value['id'])->first();
                 if (!empty($productd)) {
                     $productd->quantity = (@$productd->quantity) - 1;
@@ -1327,17 +1331,17 @@ class WorkerTicketController extends Controller
                 }
             }
             $productname = $productdetails[0]->productname;
-            
+
             $productnames = implode(',', $pname);
         }
-        
+
         $totaltax = $sum + $sum1;
         $totaltax = number_format($totaltax, 2);
         $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
-        
+
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
-        
+
         $data['userid'] = $worker->userid;
         $data['workerid'] = $worker->workerid;
         $data['customerid'] = $request->customerid;
@@ -1365,7 +1369,7 @@ class WorkerTicketController extends Controller
         $data['address_id'] = $addressinfo[0];
         $data['address'] = $addressinfo[1];
         $data['tax'] = $totaltax;
-        
+
         $formattedAddr = str_replace(' ', '+', $addressinfo[1]);
         //Send request and receive json data by address
         $auth_id = auth()->user()->userid;
@@ -1374,10 +1378,10 @@ class WorkerTicketController extends Controller
         $output = json_decode($geocodeFromAddr);
         $latitude = @$output->results[0]->geometry->location->lat;
         $longitude = @$output->results[0]->geometry->location->lng;
-        
+
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
-        
+
         // if($request->scheduledtime) {
         //   $data['giventime'] = $request->scheduledtime;
         //   $date=date_create($request->etc);
@@ -1387,32 +1391,32 @@ class WorkerTicketController extends Controller
         // } else {
         //   $data['ticket_status'] = 1;
         // }
-        
+
         //for new feature
         if ($request->time == null || $request->time == "" || $request->time == 00 || $request->time == 0) {
             $hours = 0;
         } else {
             $hours = preg_replace("/[^0-9]/", '', $request->time);
         }
-        
+
         if ($request->minute == null || $request->minute == "" || $request->minute == 00 || $request->minute == 0) {
             $minutes = 0;
         } else {
             $minutes = preg_replace("/[^0-9]/", '', $request->minute);
         }
-        
+
         //display the converted time
         $endtime = date('h:i a', strtotime("+{$hours} hour +{$minutes} minutes", strtotime($request->giventime)));
         $time = $request->giventime;
-        
+
         $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
         $newdate = $request->date;
-        
-        
+
+
         /*Get Dayclose time*/
         $closingtime = DB::table('users')->select('closingtime')->where('id', $worker->userid)->first();
         $dayclosetime = $closingtime->closingtime;
-        
+
         $tstarttime = explode(':', $time);
         $ticketstarttime = $tstarttime[0];
         $ticketdifferncetime = $dayclosetime - $ticketstarttime;
@@ -1427,7 +1431,7 @@ class WorkerTicketController extends Controller
                 $givenenddate = $newdate;
             }
         }
-        
+
         $data['giventime'] = $time;
         $data['givenendtime'] = $endtime;
         $data['givendate'] = $date;
@@ -1435,18 +1439,18 @@ class WorkerTicketController extends Controller
         $data['givenenddate'] = $givenenddate;
         $data['ticket_status'] = '2';
         $quotelastid = Quote::create($data);
-        
+
         $quoteee = Quote::where('id', $quotelastid->id)->first();
         $randomid = 100;
         $quoteee->invoiceid = $randomid . '' . $quotelastid->id;
         $quoteee->save();
-        
+
         if ($customer->email != null) {
             $app_name = 'ServiceBolt';
             $app_email = env('MAIL_FROM_ADDRESS', 'ServiceBolt');
             $email = $customer->email;
             $user_exist = Customer::where('email', $email)->first();
-            
+
             Mail::send('mail_templates.sharequote', ['name' => 'service ticket', 'address' => $addressinfo[1], 'servicename' => $servicename, 'productname' => $productnames, 'type' => $request->radiogroup, 'frequency' => $request->frequency, 'time' => $quotelastid->time, 'minute' => $quotelastid->minute, 'price' => $request->price, 'etc' => $request->etc, 'description' => $request->description], function ($message) use ($user_exist, $app_name, $app_email) {
                 $message->to($user_exist->email)
                     ->subject('Ticket details!');
@@ -1454,21 +1458,21 @@ class WorkerTicketController extends Controller
             });
         }
         $request->session()->flash('success', 'Ticket added successfully');
-        
+
         return redirect()->route('worker.myticket');
     }
-    
+
     public function ticketquotecreate(Request $request)
     {
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
-        
+
         $userdetails = User::select('taxtype', 'taxvalue', 'servicevalue', 'productvalue')->where('id', $worker->userid)->first();
-        
+
         $customer = Customer::select('customername', 'email')->where('id', $request->customerid)->first();
-        
+
         $serviceid = implode(',', $request->servicename);
-        
+
         $servicedetails = Service::select('servicename', 'productid', 'price')->whereIn('id', $request->servicename)->get();
         $sum = 0;
         foreach ($servicedetails as $key => $value) {
@@ -1485,11 +1489,11 @@ class WorkerTicketController extends Controller
             $sum += $txvalue;
         }
         $servicename = implode(',', $sname);
-        
+
         $productid = "";
         $productname = "";
         $productnames = "";
-        
+
         if (isset($request->productname)) {
             $productid = implode(',', $request->productname);
         }
@@ -1497,8 +1501,8 @@ class WorkerTicketController extends Controller
         $txvalue1 = 0;
         if ($request->productname != "") {
             $productdetails = Inventory::select('id', 'productname', 'price')->whereIn('id', $request->productname)->get();
-            
-            
+
+
             foreach ($productdetails as $key => $value) {
                 $pname[] = $value['productname'];
                 if ($userdetails->taxtype == "service_products" || $userdetails->taxtype == "both") {
@@ -1509,7 +1513,7 @@ class WorkerTicketController extends Controller
                     }
                 }
                 $sum1 += $txvalue1;
-                
+
                 $productd = Inventory::where('id', $value['id'])->first();
                 if (!empty($productd)) {
                     $productd->quantity = (@$productd->quantity) - 1;
@@ -1517,17 +1521,17 @@ class WorkerTicketController extends Controller
                 }
             }
             $productname = $productdetails[0]->productname;
-            
+
             $productnames = implode(',', $pname);
         }
-        
+
         $totaltax = $sum + $sum1;
         $totaltax = number_format($totaltax, 2);
         $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
-        
+
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
-        
+
         $data['userid'] = $worker->userid;
         $data['workerid'] = $worker->workerid;
         $data['customerid'] = $request->customerid;
@@ -1555,7 +1559,7 @@ class WorkerTicketController extends Controller
         $data['address_id'] = $addressinfo[0];
         $data['address'] = $addressinfo[1];
         $data['tax'] = $totaltax;
-        
+
         $formattedAddr = str_replace(' ', '+', $addressinfo[1]);
         //Send request and receive json data by address
         $auth_id = auth()->user()->userid;
@@ -1564,36 +1568,36 @@ class WorkerTicketController extends Controller
         $output = json_decode($geocodeFromAddr);
         $latitude = @$output->results[0]->geometry->location->lat;
         $longitude = @$output->results[0]->geometry->location->lng;
-        
+
         $data['latitude'] = $latitude;
         $data['longitude'] = $longitude;
-        
-        
+
+
         //for new feature
         if ($request->time == null || $request->time == "" || $request->time == 00 || $request->time == 0) {
             $hours = 0;
         } else {
             $hours = preg_replace("/[^0-9]/", '', $request->time);
         }
-        
+
         if ($request->minute == null || $request->minute == "" || $request->minute == 00 || $request->minute == 0) {
             $minutes = 0;
         } else {
             $minutes = preg_replace("/[^0-9]/", '', $request->minute);
         }
-        
+
         //display the converted time
         $endtime = date('h:i a', strtotime("+{$hours} hour +{$minutes} minutes", strtotime($request->giventime)));
         $time = $request->giventime;
-        
+
         $date = Carbon::createFromFormat('Y-m-d', $request->date)->format('l - F d, Y');
         $newdate = $request->date;
-        
-        
+
+
         /*Get Dayclose time*/
         $closingtime = DB::table('users')->select('closingtime')->where('id', $worker->userid)->first();
         $dayclosetime = $closingtime->closingtime;
-        
+
         $tstarttime = explode(':', $time);
         $ticketstarttime = $tstarttime[0];
         $ticketdifferncetime = $dayclosetime - $ticketstarttime;
@@ -1608,34 +1612,34 @@ class WorkerTicketController extends Controller
                 $givenenddate = $newdate;
             }
         }
-        
+
         $data['giventime'] = $time;
         $data['givenendtime'] = $endtime;
         $data['givendate'] = $date;
         $data['givenstartdate'] = $request->date;
         $data['givenenddate'] = $givenenddate;
-        
+
         if ($request->type == 'addquote') {
             $data['ticket_status'] = '0';
         }
-        
+
         if ($request->type == 'addticket') {
             $data['ticket_status'] = '2';
         }
-        
+
         $quotelastid = Quote::create($data);
-        
+
         $quoteee = Quote::where('id', $quotelastid->id)->first();
         $randomid = 100;
         $quoteee->invoiceid = $randomid . '' . $quotelastid->id;
         $quoteee->save();
-        
+
         if ($customer->email != null) {
             $app_name = 'ServiceBolt';
             $app_email = env('MAIL_FROM_ADDRESS', 'ServiceBolt');
             $email = $customer->email;
             $user_exist = Customer::where('email', $email)->first();
-            
+
             Mail::send('mail_templates.sharequote', ['name' => 'service ticket', 'address' => $addressinfo[1], 'servicename' => $servicename, 'productname' => $productnames, 'type' => $request->radiogroup, 'frequency' => $request->frequency, 'time' => $quotelastid->time, 'minute' => $quotelastid->minute, 'price' => $request->price, 'etc' => $request->etc, 'description' => $request->description], function ($message) use ($user_exist, $app_name, $app_email) {
                 $message->to($user_exist->email)
                     ->subject('Ticket details!');
@@ -1651,40 +1655,40 @@ class WorkerTicketController extends Controller
         }
         return redirect()->route('worker.myticket');
     }
-    
-    
+
+
     public function getenddatecalculation($newdate, $nextdaytime)
     {
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
         $closingtime = DB::table('users')->select('closingtime', 'openingtime')->where('id', $worker->userid)->first();
-        
+
         $fulldaytime = $closingtime->closingtime - $closingtime->openingtime;
-        
+
         if ($nextdaytime > $fulldaytime) {
             $divisionvalue = $nextdaytime / $fulldaytime;
-            
+
             $dividev = explode('.', $divisionvalue);
             $daycount = $dividev[0];
             $dayhours = $dividev[1];
-            
+
             if ($dayhours != "") {
                 $daycount = $daycount + 1;
             } else {
                 $daycount = $dividev[0];
             }
             $ddd = $daycount . 'day';
-            
+
             //day added as per calcuation wise
             $givenenddate = date('Y-m-d', strtotime($newdate . ' +' . $ddd));
-            
+
         } else {
             //day added as per calcuation wise
             $givenenddate = date('Y-m-d', strtotime($newdate . ' +1 day'));
         }
         return $givenenddate;
     }
-    
+
     public function viewticketpopup(Request $request)
     {
         $auth_id = auth()->user()->id;
@@ -1692,23 +1696,23 @@ class WorkerTicketController extends Controller
         $json = array();
         $quotedetailsnew = Quote::where('id', $request->id)->get()->toArray();
         $quotedetails = Quote::where('id', $request->id)->get();
-        
+
         $tenture = Tenture::where('status', 'Active')->get();
-        
+
         $customer = Customer::where('id', $quotedetails[0]->customerid)->get();
-        
+
         $sid = explode(',', $customer[0]->serviceid);
-        
+
         //$serviceData = Service::whereIn('id',$sid)->orderBy('id','ASC')->get();
         $serviceData = Service::where('userid', $worker->userid)->orWhere('workerid', $worker->workerid)->orderBy('id', 'desc')->get();
-        
-        
+
+
         //$productData = DB::table('products')->orderBy('id','ASC')->get();
         $productData = Inventory::where('user_id', $worker->userid)->orWhere('workerid', $worker->workerid)->get();
-        
+
         $time = explode(" ", $quotedetails[0]->time);
         $minute = explode(" ", $quotedetails[0]->minute);
-        
+
         if ($quotedetails[0]->radiogroup == 'perhour') {
             $checked = "checked";
         }
@@ -1718,7 +1722,7 @@ class WorkerTicketController extends Controller
         if ($quotedetails[0]->radiogroup == 'flatrate') {
             $checked2 = "checked";
         }
-        
+
         if ($quotedetails[0]->frequency == 'Weekly') {
             $selectedf = "selected";
         }
@@ -1740,7 +1744,7 @@ class WorkerTicketController extends Controller
         if ($quotedetails[0]->time == '1 Hours') {
             $selectedt4 = "selected";
         }
-        
+
         $html = '<div class="add-customer-modal">
                   <h5>Schedule Next Appointment</h5>
                 </div>';
@@ -1764,7 +1768,7 @@ class WorkerTicketController extends Controller
           <div class="col-md-12 mb-2">
             <label>Service</label>
             <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" required="" style="height:auto;">';
-        
+
         foreach ($serviceData as $key => $value) {
             $serviceids = explode(",", $quotedetails[0]->serviceid);
             if (in_array($value->id, $serviceids)) {
@@ -1779,7 +1783,7 @@ class WorkerTicketController extends Controller
           <div class="col-md-12 mb-2">
             <label>Product</label>
             <select class="form-control selectpicker" data-live-search="false" multiple="" data-placeholder="Select Produts" style="width: 100%;height:auto;" tabindex="-1" aria-hidden="true" name="productid[]" id="productid" style="height:auto;">';
-        
+
         foreach ($productData as $key => $value) {
             $productids = explode(",", $quotedetails[0]->product_id);
             if (in_array($value->id, $productids)) {
@@ -1839,7 +1843,7 @@ class WorkerTicketController extends Controller
              <label>Description</label>
              <textarea class="form-control height-180" placeholder="Description" name="description" id="description" style="color:#000;" required>' . $quotedetails[0]->description . '</textarea>
            </div>';
-        
+
         $html .= '<div class="col-lg-6 mb-2">
             <span class="btn btn-cancel btn-block" data-bs-dismiss="modal">Cancel</span>
           </div>
@@ -1850,18 +1854,18 @@ class WorkerTicketController extends Controller
         return json_encode(['html' => $html]);
         die;
     }
-    
+
     public function schedulecreate(Request $request)
     {
         $auth_id = auth()->user()->id;
         $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
-        
+
         $userdetails = User::select('taxtype', 'taxvalue', 'servicevalue', 'productvalue')->where('id', $worker->userid)->first();
-        
+
         $quote = Quote::where('id', $request->quoteid)->get()->first();
-        
+
         $serviceid = implode(',', $request->serviceid);
-        
+
         $servicedetails = Service::select('servicename', 'price')->whereIn('id', $request->serviceid)->get();
         $sum = 0;
         foreach ($servicedetails as $key => $value) {
@@ -1881,9 +1885,9 @@ class WorkerTicketController extends Controller
         $sum1 = "0";
         if (isset($request->productid)) {
             $productid = implode(',', $request->productid);
-            
+
             //$productid = implode(',', $request->productid);
-            
+
             $pdetails = Inventory::select('productname', 'price')->whereIn('id', $request->productid)->get();
             $sum1 = 0;
             $txvalue1 = 0;
@@ -1900,14 +1904,14 @@ class WorkerTicketController extends Controller
             }
             $productname = implode(',', $pname);
         }
-        
+
         $servicename = implode(',', $sname);
-        
-        
+
+
         $totaltax = $sum + $sum1;
         $totaltax = number_format($totaltax, 2);
         $totaltax = preg_replace('/[^\d.]/', '', $totaltax);
-        
+
         $data['customerid'] = $quote->customerid;
         $data['userid'] = $quote->userid;
         $data['serviceid'] = $serviceid;
@@ -1926,7 +1930,7 @@ class WorkerTicketController extends Controller
         $data['price'] = $request->price;
         $data['tickettotal'] = $request->ticketprice;
         $data['tax'] = $totaltax;
-        
+
         $data['etc'] = $request->etc;
         $data['description'] = $request->description;
         $data['customername'] = $quote->customername;
@@ -1939,7 +1943,7 @@ class WorkerTicketController extends Controller
         $request->session()->flash('success', 'Ticket has been Scheduled successfully');
         return redirect()->back();
     }
-    
+
     public function calculateprice(Request $request)
     {
         $json = array();
@@ -1975,7 +1979,7 @@ class WorkerTicketController extends Controller
             </div>
             </div>';
         }
-        
+
         $pidarray = explode(',', $request->productid);
         $pdetails = Inventory::select('productname', 'id', 'price')->whereIn('id', $pidarray)->get();
         $sum1 = 0;
@@ -1990,11 +1994,11 @@ class WorkerTicketController extends Controller
             $quote = Quote::where('id', $request->qid)->first();
             $quote->tickettotal = $totalprice;
         }
-        
+
         return json_encode(['totalprice' => $totalprice, 'hourpricehtml' => $hourpricehtml, 'productprice' => $sum1]);
         die;
     }
-    
+
     public function calculatepricenew(Request $request)
     {
         $json = array();
@@ -2002,6 +2006,8 @@ class WorkerTicketController extends Controller
         $servicedetails = Service::select('servicename', 'price', 'id', 'description')->whereIn('id', $serviceidarray)->get();
         $sum = 0;
         $hourpricehtml = "";
+        $horalyp = Hourlyprice::where('ticketid', $request->qid)->get();
+
         foreach ($servicedetails as $key => $value) {
             $horalyp = Hourlyprice::where('ticketid', $request->qid)->get();
             if (count($horalyp) > 0) {
@@ -2033,11 +2039,7 @@ class WorkerTicketController extends Controller
                 </div>
               </div>
 
-              <div class="col-md-4 mb-2">
-                <div class="form-group">
-                  <textarea class="form-control height-50" name="servicedescription[]" id="servicedescription" placeholder="Description">' . @$servicedescription . '</textarea>
-                </div>
-              </div>
+             
 
             </div>
             </div>';
@@ -2046,7 +2048,7 @@ class WorkerTicketController extends Controller
         $hourproducthtml = "";
         if (isset($request->productid)) {
             $pidarray = $request->productid;
-            
+
             $pdetails = Inventory::select('productname', 'id', 'price', 'description')->whereIn('id', $pidarray)->get();
             foreach ($pdetails as $key => $value) {
                 $pname[] = $value['productname'];
@@ -2059,7 +2061,7 @@ class WorkerTicketController extends Controller
                 if (@$hpinfo->productdescription != "") {
                     $productdescription = @$hpinfo->productdescription;
                 }
-                
+
                 $hourproducthtml .= '<div class="col-md-12">
             <div class="row">
 
@@ -2079,7 +2081,7 @@ class WorkerTicketController extends Controller
             </div>';
             }
         }
-        
+
         $totalprice = $sum + $sum1;
         $totalprice = number_format($totalprice, 2);
         $totalprice = preg_replace('/[^\d.]/', '', $totalprice);
@@ -2087,7 +2089,7 @@ class WorkerTicketController extends Controller
             $quote = Quote::where('id', $request->qid)->first();
             $quote->tickettotal = $totalprice;
         }
-        
+
         if (count($request->serviceid) > 0) {
             $pricetotal = 0;
             foreach ($request->serviceid as $key => $value) {
@@ -2098,7 +2100,7 @@ class WorkerTicketController extends Controller
                         $hrpicehour = $servicedetails->price * $request->hours[$key];
                     }
                 }
-                
+
                 $hrpiceminute = 0;
                 if (isset($request->minutes)) {
                     if ($request->minutes[$key] != '0' || $request->minutes[$key] != '00' || $request->minutes[$key] != null) {
@@ -2106,18 +2108,18 @@ class WorkerTicketController extends Controller
                         $hrpiceminute = $perminuteprice * $request->minutes[$key];
                     }
                 }
-                
+
                 $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
             }
             $finalsumprice = $pricetotal + $sum1;
         } else {
             $finalsumprice = 0;
         }
-        
+
         return json_encode(['totalprice' => $finalsumprice, 'hourpricehtml' => $hourpricehtml, 'hourproducthtml' => $hourproducthtml, 'productprice' => $sum1]);
         die;
     }
-    
+
     public function calculatepricewithtimewise(Request $request)
     {
         $json = array();
@@ -2130,7 +2132,7 @@ class WorkerTicketController extends Controller
                 $sum1 += (float)$value['price'];
             }
         }
-        
+
         if (count($request->serviceids) > 0) {
             $pricetotal = 0;
             foreach ($request->serviceids as $key => $value) {
@@ -2154,11 +2156,11 @@ class WorkerTicketController extends Controller
         } else {
             $finalsumprice = 0;
         }
-        
+
         return json_encode(['totalprice' => $finalsumprice, 'productprice' => $sum1]);
         die;
     }
-    
+
     public function addaddress(Request $request)
     {
         $cid = $request->customerid;
@@ -2167,11 +2169,11 @@ class WorkerTicketController extends Controller
         $data['customerid'] = $cid;
         $data['address'] = $request->address;
         Address::create($data);
-        
+
         return json_encode(['address' => $request->address]);
         die;
     }
-    
+
     public function sendpayment(Request $request)
     {
         $auth_id = auth()->user()->userid;
@@ -2183,7 +2185,7 @@ class WorkerTicketController extends Controller
                     $personnelid = $value->personnelid;
                     $userid = $value->userid;
                     $customername = $value->customername;
-                    
+
                 }
             }
             if ($request->method == "Credit Card") {
@@ -2204,11 +2206,11 @@ class WorkerTicketController extends Controller
                         "xBillPhone" => $cinfo->phonenumber,
                         "xEmail" => $cinfo->email
                     );
-                    
+
                     $headers = array(
                         'Content-Type: application/json',
                     );
-                    
+
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, 'https://x1.cardknox.com/gatewayjson');
                     curl_setopt($ch, CURLOPT_POST, true);
@@ -2229,7 +2231,7 @@ class WorkerTicketController extends Controller
                             'paymentmethod' => $request->method,
                             'status' => "Completed"
                         ]);
-                        
+
                         DB::table('quote')->where('id', '=', $request->tid)->orWhere('parentid', '=', $request->tid)
                             ->update([
                                 "payment_status" => "Completed", "price" => "$request->amount", "payment_amount" => "$request->amount", "payment_mode" => "$request->method", "card_number" => "$request->card_number", "expiration_date" => "$request->expiration_date", "cvv" => "$request->cvv"
@@ -2250,7 +2252,7 @@ class WorkerTicketController extends Controller
                         'paymentmethod' => $request->method,
                         'status' => "Completed"
                     ]);
-                    
+
                     DB::table('quote')->where('id', '=', $request->tid)->orWhere('parentid', '=', $request->tid)
                         ->update([
                             "payment_status" => "Completed", "price" => "$request->amount", "payment_amount" => "$request->amount", "payment_mode" => "$request->method", "card_number" => "$request->card_number", "expiration_date" => "$request->expiration_date", "cvv" => "$request->cvv"
@@ -2278,7 +2280,7 @@ class WorkerTicketController extends Controller
                         "xBillPhone" => $cinfo->phonenumber,
                         "xEmail" => $cinfo->email
                     );
-                    
+
                     $headers = array(
                         'Content-Type: application/json',
                     );
@@ -2292,7 +2294,7 @@ class WorkerTicketController extends Controller
                     $result = curl_exec($ch);
                     curl_close($ch);
                     $finalresult = json_decode($result);
-                    
+
                     if ($finalresult->xStatus == "Approved") {
                         $id = DB::table('balancesheet')->insertGetId([
                             'userid' => $userid,
@@ -2303,7 +2305,7 @@ class WorkerTicketController extends Controller
                             'paymentmethod' => $request->method,
                             'status' => "Completed"
                         ]);
-                        
+
                         DB::table('quote')->where('id', '=', $request->tid)->orWhere('parentid', '=', $request->tid)
                             ->update([
                                 "payment_status" => "Completed", "price" => "$request->payment_amount", "payment_amount" => "$request->payment_amount", "payment_mode" => "$request->method", "checknumber" => "$request->checknumber"
@@ -2324,7 +2326,7 @@ class WorkerTicketController extends Controller
                         'paymentmethod' => $request->method,
                         'status' => "Completed"
                     ]);
-                    
+
                     DB::table('quote')->where('id', '=', $request->tid)->orWhere('parentid', '=', $request->tid)
                         ->update([
                             "payment_status" => "Completed", "price" => "$request->payment_amount", "payment_amount" => "$request->payment_amount", "payment_mode" => "$request->method", "checknumber" => "$request->checknumber"
@@ -2333,7 +2335,7 @@ class WorkerTicketController extends Controller
                     return redirect()->back();
                 }
             }
-            
+
             if ($request->method == "Cash") {
                 $id = DB::table('balancesheet')->insertGetId([
                     'userid' => $userid,
@@ -2344,7 +2346,7 @@ class WorkerTicketController extends Controller
                     'paymentmethod' => $request->method,
                     'status' => "Completed"
                 ]);
-                
+
                 DB::table('quote')->where('id', '=', $request->tid)->orWhere('parentid', '=', $request->tid)
                     ->update([
                         "payment_status" => "Completed", "price" => "$request->payment_amount", "payment_amount" => "$request->payment_amount", "payment_mode" => "$request->method"
@@ -2353,7 +2355,7 @@ class WorkerTicketController extends Controller
                 return redirect()->back();
             }
         }
-        
+
     }
-    
+
 }

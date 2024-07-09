@@ -244,7 +244,7 @@
                             DESCRIPTION
                         </th>
                         <th style="font-size: 13px;border-bottom: 1px solid #ccc;">QTY</th>
-                        <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">PRICE</th>
+                        <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">PRICE PER UNIT</th>
                         @if($taxprice=="0.00")
                         @else
                             <th style="padding: 15px; width: 15%;font-size: 13px;border-bottom: 1px solid #ccc;">TAX
@@ -291,7 +291,7 @@
                                 @endif
                                 <td style="padding: 15px;width: 50%;">{{ $value['id'] }}</td>
                                 <td style="padding: 15px;width: 50%;text-align: left;">{{ $value['servicename'] }}</td>
-                                <td style="padding: 15px;width: 15%;">1</td>
+                                <td style="padding: 15px;width: 15%;">{{ @$hpinfo->hour  }}.{{ @$hpinfo->minute  }}</td>
                                 <td style="padding: 15px;width: 15%;">${{ $value['price'] }}</td>
                                 @if($taxprice=="0.00")
                                 @else
