@@ -716,7 +716,6 @@ class TicketController extends Controller
     
     public function ticketcreate(Request $request)
     {
-        
         $customer = Customer::select('customername', 'email')->where('id', $request->customerid)->first();
         
         $serviceid = implode(',', $request->servicename);

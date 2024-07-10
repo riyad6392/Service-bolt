@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('latitude', 50)->nullable();
             $table->string('longitude', 50)->nullable();
-            $table->string('serviceid', 50)->nullable();
+            $table->string('serviceid', 4000)->nullable();
             $table->string('servicename')->nullable();
             $table->string('product_id', 50)->nullable();
             $table->string('product_name')->nullable();

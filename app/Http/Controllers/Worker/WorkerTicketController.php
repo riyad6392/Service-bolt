@@ -706,7 +706,6 @@ class WorkerTicketController extends Controller
       <div class="d-flex align-items-center">
         <select class="form-control selectpicker" multiple aria-label="Default select example" data-live-search="true" name="serviceid[]" id="serviceid" required="" style="height:auto;">';
 
-//        dd($quote->serviceid);
         foreach ($serviceData as $key => $value) {
             $serviceids = explode(",", $quote->serviceid);
             if (in_array($value->id, $serviceids)) {
@@ -714,6 +713,8 @@ class WorkerTicketController extends Controller
             } else {
                 $selectedp = "";
             }
+
+
             $html .= '<option value="' . $value->id . '" ' . @$selectedp . '>' . $value->servicename . ' ($' . $value->price . ')</option>';
         }
 
@@ -723,7 +724,6 @@ class WorkerTicketController extends Controller
         $serviceids = explode(",", $quote->serviceid);
         $html .= '<div class="row mt-4" id="testprice">';
         $horalyp = Hourlyprice::where('ticketid', $request->id)->get();
-//        dd(count($horalyp));
         foreach ($horalyp as $key1 => $value1) {
             $serviceinfo = Service::select('id', 'servicename', 'description')->where('id', $value1->serviceid)->first();
 
@@ -885,8 +885,9 @@ class WorkerTicketController extends Controller
 
     public function sendinvoice(Request $request)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
+
 
             $auth_id = auth()->user()->id;
             $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
@@ -1084,24 +1085,15 @@ class WorkerTicketController extends Controller
                         $data[$key]['servicedescription'] = $request->servicedescription[$key] ?? '';
                         $data[$key]['price'] = number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
 
-
-//                        Hourlyprice::create($data);
-
-//                        $hourlyprice = Hourlyprice::where('ticketid', $request->qid)
-//                            ->where('serviceid', $value)
-//                            ->first();
-//
-//                        if ($hourlyprice) {
-//                            $hourlyprice->update($data);
-//                        } else {
-//                            Hourlyprice::create($data);
-//                        }
-
                         $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
                     }
                     Hourlyprice::insert($data);
 
-//                    dd($data);
+                    $newServiceIds = implode(',', $request->serviceids);
+                    DB::table('quote')->where('id', $request->qid)->update(['serviceid' => $newServiceIds]);
+
+
+//                    dd(DB::table('quote')->where('id', $request->qid)->first());
                     $productprice = 0;
                     if ($request->productprice != null || $request->productprice != '0') {
                         $productprice = $request->productprice;
@@ -2001,12 +1993,16 @@ class WorkerTicketController extends Controller
 
     public function calculatepricenew(Request $request)
     {
+//        dd($request->all());
         $json = array();
         $serviceidarray = $request->serviceid;
         $servicedetails = Service::select('servicename', 'price', 'id', 'description')->whereIn('id', $serviceidarray)->get();
         $sum = 0;
         $hourpricehtml = "";
-        $horalyp = Hourlyprice::where('ticketid', $request->qid)->get();
+        $horalypServiceIds = Hourlyprice::where('ticketid', $request->qid)->pluck('serviceid')->toArray();
+        $combinedServiceIds = array_unique(array_merge($serviceidarray, $horalypServiceIds));
+//        $servicedetails = Service::select('servicename', 'price', 'id', 'description')->whereIn('id', $combinedServiceIds)->get();
+
 
         foreach ($servicedetails as $key => $value) {
             $horalyp = Hourlyprice::where('ticketid', $request->qid)->get();
