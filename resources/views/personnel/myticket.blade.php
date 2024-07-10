@@ -92,7 +92,7 @@
                 ->whereIn('services.id',$explode_id)->get();
             @endphp
               <tr>
-                <td>#{{$ticketid}}</td>
+                <td>{{$ticketid}}</td>
                 <td>{{$value->customername}}</td>
                 <td class="address-warp">{{Str::limit($value->address, 60)}}</td>
                 <td>@php

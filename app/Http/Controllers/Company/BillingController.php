@@ -1627,6 +1627,7 @@ class BillingController extends Controller
 
     public function billingvieweditticketmodal(Request $request)
     {
+//        dd($request->all());
        $json = array();
        $auth_id = auth()->user()->id;
        $allservices = Service::where('userid', $auth_id)->get();

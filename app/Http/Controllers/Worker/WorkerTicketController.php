@@ -1060,7 +1060,8 @@ class WorkerTicketController extends Controller
                 return redirect($paynowurl);
             }
             if ($request->type == "save") {
-//                dd(count($request->serviceids));
+//                $description1gjhgjgj = Quote::find(1551);
+//                dd($description1gjhgjgj);
                 if (count($request->serviceids) > 0) {
                     DB::table('hourlyprice')->where('ticketid', $request->qid)->delete();
                     $pricetotal = 0;
@@ -1090,7 +1091,7 @@ class WorkerTicketController extends Controller
                     Hourlyprice::insert($data);
 
                     $newServiceIds = implode(',', $request->serviceids);
-                    DB::table('quote')->where('id', $request->qid)->update(['serviceid' => $newServiceIds]);
+                    DB::table('quote')->where('id', $request->qid)->update(['serviceid' => $newServiceIds,'customer_notes' => $request->customer_notes]);
 
 
 //                    dd(DB::table('quote')->where('id', $request->qid)->first());
