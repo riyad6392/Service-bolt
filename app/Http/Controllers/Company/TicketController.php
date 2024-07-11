@@ -1361,7 +1361,7 @@ class TicketController extends Controller
                         $data['servicedescription'] = $request->servicedescription[$key];
                         $data['hour']=$request->hours[$key] ?? '';
                         $data['minute']=$request->minutes[$key] ?? '';
-                        $data['price'] =$request->prices[$key] ?? '';
+                        $data['price'] =$servicedetails->price ?? '';
                         Hourlyprice::create($data);
                     }
                 }
@@ -1377,6 +1377,30 @@ class TicketController extends Controller
                     ProductDescription::create($data);
                 }
             }
+        }
+        else
+        {
+            foreach ($request->serviceid as $key => $value) {
+                $servicedetails = Service::select('id', 'servicename', 'price','description')->whereIn('id', array($value))->first();
+
+                $data = [
+                    'ticketid' => $request->quoteid,
+                    'servicedescription' => $servicedetails->description,
+                    'hour' => $request->time,
+                    'minute' => $request->minute,
+                    'price' => $servicedetails->price ?? '',
+                ];
+
+                DB::table('hourlyprice')
+                    ->where('serviceid', $value)
+                    ->where('ticketid', $request->quoteid)
+                    ->update($data);
+            }
+
+            DB::table('hourlyprice')
+                ->where('ticketid', $request->quoteid)
+                ->whereNotIn('serviceid', $request->serviceid)
+                ->delete();
         }
         
         $request->session()->flash('success', 'Updated successfully');
