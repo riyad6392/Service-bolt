@@ -1729,13 +1729,18 @@ class BillingController extends Controller
              $serviceinfo = Service::select('id','servicename','description')->where('id',$value1)->first();
              $horalyp = Hourlyprice::where('ticketid',$request->id)->get();
              if(count($horalyp)>0) {
-              $hpinfo = Hourlyprice::select('hour','minute','servicedescription','productdescription')->where('ticketid',$request->id)->whereIn('serviceid',array($value1))->first();
+              $hpinfo = Hourlyprice::select('hour','price','minute','servicedescription','productdescription')->where('ticketid',$request->id)->whereIn('serviceid',array($value1))->first();
+
              }
             
             $servicedescription = $serviceinfo->description;
             if(@$hpinfo->servicedescription!="") {
               $servicedescription = @$hpinfo->servicedescription;
             }
+
+              $hours= @$hpinfo->hour;
+              $minutes= @$hpinfo->minute;
+              $prices= @$hpinfo->price;
             
             $html .='<input type="hidden" name="quoteid" id="quoteid" value="'.$request->id.'">
                 <div class="col-md-12">
@@ -1744,6 +1749,11 @@ class BillingController extends Controller
                     <div class="form-group">
                       <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="'.$serviceinfo->servicename.'"required readonly>
                       <input type="hidden" name="serviceids[]" id="serviceids" value="'.$serviceinfo->id.'">
+                      
+                       <input type="hidden" name="hours[]" id="hours" value="'.$hours.'">
+                       <input type="hidden" name="minutes[]" id="minutes" value="'.$minutes.'">
+                       <input type="hidden" name="prices[]" id="prices" value="'.$prices.'">
+                     
                     </div>
                   </div>
                    <div class="col-md-7 mb-2">

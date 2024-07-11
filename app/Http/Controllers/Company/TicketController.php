@@ -522,6 +522,7 @@ class TicketController extends Controller
     
     public function update(Request $request)
     {
+
         $service = Service::where('id', $request->serviceid)->get()->first();
         $service->servicename = $request->servicename;
         $service->price = $request->price;
@@ -1135,22 +1136,22 @@ class TicketController extends Controller
         if (isset($request->view)) {
             $html .= '<div class="col-md-12 mb-3 position-relative">
                 <label>Invoice Note</label>
-                <input type="text" class="form-control" placeholder="Invoice Note" name="invoicenote" id="invoicenote" value="' . $quotedetails[0]->invoicenote . '">
+                <input type="text" class="form-control" placeholder="Invoice Note" name="invoicenote" id="invoicenote" value="' . strip_tags($quotedetails[0]->invoicenote) . '">
                </div>';
         }
         $html .= '<div class="col-md-12 mb-3">
              <label>Company Notes</label>
-             <textarea class="form-control height-180" placeholder="Company Notes" name="description" id="description" required>' . $quotedetails[0]->description . '</textarea>
+             <textarea class="form-control height-180" placeholder="Company Notes" name="description" id="description" required>' . strip_tags($quotedetails[0]->description) . '</textarea>
            </div>';
 
         $html .= '<div class="col-md-12 mb-3">
              <label>Internal Notes</label>
-             <textarea class="form-control height-180" placeholder="Internal Notes" name="internal_notes" id="internal_notes" required>' . $quotedetails[0]->internal_notes . '</textarea>
+             <textarea class="form-control height-180" placeholder="Internal Notes" name="internal_notes" id="internal_notes" required>' . strip_tags($quotedetails[0]->internal_notes) . '</textarea>
            </div>';
 
         $html .= '<div class="col-md-12 mb-3">
              <label>Customer Notes</label>
-             <textarea class="form-control height-180" placeholder="Customer Notes" name="customer_notes" id="customer_notes" required>' . $quotedetails[0]->customer_notes . '</textarea>
+             <textarea class="form-control height-180" placeholder="Customer Notes" name="customer_notes" id="customer_notes" required>' . strip_tags($quotedetails[0]->customer_notes) . '</textarea>
            </div>';
 
         if ($request->type == "ticket") {
@@ -1330,15 +1331,20 @@ class TicketController extends Controller
         $quote->save();
         
         if (isset($request->invoiceedit)) {
+            dd($request->all());
             if (isset($request->customersiteedit)) {
                 if ($request->serviceid1 != null) {
                     DB::table('hourlyprice')->where('ticketid', $request->quoteid)->delete();
                     $pricetotal = 0;
                     foreach ($request->serviceid1 as $key => $value) {
                         $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
+//                        $hour_minute_price = Hourlyprice::select('hour','minute','price')->where('id',$value)->first();
                         $data['ticketid'] = $request->quoteid;
                         $data['serviceid'] = $value;
                         $data['servicedescription'] = $request->servicedescription[$key];
+                        $data['hour']=$request->hours[$key] ?? '';
+                        $data['minute']=$request->minutes[$key] ?? '';
+                        $data['price'] =$request->prices[$key] ?? '';
                         Hourlyprice::create($data);
                     }
                 }
@@ -1348,9 +1354,14 @@ class TicketController extends Controller
                     $pricetotal = 0;
                     foreach ($request->serviceid as $key => $value) {
                         $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
+//                        $hour_minute_price = Hourlyprice::select('hour','minute','price')->where('id',$value)->first();
+//                        dd($hour_minute_price);
                         $data['ticketid'] = $request->quoteid;
                         $data['serviceid'] = $value;
                         $data['servicedescription'] = $request->servicedescription[$key];
+                        $data['hour']=$request->hours[$key] ?? '';
+                        $data['minute']=$request->minutes[$key] ?? '';
+                        $data['price'] =$request->prices[$key] ?? '';
                         Hourlyprice::create($data);
                     }
                 }
@@ -1359,6 +1370,7 @@ class TicketController extends Controller
             if ($request->productid != null) {
                 DB::table('productdescription')->where('ticketid', $request->quoteid)->delete();
                 foreach ($request->productid as $key => $value) {
+//                    $hour_minute_price = Hourlyprice::select('hour','minute','price')->where('id',$value)->first();
                     $data['ticketid'] = $request->quoteid;
                     $data['productid'] = $value;
                     $data['productdescription'] = $request->productdescription[$key];

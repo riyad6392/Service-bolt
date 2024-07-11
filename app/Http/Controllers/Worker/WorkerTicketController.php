@@ -718,12 +718,15 @@ class WorkerTicketController extends Controller
             $html .= '<option value="' . $value->id . '" ' . @$selectedp . '>' . $value->servicename . ' ($' . $value->price . ')</option>';
         }
 
+
+
         $html .= '</select>
         <a href="#" data-bs-toggle="modal" data-bs-target="#add-services" id="sclick"><i class="fa fa-plus"></i></a>
           </div>';
         $serviceids = explode(",", $quote->serviceid);
         $html .= '<div class="row mt-4" id="testprice">';
         $horalyp = Hourlyprice::where('ticketid', $request->id)->get();
+
         foreach ($horalyp as $key1 => $value1) {
             $serviceinfo = Service::select('id', 'servicename', 'description')->where('id', $value1->serviceid)->first();
 
@@ -735,6 +738,7 @@ class WorkerTicketController extends Controller
 
                 $hhour = $hpinfo->hour ?? "01";
                 $hminute = $hpinfo->minute ?? "00";
+                $servicedescription=$hpinfo->servicedescription;
 
                 $html .= '
         <div class="col-md-12">
@@ -743,6 +747,7 @@ class WorkerTicketController extends Controller
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="" name="servicenames[]" id="servicenames" value="' . htmlspecialchars($serviceinfo->servicename) . '" required readonly>
                         <input type="hidden" name="serviceids[]" id="serviceids" value="' . htmlspecialchars($serviceinfo->id) . '">
+                         <input type="hidden" name="servicedescription[]" id="servicedescription" value="' . htmlspecialchars($servicedescription) . '">
                     </div>
                 </div>
                 <div class="col-md-2 mb-2">
@@ -812,6 +817,7 @@ class WorkerTicketController extends Controller
               ';
             }
         }
+
         $html .= '</div>';
         $html .= '<div class="col-md-12 mb-2">
             <div class="form-group">
@@ -885,10 +891,10 @@ class WorkerTicketController extends Controller
 
     public function sendinvoice(Request $request)
     {
-        DB::beginTransaction();
+
         try {
 
-
+            DB::beginTransaction();
             $auth_id = auth()->user()->id;
             $worker = DB::table('users')->select('userid', 'workerid')->where('id', $auth_id)->first();
 
@@ -994,14 +1000,11 @@ class WorkerTicketController extends Controller
                 $companyimage = url('') . '/uploads/servicebolt-noimage.png';
             }
             $cdefaultimage = url('') . '/uploads/servicebolt-noimage.png';
-            if ($request->description) {
-                $description = $request->description;
-            } else {
-                $description = null;
-            }
+
+
             DB::table('quote')->where('id', '=', $request->id)->orWhere('parentid', '=', $request->id)
                 ->update([
-                    "description" => "$description", "serviceid" => "$serviceid", "servicename" => "$servicenames", "product_id" => "$pids", "price" => "$request->price", "tickettotal" => "$request->ticketprice", "tax" => "$totaltax", "address" => "$request->address", "invoicenote" => "$request->invoicenote"
+                    "serviceid" => "$serviceid", "servicename" => "$servicenames", "product_id" => "$pids", "price" => "$request->price", "tickettotal" => "$request->ticketprice", "tax" => "$totaltax", "address" => "$request->address", "invoicenote" => "$request->invoicenote"
                 ]);
 
             // $quote->serviceid = $serviceid;
@@ -1060,8 +1063,8 @@ class WorkerTicketController extends Controller
                 return redirect($paynowurl);
             }
             if ($request->type == "save") {
-//                $description1gjhgjgj = Quote::find(1551);
-//                dd($description1gjhgjgj);
+//                dd($request->all());
+
                 if (count($request->serviceids) > 0) {
                     DB::table('hourlyprice')->where('ticketid', $request->qid)->delete();
                     $pricetotal = 0;
