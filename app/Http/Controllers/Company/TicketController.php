@@ -1331,7 +1331,7 @@ class TicketController extends Controller
         $quote->save();
         
         if (isset($request->invoiceedit)) {
-            dd($request->all());
+//            dd($request->all());
             if (isset($request->customersiteedit)) {
                 if ($request->serviceid1 != null) {
                     DB::table('hourlyprice')->where('ticketid', $request->quoteid)->delete();
@@ -1344,7 +1344,7 @@ class TicketController extends Controller
                         $data['servicedescription'] = $request->servicedescription[$key];
                         $data['hour']=$request->hours[$key] ?? '';
                         $data['minute']=$request->minutes[$key] ?? '';
-                        $data['price'] =$request->prices[$key] ?? '';
+                        $data['price'] =$servicedetails->price ?? '';
                         Hourlyprice::create($data);
                     }
                 }
