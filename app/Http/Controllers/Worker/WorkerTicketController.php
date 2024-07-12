@@ -1091,6 +1091,7 @@ class WorkerTicketController extends Controller
 
                         $pricetotal += number_format((float)$hrpicehour + $hrpiceminute, 2, '.', '');
                     }
+//                    dd($data);
                     Hourlyprice::insert($data);
 
                     $newServiceIds = implode(',', $request->serviceids);

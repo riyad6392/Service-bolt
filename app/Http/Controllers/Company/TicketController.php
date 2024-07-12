@@ -1337,13 +1337,13 @@ class TicketController extends Controller
                     DB::table('hourlyprice')->where('ticketid', $request->quoteid)->delete();
                     $pricetotal = 0;
                     foreach ($request->serviceid1 as $key => $value) {
-                        $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
+                        $servicedetails = Service::select('id','time','minute', 'servicename', 'price')->whereIn('id', array($value))->first();
 //                        $hour_minute_price = Hourlyprice::select('hour','minute','price')->where('id',$value)->first();
                         $data['ticketid'] = $request->quoteid;
                         $data['serviceid'] = $value;
                         $data['servicedescription'] = $request->servicedescription[$key];
-                        $data['hour']=$request->hours[$key] ?? '';
-                        $data['minute']=$request->minutes[$key] ?? '';
+                        $data['hour']=$servicedetails->time;
+                        $data['minute']=$servicedetails->minute;
                         $data['price'] =$servicedetails->price ?? '';
                         Hourlyprice::create($data);
                     }
@@ -1353,14 +1353,14 @@ class TicketController extends Controller
                     DB::table('hourlyprice')->where('ticketid', $request->quoteid)->delete();
                     $pricetotal = 0;
                     foreach ($request->serviceid as $key => $value) {
-                        $servicedetails = Service::select('id', 'servicename', 'price')->whereIn('id', array($value))->first();
+                        $servicedetails = Service::select('id','time','minute', 'servicename', 'price')->whereIn('id', array($value))->first();
 //                        $hour_minute_price = Hourlyprice::select('hour','minute','price')->where('id',$value)->first();
 //                        dd($hour_minute_price);
                         $data['ticketid'] = $request->quoteid;
                         $data['serviceid'] = $value;
                         $data['servicedescription'] = $request->servicedescription[$key];
-                        $data['hour']=$request->hours[$key] ?? '';
-                        $data['minute']=$request->minutes[$key] ?? '';
+                        $data['hour']=$servicedetails->time;
+                        $data['minute']=$servicedetails->minute;
                         $data['price'] =$servicedetails->price ?? '';
                         Hourlyprice::create($data);
                     }
