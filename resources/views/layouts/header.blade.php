@@ -1,665 +1,791 @@
 <!DOCTYPE html>
 <html>
 <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Favicon -->
-<link rel="shortcut icon" href="{{url('/')}}/uploads/serviceboltfavicon.png" />
-<link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
-<link rel='stylesheet' href="{{ asset('css/main.min.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{url('/')}}/uploads/serviceboltfavicon.png"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.3/css/bootstrap.min.css"
+          integrity="sha512-oc9+XSs1H243/FRN9Rw62Fn8EtxjEYWHXRvjS43YtueEewbS6ObfXcJNyohjHqVKFPoXXUxwc+q1K7Dee6vv9g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel='stylesheet' href="{{ asset('css/main.min.css')}}">
 
 
-<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="{{ asset('css/select2.min.css')}}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+          integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel='stylesheet' href="{{ asset('css/slick-theme.css')}}">
+    <link rel='stylesheet' href="{{ asset('css/slick.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css')}}">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css'>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap5.min.css">
+    <!-- for datepicker -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css"
+          rel="stylesheet"/>
+    {{--    <link rel='stylesheet' href="{{ asset('css/jquery.typeahead.css')}}">--}}
 
-<link rel='stylesheet' href="{{ asset('css/slick-theme.css')}}">
-<link rel='stylesheet' href="{{ asset('css/slick.css')}}">
-<link rel="stylesheet" type="text/css" href="{{ asset('css/style.css')}}">
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css'>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap5.min.css">
-<!-- for datepicker -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
-<link rel='stylesheet' href="{{ asset('css/jquery.typeahead.css')}}">
-
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css"> -->
-
-
-<!-- for column visibility -->
-<!-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css"> -->
-
-<link rel='stylesheet' href="{{ asset('css/dropify.css')}}">
-
-<style type="text/css">
-	.wrapper {color: #555;cursor: help;position: relative;text-align: center;-webkit-transform: translateZ(0); /* webkit flicker fix */-webkit-font-smoothing: antialiased; /* webkit text rendering fix */display: inline-block;}
-
-.wrapper .tooltip {
-    background: #000000;
-    bottom: 100%;
-    color: #fff;
-    display: block;
-    left: auto;
-    margin-bottom: 15px;
-    opacity: 0;
-    padding: 10px;
-    pointer-events: none;
-    position: absolute;
-    width: 302px;
-    -webkit-transform: translateY(10px);
-    -moz-transform: translateY(10px);
-    -ms-transform: translateY(10px);
-    -o-transform: translateY(10px);
-    transform: translateY(10px);
-    -webkit-transition: all .25s ease-out;
-    -moz-transition: all .25s ease-out;
-    -ms-transition: all .25s ease-out;
-    -o-transition: all .25s ease-out;
-    transition: all .25s ease-out;
-    -webkit-box-shadow: 2px 2px 6px rgb(0 0 0 / 28%);
-    -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-    -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-    -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-    box-shadow: 2px 2px 6px rgb(0 0 0 / 28%);
-    right: 0;
-}
-
-/* This bridges the gap so you can mouse into the tooltip without it disappearing */
-.wrapper .tooltip:before {
-bottom: -20px;
-content: " ";
-display: block;
-height: 20px;
-left: 0;
-position: absolute;
-width: 100%;
-}
-
-/* CSS Triangles - see Trevor's post */
-.wrapper .tooltip:after {
-    border-left: solid transparent 10px;
-    border-right: solid transparent 10px;
-    border-top: solid #000000 10px;
-    bottom: -10px;
-    content: " ";
-    height: 0;
-    left: 100%;
-    margin-left: -20px;
-    position: absolute;
-    width: 0;
-}
-
-.wrapper:hover .tooltip {
-opacity: 1;
-pointer-events: auto;
--webkit-transform: translateY(0px);
-  -moz-transform: translateY(0px);
-  -ms-transform: translateY(0px);
-   -o-transform: translateY(0px);
-    transform: translateY(0px);
-}
-
-/* IE can just show/hide with no transition */
-.lte8 .wrapper .tooltip {
-display: none;
-}
-
-.lte8 .wrapper:hover .tooltip {
-display: block;
-}
-
-.bs-searchbox .form-control.heightserch {
-    height: auto;
-    border: 1px solid #ccc;
-}
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css"> -->
 
 
-.bootstrap-select .dropdown-menu li {
-    text-align: left;
-}
-i.fa.fa-angle-down {
-    padding: 0px;
-    font-size: 19px;
-}
-#loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid #3498db;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite; /* Safari */
-  animation: spin 2s linear infinite;
-}
+    <!-- for column visibility -->
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css"> -->
 
-.loadershow {
-    height: 100%;
-    position: fixed;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    /*background: rgb(35 35 34 / 43%);*/
-    background: rgba(255, 255, 255, 0.7);
+    <link rel='stylesheet' href="{{ asset('css/dropify.css')}}">
 
-    padding-top: 0;
-    display: flex;
-    justify-content: center;
-    top: 0;
-    align-items: center;
-}
+    <style type="text/css">
+        .wrapper {
+            color: #555;
+            cursor: help;
+            position: relative;
+            text-align: center;
+            -webkit-transform: translateZ(0); /* webkit flicker fix */
+            -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+            display: inline-block;
+        }
 
-/* Safari */
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
+        .wrapper .tooltip {
+            background: #000000;
+            bottom: 100%;
+            color: #fff;
+            display: block;
+            left: auto;
+            margin-bottom: 15px;
+            opacity: 0;
+            padding: 10px;
+            pointer-events: none;
+            position: absolute;
+            width: 302px;
+            -webkit-transform: translateY(10px);
+            -moz-transform: translateY(10px);
+            -ms-transform: translateY(10px);
+            -o-transform: translateY(10px);
+            transform: translateY(10px);
+            -webkit-transition: all .25s ease-out;
+            -moz-transition: all .25s ease-out;
+            -ms-transition: all .25s ease-out;
+            -o-transition: all .25s ease-out;
+            transition: all .25s ease-out;
+            -webkit-box-shadow: 2px 2px 6px rgb(0 0 0 / 28%);
+            -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+            -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+            -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+            box-shadow: 2px 2px 6px rgb(0 0 0 / 28%);
+            right: 0;
+        }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+        /* This bridges the gap so you can mouse into the tooltip without it disappearing */
+        .wrapper .tooltip:before {
+            bottom: -20px;
+            content: " ";
+            display: block;
+            height: 20px;
+            left: 0;
+            position: absolute;
+            width: 100%;
+        }
+
+        /* CSS Triangles - see Trevor's post */
+        .wrapper .tooltip:after {
+            border-left: solid transparent 10px;
+            border-right: solid transparent 10px;
+            border-top: solid #000000 10px;
+            bottom: -10px;
+            content: " ";
+            height: 0;
+            left: 100%;
+            margin-left: -20px;
+            position: absolute;
+            width: 0;
+        }
+
+        .wrapper:hover .tooltip {
+            opacity: 1;
+            pointer-events: auto;
+            -webkit-transform: translateY(0px);
+            -moz-transform: translateY(0px);
+            -ms-transform: translateY(0px);
+            -o-transform: translateY(0px);
+            transform: translateY(0px);
+        }
+
+        /* IE can just show/hide with no transition */
+        .lte8 .wrapper .tooltip {
+            display: none;
+        }
+
+        .lte8 .wrapper:hover .tooltip {
+            display: block;
+        }
+
+        .bs-searchbox .form-control.heightserch {
+            height: auto;
+            border: 1px solid #ccc;
+        }
 
 
-.position-absolute.not-bell {
-    width: 10px;
-    height: 10px;
-    background-color: green;
-    border-radius: 100%;
-    top: -5px;
-     animation: 1s blink ease infinite;
-  
-}
-.blinking {
-  -webkit-animation: 1s blink ease infinite;
-  -moz-animation: 1s blink ease infinite;
-  -ms-animation: 1s blink ease infinite;
-  -o-animation: 1s blink ease infinite;
-  animation: 1s blink ease infinite;
-  
-}
+        .bootstrap-select .dropdown-menu li {
+            text-align: left;
+        }
 
-@keyframes "blink" {
-  from, to {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-}
+        i.fa.fa-angle-down {
+            padding: 0px;
+            font-size: 19px;
+        }
 
-@-moz-keyframes blink {
-  from, to {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-}
+        #loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+        }
 
-@-webkit-keyframes "blink" {
-  from, to {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-}
+        .loadershow {
+            height: 100%;
+            position: fixed;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            /*background: rgb(35 35 34 / 43%);*/
+            background: rgba(255, 255, 255, 0.7);
 
-@-ms-keyframes "blink" {
-  from, to {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-}
+            padding-top: 0;
+            display: flex;
+            justify-content: center;
+            top: 0;
+            align-items: center;
+        }
 
-@-o-keyframes "blink" {
-  from, to {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-.notification-icon .dropdown-menu{
-    top: 23px!important;
-}
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
 
-li.notification-item {
-    margin-bottom: 5px;
-    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
-}
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
-ul#notification {
-  border: 1px solid yellow;
-  border-radius:5px ;
-}
 
-</style>
-  <title>
-  Services Bolt
-  </title>
+        .position-absolute.not-bell {
+            width: 10px;
+            height: 10px;
+            background-color: green;
+            border-radius: 100%;
+            top: -5px;
+            animation: 1s blink ease infinite;
+
+        }
+
+        .blinking {
+            -webkit-animation: 1s blink ease infinite;
+            -moz-animation: 1s blink ease infinite;
+            -ms-animation: 1s blink ease infinite;
+            -o-animation: 1s blink ease infinite;
+            animation: 1s blink ease infinite;
+
+        }
+
+        @keyframes "blink" {
+            from, to {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @-moz-keyframes blink {
+            from, to {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes "blink" {
+            from, to {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @-ms-keyframes "blink" {
+            from, to {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @-o-keyframes "blink" {
+            from, to {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .notification-icon .dropdown-menu {
+            top: 23px !important;
+        }
+
+        li.notification-item {
+            margin-bottom: 5px;
+            box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+        }
+
+        ul#notification {
+            border: 1px solid yellow;
+            border-radius: 5px;
+        }
+
+    </style>
+    <title>
+        Services Bolt
+    </title>
 </head>
 <body style="background: #F7F9FA;">
-	
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- sidebar -->
 @php
-if(strpos(Request::url(), 'customer/view') !== false){
-	$clasa = "active";
-} else {
-	$clasa = "";
-}
-if(strpos(Request::url(), 'billingview') !== false) {
-	$classbiling = "active";
-} else {
-	$classbiling = "";
-}
+    if(strpos(Request::url(), 'customer/view') !== false){
+        $clasa = "active";
+    } else {
+        $clasa = "";
+    }
+    if(strpos(Request::url(), 'billingview') !== false) {
+        $classbiling = "active";
+    } else {
+        $classbiling = "";
+    }
 
-if(strpos(Request::url(), 'paymentsetting') !== false) {
-    $classpsetting = "active";
-} else {
-    $classpsetting = "";
-}
+    if(strpos(Request::url(), 'paymentsetting') !== false) {
+        $classpsetting = "active";
+    } else {
+        $classpsetting = "";
+    }
 
-if(strpos(Request::url(), 'detail') !== false || strpos(Request::url(), 'detailweek') !== false){
-	$classcheduler = "active";
-} else {
-	$classcheduler = "";
-}
+    if(strpos(Request::url(), 'detail') !== false || strpos(Request::url(), 'detailweek') !== false){
+        $classcheduler = "active";
+    } else {
+        $classcheduler = "";
+    }
 
 
-if(strpos(Request::url(), 'searchtimeoff') !== false) {
-	$classtimeoff = "active";
-} else {
-	$classtimeoff = "";
-}
+    if(strpos(Request::url(), 'searchtimeoff') !== false) {
+        $classtimeoff = "active";
+    } else {
+        $classtimeoff = "";
+    }
 
-if(strpos(Request::url(), 'timeoff/ptoreport') !== false) {
-  $classtimeoffreport = "active";
-} else {
-  $classtimeoffreport = "";
-}
+    if(strpos(Request::url(), 'timeoff/ptoreport') !== false) {
+      $classtimeoffreport = "active";
+    } else {
+      $classtimeoffreport = "";
+    }
 
-if(strpos(Request::url(), 'categories') !== false || strpos(Request::url(), 'inventory') !== false) {
-  $classpc = "active";
-} else {
-  $classpc = "";
-}
-if(strpos(Request::url(), 'billing') !== false || strpos(Request::url(), 'managecommission') !== false) {
-  $manage_bill = "active";
-} else {
-  $manage_bill = "";
-}
+    if(strpos(Request::url(), 'categories') !== false || strpos(Request::url(), 'inventory') !== false) {
+      $classpc = "active";
+    } else {
+      $classpc = "";
+    }
+    if(strpos(Request::url(), 'billing') !== false || strpos(Request::url(), 'managecommission') !== false) {
+      $manage_bill = "active";
+    } else {
+      $manage_bill = "";
+    }
 
-if(strpos(Request::url(), 'receivepayments') !== false || strpos(Request::url(), 'receivepayments') !== false) {
-  $receivepayments = "active";
-} else {
-  $receivepayments = "";
-}
+    if(strpos(Request::url(), 'receivepayments') !== false || strpos(Request::url(), 'receivepayments') !== false) {
+      $receivepayments = "active";
+    } else {
+      $receivepayments = "";
+    }
 
-if(strpos(Request::url(), 'paynow') !== false || strpos(Request::url(), 'paynow') !== false) {
-  $paynow = "active";
-} else {
-  $paynow = "";
-}
+    if(strpos(Request::url(), 'paynow') !== false || strpos(Request::url(), 'paynow') !== false) {
+      $paynow = "active";
+    } else {
+      $paynow = "";
+    }
 
-$notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest()->offset(0)->limit(5)->get();
+    $notifications = App\Models\Notification::where('uid',Auth::user()->id)->latest()->offset(0)->limit(5)->get();
 
-$userinfo = App\Models\User::select('googleplace')->where('role','superadmin')->first();
-$googleplacekey = $userinfo->googleplace;
+    $userinfo = App\Models\User::select('googleplace')->where('role','superadmin')->first();
+    $googleplacekey = $userinfo->googleplace;
 @endphp
 <div class="sidebar pt-2" id="siderbarpt2">
-	<div class="sidebar-scroll">
-    <div class="logo">
-        <img src="{{ asset('images/logo.png')}}" style="width: 166px;">
-    </div>
-    <ul class="dashboard mt-3">
-     <li class="link">
-					<a href="{{ route('company.home') }}"><svg width="18" height="18" viewBox="0 0 18 18"  xmlns="http://www.w3.org/2000/svg">
-		<path d="M6.9375 0H1.3125C0.58875 0 0 0.58875 0 1.3125V4.6875C0 5.41125 0.58875 6 1.3125 6H6.9375C7.66125 6 8.25 5.41125 8.25 4.6875V1.3125C8.25 0.58875 7.66125 0 6.9375 0Z" fill="currentColor"/>
-		<path d="M6.9375 7.5H1.3125C0.58875 7.5 0 8.08875 0 8.8125V16.6875C0 17.4113 0.58875 18 1.3125 18H6.9375C7.66125 18 8.25 17.4113 8.25 16.6875V8.8125C8.25 8.08875 7.66125 7.5 6.9375 7.5Z" fill="currentColor"/>
-		<path d="M16.6875 12H11.0625C10.3387 12 9.75 12.5888 9.75 13.3125V16.6875C9.75 17.4113 10.3387 18 11.0625 18H16.6875C17.4112 18 18 17.4113 18 16.6875V13.3125C18 12.5888 17.4112 12 16.6875 12Z" fill="currentColor"/>
-		<path d="M16.6875 0H11.0625C10.3387 0 9.75 0.58875 9.75 1.3125V9.1875C9.75 9.91125 10.3387 10.5 11.0625 10.5H16.6875C17.4112 10.5 18 9.91125 18 9.1875V1.3125C18 0.58875 17.4112 0 16.6875 0Z" fill="currentColor"/>
-		</svg> Dashboard</a></li>
-		
-		<li class="link {{$clasa}}"><a href="{{route('company.customer')}}"><svg width="18" height="16" viewBox="0 0 18 16" xmlns="http://www.w3.org/2000/svg">
-		<path d="M9 6.26434C7.31079 6.26434 5.94141 4.89496 5.94141 3.20575C5.94141 1.51653 7.31079 0.147156 9 0.147156C10.6892 0.147156 12.0586 1.51653 12.0586 3.20575C12.0586 4.89496 10.6892 6.26434 9 6.26434Z" fill="currentColor"/>
-		<path d="M2.8125 6.26432C1.74461 6.26432 0.878906 5.39862 0.878906 4.33072C0.878906 3.26283 1.74461 2.39713 2.8125 2.39713C3.88039 2.39713 4.74609 3.26283 4.74609 4.33072C4.74609 5.39862 3.88039 6.26432 2.8125 6.26432Z" fill="currentColor"/>
-		<path d="M15.1875 6.26432C14.1196 6.26432 13.2539 5.39862 13.2539 4.33072C13.2539 3.26283 14.1196 2.39713 15.1875 2.39713C16.2554 2.39713 17.1211 3.26283 17.1211 4.33072C17.1211 5.39862 16.2554 6.26432 15.1875 6.26432Z" fill="currentColor"/>
-		<path d="M13.2824 8.00069C14.0435 7.37709 14.7328 7.45964 15.6129 7.45964C16.9291 7.45964 18 8.52417 18 9.83233V13.6717C18 14.2399 17.5363 14.7018 16.9661 14.7018C14.5042 14.7018 14.8008 14.7464 14.8008 14.5956C14.8008 11.875 15.123 9.8799 13.2824 8.00069Z" fill="currentColor"/>
-		<path d="M8.16307 7.47367C9.70024 7.34546 11.0364 7.47515 12.1888 8.42641C14.1174 9.97117 13.7462 12.0511 13.7462 14.5956C13.7462 15.2688 13.1985 15.8268 12.5151 15.8268C5.09421 15.8268 4.79886 16.0662 4.35881 15.0917C4.2145 14.7621 4.25405 14.8668 4.25405 11.7142C4.25405 9.21018 6.42224 7.47367 8.16307 7.47367Z" fill="currentColor"/>
-		<path d="M2.38726 7.45965C3.27215 7.45965 3.95766 7.37794 4.71777 8.0007C2.89088 9.86594 3.19937 11.725 3.19937 14.5956C3.19937 14.7473 3.44557 14.7018 1.07101 14.7018C0.480389 14.7018 0.000154495 14.2233 0.000154495 13.6352V9.83233C0.000154495 8.52417 1.07101 7.45965 2.38726 7.45965Z" fill="currentColor"/>
-		</svg> Customers  </a></li>
-		      
-		<li class="link" {{$classpsetting}}><a href="{{route('company.personnel')}}" ><svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-		<path d="M6.44311 7.36692H9.01011H11.5771C11.8559 7.36692 12.0817 7.14019 12.0817 6.86021V6.30801C12.0817 4.85982 10.9317 3.6091 9.3647 3.6091C10.1922 3.44366 10.8162 2.71061 10.8162 1.83076C10.8162 0.829331 10.0074 0.0176086 9.01011 0.0176086C8.0128 0.0176086 7.20407 0.829331 7.20407 1.83076C7.20407 2.71061 7.82798 3.44366 8.65553 3.6091C7.09058 3.6091 5.93848 4.85789 5.93848 6.30801V6.86021C5.93851 7.14016 6.16429 7.36692 6.44311 7.36692Z" fill="currentColor"/>
-		<path d="M2.26824 8.78087C2.30016 8.7867 2.33184 8.78951 2.36316 8.78951C2.61277 8.78951 2.8345 8.61057 2.8808 8.35519C3.01049 7.63962 3.25602 6.94434 3.61054 6.28871C3.95268 5.656 4.38173 5.08781 4.88576 4.59994C5.09522 4.39723 5.10134 4.06237 4.89944 3.85203C4.69754 3.64172 4.36408 3.63557 4.15462 3.83828C3.57289 4.40138 3.07831 5.05599 2.6847 5.78394C2.27678 6.53832 1.99402 7.33967 1.84429 8.16577C1.79222 8.45317 1.98203 8.72855 2.26824 8.78087Z" fill="currentColor"/>
-		<path d="M14.4098 6.28869C14.7643 6.94436 15.0099 7.63961 15.1396 8.35518C15.1859 8.61059 15.4076 8.7895 15.6572 8.7895C15.6885 8.7895 15.7202 8.78669 15.7521 8.78085C16.0383 8.72854 16.2281 8.45316 16.176 8.16576C16.0263 7.33965 15.7435 6.53827 15.3356 5.78392C14.942 5.05597 14.4474 4.40133 13.8657 3.83827C13.6562 3.63552 13.3228 3.64171 13.1209 3.85201C12.919 4.06235 12.9251 4.39718 13.1346 4.59993C13.6386 5.08779 14.0677 5.65599 14.4098 6.28869Z" fill="currentColor"/>
-		<path d="M11.1383 12.8208C10.4588 13.0451 9.7431 13.16 9.01024 13.1625C9.00074 13.1628 8.99093 13.1628 8.98144 13.1628C8.26471 13.1628 7.5624 13.0553 6.89481 12.8434C6.6174 12.7552 6.3217 12.9097 6.23391 13.1882C6.14613 13.4668 6.29993 13.7637 6.57735 13.8518C7.3478 14.0966 8.15654 14.2207 8.98144 14.2207H9.01024C9.85515 14.2175 10.6814 14.0849 11.467 13.8257C11.7434 13.7347 11.894 13.4357 11.803 13.1582C11.7125 12.8808 11.4146 12.7295 11.1383 12.8208Z" fill="currentColor"/>
-		<path d="M3.42615 14.2246C4.25373 14.0591 4.87768 13.3258 4.87768 12.4462C4.87768 11.4448 4.06895 10.6327 3.07164 10.6327C2.07432 10.6327 1.26559 11.4448 1.26559 12.4462C1.26559 13.3258 1.88954 14.0591 2.71712 14.2246C1.15351 14.2246 0 15.4721 0 16.9235V17.4757C0 17.7553 0.225809 17.9824 0.504633 17.9824H3.07164H5.63864C5.91746 17.9824 6.14327 17.7553 6.14327 17.4757V16.9235C6.14327 15.4782 4.99634 14.2246 3.42615 14.2246Z" fill="currentColor"/>
-		<path d="M15.2829 14.2246C16.1105 14.0591 16.7344 13.3258 16.7344 12.4462C16.7344 11.4448 15.9257 10.6327 14.9284 10.6327C13.9307 10.6327 13.1223 11.4448 13.1223 12.4462C13.1223 13.3258 13.746 14.0591 14.5737 14.2246C13.0065 14.2246 11.8567 15.475 11.8567 16.9235V17.4757C11.8567 17.7553 12.0825 17.9824 12.3613 17.9824H14.9283H17.4953C17.7738 17.9824 18 17.7553 18 17.4757V16.9235C18 15.4752 16.8499 14.2246 15.2829 14.2246Z" fill="currentColor"/>
-		</svg> Personnel  </a></li>
+    <div class="sidebar-scroll">
+        <div class="logo">
+            <img src="{{ asset('images/logo.png')}}" style="width: 166px;">
+        </div>
+        <ul class="dashboard mt-3">
+            <li class="link">
+                <a href="{{ route('company.home') }}">
+                    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.9375 0H1.3125C0.58875 0 0 0.58875 0 1.3125V4.6875C0 5.41125 0.58875 6 1.3125 6H6.9375C7.66125 6 8.25 5.41125 8.25 4.6875V1.3125C8.25 0.58875 7.66125 0 6.9375 0Z"
+                              fill="currentColor"/>
+                        <path d="M6.9375 7.5H1.3125C0.58875 7.5 0 8.08875 0 8.8125V16.6875C0 17.4113 0.58875 18 1.3125 18H6.9375C7.66125 18 8.25 17.4113 8.25 16.6875V8.8125C8.25 8.08875 7.66125 7.5 6.9375 7.5Z"
+                              fill="currentColor"/>
+                        <path d="M16.6875 12H11.0625C10.3387 12 9.75 12.5888 9.75 13.3125V16.6875C9.75 17.4113 10.3387 18 11.0625 18H16.6875C17.4112 18 18 17.4113 18 16.6875V13.3125C18 12.5888 17.4112 12 16.6875 12Z"
+                              fill="currentColor"/>
+                        <path d="M16.6875 0H11.0625C10.3387 0 9.75 0.58875 9.75 1.3125V9.1875C9.75 9.91125 10.3387 10.5 11.0625 10.5H16.6875C17.4112 10.5 18 9.91125 18 9.1875V1.3125C18 0.58875 17.4112 0 16.6875 0Z"
+                              fill="currentColor"/>
+                    </svg>
+                    Dashboard</a></li>
 
-		<li class="link {{$classtimeoff}}"><a href="{{route('company.timeoff')}}" ><svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
-		<g clip-path="url(#clip0)">
-		<path d="M16.2 2.32021H15.3V1.25254C15.3 0.611943 14.94 0.184875 14.4 0.184875C13.86 0.184875 13.5 0.611943 13.5 1.25254V2.32021H4.5V1.25254C4.5 0.611943 4.14 0.184875 3.6 0.184875C3.06 0.184875 2.7 0.611943 2.7 1.25254V2.32021H0.9C0.45 2.32021 0 2.74728 0 3.38788V18.3352C0 18.9758 0.45 19.4029 0.9 19.4029H6.39C5.76 18.1217 5.4 16.627 5.4 15.1322C5.4 10.4345 8.64 6.59088 12.6 6.59088C14.31 6.59088 15.84 7.33825 17.1 8.51268V3.38788C17.1 2.85404 16.65 2.32021 16.2 2.32021Z" fill="currentColor"/>
-		<path d="M12.6 8.72622C9.63 8.72622 7.2 11.6089 7.2 15.1322C7.2 18.6555 9.63 21.5382 12.6 21.5382C15.57 21.5382 18 18.6555 18 15.1322C18 11.6089 15.57 8.72622 12.6 8.72622ZM14.4 16.1999H12.6C12.06 16.1999 11.7 15.7728 11.7 15.1322V11.9292C11.7 11.2886 12.06 10.8616 12.6 10.8616C13.14 10.8616 13.5 11.2886 13.5 11.9292V14.0646H14.4C14.94 14.0646 15.3 14.4916 15.3 15.1322C15.3 15.7728 14.94 16.1999 14.4 16.1999Z" fill="currentColor"/>
-		</g>
-		<defs>
-		<clipPath id="clip0">
-		<rect width="18" height="21.3534" fill="white" transform="translate(0 0.184875)"/>
-		</clipPath>
-		</defs>
-		</svg> PTO  </a></li>
+            <li class="link {{$clasa}}"><a href="{{route('company.customer')}}">
+                    <svg width="18" height="16" viewBox="0 0 18 16" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 6.26434C7.31079 6.26434 5.94141 4.89496 5.94141 3.20575C5.94141 1.51653 7.31079 0.147156 9 0.147156C10.6892 0.147156 12.0586 1.51653 12.0586 3.20575C12.0586 4.89496 10.6892 6.26434 9 6.26434Z"
+                              fill="currentColor"/>
+                        <path d="M2.8125 6.26432C1.74461 6.26432 0.878906 5.39862 0.878906 4.33072C0.878906 3.26283 1.74461 2.39713 2.8125 2.39713C3.88039 2.39713 4.74609 3.26283 4.74609 4.33072C4.74609 5.39862 3.88039 6.26432 2.8125 6.26432Z"
+                              fill="currentColor"/>
+                        <path d="M15.1875 6.26432C14.1196 6.26432 13.2539 5.39862 13.2539 4.33072C13.2539 3.26283 14.1196 2.39713 15.1875 2.39713C16.2554 2.39713 17.1211 3.26283 17.1211 4.33072C17.1211 5.39862 16.2554 6.26432 15.1875 6.26432Z"
+                              fill="currentColor"/>
+                        <path d="M13.2824 8.00069C14.0435 7.37709 14.7328 7.45964 15.6129 7.45964C16.9291 7.45964 18 8.52417 18 9.83233V13.6717C18 14.2399 17.5363 14.7018 16.9661 14.7018C14.5042 14.7018 14.8008 14.7464 14.8008 14.5956C14.8008 11.875 15.123 9.8799 13.2824 8.00069Z"
+                              fill="currentColor"/>
+                        <path d="M8.16307 7.47367C9.70024 7.34546 11.0364 7.47515 12.1888 8.42641C14.1174 9.97117 13.7462 12.0511 13.7462 14.5956C13.7462 15.2688 13.1985 15.8268 12.5151 15.8268C5.09421 15.8268 4.79886 16.0662 4.35881 15.0917C4.2145 14.7621 4.25405 14.8668 4.25405 11.7142C4.25405 9.21018 6.42224 7.47367 8.16307 7.47367Z"
+                              fill="currentColor"/>
+                        <path d="M2.38726 7.45965C3.27215 7.45965 3.95766 7.37794 4.71777 8.0007C2.89088 9.86594 3.19937 11.725 3.19937 14.5956C3.19937 14.7473 3.44557 14.7018 1.07101 14.7018C0.480389 14.7018 0.000154495 14.2233 0.000154495 13.6352V9.83233C0.000154495 8.52417 1.07101 7.45965 2.38726 7.45965Z"
+                              fill="currentColor"/>
+                    </svg>
+                    Customers </a></li>
 
-    <li class="link {{$classtimeoffreport}}"><a href="{{route('company.timeoffptoreport')}}" ><svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+            <li class="link" {{$classpsetting}}><a href="{{route('company.personnel')}}">
+                    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.44311 7.36692H9.01011H11.5771C11.8559 7.36692 12.0817 7.14019 12.0817 6.86021V6.30801C12.0817 4.85982 10.9317 3.6091 9.3647 3.6091C10.1922 3.44366 10.8162 2.71061 10.8162 1.83076C10.8162 0.829331 10.0074 0.0176086 9.01011 0.0176086C8.0128 0.0176086 7.20407 0.829331 7.20407 1.83076C7.20407 2.71061 7.82798 3.44366 8.65553 3.6091C7.09058 3.6091 5.93848 4.85789 5.93848 6.30801V6.86021C5.93851 7.14016 6.16429 7.36692 6.44311 7.36692Z"
+                              fill="currentColor"/>
+                        <path d="M2.26824 8.78087C2.30016 8.7867 2.33184 8.78951 2.36316 8.78951C2.61277 8.78951 2.8345 8.61057 2.8808 8.35519C3.01049 7.63962 3.25602 6.94434 3.61054 6.28871C3.95268 5.656 4.38173 5.08781 4.88576 4.59994C5.09522 4.39723 5.10134 4.06237 4.89944 3.85203C4.69754 3.64172 4.36408 3.63557 4.15462 3.83828C3.57289 4.40138 3.07831 5.05599 2.6847 5.78394C2.27678 6.53832 1.99402 7.33967 1.84429 8.16577C1.79222 8.45317 1.98203 8.72855 2.26824 8.78087Z"
+                              fill="currentColor"/>
+                        <path d="M14.4098 6.28869C14.7643 6.94436 15.0099 7.63961 15.1396 8.35518C15.1859 8.61059 15.4076 8.7895 15.6572 8.7895C15.6885 8.7895 15.7202 8.78669 15.7521 8.78085C16.0383 8.72854 16.2281 8.45316 16.176 8.16576C16.0263 7.33965 15.7435 6.53827 15.3356 5.78392C14.942 5.05597 14.4474 4.40133 13.8657 3.83827C13.6562 3.63552 13.3228 3.64171 13.1209 3.85201C12.919 4.06235 12.9251 4.39718 13.1346 4.59993C13.6386 5.08779 14.0677 5.65599 14.4098 6.28869Z"
+                              fill="currentColor"/>
+                        <path d="M11.1383 12.8208C10.4588 13.0451 9.7431 13.16 9.01024 13.1625C9.00074 13.1628 8.99093 13.1628 8.98144 13.1628C8.26471 13.1628 7.5624 13.0553 6.89481 12.8434C6.6174 12.7552 6.3217 12.9097 6.23391 13.1882C6.14613 13.4668 6.29993 13.7637 6.57735 13.8518C7.3478 14.0966 8.15654 14.2207 8.98144 14.2207H9.01024C9.85515 14.2175 10.6814 14.0849 11.467 13.8257C11.7434 13.7347 11.894 13.4357 11.803 13.1582C11.7125 12.8808 11.4146 12.7295 11.1383 12.8208Z"
+                              fill="currentColor"/>
+                        <path d="M3.42615 14.2246C4.25373 14.0591 4.87768 13.3258 4.87768 12.4462C4.87768 11.4448 4.06895 10.6327 3.07164 10.6327C2.07432 10.6327 1.26559 11.4448 1.26559 12.4462C1.26559 13.3258 1.88954 14.0591 2.71712 14.2246C1.15351 14.2246 0 15.4721 0 16.9235V17.4757C0 17.7553 0.225809 17.9824 0.504633 17.9824H3.07164H5.63864C5.91746 17.9824 6.14327 17.7553 6.14327 17.4757V16.9235C6.14327 15.4782 4.99634 14.2246 3.42615 14.2246Z"
+                              fill="currentColor"/>
+                        <path d="M15.2829 14.2246C16.1105 14.0591 16.7344 13.3258 16.7344 12.4462C16.7344 11.4448 15.9257 10.6327 14.9284 10.6327C13.9307 10.6327 13.1223 11.4448 13.1223 12.4462C13.1223 13.3258 13.746 14.0591 14.5737 14.2246C13.0065 14.2246 11.8567 15.475 11.8567 16.9235V17.4757C11.8567 17.7553 12.0825 17.9824 12.3613 17.9824H14.9283H17.4953C17.7738 17.9824 18 17.7553 18 17.4757V16.9235C18 15.4752 16.8499 14.2246 15.2829 14.2246Z"
+                              fill="currentColor"/>
+                    </svg>
+                    Personnel </a></li>
+
+            <li class="link {{$classtimeoff}}"><a href="{{route('company.timeoff')}}">
+                    <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0)">
+                            <path d="M16.2 2.32021H15.3V1.25254C15.3 0.611943 14.94 0.184875 14.4 0.184875C13.86 0.184875 13.5 0.611943 13.5 1.25254V2.32021H4.5V1.25254C4.5 0.611943 4.14 0.184875 3.6 0.184875C3.06 0.184875 2.7 0.611943 2.7 1.25254V2.32021H0.9C0.45 2.32021 0 2.74728 0 3.38788V18.3352C0 18.9758 0.45 19.4029 0.9 19.4029H6.39C5.76 18.1217 5.4 16.627 5.4 15.1322C5.4 10.4345 8.64 6.59088 12.6 6.59088C14.31 6.59088 15.84 7.33825 17.1 8.51268V3.38788C17.1 2.85404 16.65 2.32021 16.2 2.32021Z"
+                                  fill="currentColor"/>
+                            <path d="M12.6 8.72622C9.63 8.72622 7.2 11.6089 7.2 15.1322C7.2 18.6555 9.63 21.5382 12.6 21.5382C15.57 21.5382 18 18.6555 18 15.1322C18 11.6089 15.57 8.72622 12.6 8.72622ZM14.4 16.1999H12.6C12.06 16.1999 11.7 15.7728 11.7 15.1322V11.9292C11.7 11.2886 12.06 10.8616 12.6 10.8616C13.14 10.8616 13.5 11.2886 13.5 11.9292V14.0646H14.4C14.94 14.0646 15.3 14.4916 15.3 15.1322C15.3 15.7728 14.94 16.1999 14.4 16.1999Z"
+                                  fill="currentColor"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0">
+                                <rect width="18" height="21.3534" fill="white" transform="translate(0 0.184875)"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    PTO </a></li>
+
+            <li class="link {{$classtimeoffreport}}"><a href="{{route('company.timeoffptoreport')}}">
+                    <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0)">
+                            <path d="M16.2 2.32021H15.3V1.25254C15.3 0.611943 14.94 0.184875 14.4 0.184875C13.86 0.184875 13.5 0.611943 13.5 1.25254V2.32021H4.5V1.25254C4.5 0.611943 4.14 0.184875 3.6 0.184875C3.06 0.184875 2.7 0.611943 2.7 1.25254V2.32021H0.9C0.45 2.32021 0 2.74728 0 3.38788V18.3352C0 18.9758 0.45 19.4029 0.9 19.4029H6.39C5.76 18.1217 5.4 16.627 5.4 15.1322C5.4 10.4345 8.64 6.59088 12.6 6.59088C14.31 6.59088 15.84 7.33825 17.1 8.51268V3.38788C17.1 2.85404 16.65 2.32021 16.2 2.32021Z"
+                                  fill="currentColor"/>
+                            <path d="M12.6 8.72622C9.63 8.72622 7.2 11.6089 7.2 15.1322C7.2 18.6555 9.63 21.5382 12.6 21.5382C15.57 21.5382 18 18.6555 18 15.1322C18 11.6089 15.57 8.72622 12.6 8.72622ZM14.4 16.1999H12.6C12.06 16.1999 11.7 15.7728 11.7 15.1322V11.9292C11.7 11.2886 12.06 10.8616 12.6 10.8616C13.14 10.8616 13.5 11.2886 13.5 11.9292V14.0646H14.4C14.94 14.0646 15.3 14.4916 15.3 15.1322C15.3 15.7728 14.94 16.1999 14.4 16.1999Z"
+                                  fill="currentColor"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0">
+                                <rect width="18" height="21.3534" fill="white" transform="translate(0 0.184875)"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    PTO Report </a></li>
+            <li class="link {{$classpc}}">
+                <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                   aria-controls="collapseExample" class="sidebar-collapse">
+                    <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0)">
+                            <path d="M9.75001 12.534C9.75001 12.1666 10.0035 11.8667 10.3125 11.8667H13.125V14.5359C13.125 15.027 13.461 15.4256 13.875 15.4256C14.289 15.4256 14.625 15.027 14.625 14.5359V11.8667H17.4375C17.7473 11.8667 18 12.1666 18 12.534V20.9864C18 21.3539 17.7473 21.6537 17.4375 21.6537H10.3125C10.0035 21.6537 9.75001 21.3539 9.75001 20.9864V12.534Z"
+                                  fill="currentColor"/>
+                            <path d="M-7.72476e-05 12.534C-7.72476e-05 12.1666 0.253422 11.8667 0.562422 11.8667H3.37492V14.5359C3.37492 15.027 3.71092 15.4256 4.12492 15.4256C4.53891 15.4256 4.87491 15.027 4.87491 14.5359V11.8667H7.68741C7.99716 11.8667 8.24991 12.1666 8.24991 12.534V20.9864C8.24991 21.3539 7.99716 21.6537 7.68741 21.6537H0.562422C0.253422 21.6537 -7.72476e-05 21.3539 -7.72476e-05 20.9864V12.534Z"
+                                  fill="currentColor"/>
+                            <path d="M4.87511 0.967616C4.87511 0.60105 5.12861 0.300323 5.4376 0.300323H8.2501V2.96949C8.2501 3.46062 8.5861 3.85922 9.0001 3.85922C9.4141 3.85922 9.7501 3.46062 9.7501 2.96949V0.300323H12.5626C12.8723 0.300323 13.1251 0.60105 13.1251 0.967616V9.41999C13.1251 9.78744 12.8723 10.0873 12.5626 10.0873H5.4376C5.12861 10.0873 4.87511 9.78744 4.87511 9.41999V0.967616Z"
+                                  fill="currentColor"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0">
+                                <rect width="18" height="21.3534" fill="white"
+                                      transform="matrix(-1 0 0 1 18 0.300323)"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    Manage Products<i class="fa fa-angle-down" aria-hidden="true"></i>
+                </a>
+            </li>
+
+            <div class="collapse" id="collapseExample" style="">
+                <li class="menu">
+                <li class="link" style="margin-left:32px;">
+                    <a href="{{route('company.inventory')}}">Inventory / Products</a>
+                </li>
+                </li>
+                <li class="menu">
+                <li class="link" style="margin-left:32px;">
+                    <a href="{{route('company.categories')}}">Category</a>
+                </li>
+                </li>
+            </div>
+            <li class="link">
+                <a href="{{route('company.services')}}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 422.26 469.91"
+                         fill="currentColor">
+                        <g id="services" transform="translate(1025.689 -1316)">
+                            <path id="Path_3" data-name="Path 3"
+                                  d="M331.7,329.27a93.618,93.618,0,0,0,13.09-31.418l21.9-.016V258.484h-21.9A93.327,93.327,0,0,0,331.7,227.066l15.535-15.539L319.415,183.7,303.88,199.238a93.475,93.475,0,0,0-31.414-13.086v-21.9l-39.359,0v21.891a93.646,93.646,0,0,0-31.426,13.09L186.154,183.7l-27.832,27.824,15.535,15.539a93.556,93.556,0,0,0-13.086,31.414h-21.9V297.84h21.9a93.646,93.646,0,0,0,13.09,31.426l-15.539,15.539,27.832,27.82,15.535-15.535A93.458,93.458,0,0,0,233.1,370.168v21.91h39.359v-21.9A93.486,93.486,0,0,0,303.88,357.09l15.535,15.539,27.824-27.824Zm-78.914-3.926a47.178,47.178,0,1,1,47.176-47.18A47.231,47.231,0,0,1,252.786,325.344Z"
+                                  transform="translate(-1164.563 1270.951)"/>
+                            <path id="Path_4" data-name="Path 4"
+                                  d="M539.23,139.28a93.451,93.451,0,0,0-13.086-31.418l15.535-15.535L513.847,64.495,498.312,80.03A93.475,93.475,0,0,0,466.9,66.944l0-21.9H427.539v21.9a93.486,93.486,0,0,0-31.418,13.086L380.586,64.506,352.75,92.338l15.539,15.535A93.543,93.543,0,0,0,355.2,139.291H333.3v39.352h21.9a93.611,93.611,0,0,0,13.09,31.426L352.766,225.6l27.824,27.82L396.125,237.9a93.512,93.512,0,0,0,31.418,13.078v21.9h39.352v-21.9A93.474,93.474,0,0,0,498.313,237.9l15.535,15.527,27.824-27.82-15.527-15.535a93.65,93.65,0,0,0,13.086-31.426l21.9-.012V139.287h-21.9Zm-92.008,66.852A47.176,47.176,0,1,1,494.4,158.956,47.231,47.231,0,0,1,447.222,206.132Z"
+                                  transform="translate(-1164.563 1270.951)"/>
+                            <path id="Path_5" data-name="Path 5"
+                                  d="M515.93,349.95l15.535-15.535-27.832-27.824L488.1,322.126a93.556,93.556,0,0,0-31.414-13.086V287.13H417.321v21.9a93.561,93.561,0,0,0-31.426,13.086l-15.527-15.527-27.832,27.824,15.535,15.539a93.556,93.556,0,0,0-13.086,31.414h-21.9V420.72h21.9a93.567,93.567,0,0,0,13.1,31.438l-15.547,15.523,27.832,27.832L385.9,479.978a93.618,93.618,0,0,0,31.418,13.09v21.891h39.352V493.068a93.645,93.645,0,0,0,31.426-13.09l15.527,15.535,27.824-27.824-15.527-15.535a93.611,93.611,0,0,0,13.086-31.418l21.9-.016V381.372h-21.9a93.581,93.581,0,0,0-13.082-31.422Zm-78.922,98.273a47.174,47.174,0,1,1,47.176-47.18A47.231,47.231,0,0,1,437.008,448.223Z"
+                                  transform="translate(-1164.563 1270.951)"/>
+                        </g>
+                    </svg>
+                    Services</a></li>
+            <li class="link"><a href="{{route('company.quote')}}">
+                    <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0)">
+                            <path d="M0.327487 8.89696L1.14336 9.75505C1.30747 9.70168 1.47995 9.67265 1.65816 9.67265H14.8723L9.3126 3.82537L8.13383 5.40269L7.34109 4.56893L8.51986 2.99162L6.40387 0.766187C6.2191 0.571836 5.98867 0.476273 5.75922 0.476273C5.49039 0.476273 5.22284 0.607321 5.03086 0.864138L3.80632 2.5027L3.95991 2.66425C4.31261 3.03519 4.52245 3.5469 4.55074 4.10511C4.57903 4.66332 4.4224 5.20117 4.10972 5.61958C3.79699 6.03803 3.36565 6.28693 2.8951 6.32049C2.8589 6.32308 2.82273 6.32434 2.78682 6.32434C2.35533 6.32434 1.94407 6.13971 1.61846 5.79721L1.46491 5.63571L0.244953 7.26815C0.0725762 7.49879 -0.0137359 7.7952 0.00183842 8.10283C0.0174127 8.41047 0.133072 8.69251 0.327487 8.89696ZM6.59811 5.56306L7.39085 6.39686L6.64773 7.3912L5.85499 6.5574L6.59811 5.56306ZM5.10948 7.55497L5.90221 8.38873L5.15909 9.38307L4.36636 8.54931L5.10948 7.55497Z"
+                                  fill="currentColor"/>
+                            <path d="M17.1637 10.9295H5.36134V12.8875H4.30187V10.9295H1.65805C1.16715 10.9295 0.767731 11.4032 0.767731 11.9856V14.0172H1.10496C2.04073 14.0172 2.80207 14.9203 2.80207 16.0304C2.80207 17.1405 2.04073 18.0437 1.10496 18.0437H0.767731V20.0752C0.767731 20.6576 1.16715 21.1314 1.65805 21.1314H4.30183V19.1734H5.36131V21.1314H17.1636C17.6248 21.1314 17.9999 20.6863 17.9999 20.1394V11.9215C18 11.3745 17.6248 10.9295 17.1637 10.9295ZM5.36134 17.9156H4.30187V16.6595H5.36134V17.9156ZM5.36134 15.3993H4.30187V14.1433H5.36134V15.3993ZM14.9425 16.3336H13.0682L12.0386 18.6019L11.1058 18.0061L11.8649 16.3336H10.3281L9.644 17.4698L8.78187 16.7392L9.36363 15.7731L8.66985 14.95L9.419 14.0613L10.275 15.0767H11.8649L11.1058 13.4042L12.0386 12.8084L13.0682 15.0767H14.9425V16.3336H14.9425Z"
+                                  fill="currentColor"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0">
+                                <rect width="18" height="21.3534" fill="white" transform="translate(0 0.127167)"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    Tickets</a></li>
+
+            <li class="link {{$classcheduler}}"><a href="{{route('company.scheduler')}}">
+                    <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0)">
+                            <path d="M16.2 2.32021H15.3V1.25254C15.3 0.611943 14.94 0.184875 14.4 0.184875C13.86 0.184875 13.5 0.611943 13.5 1.25254V2.32021H4.5V1.25254C4.5 0.611943 4.14 0.184875 3.6 0.184875C3.06 0.184875 2.7 0.611943 2.7 1.25254V2.32021H0.9C0.45 2.32021 0 2.74728 0 3.38788V18.3352C0 18.9758 0.45 19.4029 0.9 19.4029H6.39C5.76 18.1217 5.4 16.627 5.4 15.1322C5.4 10.4345 8.64 6.59088 12.6 6.59088C14.31 6.59088 15.84 7.33825 17.1 8.51268V3.38788C17.1 2.85404 16.65 2.32021 16.2 2.32021Z"
+                                  fill="currentColor"/>
+                            <path d="M12.6 8.72622C9.63 8.72622 7.2 11.6089 7.2 15.1322C7.2 18.6555 9.63 21.5382 12.6 21.5382C15.57 21.5382 18 18.6555 18 15.1322C18 11.6089 15.57 8.72622 12.6 8.72622ZM14.4 16.1999H12.6C12.06 16.1999 11.7 15.7728 11.7 15.1322V11.9292C11.7 11.2886 12.06 10.8616 12.6 10.8616C13.14 10.8616 13.5 11.2886 13.5 11.9292V14.0646H14.4C14.94 14.0646 15.3 14.4916 15.3 15.1322C15.3 15.7728 14.94 16.1999 14.4 16.1999Z"
+                                  fill="currentColor"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0">
+                                <rect width="18" height="21.3534" fill="white" transform="translate(0 0.184875)"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    Scheduler</a></li>
+
+            <li class="link" style="display:none;"><a href="{{route('company.schedulernew')}}">
+                    <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0)">
+                            <path d="M16.2 2.32021H15.3V1.25254C15.3 0.611943 14.94 0.184875 14.4 0.184875C13.86 0.184875 13.5 0.611943 13.5 1.25254V2.32021H4.5V1.25254C4.5 0.611943 4.14 0.184875 3.6 0.184875C3.06 0.184875 2.7 0.611943 2.7 1.25254V2.32021H0.9C0.45 2.32021 0 2.74728 0 3.38788V18.3352C0 18.9758 0.45 19.4029 0.9 19.4029H6.39C5.76 18.1217 5.4 16.627 5.4 15.1322C5.4 10.4345 8.64 6.59088 12.6 6.59088C14.31 6.59088 15.84 7.33825 17.1 8.51268V3.38788C17.1 2.85404 16.65 2.32021 16.2 2.32021Z"
+                                  fill="currentColor"/>
+                            <path d="M12.6 8.72622C9.63 8.72622 7.2 11.6089 7.2 15.1322C7.2 18.6555 9.63 21.5382 12.6 21.5382C15.57 21.5382 18 18.6555 18 15.1322C18 11.6089 15.57 8.72622 12.6 8.72622ZM14.4 16.1999H12.6C12.06 16.1999 11.7 15.7728 11.7 15.1322V11.9292C11.7 11.2886 12.06 10.8616 12.6 10.8616C13.14 10.8616 13.5 11.2886 13.5 11.9292V14.0646H14.4C14.94 14.0646 15.3 14.4916 15.3 15.1322C15.3 15.7728 14.94 16.1999 14.4 16.1999Z"
+                                  fill="currentColor"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0">
+                                <rect width="18" height="21.3534" fill="white" transform="translate(0 0.184875)"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    Scheduler-old</a></li>
+
+            <li class="link {{$manage_bill}}">
+                <a data-bs-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false"
+                   aria-controls="collapseExample" class="sidebar-collapse">
+                    <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0)">
+                            <path d="M9.75001 12.534C9.75001 12.1666 10.0035 11.8667 10.3125 11.8667H13.125V14.5359C13.125 15.027 13.461 15.4256 13.875 15.4256C14.289 15.4256 14.625 15.027 14.625 14.5359V11.8667H17.4375C17.7473 11.8667 18 12.1666 18 12.534V20.9864C18 21.3539 17.7473 21.6537 17.4375 21.6537H10.3125C10.0035 21.6537 9.75001 21.3539 9.75001 20.9864V12.534Z"
+                                  fill="currentColor"/>
+                            <path d="M-7.72476e-05 12.534C-7.72476e-05 12.1666 0.253422 11.8667 0.562422 11.8667H3.37492V14.5359C3.37492 15.027 3.71092 15.4256 4.12492 15.4256C4.53891 15.4256 4.87491 15.027 4.87491 14.5359V11.8667H7.68741C7.99716 11.8667 8.24991 12.1666 8.24991 12.534V20.9864C8.24991 21.3539 7.99716 21.6537 7.68741 21.6537H0.562422C0.253422 21.6537 -7.72476e-05 21.3539 -7.72476e-05 20.9864V12.534Z"
+                                  fill="currentColor"/>
+                            <path d="M4.87511 0.967616C4.87511 0.60105 5.12861 0.300323 5.4376 0.300323H8.2501V2.96949C8.2501 3.46062 8.5861 3.85922 9.0001 3.85922C9.4141 3.85922 9.7501 3.46062 9.7501 2.96949V0.300323H12.5626C12.8723 0.300323 13.1251 0.60105 13.1251 0.967616V9.41999C13.1251 9.78744 12.8723 10.0873 12.5626 10.0873H5.4376C5.12861 10.0873 4.87511 9.78744 4.87511 9.41999V0.967616Z"
+                                  fill="currentColor"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0">
+                                <rect width="18" height="21.3534" fill="white"
+                                      transform="matrix(-1 0 0 1 18 0.300323)"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    Manage Billing / Payments<i class="fa fa-angle-down" aria-hidden="true"></i>
+                </a>
+            </li>
+
+            <div class="collapse" id="collapseExample1" style="">
+                <li class="menu">
+                <li class="link" style="margin-left:32px;">
+                    <a href="{{route('company.billing')}}">List Payments</a>
+                </li>
+                </li>
+                <li class="menu">
+                <li class="link {{$paynow}}" style="margin-left:32px;">
+                    <a href="{{route('company.receivepayment')}}">Collect Payments</a>
+                </li>
+                </li>
+                <li class="menu">
+                <li class="link {{$receivepayments}}" style="margin-left:32px;">
+                    <a href="{{route('company.receivepayments')}}">Received Payments</a>
+                </li>
+                </li>
+                <li class="menu">
+                <li class="link" style="margin-left:32px;">
+                    <a href="{{route('company.viewallticket')}}">Invoiced Tickets</a>
+                </li>
+                </li>
+                <li class="menu">
+                <li class="link" style="margin-left:32px;">
+                    <a href="{{route('company.managecommission')}}">Manage Commission</a>
+                </li>
+                </li>
+            </div>
+
+
+            <li class="link"><a href="{{route('company.checklist')}}">
+                    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.2012 9.63281C10.8943 9.63281 9.01758 11.5096 9.01758 13.8164C9.01758 16.1233 10.8943 18 13.2012 18C15.5274 18 17.4199 16.1233 17.4199 13.8164C17.4199 11.5096 15.5274 9.63281 13.2012 9.63281ZM14.4852 13.3103L13.0789 14.9978C12.9781 15.1187 12.8293 15.1875 12.6739 15.1875C12.6536 15.1875 12.6334 15.1863 12.613 15.184C12.4362 15.1635 12.2817 15.0552 12.2021 14.896L11.6396 13.771C11.5094 13.5105 11.615 13.1937 11.8755 13.0635C12.1359 12.9332 12.4527 13.0388 12.583 13.2993L12.7849 13.7031L13.6749 12.6351C13.8614 12.4114 14.1939 12.3812 14.4176 12.5675C14.6414 12.754 14.6717 13.0865 14.4852 13.3103Z"
+                              fill="currentColor"/>
+                        <path d="M12.9739 3.00421L10.8342 0.791508C10.8332 0.790453 10.8321 0.789363 10.8311 0.788309C10.3385 0.287332 9.65296 0 8.95043 0H2.16211C1.28978 0 0.580078 0.709699 0.580078 1.58203V15.2578C0.580078 16.1301 1.28978 16.8398 2.16211 16.8398H8.92582C8.31962 15.9851 7.96289 14.9417 7.96289 13.8164C7.96289 10.928 10.3128 8.57812 13.2012 8.57812C13.3791 8.57812 13.555 8.58705 13.7285 8.60425V4.85086C13.7285 4.15586 13.4605 3.50016 12.9739 3.00421ZM6.16992 11.7773H3.35742C3.06619 11.7773 2.83008 11.5412 2.83008 11.25C2.83008 10.9588 3.06619 10.7227 3.35742 10.7227H6.16992C6.46116 10.7227 6.69727 10.9588 6.69727 11.25C6.69727 11.5412 6.46116 11.7773 6.16992 11.7773ZM6.16992 8.96484H3.35742C3.06619 8.96484 2.83008 8.72873 2.83008 8.4375C2.83008 8.14627 3.06619 7.91016 3.35742 7.91016H6.16992C6.46116 7.91016 6.69727 8.14627 6.69727 8.4375C6.69727 8.72873 6.46116 8.96484 6.16992 8.96484ZM6.16992 6.15234H3.35742C3.06619 6.15234 2.83008 5.91623 2.83008 5.625C2.83008 5.33377 3.06619 5.09766 3.35742 5.09766H6.16992C6.46116 5.09766 6.69727 5.33377 6.69727 5.625C6.69727 5.91623 6.46116 6.15234 6.16992 6.15234ZM9.54492 8.96484H8.98242C8.69119 8.96484 8.45508 8.72873 8.45508 8.4375C8.45508 8.14627 8.69119 7.91016 8.98242 7.91016H9.54492C9.83616 7.91016 10.0723 8.14627 10.0723 8.4375C10.0723 8.72873 9.83616 8.96484 9.54492 8.96484ZM9.54492 6.15234H8.98242C8.69119 6.15234 8.45508 5.91623 8.45508 5.625C8.45508 5.33377 8.69119 5.09766 8.98242 5.09766H9.54492C9.83616 5.09766 10.0723 5.33377 10.0723 5.625C10.0723 5.91623 9.83616 6.15234 9.54492 6.15234Z"
+                              fill="currentColor"/>
+                    </svg>
+                    Checklists</a></li>
+
+            <li class="link"><a href="{{route('company.report')}}">
+                    <svg width="16" height="22" viewBox="0 0 16 22" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.4374 0.0117111H2.56242C1.42467 0.0117111 0.499916 1.10874 0.499916 2.45845V18.9183C0.499916 20.268 1.42467 21.3651 2.56242 21.3651H13.4374C14.5752 21.3651 15.4999 20.268 15.4999 18.9183V2.45845C15.4999 1.10874 14.5752 0.0117111 13.4374 0.0117111ZM7.06242 11.5781V7.19712C8.86242 7.52186 10.2499 9.3538 10.2499 11.5781C10.2499 14.0311 8.56767 16.0267 6.49992 16.0267C5.66892 16.0267 4.90767 15.694 4.28517 15.1486L6.89742 12.0497C7.00317 11.9251 7.06242 11.7552 7.06242 11.5781ZM5.93742 7.19712V11.3023L3.49017 14.2055C3.03042 13.467 2.74992 12.5639 2.74992 11.5781C2.74992 9.3538 4.13742 7.52186 5.93742 7.19712ZM12.6874 18.9183H3.31242C3.00192 18.9183 2.74992 18.6194 2.74992 18.251C2.74992 17.8827 3.00192 17.5837 3.31242 17.5837H12.6874C12.9979 17.5837 13.2499 17.8827 13.2499 18.251C13.2499 18.6194 12.9979 18.9183 12.6874 18.9183ZM12.6874 16.0267H11.5624C11.2519 16.0267 10.9999 15.7278 10.9999 15.3594C10.9999 14.9911 11.2519 14.6921 11.5624 14.6921H12.6874C12.9979 14.6921 13.2499 14.9911 13.2499 15.3594C13.2499 15.7278 12.9979 16.0267 12.6874 16.0267ZM12.6874 13.58H11.5624C11.2519 13.58 10.9999 13.281 10.9999 12.9127C10.9999 12.5444 11.2519 12.2454 11.5624 12.2454H12.6874C12.9979 12.2454 13.2499 12.5444 13.2499 12.9127C13.2499 13.281 12.9979 13.58 12.6874 13.58ZM12.6874 10.9108H11.5624C11.2519 10.9108 10.9999 10.6119 10.9999 10.2435C10.9999 9.87518 11.2519 9.57623 11.5624 9.57623H12.6874C12.9979 9.57623 13.2499 9.87518 13.2499 10.2435C13.2499 10.6119 12.9979 10.9108 12.6874 10.9108ZM12.6874 8.46408H11.5624C11.2519 8.46408 10.9999 8.16513 10.9999 7.79679C10.9999 7.42844 11.2519 7.1295 11.5624 7.1295H12.6874C12.9979 7.1295 13.2499 7.42844 13.2499 7.79679C13.2499 8.16513 12.9979 8.46408 12.6874 8.46408Z"
+                              fill="currentColor"></path>
+                    </svg>
+                    Reports</a></li>
+
+            <li class="link"><a href="{{route('company.terms')}}">
+                    <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0)">
+                            <path d="M9.75001 12.534C9.75001 12.1666 10.0035 11.8667 10.3125 11.8667H13.125V14.5359C13.125 15.027 13.461 15.4256 13.875 15.4256C14.289 15.4256 14.625 15.027 14.625 14.5359V11.8667H17.4375C17.7473 11.8667 18 12.1666 18 12.534V20.9864C18 21.3539 17.7473 21.6537 17.4375 21.6537H10.3125C10.0035 21.6537 9.75001 21.3539 9.75001 20.9864V12.534Z"
+                                  fill="currentColor"/>
+                            <path d="M-7.72476e-05 12.534C-7.72476e-05 12.1666 0.253422 11.8667 0.562422 11.8667H3.37492V14.5359C3.37492 15.027 3.71092 15.4256 4.12492 15.4256C4.53891 15.4256 4.87491 15.027 4.87491 14.5359V11.8667H7.68741C7.99716 11.8667 8.24991 12.1666 8.24991 12.534V20.9864C8.24991 21.3539 7.99716 21.6537 7.68741 21.6537H0.562422C0.253422 21.6537 -7.72476e-05 21.3539 -7.72476e-05 20.9864V12.534Z"
+                                  fill="currentColor"/>
+                            <path d="M4.87511 0.967616C4.87511 0.60105 5.12861 0.300323 5.4376 0.300323H8.2501V2.96949C8.2501 3.46062 8.5861 3.85922 9.0001 3.85922C9.4141 3.85922 9.7501 3.46062 9.7501 2.96949V0.300323H12.5626C12.8723 0.300323 13.1251 0.60105 13.1251 0.967616V9.41999C13.1251 9.78744 12.8723 10.0873 12.5626 10.0873H5.4376C5.12861 10.0873 4.87511 9.78744 4.87511 9.41999V0.967616Z"
+                                  fill="currentColor"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0">
+                                <rect width="18" height="21.3534" fill="white"
+                                      transform="matrix(-1 0 0 1 18 0.300323)"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    Manage Terms</a></li>
+
+            <li class="link"><a href="{{route('company.adminsetting')}}">
+                    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.67957 3.88018C9.65658 3.45078 9.21774 3.52384 8.78955 3.52384C9.10584 3.60808 9.40507 3.72528 9.67957 3.88018Z"
+                              fill="currentColor"/>
+                        <path d="M5.10206 2.80405C3.4398 2.80405 2.67469 4.90803 4.00351 5.96622C4.4565 4.75665 5.35828 3.88815 6.54046 3.54534C6.21708 3.09827 5.6946 2.80405 5.10206 2.80405Z"
+                              fill="currentColor"/>
+                        <path d="M1.66824 5.63696C1.73598 5.85434 1.82375 6.06287 1.92802 6.26045L1.38199 6.80679C1.23535 6.95342 1.23535 7.19143 1.38199 7.33837L2.34445 8.30113C2.41454 8.37122 2.51058 8.41067 2.61067 8.41067C2.70967 8.41067 2.80506 8.37122 2.87637 8.30113L3.42179 7.75479C3.50365 7.79811 3.59437 7.82466 3.67915 7.86202C3.67915 7.8558 3.67854 7.84935 3.67854 7.84313C3.67854 7.39666 3.72982 6.9755 3.82112 6.58C3.16258 6.15618 2.72317 5.4205 2.72317 4.58055C2.72317 3.2685 3.79047 2.2009 5.10222 2.2009C5.99045 2.2009 6.75735 2.69538 7.16672 3.41782C7.60378 3.36362 8.01433 3.36362 8.50851 3.45701C8.44494 3.2647 8.37015 3.0765 8.27646 2.90009L8.82249 2.35349C8.89373 2.28309 8.93317 2.18735 8.93317 2.08783C8.93317 1.98826 8.89373 1.89257 8.82249 1.82217L7.86057 0.860013C7.78698 0.786392 7.69095 0.749866 7.59495 0.749866C7.49891 0.749866 7.40291 0.786392 7.32986 0.860013L6.78208 1.40661C6.5842 1.30178 6.37627 1.21401 6.15837 1.14775V0.375502C6.15837 0.168179 5.99106 0 5.78313 0H4.42192C4.21516 0 4.04608 0.168179 4.04608 0.375502V1.14771C3.82874 1.21397 3.62077 1.30174 3.42229 1.40658L2.87637 0.860582C2.80271 0.786961 2.70671 0.750435 2.61067 0.750435C2.51467 0.750435 2.4181 0.786961 2.34505 0.860278L1.38199 1.82244C1.31189 1.89314 1.27245 1.98853 1.27245 2.0884C1.27245 2.18823 1.31189 2.28366 1.38199 2.35405L1.92802 2.90035C1.82371 3.09827 1.73598 3.3065 1.66945 3.52384H0.897816C0.689886 3.52384 0.521973 3.69228 0.521973 3.89991V5.26116C0.521973 5.46818 0.689886 5.63696 0.897816 5.63696H1.66824Z"
+                              fill="currentColor"/>
+                        <path d="M13.4599 12.9208C14.0619 12.5906 14.4753 11.9587 14.4753 11.2253C14.4753 10.155 13.6042 9.28448 12.534 9.28448C12.1576 9.28448 11.8088 9.39698 11.5108 9.5831C11.3324 10.2934 11.0514 10.9729 10.6838 11.5631C11.7258 11.759 12.6818 12.2334 13.4599 12.9208Z"
+                              fill="currentColor"/>
+                        <path d="M17.477 10.4908C17.477 10.2667 17.295 10.0853 17.0717 10.0853H16.2389C16.167 9.85051 16.0716 9.62552 15.9585 9.41201L16.5481 8.82244C16.6247 8.74643 16.6671 8.64337 16.6671 8.53588C16.6671 8.42835 16.6247 8.32526 16.5481 8.24902L15.5102 7.21085C15.4313 7.13158 15.3271 7.09183 15.2234 7.09183C15.1197 7.09183 15.0161 7.13158 14.9372 7.21085L14.3464 7.80073C14.1331 7.68762 13.9087 7.59284 13.6731 7.52123V6.68837C13.6731 6.46455 13.4923 6.2831 13.2684 6.2831H11.8C11.7017 6.2831 11.6151 6.32254 11.5444 6.38088C11.6681 6.83205 11.7358 7.32126 11.7358 7.84314C11.7358 8.17445 11.71 8.51085 11.6616 8.84535C11.9349 8.74461 12.2259 8.68134 12.534 8.68134C13.937 8.68134 15.0785 9.8226 15.0785 11.2253C15.0785 12.1218 14.6103 12.9076 13.9076 13.3608C14.4188 13.9216 14.8253 14.5868 15.0897 15.3322C15.1333 15.3473 15.1786 15.3582 15.224 15.3582C15.3277 15.3582 15.4314 15.3187 15.5109 15.2395L16.5493 14.2013C16.6254 14.1253 16.6671 14.0222 16.6671 13.9147C16.6671 13.8072 16.6254 13.7042 16.5493 13.6279L15.9586 13.038C16.0717 12.8248 16.167 12.5997 16.239 12.3647H17.0718C17.179 12.3647 17.2832 12.3223 17.3586 12.2457C17.4347 12.17 17.4777 12.0667 17.4777 11.9592L17.477 10.4908Z"
+                              fill="currentColor"/>
+                        <path d="M14.2629 15.6992C13.6332 13.8465 11.9692 12.5721 10.0484 12.3987C9.4052 13.0798 8.60883 13.512 7.70698 13.512C6.80582 13.512 6.00884 13.0799 5.36624 12.3987C3.44428 12.5721 1.78028 13.8465 1.15057 15.6995L0.802492 16.7241C0.702927 17.019 0.750604 17.3438 0.932059 17.5968C1.11348 17.8498 1.40565 18 1.71663 18H13.6968C14.0084 18 14.3005 17.8498 14.482 17.5968C14.6628 17.3438 14.7111 17.019 14.6109 16.7241L14.2629 15.6992Z"
+                              fill="currentColor"/>
+                        <path d="M4.58325 7.84313C4.58325 10.1412 5.9822 12.6072 7.70682 12.6072C9.43211 12.6072 10.831 10.1412 10.831 7.84313C10.831 3.07941 4.58325 3.06997 4.58325 7.84313Z"
+                              fill="currentColor"/>
+                    </svg>
+                    Admin / Setup</a></li>
+            <!--
+
+            <li class="link"><a href="billing.php">
+
+    <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
     <g clip-path="url(#clip0)">
-    <path d="M16.2 2.32021H15.3V1.25254C15.3 0.611943 14.94 0.184875 14.4 0.184875C13.86 0.184875 13.5 0.611943 13.5 1.25254V2.32021H4.5V1.25254C4.5 0.611943 4.14 0.184875 3.6 0.184875C3.06 0.184875 2.7 0.611943 2.7 1.25254V2.32021H0.9C0.45 2.32021 0 2.74728 0 3.38788V18.3352C0 18.9758 0.45 19.4029 0.9 19.4029H6.39C5.76 18.1217 5.4 16.627 5.4 15.1322C5.4 10.4345 8.64 6.59088 12.6 6.59088C14.31 6.59088 15.84 7.33825 17.1 8.51268V3.38788C17.1 2.85404 16.65 2.32021 16.2 2.32021Z" fill="currentColor"/>
-    <path d="M12.6 8.72622C9.63 8.72622 7.2 11.6089 7.2 15.1322C7.2 18.6555 9.63 21.5382 12.6 21.5382C15.57 21.5382 18 18.6555 18 15.1322C18 11.6089 15.57 8.72622 12.6 8.72622ZM14.4 16.1999H12.6C12.06 16.1999 11.7 15.7728 11.7 15.1322V11.9292C11.7 11.2886 12.06 10.8616 12.6 10.8616C13.14 10.8616 13.5 11.2886 13.5 11.9292V14.0646H14.4C14.94 14.0646 15.3 14.4916 15.3 15.1322C15.3 15.7728 14.94 16.1999 14.4 16.1999Z" fill="currentColor"/>
+    <path d="M6.4686 15.4177H6.2024C5.95342 15.4177 5.72505 15.2328 5.65084 14.9509C5.56098 14.6094 5.71141 14.2524 5.98555 14.1277L10.2048 12.2026C10.5011 12.0674 10.6435 11.6688 10.5212 11.3212C8.85677 6.58914 8.44028 0.752237 8.43556 0.68359C8.39271 0.0557591 7.70302 -0.15894 7.4069 0.367047L6.59375 1.8138L5.37455 0.849577C5.05185 0.594049 4.611 0.794818 4.51674 1.24286L4.14761 2.99323L3.12457 2.18415C2.80188 1.92862 2.36102 2.12939 2.26677 2.57743L1.89763 4.3278L0.8746 3.51872C0.484862 3.21047 -0.0350223 3.57143 0.00168038 4.12553C0.0129302 4.2986 0.291013 8.41533 1.34604 12.6059C1.97463 15.1019 2.75157 17.1005 3.65507 18.5468C4.28907 19.5607 5.26085 20.0886 6.24261 20.0886H6.43875C7.51916 20.0886 8.42069 19.0708 8.43711 17.7893C8.45381 16.4849 7.56433 15.4177 6.4686 15.4177ZM2.85247 8.32525C2.73716 7.98327 2.87743 7.59499 3.16606 7.45778L5.97852 6.12321C6.2668 5.98642 6.5941 6.15282 6.70976 6.49522C6.82508 6.8372 6.6848 7.22548 6.39617 7.36269C3.35041 8.80795 3.53017 8.74481 3.37488 8.74481C3.15199 8.74481 2.94071 8.58632 2.85247 8.32525ZM4.1462 11.3664C3.86197 11.5013 3.53196 11.3406 3.41496 10.9944C3.29965 10.6524 3.43992 10.2641 3.72855 10.1269L6.54102 8.79235C6.82929 8.65556 7.1566 8.82196 7.27226 9.16436C7.38757 9.50634 7.2473 9.89462 6.95867 10.0318L4.1462 11.3664ZM15.1872 11.4139C15.0403 11.4139 15.3309 11.301 11.2642 13.1564C11.2592 13.1466 8.54356 14.3904 8.54817 14.3883C8.34813 14.4796 8.30528 14.7906 8.46865 14.9552C10.1802 16.6794 9.82475 19.9156 7.79988 21.0656C7.64871 21.1515 7.69937 21.4229 7.86695 21.4232C8.33407 21.4241 8.78231 21.2889 9.17419 21.0462L15.2396 18.0835C15.3549 18.0709 15.4604 18.0171 15.5448 17.9346C17.1886 17.1319 17.1114 17.191 17.2231 17.0525C18.9223 14.9391 17.6493 11.4139 15.1872 11.4139Z" fill="currentColor"/>
+    <path d="M14.4602 7.88153C14.2409 8.1416 13.5539 8.14093 13.3352 7.88153C13.1156 7.62095 12.7594 7.62091 12.5397 7.88153C12.3201 8.14214 12.3201 8.56462 12.5397 8.82519C12.7757 9.10508 13.1137 9.2953 13.5 9.37262V10.0788C13.5 10.4473 13.7518 10.7461 14.0625 10.7461C14.3731 10.7461 14.6249 10.4473 14.6249 10.0788V9.27407C16.1012 8.67881 16.0589 6.33389 14.7096 5.67086L13.8459 5.24642C13.3964 5.02559 13.3156 4.07329 14.2272 4.07329C14.502 4.07329 14.7077 4.17147 14.7897 4.26877C15.0094 4.52934 15.3655 4.52938 15.5852 4.26877C15.8049 4.00815 15.8048 3.58568 15.5852 3.3251C15.3493 3.04522 15.0112 2.855 14.625 2.77768V2.0714C14.625 1.70289 14.3732 1.40411 14.0625 1.40411C13.7518 1.40411 13.5 1.70289 13.5 2.0714V2.87614C12.0365 3.46623 12.0545 5.81065 13.4154 6.47935L14.2791 6.90379C14.603 7.06298 14.7217 7.57053 14.4602 7.88153Z" fill="currentColor"/>
     </g>
     <defs>
     <clipPath id="clip0">
-    <rect width="18" height="21.3534" fill="white" transform="translate(0 0.184875)"/>
+    <rect width="18" height="21.3534" fill="white" transform="translate(0 0.069458)"/>
     </clipPath>
     </defs>
-    </svg> PTO Report </a></li>
-	  <li class="link {{$classpc}}">
-      <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" class="sidebar-collapse">
-        <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0)">
-      <path d="M9.75001 12.534C9.75001 12.1666 10.0035 11.8667 10.3125 11.8667H13.125V14.5359C13.125 15.027 13.461 15.4256 13.875 15.4256C14.289 15.4256 14.625 15.027 14.625 14.5359V11.8667H17.4375C17.7473 11.8667 18 12.1666 18 12.534V20.9864C18 21.3539 17.7473 21.6537 17.4375 21.6537H10.3125C10.0035 21.6537 9.75001 21.3539 9.75001 20.9864V12.534Z" fill="currentColor"/>
-      <path d="M-7.72476e-05 12.534C-7.72476e-05 12.1666 0.253422 11.8667 0.562422 11.8667H3.37492V14.5359C3.37492 15.027 3.71092 15.4256 4.12492 15.4256C4.53891 15.4256 4.87491 15.027 4.87491 14.5359V11.8667H7.68741C7.99716 11.8667 8.24991 12.1666 8.24991 12.534V20.9864C8.24991 21.3539 7.99716 21.6537 7.68741 21.6537H0.562422C0.253422 21.6537 -7.72476e-05 21.3539 -7.72476e-05 20.9864V12.534Z" fill="currentColor"/>
-      <path d="M4.87511 0.967616C4.87511 0.60105 5.12861 0.300323 5.4376 0.300323H8.2501V2.96949C8.2501 3.46062 8.5861 3.85922 9.0001 3.85922C9.4141 3.85922 9.7501 3.46062 9.7501 2.96949V0.300323H12.5626C12.8723 0.300323 13.1251 0.60105 13.1251 0.967616V9.41999C13.1251 9.78744 12.8723 10.0873 12.5626 10.0873H5.4376C5.12861 10.0873 4.87511 9.78744 4.87511 9.41999V0.967616Z" fill="currentColor"/>
-      </g>
-      <defs>
-      <clipPath id="clip0">
-      <rect width="18" height="21.3534" fill="white" transform="matrix(-1 0 0 1 18 0.300323)"/>
-      </clipPath>
-      </defs>
-      </svg>Manage Products<i class="fa fa-angle-down" aria-hidden="true"></i>
-      </a>
-    </li>
+    </svg> Billing / Payments</a></li>
+            <li class="link"><a href="reports.php">
+    <svg width="16" height="22" viewBox="0 0 16 22" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.4374 0.0117111H2.56242C1.42467 0.0117111 0.499916 1.10874 0.499916 2.45845V18.9183C0.499916 20.268 1.42467 21.3651 2.56242 21.3651H13.4374C14.5752 21.3651 15.4999 20.268 15.4999 18.9183V2.45845C15.4999 1.10874 14.5752 0.0117111 13.4374 0.0117111ZM7.06242 11.5781V7.19712C8.86242 7.52186 10.2499 9.3538 10.2499 11.5781C10.2499 14.0311 8.56767 16.0267 6.49992 16.0267C5.66892 16.0267 4.90767 15.694 4.28517 15.1486L6.89742 12.0497C7.00317 11.9251 7.06242 11.7552 7.06242 11.5781ZM5.93742 7.19712V11.3023L3.49017 14.2055C3.03042 13.467 2.74992 12.5639 2.74992 11.5781C2.74992 9.3538 4.13742 7.52186 5.93742 7.19712ZM12.6874 18.9183H3.31242C3.00192 18.9183 2.74992 18.6194 2.74992 18.251C2.74992 17.8827 3.00192 17.5837 3.31242 17.5837H12.6874C12.9979 17.5837 13.2499 17.8827 13.2499 18.251C13.2499 18.6194 12.9979 18.9183 12.6874 18.9183ZM12.6874 16.0267H11.5624C11.2519 16.0267 10.9999 15.7278 10.9999 15.3594C10.9999 14.9911 11.2519 14.6921 11.5624 14.6921H12.6874C12.9979 14.6921 13.2499 14.9911 13.2499 15.3594C13.2499 15.7278 12.9979 16.0267 12.6874 16.0267ZM12.6874 13.58H11.5624C11.2519 13.58 10.9999 13.281 10.9999 12.9127C10.9999 12.5444 11.2519 12.2454 11.5624 12.2454H12.6874C12.9979 12.2454 13.2499 12.5444 13.2499 12.9127C13.2499 13.281 12.9979 13.58 12.6874 13.58ZM12.6874 10.9108H11.5624C11.2519 10.9108 10.9999 10.6119 10.9999 10.2435C10.9999 9.87518 11.2519 9.57623 11.5624 9.57623H12.6874C12.9979 9.57623 13.2499 9.87518 13.2499 10.2435C13.2499 10.6119 12.9979 10.9108 12.6874 10.9108ZM12.6874 8.46408H11.5624C11.2519 8.46408 10.9999 8.16513 10.9999 7.79679C10.9999 7.42844 11.2519 7.1295 11.5624 7.1295H12.6874C12.9979 7.1295 13.2499 7.42844 13.2499 7.79679C13.2499 8.16513 12.9979 8.46408 12.6874 8.46408Z" fill="currentColor"/>
+    </svg> Reports</a></li>
 
-  <div class="collapse" id="collapseExample" style="">
-    <li class="menu">
-      <li class="link" style="margin-left:32px;">
-        <a href="{{route('company.inventory')}}">Inventory / Products</a>
-      </li>
-    </li>
-    <li class="menu">
-      <li class="link" style="margin-left:32px;">
-        <a href="{{route('company.categories')}}">Category</a>
-      </li>
-    </li>
-  </div>
-		<li class="link">
-			<a href="{{route('company.services')}}">
-			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 422.26 469.91" fill="currentColor">
-  <g id="services" transform="translate(1025.689 -1316)">
-    <path id="Path_3" data-name="Path 3" d="M331.7,329.27a93.618,93.618,0,0,0,13.09-31.418l21.9-.016V258.484h-21.9A93.327,93.327,0,0,0,331.7,227.066l15.535-15.539L319.415,183.7,303.88,199.238a93.475,93.475,0,0,0-31.414-13.086v-21.9l-39.359,0v21.891a93.646,93.646,0,0,0-31.426,13.09L186.154,183.7l-27.832,27.824,15.535,15.539a93.556,93.556,0,0,0-13.086,31.414h-21.9V297.84h21.9a93.646,93.646,0,0,0,13.09,31.426l-15.539,15.539,27.832,27.82,15.535-15.535A93.458,93.458,0,0,0,233.1,370.168v21.91h39.359v-21.9A93.486,93.486,0,0,0,303.88,357.09l15.535,15.539,27.824-27.824Zm-78.914-3.926a47.178,47.178,0,1,1,47.176-47.18A47.231,47.231,0,0,1,252.786,325.344Z" transform="translate(-1164.563 1270.951)"/>
-    <path id="Path_4" data-name="Path 4" d="M539.23,139.28a93.451,93.451,0,0,0-13.086-31.418l15.535-15.535L513.847,64.495,498.312,80.03A93.475,93.475,0,0,0,466.9,66.944l0-21.9H427.539v21.9a93.486,93.486,0,0,0-31.418,13.086L380.586,64.506,352.75,92.338l15.539,15.535A93.543,93.543,0,0,0,355.2,139.291H333.3v39.352h21.9a93.611,93.611,0,0,0,13.09,31.426L352.766,225.6l27.824,27.82L396.125,237.9a93.512,93.512,0,0,0,31.418,13.078v21.9h39.352v-21.9A93.474,93.474,0,0,0,498.313,237.9l15.535,15.527,27.824-27.82-15.527-15.535a93.65,93.65,0,0,0,13.086-31.426l21.9-.012V139.287h-21.9Zm-92.008,66.852A47.176,47.176,0,1,1,494.4,158.956,47.231,47.231,0,0,1,447.222,206.132Z" transform="translate(-1164.563 1270.951)"/>
-    <path id="Path_5" data-name="Path 5" d="M515.93,349.95l15.535-15.535-27.832-27.824L488.1,322.126a93.556,93.556,0,0,0-31.414-13.086V287.13H417.321v21.9a93.561,93.561,0,0,0-31.426,13.086l-15.527-15.527-27.832,27.824,15.535,15.539a93.556,93.556,0,0,0-13.086,31.414h-21.9V420.72h21.9a93.567,93.567,0,0,0,13.1,31.438l-15.547,15.523,27.832,27.832L385.9,479.978a93.618,93.618,0,0,0,31.418,13.09v21.891h39.352V493.068a93.645,93.645,0,0,0,31.426-13.09l15.527,15.535,27.824-27.824-15.527-15.535a93.611,93.611,0,0,0,13.086-31.418l21.9-.016V381.372h-21.9a93.581,93.581,0,0,0-13.082-31.422Zm-78.922,98.273a47.174,47.174,0,1,1,47.176-47.18A47.231,47.231,0,0,1,437.008,448.223Z" transform="translate(-1164.563 1270.951)"/>
-  </g>
-</svg> Services</a></li>
-		<li class="link"><a href="{{route('company.quote')}}">
-		<svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-		<g clip-path="url(#clip0)">
-		<path d="M0.327487 8.89696L1.14336 9.75505C1.30747 9.70168 1.47995 9.67265 1.65816 9.67265H14.8723L9.3126 3.82537L8.13383 5.40269L7.34109 4.56893L8.51986 2.99162L6.40387 0.766187C6.2191 0.571836 5.98867 0.476273 5.75922 0.476273C5.49039 0.476273 5.22284 0.607321 5.03086 0.864138L3.80632 2.5027L3.95991 2.66425C4.31261 3.03519 4.52245 3.5469 4.55074 4.10511C4.57903 4.66332 4.4224 5.20117 4.10972 5.61958C3.79699 6.03803 3.36565 6.28693 2.8951 6.32049C2.8589 6.32308 2.82273 6.32434 2.78682 6.32434C2.35533 6.32434 1.94407 6.13971 1.61846 5.79721L1.46491 5.63571L0.244953 7.26815C0.0725762 7.49879 -0.0137359 7.7952 0.00183842 8.10283C0.0174127 8.41047 0.133072 8.69251 0.327487 8.89696ZM6.59811 5.56306L7.39085 6.39686L6.64773 7.3912L5.85499 6.5574L6.59811 5.56306ZM5.10948 7.55497L5.90221 8.38873L5.15909 9.38307L4.36636 8.54931L5.10948 7.55497Z" fill="currentColor"/>
-		<path d="M17.1637 10.9295H5.36134V12.8875H4.30187V10.9295H1.65805C1.16715 10.9295 0.767731 11.4032 0.767731 11.9856V14.0172H1.10496C2.04073 14.0172 2.80207 14.9203 2.80207 16.0304C2.80207 17.1405 2.04073 18.0437 1.10496 18.0437H0.767731V20.0752C0.767731 20.6576 1.16715 21.1314 1.65805 21.1314H4.30183V19.1734H5.36131V21.1314H17.1636C17.6248 21.1314 17.9999 20.6863 17.9999 20.1394V11.9215C18 11.3745 17.6248 10.9295 17.1637 10.9295ZM5.36134 17.9156H4.30187V16.6595H5.36134V17.9156ZM5.36134 15.3993H4.30187V14.1433H5.36134V15.3993ZM14.9425 16.3336H13.0682L12.0386 18.6019L11.1058 18.0061L11.8649 16.3336H10.3281L9.644 17.4698L8.78187 16.7392L9.36363 15.7731L8.66985 14.95L9.419 14.0613L10.275 15.0767H11.8649L11.1058 13.4042L12.0386 12.8084L13.0682 15.0767H14.9425V16.3336H14.9425Z" fill="currentColor"/>
-		</g>
-		<defs>
-		<clipPath id="clip0">
-		<rect width="18" height="21.3534" fill="white" transform="translate(0 0.127167)"/>
-		</clipPath>
-		</defs>
-		</svg> Tickets</a></li>
-		
-        <li class="link {{$classcheduler}}"><a href="{{route('company.scheduler')}}"><svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#clip0)">
-        <path d="M16.2 2.32021H15.3V1.25254C15.3 0.611943 14.94 0.184875 14.4 0.184875C13.86 0.184875 13.5 0.611943 13.5 1.25254V2.32021H4.5V1.25254C4.5 0.611943 4.14 0.184875 3.6 0.184875C3.06 0.184875 2.7 0.611943 2.7 1.25254V2.32021H0.9C0.45 2.32021 0 2.74728 0 3.38788V18.3352C0 18.9758 0.45 19.4029 0.9 19.4029H6.39C5.76 18.1217 5.4 16.627 5.4 15.1322C5.4 10.4345 8.64 6.59088 12.6 6.59088C14.31 6.59088 15.84 7.33825 17.1 8.51268V3.38788C17.1 2.85404 16.65 2.32021 16.2 2.32021Z" fill="currentColor"/>
-        <path d="M12.6 8.72622C9.63 8.72622 7.2 11.6089 7.2 15.1322C7.2 18.6555 9.63 21.5382 12.6 21.5382C15.57 21.5382 18 18.6555 18 15.1322C18 11.6089 15.57 8.72622 12.6 8.72622ZM14.4 16.1999H12.6C12.06 16.1999 11.7 15.7728 11.7 15.1322V11.9292C11.7 11.2886 12.06 10.8616 12.6 10.8616C13.14 10.8616 13.5 11.2886 13.5 11.9292V14.0646H14.4C14.94 14.0646 15.3 14.4916 15.3 15.1322C15.3 15.7728 14.94 16.1999 14.4 16.1999Z" fill="currentColor"/>
-        </g>
-        <defs>
-        <clipPath id="clip0">
-        <rect width="18" height="21.3534" fill="white" transform="translate(0 0.184875)"/>
-        </clipPath>
-        </defs>
-        </svg> Scheduler</a></li>
-
-		<li class="link" style="display:none;"><a href="{{route('company.schedulernew')}}"><svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
-		<g clip-path="url(#clip0)">
-		<path d="M16.2 2.32021H15.3V1.25254C15.3 0.611943 14.94 0.184875 14.4 0.184875C13.86 0.184875 13.5 0.611943 13.5 1.25254V2.32021H4.5V1.25254C4.5 0.611943 4.14 0.184875 3.6 0.184875C3.06 0.184875 2.7 0.611943 2.7 1.25254V2.32021H0.9C0.45 2.32021 0 2.74728 0 3.38788V18.3352C0 18.9758 0.45 19.4029 0.9 19.4029H6.39C5.76 18.1217 5.4 16.627 5.4 15.1322C5.4 10.4345 8.64 6.59088 12.6 6.59088C14.31 6.59088 15.84 7.33825 17.1 8.51268V3.38788C17.1 2.85404 16.65 2.32021 16.2 2.32021Z" fill="currentColor"/>
-		<path d="M12.6 8.72622C9.63 8.72622 7.2 11.6089 7.2 15.1322C7.2 18.6555 9.63 21.5382 12.6 21.5382C15.57 21.5382 18 18.6555 18 15.1322C18 11.6089 15.57 8.72622 12.6 8.72622ZM14.4 16.1999H12.6C12.06 16.1999 11.7 15.7728 11.7 15.1322V11.9292C11.7 11.2886 12.06 10.8616 12.6 10.8616C13.14 10.8616 13.5 11.2886 13.5 11.9292V14.0646H14.4C14.94 14.0646 15.3 14.4916 15.3 15.1322C15.3 15.7728 14.94 16.1999 14.4 16.1999Z" fill="currentColor"/>
-		</g>
-		<defs>
-		<clipPath id="clip0">
-		<rect width="18" height="21.3534" fill="white" transform="translate(0 0.184875)"/>
-		</clipPath>
-		</defs>
-		</svg> Scheduler-old</a></li>
-
-    <li class="link {{$manage_bill}}">
-      <a data-bs-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample" class="sidebar-collapse">
-        <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0)">
-      <path d="M9.75001 12.534C9.75001 12.1666 10.0035 11.8667 10.3125 11.8667H13.125V14.5359C13.125 15.027 13.461 15.4256 13.875 15.4256C14.289 15.4256 14.625 15.027 14.625 14.5359V11.8667H17.4375C17.7473 11.8667 18 12.1666 18 12.534V20.9864C18 21.3539 17.7473 21.6537 17.4375 21.6537H10.3125C10.0035 21.6537 9.75001 21.3539 9.75001 20.9864V12.534Z" fill="currentColor"/>
-      <path d="M-7.72476e-05 12.534C-7.72476e-05 12.1666 0.253422 11.8667 0.562422 11.8667H3.37492V14.5359C3.37492 15.027 3.71092 15.4256 4.12492 15.4256C4.53891 15.4256 4.87491 15.027 4.87491 14.5359V11.8667H7.68741C7.99716 11.8667 8.24991 12.1666 8.24991 12.534V20.9864C8.24991 21.3539 7.99716 21.6537 7.68741 21.6537H0.562422C0.253422 21.6537 -7.72476e-05 21.3539 -7.72476e-05 20.9864V12.534Z" fill="currentColor"/>
-      <path d="M4.87511 0.967616C4.87511 0.60105 5.12861 0.300323 5.4376 0.300323H8.2501V2.96949C8.2501 3.46062 8.5861 3.85922 9.0001 3.85922C9.4141 3.85922 9.7501 3.46062 9.7501 2.96949V0.300323H12.5626C12.8723 0.300323 13.1251 0.60105 13.1251 0.967616V9.41999C13.1251 9.78744 12.8723 10.0873 12.5626 10.0873H5.4376C5.12861 10.0873 4.87511 9.78744 4.87511 9.41999V0.967616Z" fill="currentColor"/>
-      </g>
-      <defs>
-      <clipPath id="clip0">
-      <rect width="18" height="21.3534" fill="white" transform="matrix(-1 0 0 1 18 0.300323)"/>
-      </clipPath>
-      </defs>
-      </svg>Manage Billing / Payments<i class="fa fa-angle-down" aria-hidden="true"></i>
-      </a>
-    </li>
-
-  <div class="collapse" id="collapseExample1" style="">
-    <li class="menu">
-      <li class="link" style="margin-left:32px;">
-        <a href="{{route('company.billing')}}">List Payments</a>
-      </li>
-    </li>
-    <li class="menu">
-      <li class="link {{$paynow}}" style="margin-left:32px;">
-        <a href="{{route('company.receivepayment')}}">Collect Payments</a>
-      </li>
-    </li>
-    <li class="menu">
-      <li class="link {{$receivepayments}}" style="margin-left:32px;">
-        <a href="{{route('company.receivepayments')}}">Received Payments</a>
-      </li>
-    </li>
-    <li class="menu">
-      <li class="link" style="margin-left:32px;">
-        <a href="{{route('company.viewallticket')}}">Invoiced Tickets</a>
-      </li>
-    </li>
-    <li class="menu">
-      <li class="link" style="margin-left:32px;">
-        <a href="{{route('company.managecommission')}}">Manage Commission</a>
-      </li>
-    </li>
-  </div>
-
-
-		<li class="link"><a href="{{route('company.checklist')}}"><svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-		<path d="M13.2012 9.63281C10.8943 9.63281 9.01758 11.5096 9.01758 13.8164C9.01758 16.1233 10.8943 18 13.2012 18C15.5274 18 17.4199 16.1233 17.4199 13.8164C17.4199 11.5096 15.5274 9.63281 13.2012 9.63281ZM14.4852 13.3103L13.0789 14.9978C12.9781 15.1187 12.8293 15.1875 12.6739 15.1875C12.6536 15.1875 12.6334 15.1863 12.613 15.184C12.4362 15.1635 12.2817 15.0552 12.2021 14.896L11.6396 13.771C11.5094 13.5105 11.615 13.1937 11.8755 13.0635C12.1359 12.9332 12.4527 13.0388 12.583 13.2993L12.7849 13.7031L13.6749 12.6351C13.8614 12.4114 14.1939 12.3812 14.4176 12.5675C14.6414 12.754 14.6717 13.0865 14.4852 13.3103Z" fill="currentColor"/>
-		<path d="M12.9739 3.00421L10.8342 0.791508C10.8332 0.790453 10.8321 0.789363 10.8311 0.788309C10.3385 0.287332 9.65296 0 8.95043 0H2.16211C1.28978 0 0.580078 0.709699 0.580078 1.58203V15.2578C0.580078 16.1301 1.28978 16.8398 2.16211 16.8398H8.92582C8.31962 15.9851 7.96289 14.9417 7.96289 13.8164C7.96289 10.928 10.3128 8.57812 13.2012 8.57812C13.3791 8.57812 13.555 8.58705 13.7285 8.60425V4.85086C13.7285 4.15586 13.4605 3.50016 12.9739 3.00421ZM6.16992 11.7773H3.35742C3.06619 11.7773 2.83008 11.5412 2.83008 11.25C2.83008 10.9588 3.06619 10.7227 3.35742 10.7227H6.16992C6.46116 10.7227 6.69727 10.9588 6.69727 11.25C6.69727 11.5412 6.46116 11.7773 6.16992 11.7773ZM6.16992 8.96484H3.35742C3.06619 8.96484 2.83008 8.72873 2.83008 8.4375C2.83008 8.14627 3.06619 7.91016 3.35742 7.91016H6.16992C6.46116 7.91016 6.69727 8.14627 6.69727 8.4375C6.69727 8.72873 6.46116 8.96484 6.16992 8.96484ZM6.16992 6.15234H3.35742C3.06619 6.15234 2.83008 5.91623 2.83008 5.625C2.83008 5.33377 3.06619 5.09766 3.35742 5.09766H6.16992C6.46116 5.09766 6.69727 5.33377 6.69727 5.625C6.69727 5.91623 6.46116 6.15234 6.16992 6.15234ZM9.54492 8.96484H8.98242C8.69119 8.96484 8.45508 8.72873 8.45508 8.4375C8.45508 8.14627 8.69119 7.91016 8.98242 7.91016H9.54492C9.83616 7.91016 10.0723 8.14627 10.0723 8.4375C10.0723 8.72873 9.83616 8.96484 9.54492 8.96484ZM9.54492 6.15234H8.98242C8.69119 6.15234 8.45508 5.91623 8.45508 5.625C8.45508 5.33377 8.69119 5.09766 8.98242 5.09766H9.54492C9.83616 5.09766 10.0723 5.33377 10.0723 5.625C10.0723 5.91623 9.83616 6.15234 9.54492 6.15234Z" fill="currentColor"/>
-		</svg> Checklists</a></li>
-		
-		<li class="link"><a href="{{route('company.report')}}">
-		<svg width="16" height="22" viewBox="0 0 16 22" xmlns="http://www.w3.org/2000/svg">
-		<path d="M13.4374 0.0117111H2.56242C1.42467 0.0117111 0.499916 1.10874 0.499916 2.45845V18.9183C0.499916 20.268 1.42467 21.3651 2.56242 21.3651H13.4374C14.5752 21.3651 15.4999 20.268 15.4999 18.9183V2.45845C15.4999 1.10874 14.5752 0.0117111 13.4374 0.0117111ZM7.06242 11.5781V7.19712C8.86242 7.52186 10.2499 9.3538 10.2499 11.5781C10.2499 14.0311 8.56767 16.0267 6.49992 16.0267C5.66892 16.0267 4.90767 15.694 4.28517 15.1486L6.89742 12.0497C7.00317 11.9251 7.06242 11.7552 7.06242 11.5781ZM5.93742 7.19712V11.3023L3.49017 14.2055C3.03042 13.467 2.74992 12.5639 2.74992 11.5781C2.74992 9.3538 4.13742 7.52186 5.93742 7.19712ZM12.6874 18.9183H3.31242C3.00192 18.9183 2.74992 18.6194 2.74992 18.251C2.74992 17.8827 3.00192 17.5837 3.31242 17.5837H12.6874C12.9979 17.5837 13.2499 17.8827 13.2499 18.251C13.2499 18.6194 12.9979 18.9183 12.6874 18.9183ZM12.6874 16.0267H11.5624C11.2519 16.0267 10.9999 15.7278 10.9999 15.3594C10.9999 14.9911 11.2519 14.6921 11.5624 14.6921H12.6874C12.9979 14.6921 13.2499 14.9911 13.2499 15.3594C13.2499 15.7278 12.9979 16.0267 12.6874 16.0267ZM12.6874 13.58H11.5624C11.2519 13.58 10.9999 13.281 10.9999 12.9127C10.9999 12.5444 11.2519 12.2454 11.5624 12.2454H12.6874C12.9979 12.2454 13.2499 12.5444 13.2499 12.9127C13.2499 13.281 12.9979 13.58 12.6874 13.58ZM12.6874 10.9108H11.5624C11.2519 10.9108 10.9999 10.6119 10.9999 10.2435C10.9999 9.87518 11.2519 9.57623 11.5624 9.57623H12.6874C12.9979 9.57623 13.2499 9.87518 13.2499 10.2435C13.2499 10.6119 12.9979 10.9108 12.6874 10.9108ZM12.6874 8.46408H11.5624C11.2519 8.46408 10.9999 8.16513 10.9999 7.79679C10.9999 7.42844 11.2519 7.1295 11.5624 7.1295H12.6874C12.9979 7.1295 13.2499 7.42844 13.2499 7.79679C13.2499 8.16513 12.9979 8.46408 12.6874 8.46408Z" fill="currentColor"></path>
-		</svg> Reports</a></li>
-
-    <li class="link"><a href="{{route('company.terms')}}">
-    <svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0)">
-      <path d="M9.75001 12.534C9.75001 12.1666 10.0035 11.8667 10.3125 11.8667H13.125V14.5359C13.125 15.027 13.461 15.4256 13.875 15.4256C14.289 15.4256 14.625 15.027 14.625 14.5359V11.8667H17.4375C17.7473 11.8667 18 12.1666 18 12.534V20.9864C18 21.3539 17.7473 21.6537 17.4375 21.6537H10.3125C10.0035 21.6537 9.75001 21.3539 9.75001 20.9864V12.534Z" fill="currentColor"/>
-      <path d="M-7.72476e-05 12.534C-7.72476e-05 12.1666 0.253422 11.8667 0.562422 11.8667H3.37492V14.5359C3.37492 15.027 3.71092 15.4256 4.12492 15.4256C4.53891 15.4256 4.87491 15.027 4.87491 14.5359V11.8667H7.68741C7.99716 11.8667 8.24991 12.1666 8.24991 12.534V20.9864C8.24991 21.3539 7.99716 21.6537 7.68741 21.6537H0.562422C0.253422 21.6537 -7.72476e-05 21.3539 -7.72476e-05 20.9864V12.534Z" fill="currentColor"/>
-      <path d="M4.87511 0.967616C4.87511 0.60105 5.12861 0.300323 5.4376 0.300323H8.2501V2.96949C8.2501 3.46062 8.5861 3.85922 9.0001 3.85922C9.4141 3.85922 9.7501 3.46062 9.7501 2.96949V0.300323H12.5626C12.8723 0.300323 13.1251 0.60105 13.1251 0.967616V9.41999C13.1251 9.78744 12.8723 10.0873 12.5626 10.0873H5.4376C5.12861 10.0873 4.87511 9.78744 4.87511 9.41999V0.967616Z" fill="currentColor"/>
-      </g>
-      <defs>
-      <clipPath id="clip0">
-      <rect width="18" height="21.3534" fill="white" transform="matrix(-1 0 0 1 18 0.300323)"/>
-      </clipPath>
-      </defs>
-      </svg> Manage Terms</a></li>
-    
-    <li class="link"><a href="{{route('company.adminsetting')}}"><svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-		<path d="M9.67957 3.88018C9.65658 3.45078 9.21774 3.52384 8.78955 3.52384C9.10584 3.60808 9.40507 3.72528 9.67957 3.88018Z" fill="currentColor"/>
-		<path d="M5.10206 2.80405C3.4398 2.80405 2.67469 4.90803 4.00351 5.96622C4.4565 4.75665 5.35828 3.88815 6.54046 3.54534C6.21708 3.09827 5.6946 2.80405 5.10206 2.80405Z" fill="currentColor"/>
-		<path d="M1.66824 5.63696C1.73598 5.85434 1.82375 6.06287 1.92802 6.26045L1.38199 6.80679C1.23535 6.95342 1.23535 7.19143 1.38199 7.33837L2.34445 8.30113C2.41454 8.37122 2.51058 8.41067 2.61067 8.41067C2.70967 8.41067 2.80506 8.37122 2.87637 8.30113L3.42179 7.75479C3.50365 7.79811 3.59437 7.82466 3.67915 7.86202C3.67915 7.8558 3.67854 7.84935 3.67854 7.84313C3.67854 7.39666 3.72982 6.9755 3.82112 6.58C3.16258 6.15618 2.72317 5.4205 2.72317 4.58055C2.72317 3.2685 3.79047 2.2009 5.10222 2.2009C5.99045 2.2009 6.75735 2.69538 7.16672 3.41782C7.60378 3.36362 8.01433 3.36362 8.50851 3.45701C8.44494 3.2647 8.37015 3.0765 8.27646 2.90009L8.82249 2.35349C8.89373 2.28309 8.93317 2.18735 8.93317 2.08783C8.93317 1.98826 8.89373 1.89257 8.82249 1.82217L7.86057 0.860013C7.78698 0.786392 7.69095 0.749866 7.59495 0.749866C7.49891 0.749866 7.40291 0.786392 7.32986 0.860013L6.78208 1.40661C6.5842 1.30178 6.37627 1.21401 6.15837 1.14775V0.375502C6.15837 0.168179 5.99106 0 5.78313 0H4.42192C4.21516 0 4.04608 0.168179 4.04608 0.375502V1.14771C3.82874 1.21397 3.62077 1.30174 3.42229 1.40658L2.87637 0.860582C2.80271 0.786961 2.70671 0.750435 2.61067 0.750435C2.51467 0.750435 2.4181 0.786961 2.34505 0.860278L1.38199 1.82244C1.31189 1.89314 1.27245 1.98853 1.27245 2.0884C1.27245 2.18823 1.31189 2.28366 1.38199 2.35405L1.92802 2.90035C1.82371 3.09827 1.73598 3.3065 1.66945 3.52384H0.897816C0.689886 3.52384 0.521973 3.69228 0.521973 3.89991V5.26116C0.521973 5.46818 0.689886 5.63696 0.897816 5.63696H1.66824Z" fill="currentColor"/>
-		<path d="M13.4599 12.9208C14.0619 12.5906 14.4753 11.9587 14.4753 11.2253C14.4753 10.155 13.6042 9.28448 12.534 9.28448C12.1576 9.28448 11.8088 9.39698 11.5108 9.5831C11.3324 10.2934 11.0514 10.9729 10.6838 11.5631C11.7258 11.759 12.6818 12.2334 13.4599 12.9208Z" fill="currentColor"/>
-		<path d="M17.477 10.4908C17.477 10.2667 17.295 10.0853 17.0717 10.0853H16.2389C16.167 9.85051 16.0716 9.62552 15.9585 9.41201L16.5481 8.82244C16.6247 8.74643 16.6671 8.64337 16.6671 8.53588C16.6671 8.42835 16.6247 8.32526 16.5481 8.24902L15.5102 7.21085C15.4313 7.13158 15.3271 7.09183 15.2234 7.09183C15.1197 7.09183 15.0161 7.13158 14.9372 7.21085L14.3464 7.80073C14.1331 7.68762 13.9087 7.59284 13.6731 7.52123V6.68837C13.6731 6.46455 13.4923 6.2831 13.2684 6.2831H11.8C11.7017 6.2831 11.6151 6.32254 11.5444 6.38088C11.6681 6.83205 11.7358 7.32126 11.7358 7.84314C11.7358 8.17445 11.71 8.51085 11.6616 8.84535C11.9349 8.74461 12.2259 8.68134 12.534 8.68134C13.937 8.68134 15.0785 9.8226 15.0785 11.2253C15.0785 12.1218 14.6103 12.9076 13.9076 13.3608C14.4188 13.9216 14.8253 14.5868 15.0897 15.3322C15.1333 15.3473 15.1786 15.3582 15.224 15.3582C15.3277 15.3582 15.4314 15.3187 15.5109 15.2395L16.5493 14.2013C16.6254 14.1253 16.6671 14.0222 16.6671 13.9147C16.6671 13.8072 16.6254 13.7042 16.5493 13.6279L15.9586 13.038C16.0717 12.8248 16.167 12.5997 16.239 12.3647H17.0718C17.179 12.3647 17.2832 12.3223 17.3586 12.2457C17.4347 12.17 17.4777 12.0667 17.4777 11.9592L17.477 10.4908Z" fill="currentColor"/>
-		<path d="M14.2629 15.6992C13.6332 13.8465 11.9692 12.5721 10.0484 12.3987C9.4052 13.0798 8.60883 13.512 7.70698 13.512C6.80582 13.512 6.00884 13.0799 5.36624 12.3987C3.44428 12.5721 1.78028 13.8465 1.15057 15.6995L0.802492 16.7241C0.702927 17.019 0.750604 17.3438 0.932059 17.5968C1.11348 17.8498 1.40565 18 1.71663 18H13.6968C14.0084 18 14.3005 17.8498 14.482 17.5968C14.6628 17.3438 14.7111 17.019 14.6109 16.7241L14.2629 15.6992Z" fill="currentColor"/>
-		<path d="M4.58325 7.84313C4.58325 10.1412 5.9822 12.6072 7.70682 12.6072C9.43211 12.6072 10.831 10.1412 10.831 7.84313C10.831 3.07941 4.58325 3.06997 4.58325 7.84313Z" fill="currentColor"/>
-		</svg> Admin / Setup</a></li>  
-		        <!-- 
-		        
-		        <li class="link"><a href="billing.php">
-
-		<svg width="18" height="22" viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
-		<g clip-path="url(#clip0)">
-		<path d="M6.4686 15.4177H6.2024C5.95342 15.4177 5.72505 15.2328 5.65084 14.9509C5.56098 14.6094 5.71141 14.2524 5.98555 14.1277L10.2048 12.2026C10.5011 12.0674 10.6435 11.6688 10.5212 11.3212C8.85677 6.58914 8.44028 0.752237 8.43556 0.68359C8.39271 0.0557591 7.70302 -0.15894 7.4069 0.367047L6.59375 1.8138L5.37455 0.849577C5.05185 0.594049 4.611 0.794818 4.51674 1.24286L4.14761 2.99323L3.12457 2.18415C2.80188 1.92862 2.36102 2.12939 2.26677 2.57743L1.89763 4.3278L0.8746 3.51872C0.484862 3.21047 -0.0350223 3.57143 0.00168038 4.12553C0.0129302 4.2986 0.291013 8.41533 1.34604 12.6059C1.97463 15.1019 2.75157 17.1005 3.65507 18.5468C4.28907 19.5607 5.26085 20.0886 6.24261 20.0886H6.43875C7.51916 20.0886 8.42069 19.0708 8.43711 17.7893C8.45381 16.4849 7.56433 15.4177 6.4686 15.4177ZM2.85247 8.32525C2.73716 7.98327 2.87743 7.59499 3.16606 7.45778L5.97852 6.12321C6.2668 5.98642 6.5941 6.15282 6.70976 6.49522C6.82508 6.8372 6.6848 7.22548 6.39617 7.36269C3.35041 8.80795 3.53017 8.74481 3.37488 8.74481C3.15199 8.74481 2.94071 8.58632 2.85247 8.32525ZM4.1462 11.3664C3.86197 11.5013 3.53196 11.3406 3.41496 10.9944C3.29965 10.6524 3.43992 10.2641 3.72855 10.1269L6.54102 8.79235C6.82929 8.65556 7.1566 8.82196 7.27226 9.16436C7.38757 9.50634 7.2473 9.89462 6.95867 10.0318L4.1462 11.3664ZM15.1872 11.4139C15.0403 11.4139 15.3309 11.301 11.2642 13.1564C11.2592 13.1466 8.54356 14.3904 8.54817 14.3883C8.34813 14.4796 8.30528 14.7906 8.46865 14.9552C10.1802 16.6794 9.82475 19.9156 7.79988 21.0656C7.64871 21.1515 7.69937 21.4229 7.86695 21.4232C8.33407 21.4241 8.78231 21.2889 9.17419 21.0462L15.2396 18.0835C15.3549 18.0709 15.4604 18.0171 15.5448 17.9346C17.1886 17.1319 17.1114 17.191 17.2231 17.0525C18.9223 14.9391 17.6493 11.4139 15.1872 11.4139Z" fill="currentColor"/>
-		<path d="M14.4602 7.88153C14.2409 8.1416 13.5539 8.14093 13.3352 7.88153C13.1156 7.62095 12.7594 7.62091 12.5397 7.88153C12.3201 8.14214 12.3201 8.56462 12.5397 8.82519C12.7757 9.10508 13.1137 9.2953 13.5 9.37262V10.0788C13.5 10.4473 13.7518 10.7461 14.0625 10.7461C14.3731 10.7461 14.6249 10.4473 14.6249 10.0788V9.27407C16.1012 8.67881 16.0589 6.33389 14.7096 5.67086L13.8459 5.24642C13.3964 5.02559 13.3156 4.07329 14.2272 4.07329C14.502 4.07329 14.7077 4.17147 14.7897 4.26877C15.0094 4.52934 15.3655 4.52938 15.5852 4.26877C15.8049 4.00815 15.8048 3.58568 15.5852 3.3251C15.3493 3.04522 15.0112 2.855 14.625 2.77768V2.0714C14.625 1.70289 14.3732 1.40411 14.0625 1.40411C13.7518 1.40411 13.5 1.70289 13.5 2.0714V2.87614C12.0365 3.46623 12.0545 5.81065 13.4154 6.47935L14.2791 6.90379C14.603 7.06298 14.7217 7.57053 14.4602 7.88153Z" fill="currentColor"/>
-		</g>
-		<defs>
-		<clipPath id="clip0">
-		<rect width="18" height="21.3534" fill="white" transform="translate(0 0.069458)"/>
-		</clipPath>
-		</defs>
-		</svg> Billing / Payments</a></li>
-		        <li class="link"><a href="reports.php">
-		<svg width="16" height="22" viewBox="0 0 16 22" xmlns="http://www.w3.org/2000/svg">
-		<path d="M13.4374 0.0117111H2.56242C1.42467 0.0117111 0.499916 1.10874 0.499916 2.45845V18.9183C0.499916 20.268 1.42467 21.3651 2.56242 21.3651H13.4374C14.5752 21.3651 15.4999 20.268 15.4999 18.9183V2.45845C15.4999 1.10874 14.5752 0.0117111 13.4374 0.0117111ZM7.06242 11.5781V7.19712C8.86242 7.52186 10.2499 9.3538 10.2499 11.5781C10.2499 14.0311 8.56767 16.0267 6.49992 16.0267C5.66892 16.0267 4.90767 15.694 4.28517 15.1486L6.89742 12.0497C7.00317 11.9251 7.06242 11.7552 7.06242 11.5781ZM5.93742 7.19712V11.3023L3.49017 14.2055C3.03042 13.467 2.74992 12.5639 2.74992 11.5781C2.74992 9.3538 4.13742 7.52186 5.93742 7.19712ZM12.6874 18.9183H3.31242C3.00192 18.9183 2.74992 18.6194 2.74992 18.251C2.74992 17.8827 3.00192 17.5837 3.31242 17.5837H12.6874C12.9979 17.5837 13.2499 17.8827 13.2499 18.251C13.2499 18.6194 12.9979 18.9183 12.6874 18.9183ZM12.6874 16.0267H11.5624C11.2519 16.0267 10.9999 15.7278 10.9999 15.3594C10.9999 14.9911 11.2519 14.6921 11.5624 14.6921H12.6874C12.9979 14.6921 13.2499 14.9911 13.2499 15.3594C13.2499 15.7278 12.9979 16.0267 12.6874 16.0267ZM12.6874 13.58H11.5624C11.2519 13.58 10.9999 13.281 10.9999 12.9127C10.9999 12.5444 11.2519 12.2454 11.5624 12.2454H12.6874C12.9979 12.2454 13.2499 12.5444 13.2499 12.9127C13.2499 13.281 12.9979 13.58 12.6874 13.58ZM12.6874 10.9108H11.5624C11.2519 10.9108 10.9999 10.6119 10.9999 10.2435C10.9999 9.87518 11.2519 9.57623 11.5624 9.57623H12.6874C12.9979 9.57623 13.2499 9.87518 13.2499 10.2435C13.2499 10.6119 12.9979 10.9108 12.6874 10.9108ZM12.6874 8.46408H11.5624C11.2519 8.46408 10.9999 8.16513 10.9999 7.79679C10.9999 7.42844 11.2519 7.1295 11.5624 7.1295H12.6874C12.9979 7.1295 13.2499 7.42844 13.2499 7.79679C13.2499 8.16513 12.9979 8.46408 12.6874 8.46408Z" fill="currentColor"/>
-		</svg> Reports</a></li>
-		        
-		        <li class="link"><a href="admin-setting.php"><svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-		<path d="M9.67957 3.88018C9.65658 3.45078 9.21774 3.52384 8.78955 3.52384C9.10584 3.60808 9.40507 3.72528 9.67957 3.88018Z" fill="currentColor"/>
-		<path d="M5.10206 2.80405C3.4398 2.80405 2.67469 4.90803 4.00351 5.96622C4.4565 4.75665 5.35828 3.88815 6.54046 3.54534C6.21708 3.09827 5.6946 2.80405 5.10206 2.80405Z" fill="currentColor"/>
-		<path d="M1.66824 5.63696C1.73598 5.85434 1.82375 6.06287 1.92802 6.26045L1.38199 6.80679C1.23535 6.95342 1.23535 7.19143 1.38199 7.33837L2.34445 8.30113C2.41454 8.37122 2.51058 8.41067 2.61067 8.41067C2.70967 8.41067 2.80506 8.37122 2.87637 8.30113L3.42179 7.75479C3.50365 7.79811 3.59437 7.82466 3.67915 7.86202C3.67915 7.8558 3.67854 7.84935 3.67854 7.84313C3.67854 7.39666 3.72982 6.9755 3.82112 6.58C3.16258 6.15618 2.72317 5.4205 2.72317 4.58055C2.72317 3.2685 3.79047 2.2009 5.10222 2.2009C5.99045 2.2009 6.75735 2.69538 7.16672 3.41782C7.60378 3.36362 8.01433 3.36362 8.50851 3.45701C8.44494 3.2647 8.37015 3.0765 8.27646 2.90009L8.82249 2.35349C8.89373 2.28309 8.93317 2.18735 8.93317 2.08783C8.93317 1.98826 8.89373 1.89257 8.82249 1.82217L7.86057 0.860013C7.78698 0.786392 7.69095 0.749866 7.59495 0.749866C7.49891 0.749866 7.40291 0.786392 7.32986 0.860013L6.78208 1.40661C6.5842 1.30178 6.37627 1.21401 6.15837 1.14775V0.375502C6.15837 0.168179 5.99106 0 5.78313 0H4.42192C4.21516 0 4.04608 0.168179 4.04608 0.375502V1.14771C3.82874 1.21397 3.62077 1.30174 3.42229 1.40658L2.87637 0.860582C2.80271 0.786961 2.70671 0.750435 2.61067 0.750435C2.51467 0.750435 2.4181 0.786961 2.34505 0.860278L1.38199 1.82244C1.31189 1.89314 1.27245 1.98853 1.27245 2.0884C1.27245 2.18823 1.31189 2.28366 1.38199 2.35405L1.92802 2.90035C1.82371 3.09827 1.73598 3.3065 1.66945 3.52384H0.897816C0.689886 3.52384 0.521973 3.69228 0.521973 3.89991V5.26116C0.521973 5.46818 0.689886 5.63696 0.897816 5.63696H1.66824Z" fill="currentColor"/>
-		<path d="M13.4599 12.9208C14.0619 12.5906 14.4753 11.9587 14.4753 11.2253C14.4753 10.155 13.6042 9.28448 12.534 9.28448C12.1576 9.28448 11.8088 9.39698 11.5108 9.5831C11.3324 10.2934 11.0514 10.9729 10.6838 11.5631C11.7258 11.759 12.6818 12.2334 13.4599 12.9208Z" fill="currentColor"/>
-		<path d="M17.477 10.4908C17.477 10.2667 17.295 10.0853 17.0717 10.0853H16.2389C16.167 9.85051 16.0716 9.62552 15.9585 9.41201L16.5481 8.82244C16.6247 8.74643 16.6671 8.64337 16.6671 8.53588C16.6671 8.42835 16.6247 8.32526 16.5481 8.24902L15.5102 7.21085C15.4313 7.13158 15.3271 7.09183 15.2234 7.09183C15.1197 7.09183 15.0161 7.13158 14.9372 7.21085L14.3464 7.80073C14.1331 7.68762 13.9087 7.59284 13.6731 7.52123V6.68837C13.6731 6.46455 13.4923 6.2831 13.2684 6.2831H11.8C11.7017 6.2831 11.6151 6.32254 11.5444 6.38088C11.6681 6.83205 11.7358 7.32126 11.7358 7.84314C11.7358 8.17445 11.71 8.51085 11.6616 8.84535C11.9349 8.74461 12.2259 8.68134 12.534 8.68134C13.937 8.68134 15.0785 9.8226 15.0785 11.2253C15.0785 12.1218 14.6103 12.9076 13.9076 13.3608C14.4188 13.9216 14.8253 14.5868 15.0897 15.3322C15.1333 15.3473 15.1786 15.3582 15.224 15.3582C15.3277 15.3582 15.4314 15.3187 15.5109 15.2395L16.5493 14.2013C16.6254 14.1253 16.6671 14.0222 16.6671 13.9147C16.6671 13.8072 16.6254 13.7042 16.5493 13.6279L15.9586 13.038C16.0717 12.8248 16.167 12.5997 16.239 12.3647H17.0718C17.179 12.3647 17.2832 12.3223 17.3586 12.2457C17.4347 12.17 17.4777 12.0667 17.4777 11.9592L17.477 10.4908Z" fill="currentColor"/>
-		<path d="M14.2629 15.6992C13.6332 13.8465 11.9692 12.5721 10.0484 12.3987C9.4052 13.0798 8.60883 13.512 7.70698 13.512C6.80582 13.512 6.00884 13.0799 5.36624 12.3987C3.44428 12.5721 1.78028 13.8465 1.15057 15.6995L0.802492 16.7241C0.702927 17.019 0.750604 17.3438 0.932059 17.5968C1.11348 17.8498 1.40565 18 1.71663 18H13.6968C14.0084 18 14.3005 17.8498 14.482 17.5968C14.6628 17.3438 14.7111 17.019 14.6109 16.7241L14.2629 15.6992Z" fill="currentColor"/>
-		<path d="M4.58325 7.84313C4.58325 10.1412 5.9822 12.6072 7.70682 12.6072C9.43211 12.6072 10.831 10.1412 10.831 7.84313C10.831 3.07941 4.58325 3.06997 4.58325 7.84313Z" fill="currentColor"/>
-		</svg> Admin / Setup</a></li> -->
-		    </ul>
-		</div>
+            <li class="link"><a href="admin-setting.php"><svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9.67957 3.88018C9.65658 3.45078 9.21774 3.52384 8.78955 3.52384C9.10584 3.60808 9.40507 3.72528 9.67957 3.88018Z" fill="currentColor"/>
+    <path d="M5.10206 2.80405C3.4398 2.80405 2.67469 4.90803 4.00351 5.96622C4.4565 4.75665 5.35828 3.88815 6.54046 3.54534C6.21708 3.09827 5.6946 2.80405 5.10206 2.80405Z" fill="currentColor"/>
+    <path d="M1.66824 5.63696C1.73598 5.85434 1.82375 6.06287 1.92802 6.26045L1.38199 6.80679C1.23535 6.95342 1.23535 7.19143 1.38199 7.33837L2.34445 8.30113C2.41454 8.37122 2.51058 8.41067 2.61067 8.41067C2.70967 8.41067 2.80506 8.37122 2.87637 8.30113L3.42179 7.75479C3.50365 7.79811 3.59437 7.82466 3.67915 7.86202C3.67915 7.8558 3.67854 7.84935 3.67854 7.84313C3.67854 7.39666 3.72982 6.9755 3.82112 6.58C3.16258 6.15618 2.72317 5.4205 2.72317 4.58055C2.72317 3.2685 3.79047 2.2009 5.10222 2.2009C5.99045 2.2009 6.75735 2.69538 7.16672 3.41782C7.60378 3.36362 8.01433 3.36362 8.50851 3.45701C8.44494 3.2647 8.37015 3.0765 8.27646 2.90009L8.82249 2.35349C8.89373 2.28309 8.93317 2.18735 8.93317 2.08783C8.93317 1.98826 8.89373 1.89257 8.82249 1.82217L7.86057 0.860013C7.78698 0.786392 7.69095 0.749866 7.59495 0.749866C7.49891 0.749866 7.40291 0.786392 7.32986 0.860013L6.78208 1.40661C6.5842 1.30178 6.37627 1.21401 6.15837 1.14775V0.375502C6.15837 0.168179 5.99106 0 5.78313 0H4.42192C4.21516 0 4.04608 0.168179 4.04608 0.375502V1.14771C3.82874 1.21397 3.62077 1.30174 3.42229 1.40658L2.87637 0.860582C2.80271 0.786961 2.70671 0.750435 2.61067 0.750435C2.51467 0.750435 2.4181 0.786961 2.34505 0.860278L1.38199 1.82244C1.31189 1.89314 1.27245 1.98853 1.27245 2.0884C1.27245 2.18823 1.31189 2.28366 1.38199 2.35405L1.92802 2.90035C1.82371 3.09827 1.73598 3.3065 1.66945 3.52384H0.897816C0.689886 3.52384 0.521973 3.69228 0.521973 3.89991V5.26116C0.521973 5.46818 0.689886 5.63696 0.897816 5.63696H1.66824Z" fill="currentColor"/>
+    <path d="M13.4599 12.9208C14.0619 12.5906 14.4753 11.9587 14.4753 11.2253C14.4753 10.155 13.6042 9.28448 12.534 9.28448C12.1576 9.28448 11.8088 9.39698 11.5108 9.5831C11.3324 10.2934 11.0514 10.9729 10.6838 11.5631C11.7258 11.759 12.6818 12.2334 13.4599 12.9208Z" fill="currentColor"/>
+    <path d="M17.477 10.4908C17.477 10.2667 17.295 10.0853 17.0717 10.0853H16.2389C16.167 9.85051 16.0716 9.62552 15.9585 9.41201L16.5481 8.82244C16.6247 8.74643 16.6671 8.64337 16.6671 8.53588C16.6671 8.42835 16.6247 8.32526 16.5481 8.24902L15.5102 7.21085C15.4313 7.13158 15.3271 7.09183 15.2234 7.09183C15.1197 7.09183 15.0161 7.13158 14.9372 7.21085L14.3464 7.80073C14.1331 7.68762 13.9087 7.59284 13.6731 7.52123V6.68837C13.6731 6.46455 13.4923 6.2831 13.2684 6.2831H11.8C11.7017 6.2831 11.6151 6.32254 11.5444 6.38088C11.6681 6.83205 11.7358 7.32126 11.7358 7.84314C11.7358 8.17445 11.71 8.51085 11.6616 8.84535C11.9349 8.74461 12.2259 8.68134 12.534 8.68134C13.937 8.68134 15.0785 9.8226 15.0785 11.2253C15.0785 12.1218 14.6103 12.9076 13.9076 13.3608C14.4188 13.9216 14.8253 14.5868 15.0897 15.3322C15.1333 15.3473 15.1786 15.3582 15.224 15.3582C15.3277 15.3582 15.4314 15.3187 15.5109 15.2395L16.5493 14.2013C16.6254 14.1253 16.6671 14.0222 16.6671 13.9147C16.6671 13.8072 16.6254 13.7042 16.5493 13.6279L15.9586 13.038C16.0717 12.8248 16.167 12.5997 16.239 12.3647H17.0718C17.179 12.3647 17.2832 12.3223 17.3586 12.2457C17.4347 12.17 17.4777 12.0667 17.4777 11.9592L17.477 10.4908Z" fill="currentColor"/>
+    <path d="M14.2629 15.6992C13.6332 13.8465 11.9692 12.5721 10.0484 12.3987C9.4052 13.0798 8.60883 13.512 7.70698 13.512C6.80582 13.512 6.00884 13.0799 5.36624 12.3987C3.44428 12.5721 1.78028 13.8465 1.15057 15.6995L0.802492 16.7241C0.702927 17.019 0.750604 17.3438 0.932059 17.5968C1.11348 17.8498 1.40565 18 1.71663 18H13.6968C14.0084 18 14.3005 17.8498 14.482 17.5968C14.6628 17.3438 14.7111 17.019 14.6109 16.7241L14.2629 15.6992Z" fill="currentColor"/>
+    <path d="M4.58325 7.84313C4.58325 10.1412 5.9822 12.6072 7.70682 12.6072C9.43211 12.6072 10.831 10.1412 10.831 7.84313C10.831 3.07941 4.58325 3.06997 4.58325 7.84313Z" fill="currentColor"/>
+    </svg> Admin / Setup</a></li> -->
+        </ul>
+    </div>
 </div>
 <!-- sidebar end -->
 
 <div class="content-page">
-<!-- topbarstart -->
-<div class="loadershow">
-	
-	<!-- <div id="loader" style="display: block;"></div> -->
-  <!-- <h2 style="color: #fff;">Processing...</h2> -->
-  <img src="{{url('')}}/images/gifloader.gif"/>
+    <!-- topbarstart -->
+    <div class="loadershow">
 
-</div>
-<div class="top-bar">
-<div class="left-sidemenu">
-<a class="menubar" id="menuhideshow">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path></svg>
-</a>
-       <div class="search-1">
-        <!-- <i class="fa fa-search" aria-hidden="true"></i>
-         <input type="search" name="" placeholder="search" class="form-control srch"> -->
-         <form>
-        <div class="typeahead__container">
-            <div class="typeahead__field">
-                <div class="typeahead__query">
-                  <i class="fa fa-search" aria-hidden="true"></i>
-                    <input class="js-typeahead form-control srch"
-                           name="q" id="q" autofocus
-                           autocomplete="off" value="{{request()->q}}" placeholder="search">
-                </div>
-                @if(request()->q !=null)
-                  <i class="fa fa-close removesearch" aria-hidden="true"  style="margin-top: 10px;margin-left: 10px;"></i>
-                @endif
-                <!-- <div class="typeahead__button">
+        <!-- <div id="loader" style="display: block;"></div> -->
+        <!-- <h2 style="color: #fff;">Processing...</h2> -->
+        <img src="{{url('')}}/images/gifloader.gif"/>
+
+    </div>
+    <div class="top-bar">
+        <div class="left-sidemenu">
+            <a class="menubar" id="menuhideshow">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                    <path fill-rule="evenodd"
+                          d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </a>
+            <div class="search-1">
+                <!-- <i class="fa fa-search" aria-hidden="true"></i>
+                 <input type="search" name="" placeholder="search" class="form-control srch"> -->
+                <form>
+                    <div class="typeahead__container">
+                        <div class="typeahead__field">
+                            <div class="typeahead__query">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                                <input class="js-typeahead form-control srch"
+                                       name="q" id="q" autofocus
+                                       autocomplete="off" value="{{request()->q}}" placeholder="search">
+                            </div>
+                            @if(request()->q !=null)
+                                <i class="fa fa-close removesearch" aria-hidden="true"
+                                   style="margin-top: 10px;margin-left: 10px;"></i>
+                            @endif
+                            <!-- <div class="typeahead__button">
                     <button type="submit">
                         <span class="typeahead__search-icon"></span>
                     </button>
                 </div> -->
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
-       </div>
-	   </div>
-       <div class="flex-new">
-         <span class="ned-hlp">Need Help?</span>
-<div class="dropdown position-relative notification-icon">
-    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color: #81878F;">
-    <img src="{{url('')}}/images/notificationgray.png" style="width: 30px;  position: relative;right: 20px;height: 30px;object-fit: cover;border-radius: 100px;">
-    </a>
-    <div class="position-absolute not-bell" id="blink">
-   <span class="blinking"></span>
-</div>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-      <span id="notification"></span>
-      @if(count($notifications)>0)
-        @foreach($notifications as $notification)
-            <li class="notification-item">
-              @if($notification->ticketid!="")
-              <a class="dropdown-item" href="{{url('company/quote/ticketdetail/')}}/{{$notification->ticketid}}">
-                {{$notification->message}}
-              </a>
-              @else
-              <a class="dropdown-item" href="{{url('company/timeoff')}}">
-                {{$notification->message}}
-              </a>
-              @endif
-            </li>
-        @endforeach
-        <p style="text-align:center;"><a class="add-btn-yellow w-75 p-1 mt-2" href="{{route('company.notification')}}">View All</a></p>
-      @endif
-    </ul>   
-     
-</div>
+        <div class="flex-new">
+            <span class="ned-hlp">Need Help?</span>
+            <div class="dropdown position-relative notification-icon">
+                <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                   aria-expanded="false" style="color: #81878F;">
+                    <img src="{{url('')}}/images/notificationgray.png"
+                         style="width: 30px;  position: relative;right: 20px;height: 30px;object-fit: cover;border-radius: 100px;">
+                </a>
+                <div class="position-absolute not-bell" id="blink">
+                    <span class="blinking"></span>
+                </div>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <span id="notification"></span>
+                    @if(count($notifications)>0)
+                        @foreach($notifications as $notification)
+                            <li class="notification-item">
+                                @if($notification->ticketid!="")
+                                    <a class="dropdown-item"
+                                       href="{{url('company/quote/ticketdetail/')}}/{{$notification->ticketid}}">
+                                        {{$notification->message}}
+                                    </a>
+                                @else
+                                    <a class="dropdown-item" href="{{url('company/timeoff')}}">
+                                        {{$notification->message}}
+                                    </a>
+                                @endif
+                            </li>
+                        @endforeach
+                        <p style="text-align:center;"><a class="add-btn-yellow w-75 p-1 mt-2"
+                                                         href="{{route('company.notification')}}">View All</a></p>
+                    @endif
+                </ul>
 
-<div class="dropdown">
-	@if(Auth::user()->image!="")
-		<img src="{{url('')}}/userimage/{{Auth::user()->image}}" style="width: 30px;  position: relative;right: 20px;height: 30px;object-fit: cover;border-radius: 100px;">
-	@else
-  	<img src="{{ url('')}}/uploads/servicebolt-noimage.png" style="width: 30px;  position: relative;right: 20px;height: 30px;object-fit: cover;border-radius: 100px;">
-  @endif
-  <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink1" data-bs-toggle="dropdown" aria-expanded="false" style="color: #81878F;">
-    {{Auth::user()->firstname}}
-  </a>
+            </div>
 
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-  	@if(Auth::user()->role=="company")
-    <li><a class="dropdown-item" href="{{route('company.adminsetting')}}">Settings</a></li>
-    <li><a class="dropdown-item" href="{{route('company.changepassword')}}">Change Password</a></li>
-    <li><a class="dropdown-item" href="{{route('logout')}}">Logout</a></li>
-   @else
-   	<li><a class="dropdown-item" href="{{route('workerlogout')}}">Logout</a></li>
-   @endif
-  </ul>
-</div>
-       </div>
-     </div>
-<!-- topbar end -->
+            <div class="dropdown">
+                @if(Auth::user()->image!="")
+                    <img src="{{url('')}}/userimage/{{Auth::user()->image}}"
+                         style="width: 30px;  position: relative;right: 20px;height: 30px;object-fit: cover;border-radius: 100px;">
+                @else
+                    <img src="{{ url('')}}/uploads/servicebolt-noimage.png"
+                         style="width: 30px;  position: relative;right: 20px;height: 30px;object-fit: cover;border-radius: 100px;">
+                @endif
+                <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink1" data-bs-toggle="dropdown"
+                   aria-expanded="false" style="color: #81878F;">
+                    {{Auth::user()->firstname}}
+                </a>
 
-<div>
-    @yield('content')
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    @if(Auth::user()->role=="company")
+                        <li><a class="dropdown-item" href="{{route('company.adminsetting')}}">Settings</a></li>
+                        <li><a class="dropdown-item" href="{{route('company.changepassword')}}">Change Password</a></li>
+                        <li><a class="dropdown-item" href="{{route('logout')}}">Logout</a></li>
+                    @else
+                        <li><a class="dropdown-item" href="{{route('workerlogout')}}">Logout</a></li>
+                    @endif
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- topbar end -->
+
+    <div>
+        @yield('content')
+    </div>
 </div>
-</div>
-<script src="{{ asset('js/jquery.min.js')}}"></script>
-<script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.3/js/bootstrap.bundle.min.js"
+        integrity="sha512-iceXjjbmB2rwoX93Ka6HAHP+B76IY1z0o3h+N1PeDtRSsyeetU3/0QKJqGyPJcX63zysNehggFwMC/bi7dvMig=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script> -->
-<script src="{{ asset('js/bootstrap-select.min.js')}}"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
-   <!-- <script src="{{ asset('js/chart.js')}}"></script> -->
-   <script src="{{ asset('js/drop-zone.js')}}"></script>
-   <script src="{{ asset('js/dropify.js')}}"></script>
-   
-  
-<script src="{{ asset('js/slick.min.js')}}"></script>
-<script src="{{ asset('js/main.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"
+        integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
+<!-- <script src="{{ asset('js/chart.js')}}"></script> -->
+<script src="{{ asset('js/drop-zone.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.js"
+        integrity="sha512-hJsxoiLoVRkwHNvA5alz/GVA+eWtVxdQ48iy4sFRQLpDrBPn6BFZeUcW4R4kU+Rj2ljM9wHwekwVtsb0RY/46Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"
+        integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.4/main.min.js"
+        integrity="sha512-XOEq47av5VoS9AeXnMf7KWh4MqU5qLlXavvjwOslpq56aBrulO2+vlc2/s0tO2JDnild+RlFzSEtA+4Ih/VYZA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
@@ -667,456 +793,459 @@ $googleplacekey = $userinfo->googleplace;
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.js"></script>
 
-<script async defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script async defer
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <!-- <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script> -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet"/>
 
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css'>
+<link rel='stylesheet'
+      href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css'>
 
-<script src="{{ asset('js/jquery-ui.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"
+        integrity="sha512-kHKdovQFIwzs2NABJSo9NgJKZOrRqLPSoqIumoCkaIytTRGgsddo7d0rFyyh8RvYyNNKcMF7C9+4sM7YhMylgg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('js/add-field.js')}}"></script>
 <script src="https://js.pusher.com/7.1/pusher.min.js"></script>
 
 <script src="{{ asset('js/jquery.typeahead.js')}}"></script>
-   
+
 @yield('script')
- <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $googleplacekey; ?>&loading=async&callback=initAutocomplete&libraries=places" async></script>
- <!-- for datepicker -->
+<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $googleplacekey; ?>&loading=async&callback=initAutocomplete&libraries=places"
+        async></script>
+<!-- for datepicker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
- 
- <!-- AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc -->
- <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOi1ruL06YUktpnX-qRJlTtXxPL6RUzcg&callback=initAutocomplete&libraries=places" async></script> -->
+
+<!-- AIzaSyC_iTi38PPPgtBY1msPceI8YfMxNSqDnUc -->
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOi1ruL06YUktpnX-qRJlTtXxPL6RUzcg&callback=initAutocomplete&libraries=places" async></script> -->
 
 
-  <script>
-  	$(window).on('load', function () {
-    	$('.loadershow').hide();
-  	}) 
-  
+<script>
+    $(window).on('load', function () {
+        $('.loadershow').hide();
+    })
+
     function initAutocomplete() {
 
-      var input = document.getElementById('address');
+        var input = document.getElementById('address');
 
-       var autocomplete = new google.maps.places.Autocomplete(input);
-        autocomplete.addListener('place_changed', function() {
-           var place = autocomplete.getPlace();
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener('place_changed', function () {
+            var place = autocomplete.getPlace();
             autocomplete.setComponentRestrictions(
-        {'country': ['us','in']});
-          $("#saddress").val($("#address").val());
-       });
+                {'country': ['us', 'in']});
+            $("#saddress").val($("#address").val());
+        });
 
-       var input1 = document.getElementById('address6');
-       var autocomplete1 = new google.maps.places.Autocomplete(input1);
+        var input1 = document.getElementById('address6');
+        var autocomplete1 = new google.maps.places.Autocomplete(input1);
         // autocomplete.setComponentRestrictions(
         // {'country': ['us']});
 
-       autocomplete1.addListener('place_changed', function() {
-           var place1 = autocomplete1.getPlace();
+        autocomplete1.addListener('place_changed', function () {
+            var place1 = autocomplete1.getPlace();
             autocomplete1.setComponentRestrictions(
-        {'country': ['us','in']});
-      });
+                {'country': ['us', 'in']});
+        });
 
-       var input2 = document.getElementById('address5');
-       var autocomplete2 = new google.maps.places.Autocomplete(input2);
+        var input2 = document.getElementById('address5');
+        var autocomplete2 = new google.maps.places.Autocomplete(input2);
         // autocomplete.setComponentRestrictions(
         // {'country': ['us']});
 
-       autocomplete2.addListener('place_changed', function() {
-           var place2 = autocomplete2.getPlace();
+        autocomplete2.addListener('place_changed', function () {
+            var place2 = autocomplete2.getPlace();
             autocomplete2.setComponentRestrictions(
-        {'country': ['us','in']});
-      });
+                {'country': ['us', 'in']});
+        });
 
-       var input3 = document.getElementById('addressq1');
-       var autocomplete3 = new google.maps.places.Autocomplete(input3);
-        
-        autocomplete3.addListener('place_changed', function() {
-           var place3 = autocomplete3.getPlace();
+        var input3 = document.getElementById('addressq1');
+        var autocomplete3 = new google.maps.places.Autocomplete(input3);
+
+        autocomplete3.addListener('place_changed', function () {
+            var place3 = autocomplete3.getPlace();
             autocomplete3.setComponentRestrictions(
-        {'country': ['us','in']});
-      });
+                {'country': ['us', 'in']});
+        });
 
-      var input4 = document.getElementById('addresst1');
-      var autocomplete4 = new google.maps.places.Autocomplete(input4);
-        
-      autocomplete4.addListener('place_changed', function() {
-           var place4 = autocomplete4.getPlace();
+        var input4 = document.getElementById('addresst1');
+        var autocomplete4 = new google.maps.places.Autocomplete(input4);
+
+        autocomplete4.addListener('place_changed', function () {
+            var place4 = autocomplete4.getPlace();
             autocomplete4.setComponentRestrictions(
-        {'country': ['us','in']});
-      });
+                {'country': ['us', 'in']});
+        });
 
-      var input5 = document.getElementById('billingaddress');
-      var autocomplete5 = new google.maps.places.Autocomplete(input5);
-        
-      autocomplete5.addListener('place_changed', function() {
-           var place5 = autocomplete5.getPlace();
+        var input5 = document.getElementById('billingaddress');
+        var autocomplete5 = new google.maps.places.Autocomplete(input5);
+
+        autocomplete5.addListener('place_changed', function () {
+            var place5 = autocomplete5.getPlace();
             autocomplete5.setComponentRestrictions(
-        {'country': ['us','in']});
-      });
+                {'country': ['us', 'in']});
+        });
 
-      var input6 = document.getElementById('mailingaddress');
-      var autocomplete6 = new google.maps.places.Autocomplete(input6);
-        
-      autocomplete6.addListener('place_changed', function() {
-           var place6 = autocomplete6.getPlace();
+        var input6 = document.getElementById('mailingaddress');
+        var autocomplete6 = new google.maps.places.Autocomplete(input6);
+
+        autocomplete6.addListener('place_changed', function () {
+            var place6 = autocomplete6.getPlace();
             autocomplete6.setComponentRestrictions(
-        {'country': ['us','in']});
-      });
+                {'country': ['us', 'in']});
+        });
 
-      var input7 = document.getElementById('billingaddress1');
-      var autocomplete7 = new google.maps.places.Autocomplete(input7);
-        
-      autocomplete7.addListener('place_changed', function() {
-           var place7 = autocomplete7.getPlace();
+        var input7 = document.getElementById('billingaddress1');
+        var autocomplete7 = new google.maps.places.Autocomplete(input7);
+
+        autocomplete7.addListener('place_changed', function () {
+            var place7 = autocomplete7.getPlace();
             autocomplete7.setComponentRestrictions(
-        {'country': ['us','in']});
-      });
+                {'country': ['us', 'in']});
+        });
 
-      var input8 = document.getElementById('mailingaddress1');
-      var autocomplete8 = new google.maps.places.Autocomplete(input8);
-        
-      autocomplete8.addListener('place_changed', function() {
-           var place8 = autocomplete8.getPlace();
+        var input8 = document.getElementById('mailingaddress1');
+        var autocomplete8 = new google.maps.places.Autocomplete(input8);
+
+        autocomplete8.addListener('place_changed', function () {
+            var place8 = autocomplete8.getPlace();
             autocomplete8.setComponentRestrictions(
-        {'country': ['us','in']});
-      });
+                {'country': ['us', 'in']});
+        });
     }
-</script>  
-   
+</script>
+
 <script>
-$(document).ready(function () {
+    $(document).ready(function () {
         var url = window.location;
-        
+
         $('.sidebar ul li a[href="' + url + '"]').parent().addClass('active');
 
-    // Will also work for relative and absolute hrefs
+        // Will also work for relative and absolute hrefs
         $('.sidebar ul li a').filter(function () {
             return this.href == url;
         }).parent().addClass('active').parent().parent().addClass('active');
-      
-      
-      $(".menubar").click(function(){
-    $(".sidebar").toggle();
-   $("body").toggleClass('leftside-none');
-   
-  });
-    $("#blink").removeClass("not-bell"); 
 
-     displayDatePickerIfBrowserDoesNotSupportDateType();
 
-});
+        $(".menubar").click(function () {
+            $(".sidebar").toggle();
+            $("body").toggleClass('leftside-none');
 
-  function displayDatePickerIfBrowserDoesNotSupportDateType() {
-    var datePicker = document.querySelector('.etc');
-    if (datePicker && datePicker.type !== 'date') {
-      $('.etc').datepicker();
+        });
+        $("#blink").removeClass("not-bell");
+
+        displayDatePickerIfBrowserDoesNotSupportDateType();
+
+    });
+
+    function displayDatePickerIfBrowserDoesNotSupportDateType() {
+        var datePicker = document.querySelector('.etc');
+        if (datePicker && datePicker.type !== 'date') {
+            $('.etc').datepicker();
+        }
     }
-  }
 
-$(document).ready(function() {
-  var buttonAdd = $("#add-button");
-  var buttonRemove = $("#remove-button");
-  
-  var className = ".dynamic-field";
-  var count = 0;
-  var field = "";
-  var maxFields =50;
+    $(document).ready(function () {
+        var buttonAdd = $("#add-button");
+        var buttonRemove = $("#remove-button");
 
-  function totalFields() {
-    return $(className).length;
-  }
+        var className = ".dynamic-field";
+        var count = 0;
+        var field = "";
+        var maxFields = 50;
 
-  function addNewField() {
-    count = totalFields() + 1;
-    field = $("#dynamic-field-1").clone();
-    field.attr("id", "dynamic-field-" + count);
-    field.children("label").text("Field " + count);
-    field.find("input").val("");
-    $(className + ":last").after($(field));
-  }
+        function totalFields() {
+            return $(className).length;
+        }
 
-  function removeLastField() {
-    if (totalFields() > 1) {
-      $(className + ":last").remove();
+        function addNewField() {
+            count = totalFields() + 1;
+            field = $("#dynamic-field-1").clone();
+            field.attr("id", "dynamic-field-" + count);
+            field.children("label").text("Field " + count);
+            field.find("input").val("");
+            $(className + ":last").after($(field));
+        }
+
+        function removeLastField() {
+            if (totalFields() > 1) {
+                $(className + ":last").remove();
+            }
+        }
+
+        function enableButtonRemove() {
+            if (totalFields() === 2) {
+                buttonRemove.removeAttr("disabled");
+                buttonRemove.addClass("shadow-sm");
+            }
+        }
+
+        function disableButtonRemove() {
+            if (totalFields() === 1) {
+                buttonRemove.attr("disabled", "disabled");
+                buttonRemove.removeClass("shadow-sm");
+            }
+        }
+
+        function disableButtonAdd() {
+            if (totalFields() === maxFields) {
+                buttonAdd.attr("disabled", "disabled");
+                buttonAdd.removeClass("shadow-sm");
+            }
+        }
+
+        function enableButtonAdd() {
+            if (totalFields() === (maxFields - 1)) {
+                buttonAdd.removeAttr("disabled");
+                buttonAdd.addClass("shadow-sm");
+            }
+        }
+
+        buttonAdd.click(function () {
+            addNewField();
+            enableButtonRemove();
+            disableButtonAdd();
+        });
+
+        buttonRemove.click(function () {
+            removeLastField();
+            disableButtonRemove();
+            enableButtonAdd();
+        });
+    });
+
+
+    var buttonAdd1 = $("#add-button1");
+    var buttonRemove1 = $("#remove-button1");
+
+    var className1 = ".dynamic-fieldnew";
+    var count = 0;
+    var field = "";
+    var maxFields = 50;
+
+    function totalFields1() {
+        return $(className1).length;
     }
-  }
 
-  function enableButtonRemove() {
-    if (totalFields() === 2) {
-      buttonRemove.removeAttr("disabled");
-      buttonRemove.addClass("shadow-sm");
+    function addNewField1() {
+        count = totalFields1() + 1;
+        field = $("#dynamic-fieldnew-1").clone();
+        field.attr("id", "dynamic-fieldnew-" + count);
+        field.children("label").text("Field " + count);
+        field.find("input").val("");
+        $(className1 + ":last").after($(field));
     }
-  }
 
-  function disableButtonRemove() {
-    if (totalFields() === 1) {
-      buttonRemove.attr("disabled", "disabled");
-      buttonRemove.removeClass("shadow-sm");
+    function removeLastField1() {
+        if (totalFields1() > 1) {
+            $(className1 + ":last").remove();
+        }
     }
-  }
 
-  function disableButtonAdd() {
-    if (totalFields() === maxFields) {
-      buttonAdd.attr("disabled", "disabled");
-      buttonAdd.removeClass("shadow-sm");
+    function enableButtonRemove1() {
+        if (totalFields1() === 2 || totalFields1() >= 2) {
+            buttonRemove1.removeAttr("disabled");
+            buttonRemove1.addClass("shadow-sm");
+        }
     }
-  }
 
-  function enableButtonAdd() {
-    if (totalFields() === (maxFields - 1)) {
-      buttonAdd.removeAttr("disabled");
-      buttonAdd.addClass("shadow-sm");
+    function disableButtonRemove1() {
+        if (totalFields1() === 1) {
+            buttonRemove1.attr("disabled", "disabled");
+            buttonRemove1.removeClass("shadow-sm");
+        }
     }
-  }
 
-  buttonAdd.click(function() {
-    addNewField();
-    enableButtonRemove();
-    disableButtonAdd();
-  });
-
-  buttonRemove.click(function() {
-    removeLastField();
-    disableButtonRemove();
-    enableButtonAdd();
-  });
-});
-
-
-var buttonAdd1 = $("#add-button1");
-  var buttonRemove1 = $("#remove-button1");
-  
-  var className1 = ".dynamic-fieldnew";
-  var count = 0;
-  var field = "";
-  var maxFields =50;
-
-  function totalFields1() {
-    return $(className1).length;
-  }
-
-  function addNewField1() {
-    count = totalFields1() + 1;
-    field = $("#dynamic-fieldnew-1").clone();
-    field.attr("id", "dynamic-fieldnew-" + count);
-    field.children("label").text("Field " + count);
-    field.find("input").val("");
-    $(className1 + ":last").after($(field));
-  }
-
-  function removeLastField1() {
-    if (totalFields1() > 1) {
-      $(className1 + ":last").remove();
+    function disableButtonAdd1() {
+        if (totalFields1() === maxFields) {
+            buttonAdd1.attr("disabled", "disabled");
+            buttonAdd1.removeClass("shadow-sm");
+        }
     }
-  }
 
-  function enableButtonRemove1() {
-    if (totalFields1() === 2 || totalFields1() >= 2) {
-      buttonRemove1.removeAttr("disabled");
-      buttonRemove1.addClass("shadow-sm");
+    function enableButtonAdd1() {
+        if (totalFields1() === (maxFields - 1)) {
+            buttonAdd1.removeAttr("disabled");
+            buttonAdd1.addClass("shadow-sm");
+        }
     }
-  }
 
-  function disableButtonRemove1() {
-    if (totalFields1() === 1) {
-      buttonRemove1.attr("disabled", "disabled");
-      buttonRemove1.removeClass("shadow-sm");
-    }
-  }
+    buttonAdd1.click(function () {
+        addNewField1();
+        enableButtonRemove1();
+        disableButtonAdd1();
+    });
 
-  function disableButtonAdd1() {
-    if (totalFields1() === maxFields) {
-      buttonAdd1.attr("disabled", "disabled");
-      buttonAdd1.removeClass("shadow-sm");
-    }
-  }
+    buttonRemove1.click(function () {
+        removeLastField1();
+        disableButtonRemove1();
+        enableButtonAdd1();
+    });
 
-  function enableButtonAdd1() {
-    if (totalFields1() === (maxFields - 1)) {
-      buttonAdd1.removeAttr("disabled");
-      buttonAdd1.addClass("shadow-sm");
-    }
-  }
-
-  buttonAdd1.click(function() {
-    addNewField1();
-    enableButtonRemove1();
-    disableButtonAdd1();
-  });
-
-  buttonRemove1.click(function() {
-    removeLastField1();
-    disableButtonRemove1();
-    enableButtonAdd1();
-  });
-   
 </script>
 
 
 
 <script>
 
-function addData(chart, label, data) {
-    chart.data.labels.push(label);
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
-    });
-    chart.update();
-}
+    function addData(chart, label, data) {
+        chart.data.labels.push(label);
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.push(data);
+        });
+        chart.update();
+    }
 
 
 </script>
 
 
-    <script type="">
-      
-var icons = { parking: { icon: 'https://tarantelleromane.files.wordpress.com/2016/10/map-marker.png?w=50' } };
+<script type="">
+
+    var icons = { parking: { icon: 'https://tarantelleromane.files.wordpress.com/2016/10/map-marker.png?w=50' } };
 
 
-// REPLACE WITH DATA FROM API
-//TITLE | POSITION - LAT , LNG | ICON | TITLE | CONTENT
-var airports = [
-   { 
-      title: 'Manchester Airport', 
-      position: { 
-         lat: 53.3588026, 
-         lng: -2.274919 }, 
-      icon: 'parking',  
-      content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
-   },
-   { 
-      title: 'Leeds Airport', 
-      position: { 
-         lat: 53.8679434, 
-         lng: -1.6637193 }, 
-      icon: 'parking',  
-      content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
-   },
-   { 
-      title: 'Belfast Airport', 
-      position: { 
-         lat: 54.661781, 
-         lng: -6.2184331 }, 
-      icon: 'parking',  
-      content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
-   },
-   { 
-      title: 'Edinburgh Airport', 
-      position: { 
-         lat: 55.950785, 
-         lng: -3.3636419 }, 
-      icon: 'parking',  
-      content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
-   },
-   { 
-      title: 'Cardiff Airport', 
-      position: { 
-         lat: 51.3985498, 
-         lng: -3.3416461 }, 
-      icon: 'parking',  
-      content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
-   },
-   { 
-      title: 'Heathrow Airport', 
-      position: { 
-         lat: 51.4700223, 
-         lng: -0.4542955 }, 
-      icon: 'parking',  
-   content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'}
-];
+    // REPLACE WITH DATA FROM API
+    //TITLE | POSITION - LAT , LNG | ICON | TITLE | CONTENT
+    var airports = [
+       {
+          title: 'Manchester Airport',
+          position: {
+             lat: 53.3588026,
+             lng: -2.274919 },
+          icon: 'parking',
+          content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
+       },
+       {
+          title: 'Leeds Airport',
+          position: {
+             lat: 53.8679434,
+             lng: -1.6637193 },
+          icon: 'parking',
+          content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
+       },
+       {
+          title: 'Belfast Airport',
+          position: {
+             lat: 54.661781,
+             lng: -6.2184331 },
+          icon: 'parking',
+          content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
+       },
+       {
+          title: 'Edinburgh Airport',
+          position: {
+             lat: 55.950785,
+             lng: -3.3636419 },
+          icon: 'parking',
+          content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
+       },
+       {
+          title: 'Cardiff Airport',
+          position: {
+             lat: 51.3985498,
+             lng: -3.3416461 },
+          icon: 'parking',
+          content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'
+       },
+       {
+          title: 'Heathrow Airport',
+          position: {
+             lat: 51.4700223,
+             lng: -0.4542955 },
+          icon: 'parking',
+       content: '<div id="content"><div><img src="images/Ellipse-1.png"/>&nbsp;<span>Jason Smith</span><p style="margin:0px;font-size:12px;color:#B0B7C3;">Ticket # 2 -<span style="font-size:12px;color:black;"> 2:00 - 4:00</span></p></div>'}
+    ];
 
-function initMap() {
-   
-   var uk = { 
-      lat: 53.990221, 
-      lng: -3.911132 
-   };
-   
-   var map = new google.maps.Map( document.getElementById('map'), {
-     zoom: 6,
-     center: uk, 
-     disableDefaultUI: true,
-     styles: [{"elementType":"labels","stylers":[{"visibility":"off"},{"color":"#f49f53"}]},{"featureType":"landscape","stylers":[{"color":"#f9ddc5"},{"lightness":-7}]},{"featureType":"road","stylers":[{"color":"#813033"},{"lightness":43}]},{"featureType":"poi.business","stylers":[{"color":"#645c20"},{"lightness":38}]},{"featureType":"water","stylers":[{"color":"#1994bf"},{"saturation":-69},{"gamma":0.99},{"lightness":43}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"color":"#f19f53"},{"weight":1.3},{"visibility":"on"},{"lightness":16}]},{"featureType":"poi.business"},{"featureType":"poi.park","stylers":[{"color":"#645c20"},{"lightness":39}]},{"featureType":"poi.school","stylers":[{"color":"#a95521"},{"lightness":35}]},{},{"featureType":"poi.medical","elementType":"geometry.fill","stylers":[{"color":"#813033"},{"lightness":38},{"visibility":"off"}]},{},{},{},{},{},{},{},{},{},{},{},{"elementType":"labels"},{"featureType":"poi.sports_complex","stylers":[{"color":"#9e5916"},{"lightness":32}]},{},{"featureType":"poi.government","stylers":[{"color":"#9e5916"},{"lightness":46}]},{"featureType":"transit.station","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","stylers":[{"color":"#813033"},{"lightness":22}]},{"featureType":"transit","stylers":[{"lightness":38}]},{"featureType":"road.local","elementType":"geometry.stroke","stylers":[{"color":"#f19f53"},{"lightness":-10}]},{},{},{}]
-   });
-        
-   var InfoWindows = new google.maps.InfoWindow({});
-   
-   airports.forEach(function(airport) {   
-      var marker = new google.maps.Marker({
-        position: { lat: airport.position.lat, lng: airport.position.lng },
-        map: map,
-        icon: icons[airport.icon].icon,
-        title: airport.title
-      });
-      marker.addListener('mouseover', function() {
-        InfoWindows.open(map, this);
-        InfoWindows.setContent(airport.content);
-      });
-   });
-}
+    function initMap() {
 
+       var uk = {
+          lat: 53.990221,
+          lng: -3.911132
+       };
 
-    </script>
+       var map = new google.maps.Map( document.getElementById('map'), {
+         zoom: 6,
+         center: uk,
+         disableDefaultUI: true,
+         styles: [{"elementType":"labels","stylers":[{"visibility":"off"},{"color":"#f49f53"}]},{"featureType":"landscape","stylers":[{"color":"#f9ddc5"},{"lightness":-7}]},{"featureType":"road","stylers":[{"color":"#813033"},{"lightness":43}]},{"featureType":"poi.business","stylers":[{"color":"#645c20"},{"lightness":38}]},{"featureType":"water","stylers":[{"color":"#1994bf"},{"saturation":-69},{"gamma":0.99},{"lightness":43}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"color":"#f19f53"},{"weight":1.3},{"visibility":"on"},{"lightness":16}]},{"featureType":"poi.business"},{"featureType":"poi.park","stylers":[{"color":"#645c20"},{"lightness":39}]},{"featureType":"poi.school","stylers":[{"color":"#a95521"},{"lightness":35}]},{},{"featureType":"poi.medical","elementType":"geometry.fill","stylers":[{"color":"#813033"},{"lightness":38},{"visibility":"off"}]},{},{},{},{},{},{},{},{},{},{},{},{"elementType":"labels"},{"featureType":"poi.sports_complex","stylers":[{"color":"#9e5916"},{"lightness":32}]},{},{"featureType":"poi.government","stylers":[{"color":"#9e5916"},{"lightness":46}]},{"featureType":"transit.station","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","stylers":[{"color":"#813033"},{"lightness":22}]},{"featureType":"transit","stylers":[{"lightness":38}]},{"featureType":"road.local","elementType":"geometry.stroke","stylers":[{"color":"#f19f53"},{"lightness":-10}]},{},{},{}]
+       });
+
+       var InfoWindows = new google.maps.InfoWindow({});
+
+       airports.forEach(function(airport) {
+          var marker = new google.maps.Marker({
+            position: { lat: airport.position.lat, lng: airport.position.lng },
+            map: map,
+            icon: icons[airport.icon].icon,
+            title: airport.title
+          });
+          marker.addListener('mouseover', function() {
+            InfoWindows.open(map, this);
+            InfoWindows.setContent(airport.content);
+          });
+       });
+    }
 
 
-   
+</script>
 
-    <script type="">
-      $(".circle_percent").each(function() {
-    var $this = $(this),
-      $dataV = $this.data("percent"),
-      $dataDeg = $dataV * 3.6,
-      $round = $this.find(".round_per");
-   $round.css("transform", "rotate(" + parseInt($dataDeg + 180) + "deg)"); 
-   $this.append('<div class="circle_inbox"><span class="percent_text"></span></div>');
-   $this.prop('Counter', 0).animate({Counter: $dataV},
-   {
-      duration: 2000, 
-      easing: 'swing', 
-      step: function (now) {
-            $this.find(".percent_text").text(Math.ceil(now)+"%");
-        }
-    });
-   if($dataV >= 51){
-      $round.css("transform", "rotate(" + 360 + "deg)");
-      setTimeout(function(){
-         $this.addClass("percent_more");
-      },1000);
-      setTimeout(function(){
-         $round.css("transform", "rotate(" + parseInt($dataDeg + 180) + "deg)");
-      },1000);
-   } 
+
+<script type="">
+    $(".circle_percent").each(function() {
+  var $this = $(this),
+    $dataV = $this.data("percent"),
+    $dataDeg = $dataV * 3.6,
+    $round = $this.find(".round_per");
+ $round.css("transform", "rotate(" + parseInt($dataDeg + 180) + "deg)");
+ $this.append('<div class="circle_inbox"><span class="percent_text"></span></div>');
+ $this.prop('Counter', 0).animate({Counter: $dataV},
+ {
+    duration: 2000,
+    easing: 'swing',
+    step: function (now) {
+          $this.find(".percent_text").text(Math.ceil(now)+"%");
+      }
+  });
+ if($dataV >= 51){
+    $round.css("transform", "rotate(" + 360 + "deg)");
+    setTimeout(function(){
+       $this.addClass("percent_more");
+    },1000);
+    setTimeout(function(){
+       $round.css("transform", "rotate(" + parseInt($dataDeg + 180) + "deg)");
+    },1000);
+ }
 });
-    </script>
+</script>
 
-    <script type="text/javascript">
-        var userids = {{Auth::user()->id}};
-        // Enable pusher logging - don't include this in production
-        //Pusher.logToConsole = true;
+<script type="text/javascript">
+    var userids = {{Auth::user()->id}};
+    // Enable pusher logging - don't include this in production
+    //Pusher.logToConsole = true;
 
-        var pusher = new Pusher('21ccb81c25e86ff20bc3', {
-          cluster: 'ap2'
-        });
+    var pusher = new Pusher('21ccb81c25e86ff20bc3', {
+        cluster: 'ap2'
+    });
 
-        var channel = pusher.subscribe('my-channel');
-        
-        channel.bind('my-event', function(data) {
-        if(userids==data.message.uid) {
-          var newNotificationHtml = `<li><a class="dropdown-item" href="">${data.message.message}</a></li>`;
-          $("#notification").append(newNotificationHtml);
+    var channel = pusher.subscribe('my-channel');
 
-          $("#blink").addClass("not-bell"); 
+    channel.bind('my-event', function (data) {
+        if (userids == data.message.uid) {
+            var newNotificationHtml = `<li><a class="dropdown-item" href="">${data.message.message}</a></li>`;
+            $("#notification").append(newNotificationHtml);
+
+            $("#blink").addClass("not-bell");
         }
 
-        });
+    });
 
-        $.typeahead({
+    $.typeahead({
         input: '.js-typeahead',
         minLength: 1,
-        maxItem:25,
+        maxItem: 25,
         order: "asc",
         dynamic: true,
-        delay: 100,debug: false ,
+        delay: 100, debug: false,
         backdrop: {
             "background-color": "#fff"
         },
@@ -1125,37 +1254,37 @@ function initMap() {
             //return item.id+'==>'+item.customername;
         },
         emptyTemplate: "No Result Found",
-        display: ["id","customername","address"],
+        display: ["id", "customername", "address"],
         source: {
-            item: [ {name: "customername"}],
+            item: [{name: "customername"}],
             ajax: function (query) {
                 return {
                     type: "GET",
                     url: "{{url('company/home/autocomplete')}}",
                     data: {
                         query: query,
-                        _token:$('input[name="_token"]').val()
+                        _token: $('input[name="_token"]').val()
                     }
                 }
             }
         },
         callback: {
-            onClickAfter:function(param1, param2, node, a, item, event,query){
+            onClickAfter: function (param1, param2, node, a, item, event, query) {
                 //window.location.href="customer?q="+node.customername;
                 //window.location.href="{{ route('company.customer') }}/view/"+node.id+"?q="+node.customername;
-                window.location.href="{{ route('company.customer') }}/view/"+node.id;
+                window.location.href = "{{ route('company.customer') }}/view/" + node.id;
                 return false;
             },
         }
     });
 
-    $(".removesearch").click(function(e) {
-     $('#q').val('');
-     window.location.href="customer";
+    $(".removesearch").click(function (e) {
+        $('#q').val('');
+        window.location.href = "customer";
     });
-    </script>
+</script>
 
 
- </body>
+</body>
 
 </html>
