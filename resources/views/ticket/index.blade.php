@@ -136,6 +136,9 @@
             height: 150px;
         }
 
+        .bootstrap-select .dropdown-menu {
+            z-index: 1050; /* Adjust if needed to ensure the dropdown appears above other elements */
+        }
     </style>
 
     <div class="ticket-page">
@@ -830,7 +833,8 @@
                             </div>
 
                             <div class="col-md-12 mb-3">
-                                <select class="form-select" name="personnelid" id="personnelid1">
+                                <select class="form-select" name="personnelid" id="personnelid1" multiple
+                                        aria-label="Default select example">
                                     <option selected="" value="">Select Personnel</option>
                                     @foreach($worker as $key => $value)
                                         {
@@ -956,7 +960,7 @@
 
                             <div class="col-lg-12">
                                 <button type="submit" class="btn btn-dark btn-block btn-lg p-2" name="share"
-                                        value="share"><img src="images/share-2.png" alt=""/> Share
+                                        value="share"><img src="images/share-2.png" alt=""/>Share
                                 </button>
                             </div>
                         </div>
@@ -1065,12 +1069,13 @@
                             @endphp
                             <div class="col-md-11 mb-3">
                                 <select class="selectpicker1 form-control {{$cname}}" name="servicename[]"
-                                        id="servicenamet1" class="service" required="" multiple
-                                        aria-label="Default select example" data-live-search="true">
+                                        id="servicenamet1" required="" multiple data-live-search="true">
                                     @foreach($services as $key =>$value)
                                         <option value="{{$value->id}}" data-hour="{{$value->time}}"
                                                 data-min="{{$value->minute}}" data-price1="{{$value->price}}"
-                                                data-frequency="{{$value->frequency}}">{{$value->servicename}}</option>
+                                                data-frequency="{{$value->frequency}}">
+                                            {{$value->servicename}}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <div class="d-flex align-items-center justify-content-end pe-3 mt-3">
@@ -2165,7 +2170,9 @@
 @endsection
 @section('script')
     <!-- for datepicker -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+{{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>--}}
+{{--    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>--}}
+
     <script type="text/javascript">
         $('.dropify').dropify();
 

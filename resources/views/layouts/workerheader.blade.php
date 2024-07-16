@@ -4,6 +4,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Favicon -->
 <link rel="shortcut icon" href="{{url('/')}}/uploads/serviceboltfavicon.png" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
 <link rel='stylesheet' href="{{ asset('css/main.min.css')}}">
 
@@ -563,6 +564,7 @@ $googleplacekey = $userinfo->googleplace;
     @yield('content')
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('js/jquery.min.js')}}"></script>
 <script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script> -->
