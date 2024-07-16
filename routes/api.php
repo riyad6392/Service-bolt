@@ -58,7 +58,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::post('/createquote', [App\Http\Controllers\Api\UserController::class, 'createquote'])->name('createquote');
 
 	Route::get('/servicedata', [App\Http\Controllers\Api\UserController::class, 'servicedata'])->name('servicedata');
-	
+
 	Route::post('/addservice', [App\Http\Controllers\Api\UserController::class, 'addservice'])->name('addservice');
 	Route::post('/addproduct', [App\Http\Controllers\Api\UserController::class, 'addproduct'])->name('addproduct');
 
@@ -72,7 +72,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::post('/sendinvoice', [App\Http\Controllers\Api\UserController::class, 'sendinvoice'])->name('sendinvoice');
 
 	Route::post('/customerupdate', [App\Http\Controllers\Api\UserController::class, 'customerupdate'])->name('customerupdate');
-	
+
 	Route::get('/allproducData', [App\Http\Controllers\Api\UserController::class, 'allproducData'])->name('allproducData');
 
 	Route::get('/googleplacekey', [App\Http\Controllers\Api\UserController::class, 'googleplacekey'])->name('googleplacekey');
@@ -91,7 +91,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 	Route::get('/gettime', [App\Http\Controllers\Api\UserController::class, 'gettime'])->name('gettime');
 	Route::get('/timedetails', [App\Http\Controllers\Api\UserController::class, 'timedetails'])->name('timedetails');
-	
+
 	Route::post('/getservicedatabyid', [App\Http\Controllers\Api\UserController::class, 'getservicedatabyid'])->name('getservicedatabyid');
 
 	Route::get('/pendingticket', [App\Http\Controllers\Api\UserController::class, 'pendingticket'])->name('pendingticket');
@@ -118,7 +118,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::post('/updatenotes', [App\Http\Controllers\Api\UserController::class, 'updatenotes'])->name('updatenotes');
 
 	Route::get('/adminchecklist', [App\Http\Controllers\Api\UserController::class, 'adminchecklist'])->name('adminchecklist');
-	
+
 	Route::post('/setnotes', [App\Http\Controllers\Api\UserController::class, 'setnotes'])->name('setnotes');
 	Route::post('/setnotesview', [App\Http\Controllers\Api\UserController::class, 'setnotesview'])->name('setnotesview');
 	Route::post('/category', [App\Http\Controllers\Api\UserController::class, 'category'])->name('category');
