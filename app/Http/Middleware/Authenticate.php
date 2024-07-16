@@ -26,7 +26,7 @@ class Authenticate extends Middleware
             return route('superadmin');
         }
         if(strpos($url, 'api') !== false) {
-        //dd($request->all());
+        dd($request->all());
         // if (! $request->expectsJson()) {
         //     //return route('login');
         //     //return url('/');

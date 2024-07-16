@@ -19,6 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/hello',function(Request $request){
+    return $request->user();
+});
+
 Route::post('/login', [App\Http\Controllers\Api\UserController::class, 'login'])->name('login');
 Route::get('/loginerror', [App\Http\Controllers\Api\UserController::class, 'loginerror'])->name('loginerror');
 
