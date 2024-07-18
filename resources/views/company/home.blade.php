@@ -124,27 +124,30 @@
                                     <div class="col-2 text-center">
                                         @if(!empty($goodproduct[0]))
                                             <span class="icon-arrow mb-2">
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-             <path fill-rule="evenodd"
-                   d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z"
-                   fill="currentColor"></path></svg>
-          </span>
+                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                                      height="24">
+                                                 <path fill-rule="evenodd"
+                                                       d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z"
+                                                       fill="currentColor"></path></svg>
+                                              </span>
                                         @endif
                                         @if(!empty($lowproduct[0]))
                                             <span class="icon-arrow mb-2 red-light">
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-             <path fill-rule="evenodd"
-                   d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z"
-                   fill="currentColor"></path></svg>
-          </span>
+                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                                      height="24">
+                                                 <path fill-rule="evenodd"
+                                                       d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z"
+                                                       fill="currentColor"></path></svg>
+                                              </span>
                                         @endif
                                         @if(!empty($restockproduct[0]))
                                             <span class="icon-arrow mb-2 red-light">
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-             <path fill-rule="evenodd"
-                   d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z"
-                   fill="currentColor"></path></svg>
-          </span>
+                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                                      height="24">
+                                                 <path fill-rule="evenodd"
+                                                       d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z"
+                                                       fill="currentColor"></path></svg>
+                                              </span>
                                         @endif
                                     </div>
                                     <div class="col-6">
@@ -190,12 +193,13 @@
                             @endif
                             <div class="row align-items-center mb-4" style="display: none;">
                                 <div class="col-2 text-center">
-      <span class="icon-arrow">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-      <path fill-rule="evenodd"
-            d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z"
-            fill="currentColor"></path></svg>
-      </span>
+                                      <span class="icon-arrow">
+                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                           height="24">
+                                      <path fill-rule="evenodd"
+                                            d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z"
+                                            fill="currentColor"></path></svg>
+                                      </span>
                                 </div>
 
                                 <div class="col-6">
@@ -213,11 +217,13 @@
 
                             <div class="row align-items-center mb-4" style="display: none;">
                                 <div class="col-2 text-center">
-      <span class="icon-arrow red-light">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd"
-                                                                                               fill="currentColor"
-                                                                                               d="M5.75 8.5a.75.75 0 00-.75.75v9c0 .414.336.75.75.75h9a.75.75 0 000-1.5H7.56L17.78 7.28a.75.75 0 00-1.06-1.06L6.5 16.44V9.25a.75.75 0 00-.75-.75z"></path></svg>
-      </span>
+                                      <span class="icon-arrow red-light">
+                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                           height="24">
+                                          <path fill-rule="evenodd"
+                                                             fill="currentColor"
+                                                             d="M5.75 8.5a.75.75 0 00-.75.75v9c0 .414.336.75.75.75h9a.75.75 0 000-1.5H7.56L17.78 7.28a.75.75 0 00-1.06-1.06L6.5 16.44V9.25a.75.75 0 00-.75-.75z"></path></svg>
+                                      </span>
                                 </div>
 
                                 <div class="col-6">
@@ -271,7 +277,7 @@
                                     <path fill="currentColor"
                                           d="M370.72 133.28C339.458 104.008 298.888 87.962 255.848 88c-77.458.068-144.328 53.178-162.791 126.85-1.344 5.363-6.122 9.15-11.651 9.15H24.103c-7.498 0-13.194-6.807-11.807-14.176C33.933 94.924 134.813 8 256 8c66.448 0 126.791 26.136 171.315 68.685L463.03 40.97C478.149 25.851 504 36.559 504 57.941V192c0 13.255-10.745 24-24 24H345.941c-21.382 0-32.09-25.851-16.971-40.971l41.75-41.749zM32 296h134.059c21.382 0 32.09 25.851 16.971 40.971l-41.75 41.75c31.262 29.273 71.835 45.319 114.876 45.28 77.418-.07 144.315-53.144 162.787-126.849 1.344-5.363 6.122-9.15 11.651-9.15h57.304c7.498 0 13.194 6.807 11.807 14.176C478.067 417.076 377.187 504 256 504c-66.448 0-126.791-26.136-171.315-68.685L48.97 471.03C33.851 486.149 8 475.441 8 454.059V320c0-13.255 10.745-24 24-24z"></path>
                                 </svg>
-                                </a></h5>
+                            </a></h5>
                         @if($usersaddress->company_address!="")
                             Office Address : {{$usersaddress->company_address}}<br><br>
                         @endif
@@ -464,6 +470,8 @@
 @section('script')
     {{--<script src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&key=AIzaSyBSsKUzYG_Wz7u2qL6unHqfBOmvaZ0H1Mg&callback=initMap" type="text/javascript"></script>--}}
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
+    <script src="{{ asset('js/chart.js')}}"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -577,16 +585,16 @@
                             }
 
                             marker = new google.maps.Marker({
-                              position: new google.maps.LatLng(data.html[i][1], data.html[i][2]),
-                              map: map,
-                              icon: {
-                                 //url: APP_URL+'/uploads/personnel/thumbnail/'+data.html[i][4]+ '#custom_marker',
-                                 url: imgestatic,
-                                 size: new google.maps.Size(36, 36),
-                                 scaledSize: new google.maps.Size(36, 36),
-                                 anchor: new google.maps.Point(0, 50),
+                                position: new google.maps.LatLng(data.html[i][1], data.html[i][2]),
+                                map: map,
+                                icon: {
+                                    //url: APP_URL+'/uploads/personnel/thumbnail/'+data.html[i][4]+ '#custom_marker',
+                                    url: imgestatic,
+                                    size: new google.maps.Size(36, 36),
+                                    scaledSize: new google.maps.Size(36, 36),
+                                    anchor: new google.maps.Point(0, 50),
 
-                              }
+                                }
                             });
 
                             google.maps.event.addListener(marker, 'click', (function (marker, i) {

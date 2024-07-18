@@ -132,7 +132,7 @@
             border-radius: 100px;
         }
 
-        select#servicename {
+        select #servicename {
             height: 150px;
         }
 
@@ -802,7 +802,7 @@
 	 		}
                             @endphp
                             <div class="col-md-11 mb-3">
-                                <select class="selectpicker form-control {{$cname}}" name="servicename[]"
+                                <select class="selectpickerp1 form-control {{$cname}}" name="servicename[]"
                                         id="servicename" required="" multiple aria-label="Default select example"
                                         data-live-search="true">
                                     @foreach($services as $key =>$value)
@@ -833,7 +833,7 @@
                             </div>
 
                             <div class="col-md-12 mb-3">
-                                <select class="form-select" name="personnelid" id="personnelid1" multiple
+                                <select class="selectpickerp1 form-select" name="personnelid" id="personnelid1" multiple
                                         aria-label="Default select example">
                                     <option selected="" value="">Select Personnel</option>
                                     @foreach($worker as $key => $value)
@@ -2170,8 +2170,9 @@
 @endsection
 @section('script')
     <!-- for datepicker -->
-{{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>--}}
-{{--    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>--}}
+
+    {{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>--}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 
     <script type="text/javascript">
         $('.dropify').dropify();
@@ -2727,6 +2728,7 @@
             // 	getfrequency();
             // });
             $('.selectpicker1').selectpicker();
+            // $('#servicename').selectpicker();
 
 
             // $('select.selectpicker1').on('change', function() {

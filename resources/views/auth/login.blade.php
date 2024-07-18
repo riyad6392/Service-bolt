@@ -6,7 +6,6 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{url('/')}}/uploads/serviceboltfavicon.png"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css"
-          integrity="sha512-oc9+XSs1H243/FRN9Rw62Fn8EtxjEYWHXRvjS43YtueEewbS6ObfXcJNyohjHqVKFPoXXUxwc+q1K7Dee6vv9g=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
