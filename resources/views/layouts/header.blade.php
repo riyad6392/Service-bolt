@@ -18,8 +18,9 @@
     <!-- for datepicker -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-typeahead/2.11.2/jquery.typeahead.min.css">
 
-    {{--    <link rel='stylesheet' href="{{ asset('css/jquery.typeahead.css')}}">--}}
+{{--        <link rel='stylesheet' href="{{ asset('css/jquery.typeahead.css')}}">--}}
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css"> -->
 
 
@@ -1249,6 +1250,7 @@
             },
         }
     });
+
 
     $(".removesearch").click(function (e) {
         $('#q').val('');

@@ -5,7 +5,7 @@
 </a>
        <div class="search-1">
         <i class="fa fa-search" aria-hidden="true"></i>
-         <input type="search" name="" placeholder="search" class="form-control srch">
+         <input type="search" name="" placeholder="search" class="form-control search">
        </div>
 	   </div>
        <div class="flex-new">
