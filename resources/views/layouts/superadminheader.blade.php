@@ -3,6 +3,9 @@
 <head>
       <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css"
+          integrity="sha512-oc9+XSs1H243/FRN9Rw62Fn8EtxjEYWHXRvjS43YtueEewbS6ObfXcJNyohjHqVKFPoXXUxwc+q1K7Dee6vv9g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 <link rel='stylesheet' href="{{ asset('css/main.min.css')}}">
 
 
@@ -256,8 +259,11 @@
 
 
 </body>
- <script src="{{ asset('js/jquery.min.js')}}"></script>
-<script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js"
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{-- <script src="{{ asset('js/jquery.min.js')}}"></script>--}}
+{{--<script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>--}}
  
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
    <!-- <script src="{{ asset('js/chart.js')}}"></script> -->

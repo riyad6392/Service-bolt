@@ -10,7 +10,7 @@
     <title>ServiceBolt</title>
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{url('/')}}/uploads/serviceboltfavicon.png" />
-    <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css')}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,12 +47,11 @@
         <div>
             @yield('content')
         </div>
-    
-<script src="{{ asset('js/jquery.min.js')}}"></script>
-<script src="{{ asset('js/popper.min.js')}}"></script>
-<script src="{{ asset('js/bootstrap.min.js')}}"></script>
-<script src="{{ asset('js/slick.min.js')}}"></script>
-
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/js/bootstrap.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('js/comman.js')}}"></script>
 <script type="text/javascript">
  $('.slider').slick({
