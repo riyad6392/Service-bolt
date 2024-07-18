@@ -81,7 +81,7 @@ class UserController extends Controller
         if (Auth::attempt(['email' => request('email'), 'password' => request('password'), 'role' => 'worker'])) {
             $user = Auth::user();
             
-            $token = auth()->user()->createToken('API Token')->plainTextToken;
+            $token = request()->user()->createToken('API Token')->plainTextToken;
             
             //$user->createToken('MyApp')->accessToken;
             //$details = DB::table('personnel')->where('id',$user->workerid)->first();
