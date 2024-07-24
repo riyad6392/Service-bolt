@@ -5,7 +5,7 @@
 <!-- Favicon -->
 <link rel="shortcut icon" href="{{url('/')}}/uploads/serviceboltfavicon.png" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
-<link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">
+{{--<link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet">--}}
 <link rel='stylesheet' href="{{ asset('css/main.min.css')}}">
 
 
@@ -19,7 +19,8 @@
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css'>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap5.min.css">
 <link rel='stylesheet' href="{{ asset('css/dropify.css')}}">
-<link rel='stylesheet' href="{{ asset('css/jquery.typeahead.css')}}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-typeahead/2.11.2/jquery.typeahead.min.css">
+{{--<link rel='stylesheet' href="{{ asset('css/jquery.typeahead.css')}}">--}}
 <style type="text/css">
 	.wrapper {color: #555;cursor: help;position: relative;text-align: center;-webkit-transform: translateZ(0); /* webkit flicker fix */-webkit-font-smoothing: antialiased; /* webkit text rendering fix */display: inline-block;}
 .pac-container {
@@ -565,18 +566,23 @@ $googleplacekey = $userinfo->googleplace;
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{ asset('js/jquery.min.js')}}"></script>
-<script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script> -->
-<script src="{{ asset('js/bootstrap-select.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{--<script src="{{ asset('js/jquery.min.js')}}"></script>--}}
+{{--<script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>--}}
+{{--<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script> -->--}}
+{{--<script src="{{ asset('js/bootstrap-select.min.js')}}"></script>--}}
  
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
    <!-- <script src="{{ asset('js/chart.js')}}"></script> -->
    <script src="{{ asset('js/drop-zone.js')}}"></script>
-   <script src="{{ asset('js/dropify.js')}}"></script>
-  
-<script src="{{ asset('js/slick.min.js')}}"></script>
-<script src="{{ asset('js/main.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{--   <script src="{{ asset('js/dropify.js')}}"></script>--}}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{--<script src="{{ asset('js/slick.min.js')}}"></script>--}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.4/main.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{--<script src="{{ asset('js/main.min.js')}}"></script>--}}
 <script src='https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
@@ -587,9 +593,11 @@ $googleplacekey = $userinfo->googleplace;
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css'>
-<script src="{{ asset('js/jquery-ui.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{--<script src="{{ asset('js/jquery-ui.js')}}"></script>--}}
    <script src="{{ asset('js/add-field.js')}}"></script>
-<script src="{{ asset('js/jquery.typeahead.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-typeahead/2.11.2/jquery.typeahead.min.js"></script>
+{{--<script src="{{ asset('js/jquery.typeahead.js')}}"></script>--}}
    
 @yield('script')
 <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $googleplacekey; ?>&callback=initAutocomplete&libraries=places"
